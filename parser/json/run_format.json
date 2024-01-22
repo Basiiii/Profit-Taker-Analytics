@@ -4,8 +4,14 @@
     "total_leg": 0,
     "total_body": 0,
     "total_pylon": 0,
-    "bugged_run": 0,
-    "aborted_run": 0,
+
+    "flight_duration": 0,
+
+    "bugged_run": false,
+    "aborted_run": false,
+    "best_run": false,
+
+    "squad_members": [],
 
     "phase_1": {
         "phase_time": 0,

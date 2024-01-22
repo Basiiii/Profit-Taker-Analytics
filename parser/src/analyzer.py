@@ -19,7 +19,7 @@ from src.utils import color, time_str, oxfordcomma
 
 class PTConstants:
     SHIELD_SWITCH = 'SwitchShieldVulnerability'
-    SHIELD_PHASE_ENDINGS = {1: 'GiveItem Queuing resource load for Transmission: '
+    SHIELD_PHASE_ENDINGS = {1: 'GiveItem Queuing resource load for Transmission: '  
                                '/Lotus/Sounds/Dialog/FortunaOrbHeist/Business/DBntyFourInterPrTk0920TheBusiness',
                             3: 'GiveItem Queuing resource load for Transmission: '
                                '/Lotus/Sounds/Dialog/FortunaOrbHeist/Business/DBntyFourInterPrTk0890TheBusiness',
