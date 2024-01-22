@@ -1,7 +1,7 @@
 ############################################################
 # Profit-Taker Analyzer by ReVoltage#3425                  #
 # Rewritten by Iterniam#5829                               #
-# Re-Rewritten by scamcat
+# Re-Rewritten by scamcat                                  #
 # Original repo: https://github.com/revoltage34/ptanalyzer #
 # Repo: https://github.com/Basiiii/Profit-Taker-Analytics  #
 # Requires Python 3.10                                     #
@@ -9,8 +9,6 @@
 
 import traceback
 from sty import fg
-import colorama
-
 from src.analyzer import Analyzer
 from src.utils import color
 
@@ -25,11 +23,6 @@ def error_msg():
 
 
 def main():
-    colorama.init()  # To make ansi colors work.
-    print(f'{fg.cyan}Profit-Taker Analyzer {VERSION} by {fg.li_cyan}ReVoltage#3425{fg.cyan}, rewritten by '
-          f'{fg.li_cyan}Iterniam#5829.')
-    print(color("https://github.com/revoltage34/ptanalyzer \n", fg.li_grey))
-
     Analyzer().run()
 
 
