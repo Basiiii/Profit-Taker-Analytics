@@ -72,7 +72,7 @@ class PhaseCards {
 /// - Index 3: Pylons
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase1 = ['1.111s', '2.111s', '3.111s', '4.111s'];
+List<String> overviewPhase1 = ['N/A', 'N/A', 'N/A', 'N/A'];
 
 /// List of strings representing the overview for the second phase.
 ///
@@ -81,7 +81,7 @@ List<String> overviewPhase1 = ['1.111s', '2.111s', '3.111s', '4.111s'];
 /// - Index 1: Body
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase2 = ['1.111s', '2.111s'];
+List<String> overviewPhase2 = ['N/A', 'N/A'];
 
 /// List of strings representing the overview for the third phase.
 ///
@@ -92,7 +92,7 @@ List<String> overviewPhase2 = ['1.111s', '2.111s'];
 /// - Index 3: Pylons
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase3 = ['1.111s', '2.111s', '3.111s', '4.111s'];
+List<String> overviewPhase3 = ['N/A', 'N/A', 'N/A', 'N/A'];
 
 /// List of strings representing the overview for the fourth phase.
 ///
@@ -102,24 +102,24 @@ List<String> overviewPhase3 = ['1.111s', '2.111s', '3.111s', '4.111s'];
 /// - Index 2: Body
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase4 = ['1.111s', '2.111s', '3.111s'];
+List<String> overviewPhase4 = ['N/A', 'N/A', 'N/A'];
 
 /// List of maps representing the shields for the first phase.
 ///
 /// Each map in the list corresponds to a shield, with the key being the icon and the value being the text.
-/// Initially, this list is empty but will be populated with data fetched from an API.
+/// Initially, this list is empty but will be populated with data fetched from an API. Max of 15 elements.
 List<Map<String, dynamic>> shieldsPhase1 = [];
 
 /// List of maps representing the shields for the third phase.
 ///
 /// Each map in the list corresponds to a shield, with the key being the icon and the value being the text.
-/// Initially, this list is empty but will be populated with data fetched from an API.
+/// Initially, this list is empty but will be populated with data fetched from an API. Max of 15 elements.
 List<Map<String, dynamic>> shieldsPhase3 = [];
 
 /// List of maps representing the shields for the fourth phase.
 ///
 /// Each map in the list corresponds to a shield, with the key being the icon and the value being the text.
-/// Initially, this list is empty but will be populated with data fetched from an API.
+/// Initially, this list is empty but will be populated with data fetched from an API. Max of 15 elements.
 List<Map<String, dynamic>> shieldsPhase4 = [];
 
 /// List of maps representing the legs for the first phase.
@@ -127,10 +127,10 @@ List<Map<String, dynamic>> shieldsPhase4 = [];
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase1 = [
-  {'icon': CustomIcons.fl, 'text': '21.111s'},
-  {'icon': CustomIcons.fr, 'text': '1.111s'},
-  {'icon': CustomIcons.bl, 'text': '1.111s'},
-  {'icon': CustomIcons.br, 'text': '1.111s'},
+  {'icon': CustomIcons.fl, 'text': 'N/A'},
+  {'icon': CustomIcons.fr, 'text': 'N/A'},
+  {'icon': CustomIcons.bl, 'text': 'N/A'},
+  {'icon': CustomIcons.br, 'text': 'N/A'},
 ];
 
 /// List of maps representing the legs for the second phase.
@@ -138,10 +138,10 @@ List<Map<String, dynamic>> legsPhase1 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase2 = [
-  {'icon': CustomIcons.fl, 'text': '1.111s'},
-  {'icon': CustomIcons.fr, 'text': '1.111s'},
-  {'icon': CustomIcons.bl, 'text': '1.111s'},
-  {'icon': CustomIcons.br, 'text': '1.111s'},
+  {'icon': CustomIcons.fl, 'text': 'N/A'},
+  {'icon': CustomIcons.fr, 'text': 'N/A'},
+  {'icon': CustomIcons.bl, 'text': 'N/A'},
+  {'icon': CustomIcons.br, 'text': 'N/A'},
 ];
 
 /// List of maps representing the legs for the third phase.
@@ -149,10 +149,10 @@ List<Map<String, dynamic>> legsPhase2 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase3 = [
-  {'icon': CustomIcons.fl, 'text': '1.111s'},
-  {'icon': CustomIcons.fr, 'text': '1.111s'},
-  {'icon': CustomIcons.bl, 'text': '1.111s'},
-  {'icon': CustomIcons.br, 'text': '1.111s'},
+  {'icon': CustomIcons.fl, 'text': 'N/A'},
+  {'icon': CustomIcons.fr, 'text': 'N/A'},
+  {'icon': CustomIcons.bl, 'text': 'N/A'},
+  {'icon': CustomIcons.br, 'text': 'N/A'},
 ];
 
 /// List of maps representing the legs for the fourth phase.
@@ -160,10 +160,10 @@ List<Map<String, dynamic>> legsPhase3 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase4 = [
-  {'icon': CustomIcons.fl, 'text': '1.111s'},
-  {'icon': CustomIcons.fr, 'text': '1.111s'},
-  {'icon': CustomIcons.bl, 'text': '1.111s'},
-  {'icon': CustomIcons.br, 'text': '1.111s'},
+  {'icon': CustomIcons.fl, 'text': 'N/A'},
+  {'icon': CustomIcons.fr, 'text': 'N/A'},
+  {'icon': CustomIcons.bl, 'text': 'N/A'},
+  {'icon': CustomIcons.br, 'text': 'N/A'},
 ];
 
 /// List of PhaseCards objects representing the phases of the game.
@@ -173,27 +173,27 @@ List<Map<String, dynamic>> legsPhase4 = [
 List<PhaseCards> phaseCards = [
   PhaseCards(
       title: "First Phase",
-      time: "16.707",
+      time: "N/A",
       overviewList: overviewPhase1,
       shieldsList: shieldsPhase1,
       legsList: legsPhase1),
   PhaseCards(
       title: "Second Phase",
-      time: "16.707",
+      time: "N/A",
       overviewList: overviewPhase2,
       shieldsList: [],
       legsList: legsPhase2),
   PhaseCards(
       title: "Third Phase",
-      time: "16.707",
+      time: "N/A",
       overviewList: overviewPhase3,
       shieldsList: shieldsPhase3,
       legsList: legsPhase3),
   PhaseCards(
       title: "Fourth Phase",
-      time: "16.707",
+      time: "N/A",
       overviewList: overviewPhase4,
-      shieldsList: shieldsPhase1,
+      shieldsList: shieldsPhase4,
       legsList: legsPhase4),
 ];
 
@@ -203,40 +203,40 @@ List<PhaseCards> phaseCards = [
 /// including its color, icon, title, and time.
 List<OverviewCards> overviewCards = [
   OverviewCards(
-    color: const Color(0xFF86BCFC),
+    color: const Color(0xFF68ADFF),
     icon: Icons.access_time,
     title: "Total\nDuration",
-    time: "57.539",
+    time: "N/A",
   ),
   OverviewCards(
-    color: const Color(0xFFFCC686),
+    color: const Color(0xFFFFB054),
     icon: Icons.flight,
     title: "Flight\nTime",
-    time: "3.106",
+    time: "N/A",
   ),
   OverviewCards(
-    color: const Color(0xFFA4ADE9),
+    color: const Color(0xFF7C8AE7),
     icon: Icons.shield,
     title: "Shield\nBreak",
-    time: "9.629",
+    time: "N/A",
   ),
   OverviewCards(
-    color: const Color(0xFF84DFE2),
+    color: const Color(0xFF59D5D9),
     icon: Icons.airline_seat_legroom_extra,
     title: "Leg\nBreak",
-    time: "8.809",
+    time: "N/A",
   ),
   OverviewCards(
-    color: const Color(0xFFE28484),
+    color: const Color(0xFFDB5858),
     icon: Icons.my_location,
     title: "Body\nKill",
-    time: "0.029",
+    time: "N/A",
   ),
   OverviewCards(
-    color: const Color(0xFFE9A4E2),
+    color: const Color(0xFFE888DE),
     icon: Icons.workspaces_outline,
     title: "Pylon\nDestruction",
-    time: "16.707",
+    time: "N/A",
   ),
 ];
 

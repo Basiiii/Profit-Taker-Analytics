@@ -1,43 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
-/// Creates a styled text widget.
-///
-/// This function generates a Text widget with the specified [text], [fontSize]
-/// and [weight]. The font family used is 'Poppins'.
-///
-/// ```dart
-/// titleText("Hello World", 20.0, FontWeight.bold);
-/// ```
-///
-/// The above code will produce a bold text with the text "Hello World" and
-/// font size 20.0.
-///
-/// Parameters:
-/// * [text]: The text to be displayed.
-/// * [fontSize]: The size of the font.
-/// * [weight]: The weight of the font.
-///
-/// Returns:
-/// A [Text] widget with the specified parameters.
-Text titleText(String text, double fontSize, FontWeight weight) {
-  return Text(
-    text,
-    style: TextStyle(
-      fontSize: fontSize,
-      fontWeight: weight,
-      fontFamily: 'Poppins',
-    ),
-  );
-}
-
-/// Creates an IconButton widget.
+/// Creates an IconButton widget for drawer.
 ///
 /// This function generates an IconButton widget with a specific icon. When
 /// the button is pressed, it opens the end drawer of the scaffold.
 ///
 /// ```dart
-/// iconButton(GlobalKey<ScaffoldState> scaffoldKey);
+/// drawerButton(GlobalKey<ScaffoldState> scaffoldKey);
 /// ```
 ///
 /// The above code will produce an IconButton with a specific icon. When
@@ -48,7 +18,7 @@ Text titleText(String text, double fontSize, FontWeight weight) {
 ///
 /// Returns:
 /// An [IconButton] widget that opens the end drawer when pressed.
-IconButton iconButton(GlobalKey<ScaffoldState> scaffoldKey) {
+IconButton drawerButton(GlobalKey<ScaffoldState> scaffoldKey) {
   return IconButton(
     icon: const Icon(
       Icons.view_headline,
@@ -242,9 +212,9 @@ Widget buildOverviewCard(int index, BuildContext context) {
                 generateRichText(context, [
                   generateTextSpan(
                       overviewCards[index].time, 32, FontWeight.w600,
-                      color: Colors.white),
+                      color: Theme.of(context).colorScheme.onSurface),
                   generateTextSpan('s ', 20, FontWeight.w400,
-                      color: Colors.white),
+                      color: Theme.of(context).colorScheme.onSurface),
                 ]),
               ],
             ),
@@ -323,8 +293,10 @@ Widget buildPhaseCard(int index, BuildContext context) {
               Expanded(
                 child: Text(
                   phaseCards[index].title,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               ),
               Expanded(
@@ -336,9 +308,9 @@ Widget buildPhaseCard(int index, BuildContext context) {
                       generateRichText(context, [
                         generateTextSpan(
                             phaseCards[index].time, 20, FontWeight.w600,
-                            color: Theme.of(context).colorScheme.tertiary),
+                            color: Theme.of(context).colorScheme.onSurface),
                         generateTextSpan('s ', 20, FontWeight.w400,
-                            color: Theme.of(context).colorScheme.tertiary),
+                            color: Theme.of(context).colorScheme.onSurface),
                       ]),
                     ],
                   ),

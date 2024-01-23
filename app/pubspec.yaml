@@ -26,8 +26,8 @@ dependencies:
  path_provider: ^2.1.2
  # Super clipboard for copy/paste operations
  super_clipboard: ^0.8.4
- # Cupertino Icons for iOS style icons
- cupertino_icons: ^1.0.2
+ # Shared preferences
+ shared_preferences: ^2.0.8
 
 dev_dependencies:
  flutter_test:

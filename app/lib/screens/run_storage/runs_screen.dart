@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AdvancedScreen extends StatelessWidget {
-  const AdvancedScreen({super.key});
+class RunStorage extends StatelessWidget {
+  const RunStorage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Welcome to the Advanced Page!'),
+        child: Text('Coming soon!'),
       ),
     );
   }
