@@ -5,8 +5,9 @@ from math import nan, isnan
 from statistics import median
 from time import sleep
 from typing import Iterator, Callable, Optional, Union
+
 from flask import Flask
-from flask_restful import Resource, Api
+import threading
 
 from sty import rs, fg
 
@@ -16,6 +17,7 @@ from src.exceptions.log_end import LogEnd
 from src.exceptions.run_abort import RunAbort
 from src.utils import color, time_str, oxfordcomma
 
+lastRun = {}
 
 class PTConstants:
     SHIELD_SWITCH = 'SwitchShieldVulnerability'
@@ -165,6 +167,9 @@ class RelRun:
         print(f'{fg.white} Body Killed:\t{fg.li_green}{self.body_sum:7.3f}s')
         print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_sum:7.3f}s')
 
+    def to_json(self):
+        pass
+
 
 class AbsRun:
 
@@ -313,7 +318,21 @@ class Analyzer:
         self.runs: list[Union[RelRun, RunAbort, BuggedRun]] = []
         self.proper_runs: list[RelRun] = []
 
+    def initAPI(self):
+        app = Flask(__name__)
+        
+        @app.route("/last_run")
+        def last_run():
+            return self.runs[-1]    
+
+        try:
+            threading.Thread(target=lambda: app.run(debug=True, use_reloader=False)).start()
+        except Exception as e:
+            print(e)
+
     def run(self):
+        self.initAPI()
+
         filename = self.get_file()
         if self.follow_mode:
             self.follow_log(filename)
