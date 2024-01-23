@@ -1,5 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+import 'package:super_clipboard/super_clipboard.dart';
+
+/// An enumeration of possible statuses for the screenshot operation.
+enum ScreenshotStatus {
+  success,
+  failure,
+  unsupportedPlatform,
+  directoryDoesNotExist,
+  screenshotFailure,
+}
+
+/// A map that associates each [ScreenshotStatus] with a corresponding message.
+const Map<ScreenshotStatus, String> messages = {
+  ScreenshotStatus.success: 'Image copied to clipboard',
+  ScreenshotStatus.failure: 'An unknown error occurred',
+  ScreenshotStatus.unsupportedPlatform:
+      'Clipboard API is not supported on this platform',
+  ScreenshotStatus.directoryDoesNotExist: 'Temporary directory does not exist',
+  ScreenshotStatus.screenshotFailure: 'Failed to capture screenshot',
+};
 
 /// The HomeScreen widget represents the home screen of the application.
 ///
@@ -25,6 +50,39 @@ class HomeScreen extends StatefulWidget {
 /// opening and closing of drawers programmatically.
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ScreenshotController screenshotController = ScreenshotController();
+
+  Future<ScreenshotStatus> captureScreenshot() async {
+    try {
+      Uint8List? image = await screenshotController.capture();
+      if (image == null) {
+        return ScreenshotStatus.screenshotFailure;
+      }
+
+      final directory = await getTemporaryDirectory();
+      if (!(await directory.exists())) {
+        return ScreenshotStatus.directoryDoesNotExist;
+      }
+
+      final path = directory.path;
+      final file = File('$path/screenshot.png');
+      await file.writeAsBytes(image);
+
+      final clipboard = SystemClipboard.instance;
+      if (clipboard == null) {
+        return ScreenshotStatus.unsupportedPlatform;
+      }
+
+      final item = DataWriterItem();
+      item.add(Formats.png(image));
+      await clipboard.write([item]);
+
+      return ScreenshotStatus.success;
+    } catch (_) {
+      return ScreenshotStatus.failure;
+    }
+  }
 
   /// Overrides the build method to construct the widget tree.
   ///
@@ -59,31 +117,41 @@ class _HomeScreenState extends State<HomeScreen> {
                         IconButton(
                           icon: const Icon(Icons.share, size: 18),
                           onPressed: () {
-                            // TODO: Implement share feature (image to clipboard)
+                            var scaffoldMessenger =
+                                ScaffoldMessenger.of(context);
+                            captureScreenshot().then((status) {
+                              String message =
+                                  messages[status] ?? 'Unknown status';
+                              scaffoldMessenger.showSnackBar(
+                                SnackBar(content: Text(message)),
+                              );
+                            });
                           },
                         )
                       ],
                     ),
                     const SizedBox(height: 15),
-                    Column(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Wrap(
-                                spacing: 12.0,
-                                runSpacing: 12.0,
-                                children: [
-                                  ...List.generate(
-                                      6,
-                                      (index) =>
-                                          buildOverviewCard(index, context)),
-                                  ...List.generate(
-                                      4,
-                                      (index) =>
-                                          buildPhaseCard(index, context)),
-                                ])),
-                      ],
-                    ),
+                    Screenshot(
+                        controller: screenshotController,
+                        child: Column(
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Wrap(
+                                    spacing: 12.0,
+                                    runSpacing: 12.0,
+                                    children: [
+                                      ...List.generate(
+                                          6,
+                                          (index) => buildOverviewCard(
+                                              index, context)),
+                                      ...List.generate(
+                                          4,
+                                          (index) =>
+                                              buildPhaseCard(index, context)),
+                                    ])),
+                          ],
+                        )),
                     const SizedBox(height: 12), // Space between elements
                   ]))),
       endDrawer: Drawer(
