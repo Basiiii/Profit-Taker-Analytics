@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-
+import 'package:screenshot/screenshot.dart';
 import 'package:super_clipboard/super_clipboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 /// An enumeration of possible statuses for the screenshot operation.
 enum ScreenshotStatus {
@@ -100,15 +102,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          titleText(
-                              'Profit Taker Analytics', 32, FontWeight.bold),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: iconButton(_scaffoldKey),
-                          )
-                        ]),
+                      children: [
+                        titleText(
+                            'Profit Taker Analytics', 32, FontWeight.bold),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  icon: Icon(MyApp.themeNotifier.value ==
+                                          ThemeMode.light
+                                      ? Icons.nightlight
+                                      : Icons.wb_sunny),
+                                  onPressed: () async {
+                                    ThemeMode newMode =
+                                        MyApp.themeNotifier.value ==
+                                                ThemeMode.light
+                                            ? ThemeMode.dark
+                                            : ThemeMode.light;
+
+                                    MyApp.themeNotifier.value = newMode;
+
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    Map<ThemeMode, String> themeModeMap = {
+                                      ThemeMode.light: 'light',
+                                      ThemeMode.dark: 'dark',
+                                    };
+                                    prefs.setString(
+                                        'themeMode', themeModeMap[newMode]!);
+                                  }),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15),
+                                child: drawerButton(_scaffoldKey),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     titleText('Hello User!', 24, FontWeight.normal),
                     const SizedBox(height: 25),
                     Row(

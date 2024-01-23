@@ -30,7 +30,7 @@ class _NavigationBarState extends State<NavigationBar> {
         children: <Widget>[
           _buildNavItem('assets/HOME_ICON.svg', 0),
           const SizedBox(height: 20),
-          _buildNavItem('assets/PLUS_ICON.svg', 1),
+          _buildNavItem('assets/BOX_ICON.svg', 1),
           const SizedBox(height: 20),
           _buildNavItem('assets/SETTINGS_ICON.svg', 2),
         ],
@@ -48,6 +48,7 @@ class _NavigationBarState extends State<NavigationBar> {
           child: Container(
             width: 3,
             height: 24,
+
             /// Only highlights current index with primary color
             color: _currentIndex == index
                 ? Theme.of(context).colorScheme.primary
@@ -60,7 +61,7 @@ class _NavigationBarState extends State<NavigationBar> {
               svgAsset,
               color: _currentIndex == index
                   ? Theme.of(context).colorScheme.primary
-                  : Colors.white,
+                  : Theme.of(context).colorScheme.tertiary,
             ),
             onPressed: () {
               setState(() {
