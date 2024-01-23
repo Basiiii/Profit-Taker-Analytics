@@ -70,7 +70,21 @@ flutter:
         - asset: fonts/Poppins-Regular.ttf
         - asset: fonts/Poppins-Light.ttf
         - asset: fonts/Poppins-ExtraLight.ttf
+
     - family: Rubik
       fonts:
         - asset: fonts/Rubik-Medium.ttf
         - asset: fonts/Rubik-Regular.ttf
+
+    - family: DMMono
+      fonts:
+        - asset: fonts/DMMono-Italic.ttf
+        - asset: fonts/DMMono-Light.ttf
+        - asset: fonts/DMMono-LightItalic.ttf
+        - asset: fonts/DMMono-Medium.ttf
+        - asset: fonts/DMMono-MediumItalic.ttf
+        - asset: fonts/DMMono-Regular.ttf
+        
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/Custom-Icons.ttf
