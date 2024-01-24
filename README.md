@@ -1,4 +1,4 @@
-![project header](assets/PT_Analytics.png "Profit Taker Analytics")
+![project header](assets/PT_Analytics.png)
 
 # Profit Taker Analytics app
 
