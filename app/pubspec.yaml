@@ -14,20 +14,24 @@ topics:
 dependencies:
  flutter:
     sdk: flutter
+ # Splash screen
+ another_flutter_splash_screen: ^1.2.0
+ # Windows window control
+ window_manager: ^0.3.7
  # Provider for state management
  provider: ^6.0.0
+ # Shared preferences
+ shared_preferences: ^2.0.8
  # SVG rendering
  flutter_svg: ^0.22.0
- # Window customization
- bitsdojo_window: ^0.1.5
  # Screenshot functionality
  screenshot: ^2.1.0
  # Path provider for file access
  path_provider: ^2.1.2
  # Super clipboard for copy/paste operations
  super_clipboard: ^0.8.4
- # Shared preferences
- shared_preferences: ^2.0.8
+ # Used to execute the compiled parser
+ process_run: ^0.13.0
 
 dev_dependencies:
  flutter_test:

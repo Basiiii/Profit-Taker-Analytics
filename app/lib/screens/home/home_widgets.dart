@@ -415,3 +415,47 @@ Widget buildPhaseCard(int index, BuildContext context) {
     ),
   );
 }
+
+/// The home page drawer widget.
+///
+/// This widget is our home page drawer, it's where we will store past runs.
+/// It contains a ListView with a list of items. Each item in the list is represented by a ListTile widget.
+class HomePageDrawer extends StatelessWidget {
+  const HomePageDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: Theme.of(context).colorScheme.surface,
+        child: ListView(
+          padding: const EdgeInsets.only(left: 5, top: 10),
+          children: <Widget>[
+            const ListTile(
+              title: Text(
+                'Latest runs',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Material(
+              type: MaterialType.transparency,
+              child: ListTile(
+                hoverColor: Theme.of(context).colorScheme.surfaceVariant,
+                title: const Text(
+                  'Coming soon!',
+                  style: TextStyle(fontSize: 14),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
