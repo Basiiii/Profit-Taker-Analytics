@@ -6,8 +6,9 @@ from statistics import median
 from time import sleep
 from typing import Iterator, Callable, Optional, Union
 
-from flask import Flask
+from flask import Flask, request
 import threading
+import json
 
 from sty import rs, fg
 
@@ -320,10 +321,21 @@ class Analyzer:
 
     def initAPI(self):
         app = Flask(__name__)
+        self.lastRun = {}
         
-        @app.route("/last_run")
+        @app.route("/last_run", methods= ['GET'])
         def last_run():
-            return self.runs[-1]    
+            return self.lastRun
+        
+        @app.route("/healthcheck", methods= ['GET'])
+        def healthcheck():
+            return {'status': 'ok'}
+        
+        @app.route("/post_run", methods = ['POST'])
+        def storeRun():
+            self.lastRun = request.json
+
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
         try:
             threading.Thread(target=lambda: app.run(debug=True, use_reloader=False)).start()
