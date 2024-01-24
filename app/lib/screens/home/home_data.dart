@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
+/// Players in-game-name.
+String ign = '';
+
+/// Display name.
+///
+/// If there is no ign data, then username will be empty.
+/// If there is ign data, then username will be the ign.
+String username = ign == '' ? '' : ' $ign';
+
 /// Represents an overview card with a color, an icon, a title and a time.
 ///
 /// An overview card is a simple widget that displays a color, an icon, a title and a time.
@@ -238,11 +247,4 @@ List<OverviewCards> overviewCards = [
     title: "Pylon\nDestruction",
     time: "N/A",
   ),
-];
-
-// TODO: Look at how we plan on storing previous run data
-// NOTE: Undocumented and basic for now, was testing implementation a long time ago
-List<String> previousRuns = [
-  "15/11/2023 @ 15:04",
-  "15/11/2023 @ 15:02",
 ];
