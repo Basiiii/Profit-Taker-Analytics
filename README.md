@@ -1,4 +1,5 @@
 ![project header](assets/PT_Analytics.png "Profit Taker Analytics")
+
 # Profit Taker Analytics app
 
 The Profit Taker Analytics project is designed to enhance the experience for Profit Taker speedrunners in Warframe by providing an advanced analyzer with a user-friendly Graphical User Interface (GUI). This project builds upon an existing simple command line application, transforming it into a sophisticated tool that bridges the gap between textual data and intuitive visual representation.
