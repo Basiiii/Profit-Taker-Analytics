@@ -1,94 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
-
-/// Creates an IconButton widget for drawer.
-///
-/// This function generates an IconButton widget with a specific icon. When
-/// the button is pressed, it opens the end drawer of the scaffold.
-///
-/// ```dart
-/// drawerButton(GlobalKey<ScaffoldState> scaffoldKey);
-/// ```
-///
-/// The above code will produce an IconButton with a specific icon. When
-/// the button is pressed, it will open the end drawer of the scaffold.
-///
-/// Parameters:
-/// * [scaffoldKey]: The key of the scaffold.
-///
-/// Returns:
-/// An [IconButton] widget that opens the end drawer when pressed.
-IconButton drawerButton(GlobalKey<ScaffoldState> scaffoldKey) {
-  return IconButton(
-    icon: const Icon(
-      Icons.view_headline,
-      size: 24,
-    ),
-    onPressed: () {
-      scaffoldKey.currentState!.openEndDrawer();
-    },
-  );
-}
-
-/// Generates a TextSpan with the specified parameters.
-///
-/// This function creates a TextSpan widget with the provided [text], [fontSize],
-/// [fontWeight], and [color]. The font family used is 'Rubik'.
-///
-/// ```dart
-/// generateTextSpan("Hello World", 20.0, FontWeight.bold, color: Colors.red);
-/// ```
-///
-/// The above code will produce a TextSpan with the text "Hello World", font size
-/// 20.0, bold weight, and red color.
-///
-/// Parameters:
-/// * [text]: The text to be displayed.
-/// * [fontSize]: The size of the font.
-/// * [fontWeight]: The weight of the font.
-/// * [color]: The color of the text.
-///
-/// Returns:
-/// A [TextSpan] widget with the specified parameters.
-TextSpan generateTextSpan(String text, double fontSize, FontWeight fontWeight,
-    {required Color color}) {
-  return TextSpan(
-    text: text,
-    style: TextStyle(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      fontFamily: 'Rubik',
-      color: color,
-    ),
-  );
-}
-
-/// Generates a RichText widget with the specified parameters.
-///
-/// This function creates a RichText widget with a list of TextSpan children.
-/// The default text style of the current context is used for the TextSpan.
-///
-/// ```dart
-/// generateRichText(context, [TextSpan1, TextSpan2]);
-/// ```
-///
-/// The above code will produce a RichText widget with two TextSpan children.
-/// The text style of these children will be the default text style of the current context.
-///
-/// Parameters:
-/// * [context]: The build context.
-/// * [textSpans]: A list of TextSpan children.
-///
-/// Returns:
-/// A [RichText] widget with the specified parameters.
-RichText generateRichText(BuildContext context, List<TextSpan> textSpans) {
-  return RichText(
-    text: TextSpan(
-      style: DefaultTextStyle.of(context).style,
-      children: textSpans,
-    ),
-  );
-}
+import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 
 /// Builds a Row widget with the specified parameters.
 ///
@@ -413,6 +325,35 @@ Widget buildPhaseCard(int index, BuildContext context) {
         )
       ],
     ),
+  );
+}
+
+/// Creates an IconButton widget for drawer.
+///
+/// This function generates an IconButton widget with a specific icon. When
+/// the button is pressed, it opens the end drawer of the scaffold.
+///
+/// ```dart
+/// drawerButton(GlobalKey<ScaffoldState> scaffoldKey);
+/// ```
+///
+/// The above code will produce an IconButton with a specific icon. When
+/// the button is pressed, it will open the end drawer of the scaffold.
+///
+/// Parameters:
+/// * [scaffoldKey]: The key of the scaffold.
+///
+/// Returns:
+/// An [IconButton] widget that opens the end drawer when pressed.
+IconButton drawerButton(GlobalKey<ScaffoldState> scaffoldKey) {
+  return IconButton(
+    icon: const Icon(
+      Icons.view_headline,
+      size: 24,
+    ),
+    onPressed: () {
+      scaffoldKey.currentState!.openEndDrawer();
+    },
   );
 }
 
