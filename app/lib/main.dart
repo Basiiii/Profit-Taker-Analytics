@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/utils/parser.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 import 'package:profit_taker_analyzer/theme/theme_control.dart';
+import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 
 import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
     as custom_nav;
@@ -144,38 +146,40 @@ class _MyAppState extends State<MyApp> with WindowListener {
           return ValueListenableBuilder<ThemeMode>(
               valueListenable: MyApp.themeNotifier,
               builder: (_, ThemeMode currentMode, __) {
-                return MaterialApp(
-                  theme: lightTheme,
-                  darkTheme: darkTheme,
-                  themeMode: currentMode,
-                  home: Scaffold(
-                    body: Row(
-                      children: <Widget>[
-                        /// Navigation bar widget.
-                        custom_nav.NavigationBar(
-                          /// Callback function when a tab is selected.
-                          onTabSelected: (index) {
-                            setState(() {
-                              _currentIndex = index;
-                            });
-                          },
-                        ),
-                        Expanded(
-                          child: IndexedStack(
-                            index: _currentIndex,
-                            children: const <Widget>[
-                              /// Home screen widget.
-                              HomeScreen(),
-
-                              /// Advanced screen widget.
-                              RunStorage(),
-
-                              /// Settings screen widget.
-                              SettingsScreen(),
-                            ],
+                return LoadingOverlay(
+                  child: MaterialApp(
+                    theme: lightTheme,
+                    darkTheme: darkTheme,
+                    themeMode: currentMode,
+                    home: Scaffold(
+                      body: Row(
+                        children: <Widget>[
+                          /// Navigation bar widget.
+                          custom_nav.NavigationBar(
+                            /// Callback function when a tab is selected.
+                            onTabSelected: (index) {
+                              setState(() {
+                                _currentIndex = index;
+                              });
+                            },
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: IndexedStack(
+                              index: _currentIndex,
+                              children: const <Widget>[
+                                /// Home screen widget.
+                                HomeScreen(),
+
+                                /// Advanced screen widget.
+                                RunStorage(),
+
+                                /// Settings screen widget.
+                                SettingsScreen(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
-import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
+import 'package:profit_taker_analyzer/widgets/home_widgets.dart';
+import 'package:profit_taker_analyzer/utils/parser.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
+import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -35,22 +37,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
 
-  Timer? _timer;
+  Timer? _healthCheck;
+  Timer? _dataFetch;
 
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+
+    _healthCheck = Timer.periodic(const Duration(seconds: 5), (timer) async {
       bool isConnected = await checkConnection();
       _connectionStatus.value = isConnected;
+    });
+
+    _dataFetch = Timer.periodic(const Duration(seconds: 10), (timer) async {
+      if (await checkForNewData() == true && mounted) {
+        LoadingOverlay.of(context).show();
+        await loadData().then((_) {
+          setState(() {});
+          LoadingOverlay.of(context).hide();
+        });
+      }
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _healthCheck?.cancel();
+    _dataFetch?.cancel();
     super.dispose();
   }
 

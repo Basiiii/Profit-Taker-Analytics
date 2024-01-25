@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
-/// Players in-game-name.
-String ign = '';
-
 /// Display name.
-///
-/// If there is no ign data, then username will be empty.
-/// If there is ign data, then username will be the ign.
-String username = ign == '' ? '' : ' $ign';
+String username = '';
 
 /// Represents an overview card with a color, an icon, a title and a time.
 ///
