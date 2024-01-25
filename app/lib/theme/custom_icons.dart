@@ -55,4 +55,10 @@ class CustomIcons {
       IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bl =
       IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData book =
+      IconData(0xf02d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData github =
+      IconData(0xf09b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData discord =
+      IconData(0xf392, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

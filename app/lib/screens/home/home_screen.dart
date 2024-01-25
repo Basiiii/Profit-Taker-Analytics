@@ -5,7 +5,6 @@ import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// The HomeScreen widget represents the home screen of the application.
 ///
@@ -58,28 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                  icon: Icon(MyApp.themeNotifier.value ==
-                                          ThemeMode.light
-                                      ? Icons.nightlight
-                                      : Icons.wb_sunny),
-                                  onPressed: () async {
-                                    ThemeMode newMode =
-                                        MyApp.themeNotifier.value ==
-                                                ThemeMode.light
-                                            ? ThemeMode.dark
-                                            : ThemeMode.light;
-
-                                    MyApp.themeNotifier.value = newMode;
-
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    Map<ThemeMode, String> themeModeMap = {
-                                      ThemeMode.light: 'light',
-                                      ThemeMode.dark: 'dark',
-                                    };
-                                    prefs.setString(
-                                        'themeMode', themeModeMap[newMode]!);
-                                  }),
+                                icon: Icon(
+                                    MyApp.themeNotifier.value == ThemeMode.light
+                                        ? Icons.nightlight
+                                        : Icons.wb_sunny),
+                                onPressed: switchTheme,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(right: 15),
                                 child: drawerButton(_scaffoldKey),
