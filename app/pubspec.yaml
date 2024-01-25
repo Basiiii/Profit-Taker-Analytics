@@ -36,6 +36,8 @@ dependencies:
  flutter_settings_ui: ^3.0.0
  # Launch URL's
  url_launcher: ^6.0.10
+ # Establish HTTP connection with parser
+ http: ^1.2.0
 
 dev_dependencies:
  flutter_test:

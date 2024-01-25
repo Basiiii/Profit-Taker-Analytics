@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:http/http.dart' as http;
 
 /// An enumeration that represents the status of a screenshot operation.
 enum ScreenshotStatus {
@@ -171,4 +172,90 @@ Future<void> switchTheme() async {
     ThemeMode.dark: 'dark',
   };
   prefs.setString('themeMode', themeModeMap[newMode]!);
+}
+
+/// Checks the connection to the server by sending a GET request to the '/healthcheck' endpoint.
+///
+/// This function sends an HTTP GET request to the '/healthcheck' endpoint and checks the response.
+/// If the response status code is 200 and the body contains '{"status":"ok"}', the function returns `true`.
+/// Otherwise, it returns `false`. If an exception occurs during the request, the function prints the error message
+/// (if the app is in debug mode) and returns `false`.
+///
+/// Returns a `Future<bool>` that completes with `true` if the connection is okay and `false` otherwise.
+///
+/// Example usage:
+/// ```dart
+/// bool isConnected = await checkConnection();
+/// if (!isConnected) {
+///   print('No connection.');
+/// }
+/// ```
+Future<bool> checkConnection() async {
+  try {
+    if (kDebugMode) {
+      print("Checking connection...");
+    }
+    final response = await http.get(Uri.parse('http://localhost/healthcheck'));
+    if (response.statusCode == 200 &&
+        response.body.contains('{"status":"ok"}')) {
+      return true;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Failed to connect: $e');
+    }
+  }
+  return false;
+}
+
+/// Displays an about dialog with information about the app.
+///
+/// This function shows a dialog with a title of "About", and content describing
+/// the author of the app and instructions for reaching out via Discord. The user
+/// can close the dialog by pressing the "OK" button.
+void showAboutAppDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('About'),
+        content: const Text(
+            'Made with love by Basi.\nIf you found this, send me a DM\nof a mango on discord.'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    },
+  );
+}
+
+/// Displays a connection error dialog when the app fails to connect to the parser.
+///
+/// This function shows a dialog with a title of "Error!" and content advising the user
+/// to restart the program. If the problem persists, they are instructed to contact Basi.
+/// The user can close the dialog by pressing the "OK" button.
+void showParserConnectionErrorDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Error!'),
+        content: const Text(
+            'The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    },
+  );
 }

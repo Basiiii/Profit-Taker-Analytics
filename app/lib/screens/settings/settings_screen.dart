@@ -90,23 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: const Text('About'),
                   leading: const Icon(Icons.info),
                   onPressed: (BuildContext context) {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('About'),
-                            content: const Text(
-                                'Made with love by Basi.\nIf you found this, send me a DM\nof a mango on discord.'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          );
-                        });
+                    showAboutAppDialog(context);
                   },
                 ),
                 SettingsTile(

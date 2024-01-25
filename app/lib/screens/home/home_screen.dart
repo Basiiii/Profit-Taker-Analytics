@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
@@ -31,7 +33,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
+
+  Timer? _timer;
+
   ScreenshotController screenshotController = ScreenshotController();
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      bool isConnected = await checkConnection();
+      _connectionStatus.value = isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   /// Overrides the build method to construct the widget tree.
   ///
@@ -56,6 +77,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              ValueListenableBuilder<bool>(
+                                valueListenable: _connectionStatus,
+                                builder: (context, isConnected, _) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      Icons.warning,
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                                    onPressed: () {
+                                      showParserConnectionErrorDialog(context);
+                                    },
+                                  );
+                                },
+                              ),
                               IconButton(
                                 icon: Icon(
                                     MyApp.themeNotifier.value == ThemeMode.light
