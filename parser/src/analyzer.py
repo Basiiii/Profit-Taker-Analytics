@@ -9,6 +9,7 @@ from typing import Iterator, Callable, Optional, Union
 from flask import Flask, request
 import threading
 import json
+from datetime import datetime
 
 from sty import rs, fg
 
@@ -60,8 +61,8 @@ class RelRun:
                  squad_members: set[str],
                  pt_found: float,
                  phase_durations: dict[int, float],
-                 shield_phases: dict[float, list[tuple[DT, float]]],    # phase -> list((type, abs time))
-                 legs: dict[int, list[float]],                          # phase -> list(abs time)
+                 shield_phases: dict[float, list[tuple[DT, float]]],    # phase -> list(tuple(type, rev time))
+                 legs: dict[int, list[float]],                          # phase -> list(rev time)
                  body_dur: dict[int, float],
                  pylon_dur: dict[int, float]):
         self.run_nr = run_nr
@@ -171,6 +172,48 @@ class RelRun:
 
     def to_json(self):
         fullRunFormat = runFormat.RUNFORMAT
+        fullRunFormat["total_duration"] = self.length
+        fullRunFormat["total_shield"] = self.shield_sum
+        fullRunFormat["total_leg"] = self.leg_sum
+        fullRunFormat["total_body"] = self.body_sum
+        fullRunFormat["total_pylon"] = self.pylon_sum
+
+        fullRunFormat["time_stamp"] = datetime.now().isoformat()
+        fullRunFormat["best_run"] = self.best_run_yet
+
+        fullRunFormat["squad_members"] = self.squad_members
+
+        fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
+        fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
+        fullRunFormat["phase_1"]["total_leg"] = sum(self.legs[1])
+        fullRunFormat["phase_1"]["shield_change_times"] = [i for _,i in self.shield_phases[1]]
+        fullRunFormat["phase_1"]["shield_change_types"] = [i for i,_ in self.shield_phases[1]]
+        fullRunFormat["phase_1"]["leg_break_times"] = self.legs[1]
+        fullRunFormat["phase_1"]["body_kill_time"] = self.body_dur[1]
+        fullRunFormat["phase_1"]["pylon_time"] = self.pylon_dur[1]
+        
+        fullRunFormat["phase_2"]["phase_time"] = self.phase_durations[2]
+        fullRunFormat["phase_2"]["total_leg"] = sum(self.legs[2])
+        fullRunFormat["phase_2"]["leg_break_times"] = self.legs[2]
+        fullRunFormat["phase_2"]["body_kill_time"] = self.body_dur[2]
+
+        fullRunFormat["phase_3"]["phase_time"] = self.phase_durations[3]
+        fullRunFormat["phase_3"]["total_leg"] = sum(self.legs[3])
+        fullRunFormat["phase_3"]["leg_break_times"] = self.legs[3]
+        fullRunFormat["phase_3"]["body_kill_time"] = self.body_dur[3]
+        fullRunFormat["phase_3"]["total_shield"] = sum(i for _, i in self.shield_phases[3])
+        fullRunFormat["phase_3"]["shield_change_times"] = [i for _,i in self.shield_phases[3]]
+        fullRunFormat["phase_3"]["shield_change_types"] = [i for i,_ in self.shield_phases[3]]
+        fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
+
+        fullRunFormat["phase_4"]["phase_time"] = self.phase_durations[4]
+        fullRunFormat["phase_4"]["total_leg"] = sum(self.legs[4])
+        fullRunFormat["phase_4"]["leg_break_times"] = self.legs[4]
+        fullRunFormat["phase_4"]["body_kill_time"] = self.body_dur[4]
+        fullRunFormat["phase_4"]["total_shield"] = sum(i for _, i in self.shield_phases[4])
+        fullRunFormat["phase_4"]["shield_change_times"] = [i for _,i in self.shield_phases[4]]
+        fullRunFormat["phase_4"]["shield_change_types"] = [i for i,_ in self.shield_phases[4]]
+
         print(fullRunFormat)
         
 
