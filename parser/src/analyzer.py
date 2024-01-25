@@ -38,6 +38,8 @@ class PTConstants:
                   4: ''}
     FINAL_PHASE = 4
 
+class runFormat:
+    RUNFORMAT = {}
 
 class MiscConstants:
     NICKNAME = 'Net [Info]: name: '
@@ -168,11 +170,9 @@ class RelRun:
         print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_sum:7.3f}s')
 
     def to_json(self):
-        runFormat = Analyzer.get_run_format()
+        fullRunFormat = runFormat.RUNFORMAT
+        print(fullRunFormat)
         
-        pass
-        
-
 
 class AbsRun:
 
@@ -361,15 +361,11 @@ class Analyzer:
         except Exception as e:
             print(e)
 
-    def get_run_format(self):
-        return self.runFormat
-
     def run(self):
         self.initAPI()
 
-
-        with open("json/run_format.json") as file:
-            self.runFormat = json.load(file)
+        with open("parser\\src\\json\\run_format.json") as file:
+            runFormat.RUNFORMAT = json.load(file)
 
         filename = self.get_file()
         if self.follow_mode:
@@ -426,6 +422,7 @@ class Analyzer:
                 while True:
                     try:
                         run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
+                        run.to_json()
 
                         self.runs.append(run)
                         self.proper_runs.append(run)
@@ -469,6 +466,7 @@ class Analyzer:
             try:
                 run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
                 # TODO convert run to proper format, send to API
+                run.to_json()
                 self.runs.append(run)
                 self.proper_runs.append(run)
                 require_heist_start = True
