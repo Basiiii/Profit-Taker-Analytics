@@ -18,7 +18,6 @@ from src.exceptions.log_end import LogEnd
 from src.exceptions.run_abort import RunAbort
 from src.utils import color, time_str, oxfordcomma
 
-lastRun = {}
 
 class PTConstants:
     SHIELD_SWITCH = 'SwitchShieldVulnerability'
@@ -59,8 +58,8 @@ class RelRun:
                  squad_members: set[str],
                  pt_found: float,
                  phase_durations: dict[int, float],
-                 shield_phases: dict[float, list[tuple[DT, float]]],
-                 legs: dict[int, list[float]],
+                 shield_phases: dict[float, list[tuple[DT, float]]],    # phase -> list((type, abs time))
+                 legs: dict[int, list[float]],                          # phase -> list(abs time)
                  body_dur: dict[int, float],
                  pylon_dur: dict[int, float]):
         self.run_nr = run_nr
@@ -169,7 +168,10 @@ class RelRun:
         print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_sum:7.3f}s')
 
     def to_json(self):
+        runFormat = Analyzer.get_run_format()
+        
         pass
+        
 
 
 class AbsRun:
@@ -320,19 +322,36 @@ class Analyzer:
         self.proper_runs: list[RelRun] = []
 
     def initAPI(self):
+        """Initiate the Flask application responsible for the API.
+        """
         app = Flask(__name__)
         self.lastRun = {}
         
         @app.route("/last_run", methods= ['GET'])
         def last_run():
+            """Return the last run that was logged.
+
+            Returns:
+                dict: The last run that was logged.
+            """
             return self.lastRun
         
         @app.route("/healthcheck", methods= ['GET'])
         def healthcheck():
+            """Return the status of the parser.
+
+            Returns:
+                dict: the status of the parser.
+            """
             return {'status': 'ok'}
         
         @app.route("/post_run", methods = ['POST'])
-        def storeRun():
+        def post_run():
+            """Store the latest completed run
+
+            Returns:
+                response: OK
+            """
             self.lastRun = request.json
 
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
@@ -342,8 +361,15 @@ class Analyzer:
         except Exception as e:
             print(e)
 
+    def get_run_format(self):
+        return self.runFormat
+
     def run(self):
         self.initAPI()
+
+
+        with open("json/run_format.json") as file:
+            self.runFormat = json.load(file)
 
         filename = self.get_file()
         if self.follow_mode:
@@ -400,6 +426,7 @@ class Analyzer:
                 while True:
                     try:
                         run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
+
                         self.runs.append(run)
                         self.proper_runs.append(run)
                         require_heist_start = True
@@ -441,6 +468,7 @@ class Analyzer:
         while True:
             try:
                 run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
+                # TODO convert run to proper format, send to API
                 self.runs.append(run)
                 self.proper_runs.append(run)
                 require_heist_start = True
