@@ -32,6 +32,10 @@ dependencies:
  super_clipboard: ^0.8.4
  # Used to execute the compiled parser
  process_run: ^0.13.0
+ # Settings screen
+ flutter_settings_ui: ^3.0.0
+ # Launch URL's
+ url_launcher: ^6.0.10
 
 dev_dependencies:
  flutter_test:

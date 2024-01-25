@@ -51,13 +51,13 @@ void main() async {
       home: FlutterSplashScreen.fadeIn(
         backgroundColor: const Color(0xFF121212),
         childWidget: SizedBox(
-          height: 200,
-          width: 200,
+          height: 75,
+          width: 75,
           child: Image.asset("assets/AppIcon.png"),
         ),
         onAnimationEnd: () => debugPrint("On Fade In End"),
         nextScreen: const MyApp(),
-        duration: const Duration(milliseconds: 3515),
+        duration: const Duration(milliseconds: 3500),
         onInit: () async {
           // debugPrint("onInit");
           ProcessHolder().parserProcess = startParser();

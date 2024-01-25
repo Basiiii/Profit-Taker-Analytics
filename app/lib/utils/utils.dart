@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:profit_taker_analyzer/main.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_clipboard/super_clipboard.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 /// An enumeration that represents the status of a screenshot operation.
@@ -136,4 +139,36 @@ void showErrorDialog(BuildContext context) {
           ]);
     },
   );
+}
+
+/// Launches a URL.
+///
+/// Parses the provided URL and checks if it can be launched.
+/// If it can be launched, it does so. Otherwise, it throws an error.
+void launchURL(String url) async {
+  final Uri parsedUrl = Uri.parse(url);
+  if (await canLaunchUrl(parsedUrl)) {
+    await launchUrl(parsedUrl);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+/// Switches the current theme.
+///
+/// Checks the current theme mode and switches it to the other mode.
+/// Then, it saves the new theme mode to the shared preferences.
+Future<void> switchTheme() async {
+  ThemeMode newMode = MyApp.themeNotifier.value == ThemeMode.light
+      ? ThemeMode.dark
+      : ThemeMode.light;
+
+  MyApp.themeNotifier.value = newMode;
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  Map<ThemeMode, String> themeModeMap = {
+    ThemeMode.light: 'light',
+    ThemeMode.dark: 'dark',
+  };
+  prefs.setString('themeMode', themeModeMap[newMode]!);
 }
