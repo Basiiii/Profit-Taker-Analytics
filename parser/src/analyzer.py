@@ -10,6 +10,7 @@ from flask import Flask, request
 import threading
 import json
 from datetime import datetime
+import requests
 
 from sty import rs, fg
 
@@ -181,13 +182,14 @@ class RelRun:
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
         fullRunFormat["best_run"] = self.best_run_yet
 
-        fullRunFormat["squad_members"] = self.squad_members
+        fullRunFormat["squad_members"] = list(self.squad_members)
+        fullRunFormat["nickname"] = self.nickname
 
         fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
         fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
         fullRunFormat["phase_1"]["total_leg"] = sum(self.legs[1])
         fullRunFormat["phase_1"]["shield_change_times"] = [i for _,i in self.shield_phases[1]]
-        fullRunFormat["phase_1"]["shield_change_types"] = [i for i,_ in self.shield_phases[1]]
+        fullRunFormat["phase_1"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[1]]
         fullRunFormat["phase_1"]["leg_break_times"] = self.legs[1]
         fullRunFormat["phase_1"]["body_kill_time"] = self.body_dur[1]
         fullRunFormat["phase_1"]["pylon_time"] = self.pylon_dur[1]
@@ -203,7 +205,7 @@ class RelRun:
         fullRunFormat["phase_3"]["body_kill_time"] = self.body_dur[3]
         fullRunFormat["phase_3"]["total_shield"] = sum(i for _, i in self.shield_phases[3])
         fullRunFormat["phase_3"]["shield_change_times"] = [i for _,i in self.shield_phases[3]]
-        fullRunFormat["phase_3"]["shield_change_types"] = [i for i,_ in self.shield_phases[3]]
+        fullRunFormat["phase_3"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[3]]
         fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
 
         fullRunFormat["phase_4"]["phase_time"] = self.phase_durations[4]
@@ -212,9 +214,11 @@ class RelRun:
         fullRunFormat["phase_4"]["body_kill_time"] = self.body_dur[4]
         fullRunFormat["phase_4"]["total_shield"] = sum(i for _, i in self.shield_phases[4])
         fullRunFormat["phase_4"]["shield_change_times"] = [i for _,i in self.shield_phases[4]]
-        fullRunFormat["phase_4"]["shield_change_types"] = [i for i,_ in self.shield_phases[4]]
+        fullRunFormat["phase_4"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[4]]
 
-        print(fullRunFormat)
+        print(fullRunFormat, type(fullRunFormat))
+        fullRunFormat = json.dumps(fullRunFormat)
+        return fullRunFormat
         
 
 class AbsRun:
@@ -465,8 +469,10 @@ class Analyzer:
                 while True:
                     try:
                         run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
-                        run.to_json()
-
+                        formattedRun = run.to_json()
+                        print(type(formattedRun))
+                        header = {'Content-Type':'application/json', 'Accept':'application/json'}
+                        requests.post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
                         self.runs.append(run)
                         self.proper_runs.append(run)
                         require_heist_start = True
@@ -508,8 +514,11 @@ class Analyzer:
         while True:
             try:
                 run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
-                # TODO convert run to proper format, send to API
-                run.to_json()
+                formattedRun = run.to_json()
+                print(type(formattedRun))
+
+                header = {'Content-Type':'application/json', 'Accept':'application/json'}
+                requests.post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
                 self.runs.append(run)
                 self.proper_runs.append(run)
                 require_heist_start = True
