@@ -2,20 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/utils/dialogs.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'package:profit_taker_analyzer/main.dart';
 
-import 'package:profit_taker_analyzer/utils/parser.dart';
+import 'package:profit_taker_analyzer/services/parser.dart';
+
 import 'package:profit_taker_analyzer/utils/utils.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';
 
-import 'package:profit_taker_analyzer/widgets/home_widgets.dart';
+import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
+import 'package:profit_taker_analyzer/screens/home/home_data.dart';
+
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
-
-import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
 /// The HomeScreen widget represents the home screen of the application.
 ///
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _healthCheck = Timer.periodic(const Duration(seconds: 15), (timer) async {
+    _healthCheck = Timer.periodic(const Duration(seconds: 10), (timer) async {
       bool isConnected = await checkConnection();
       _connectionStatus.value = isConnected;
       if (kDebugMode) {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 
 import 'package:profit_taker_analyzer/main.dart';
-import 'package:profit_taker_analyzer/utils/dialogs.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 

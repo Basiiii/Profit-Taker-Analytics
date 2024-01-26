@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 
