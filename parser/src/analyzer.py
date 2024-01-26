@@ -178,6 +178,7 @@ class RelRun:
         fullRunFormat["total_leg"] = self.leg_sum
         fullRunFormat["total_body"] = self.body_sum
         fullRunFormat["total_pylon"] = self.pylon_sum
+        fullRunFormat["flight_duration"] = self.pt_found
 
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
         fullRunFormat["best_run"] = self.best_run_yet
@@ -404,7 +405,7 @@ class Analyzer:
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
         try:
-            threading.Thread(target=lambda: app.run(debug=True, use_reloader=False)).start()
+            threading.Thread(target=lambda: app.run(use_reloader=False, port=5000)).start()
         except Exception as e:
             print(e)
 

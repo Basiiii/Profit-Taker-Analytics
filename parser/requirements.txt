@@ -3,3 +3,6 @@ requests
 colorama
 sty
 aenum
+flask
+json
+threading
