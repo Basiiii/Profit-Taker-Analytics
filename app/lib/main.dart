@@ -19,8 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:profit_taker_analyzer/utils/dialogs.dart';
-import 'package:profit_taker_analyzer/utils/parser.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs.dart';
+import 'package:profit_taker_analyzer/services/parser.dart';
 
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'

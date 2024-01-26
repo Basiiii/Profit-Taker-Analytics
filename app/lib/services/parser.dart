@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:profit_taker_analyzer/utils/utils.dart';
+
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
+
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
 /// Inicialize the time to epoch 0 to ensure all API records will be newer
@@ -69,6 +71,7 @@ Future<bool> checkConnection() async {
     if (kDebugMode) {
       print('Failed to connect: $e');
     }
+    return false;
   }
   return false;
 }
@@ -100,26 +103,33 @@ Future<bool> checkForNewData() async {
     print("Checking for new data...");
   }
   var url = Uri.parse('http://127.0.0.1:5000/last_run');
-  var response = await http.get(url);
+  try {
+    var response = await http.get(url);
 
-  if (response.statusCode == 200) {
-    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
 
-    DateTime currentTimestamp =
-        DateTime.parse(data['time_stamp'].split('.')[0]);
+      DateTime currentTimestamp =
+          DateTime.parse(data['time_stamp'].split('.')[0]);
 
-    if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
-      lastUpdateTimestamp = currentTimestamp;
-      return true; // New data is available
+      if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
+        lastUpdateTimestamp = currentTimestamp;
+        return true; // New data is available
+      }
+    } else {
+      throw Exception('Failed to load data');
     }
-  } else {
-    throw Exception('Failed to load data');
-  }
 
-  if (kDebugMode) {
-    print("There is no new data.");
+    if (kDebugMode) {
+      print("There is no new data.");
+    }
+    return false; // No new data is available
+  } catch (e) {
+    if (kDebugMode) {
+      print("Failed to connect: $e");
+    }
+    return false;
   }
-  return false; // No new data is available
 }
 
 /// Updates the time value of an overview card in the specified [cards] list at the given [index].
