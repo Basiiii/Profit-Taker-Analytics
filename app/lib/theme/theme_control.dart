@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/main.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:profit_taker_analyzer/main.dart';
 
 Map<ThemeMode, String> themeModeMap = {
   ThemeMode.light: 'light',

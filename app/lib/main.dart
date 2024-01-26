@@ -1,21 +1,37 @@
+/// main.dart - Entry point for Profit Taker Analytics.
+///
+/// **Author**: [Basi]
+///
+/// **Date**: January 26, 2024
+///
+/// **Description**:
+/// The Profit Taker Analytics project is designed to enhance the experience for
+/// Profit Taker speedrunners in Warframe by providing an advanced analyzer with
+/// a user-friendly Graphical User Interface (GUI). This project builds upon an
+/// existing simple command line application, transforming it into a sophisticated
+/// tool that bridges the gap between textual data and intuitive visual representation.
+///
+///
 import 'dart:io';
 
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/utils/parser.dart';
-import 'package:profit_taker_analyzer/utils/utils.dart';
-import 'package:profit_taker_analyzer/theme/theme_control.dart';
-import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 
-import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
-    as custom_nav;
+import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/home/home_screen.dart';
-import 'screens/run_storage/runs_screen.dart';
-import 'screens/settings/settings_screen.dart';
+import 'package:profit_taker_analyzer/utils/dialogs.dart';
+import 'package:profit_taker_analyzer/utils/parser.dart';
 
-import 'theme/app_theme.dart';
+import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
+import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
+    as custom_nav;
+
+import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
+import 'package:profit_taker_analyzer/screens/run_storage/runs_screen.dart';
+import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
+
+import 'package:profit_taker_analyzer/theme/theme_control.dart';
+import 'package:profit_taker_analyzer/theme/app_theme.dart';
 
 class ProcessHolder {
   static final ProcessHolder _singleton = ProcessHolder._internal();

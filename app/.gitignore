@@ -1,3 +1,6 @@
+# Ignore generated installers
+installers/*.exe
+
 # Miscellaneous
 *.class
 *.log

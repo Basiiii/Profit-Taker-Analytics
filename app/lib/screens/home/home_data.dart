@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
 /// Display name.

@@ -1,147 +1,9 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:profit_taker_analyzer/main.dart';
-import 'package:screenshot/screenshot.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:super_clipboard/super_clipboard.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:window_manager/window_manager.dart';
 
-/// An enumeration that represents the status of a screenshot operation.
-enum ScreenshotStatus {
-  /// Indicates that the screenshot was successfully captured and copied to the clipboard.
-  success,
-
-  /// Indicates that an unknown error occurred during the screenshot operation.
-  failure,
-
-  /// Indicates that the screenshot capture failed.
-  screenshotFailure,
-
-  /// Indicates that the Clipboard API is not supported on the current platform.
-  unsupportedPlatform,
-
-  /// Indicates that the temporary directory where screenshots should be saved does not exist.
-  directoryDoesNotExist
-}
-
-/// A map that associates each [ScreenshotStatus] with a corresponding message.
-const Map<ScreenshotStatus, String> messages = {
-  ScreenshotStatus.success: 'Image copied to clipboard',
-  ScreenshotStatus.failure: 'An unknown error occurred',
-  ScreenshotStatus.unsupportedPlatform:
-      'Clipboard API is not supported on this platform',
-  ScreenshotStatus.directoryDoesNotExist: 'Temporary directory does not exist',
-  ScreenshotStatus.screenshotFailure: 'Failed to capture screenshot',
-};
-
-/// Captures a screenshot using the provided [ScreenshotController].
-///
-/// This function captures a screenshot using the provided [ScreenshotController], saves it as a `.png`
-/// to the temporary directory of the system and then saves that `.png` to the clipboard.
-///
-/// At the end returns the status of the operation.
-///
-/// Parameters:
-/// * `screenshotController`: The controller for capturing screenshots.
-///
-/// Returns a [Future] that completes with a [ScreenshotStatus] value indicating the outcome of the operation.
-Future<ScreenshotStatus> captureScreenshot(
-    ScreenshotController screenshotController) async {
-  try {
-    Uint8List? image = await screenshotController.capture();
-    if (image == null) {
-      return ScreenshotStatus.screenshotFailure;
-    }
-
-    final directory = await getTemporaryDirectory();
-    if (!(await directory.exists())) {
-      return ScreenshotStatus.directoryDoesNotExist;
-    }
-
-    final path = directory.path;
-    final file = File('$path/screenshot.png');
-    await file.writeAsBytes(image);
-
-    final clipboard = SystemClipboard.instance;
-    if (clipboard == null) {
-      return ScreenshotStatus.unsupportedPlatform;
-    }
-
-    final item = DataWriterItem();
-    item.add(Formats.png(image));
-    await clipboard.write([item]);
-
-    return ScreenshotStatus.success;
-  } catch (_) {
-    return ScreenshotStatus.failure;
-  }
-}
-
-/// Displays an error dialog to the user.
-///
-/// This method creates an AlertDialog with a title indicating that there was an error closing the parser.
-/// The content of the dialog tells the user to try again. The dialog has two action buttons: 'FORCE QUIT' and 'Okay'.
-///
-/// Clicking the 'FORCE QUIT' button closes the dialog and forces the destruction of the window.
-/// Clicking the 'Okay' button simply closes the dialog.
-///
-/// The method uses the `showDialog` function to display the AlertDialog. The `showDialog` function
-/// requires a context and a builder function.
-/// The builder function returns the AlertDialog to be displayed.
-void showErrorDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (_) {
-      return AlertDialog(
-          title: const Text('There was an error closing parser.'),
-          content: const Text('Please try again.'),
-          actions: [
-            TextButton(
-                child: Text('FORCE QUIT',
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error)),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await windowManager.destroy();
-                }),
-            TextButton(
-                child: const Text('Okay'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })
-          ]);
-    },
-  );
-}
-
-/// Displays an about dialog with information about the app.
-///
-/// This function shows a dialog with a title of "About", and content describing
-/// the author of the app and instructions for reaching out via Discord. The user
-/// can close the dialog by pressing the "OK" button.
-void showAboutAppDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('About'),
-        content: const Text(
-            'Made with love by Basi.\nIf you found this, send me a DM\nof a mango on discord.'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
-}
+import 'package:profit_taker_analyzer/main.dart';
 
 /// Switches the current theme.
 ///
@@ -175,28 +37,41 @@ void launchURL(String url) async {
   }
 }
 
-/// Displays a connection error dialog when the app fails to connect to the parser.
+/// Rounds the given [value] to three decimal places.
 ///
-/// This function shows a dialog with a title of "Error!" and content advising the user
-/// to restart the program. If the problem persists, they are instructed to contact Basi.
-/// The user can close the dialog by pressing the "OK" button.
-void showParserConnectionErrorDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Error!'),
-        content: const Text(
-            'The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
+/// This function multiplies the input [value] by 1000, rounds the result to the nearest integer,
+/// and then divides the rounded value by 1000 to obtain the rounded result with three decimal places.
+///
+/// Example:
+/// ```dart
+/// double originalValue = 3.14159265359;
+/// double roundedValue = roundToThreeDecimalPlaces(originalValue);
+/// print(roundedValue); // Output: 3.142
+/// ```
+double roundToThreeDecimalPlaces(double value) {
+  return ((value * 1000).round() / 1000);
+}
+
+/// Retrieves a numeric value from the provided [jsonData] using the specified [key],
+/// rounds it to three decimal places, and returns the rounded value as a formatted string.
+///
+/// This function assumes that the value associated with the given [key] in [jsonData] is numeric.
+/// It casts the value to a double, rounds it to three decimal places using [roundToThreeDecimalPlaces],
+/// and then converts the rounded value to a string using [toStringAsFixed].
+///
+/// Throws an exception if the [key] is not present in [jsonData] or if the value associated with
+/// the [key] cannot be cast to a numeric type.
+///
+/// Example:
+/// ```dart
+/// Map<String, dynamic> jsonData = {'value': 7.123456789};
+/// String roundedValue = getRoundedJsonValueAsString(jsonData, 'value');
+/// print(roundedValue); // Output: '7.123'
+/// ```
+String getRoundedJsonValueAsString(Map<String, dynamic> jsonData, String key) {
+  // Retrieve the value, cast it to a double, and round it
+  double value = roundToThreeDecimalPlaces((jsonData[key] as num).toDouble());
+
+  // Return the rounded value as a string
+  return value.toStringAsFixed(3);
 }
