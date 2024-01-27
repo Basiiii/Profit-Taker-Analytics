@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/constants/constants.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -89,6 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
   /// an AppBar and a Body.
   @override
   Widget build(BuildContext context) {
+    double screenWidth =
+        MediaQuery.of(context).size.width - (totalLeftPaddingHome);
+
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
@@ -177,11 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ...List.generate(
                                           6,
                                           (index) => buildOverviewCard(
-                                              index, context)),
+                                              index, context, screenWidth)),
                                       ...List.generate(
                                           4,
-                                          (index) =>
-                                              buildPhaseCard(index, context)),
+                                          (index) => buildPhaseCard(
+                                              index, context, screenWidth)),
                                     ])),
                           ],
                         )),

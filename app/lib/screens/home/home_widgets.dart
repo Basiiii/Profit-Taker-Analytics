@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:profit_taker_analyzer/constants/constants.dart';
+
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 
@@ -50,28 +52,36 @@ Widget buildRow(BuildContext context, String label, String time) {
 
 /// Builds an overview card widget with the specified parameters.
 ///
-/// This function creates an overview card widget with a given index and context.
+/// This function creates an overview card widget with a given index, context,
+/// and screen width.
 /// The card has a width of 200 and height of 135, with a decoration that includes
 /// a color scheme and a border radius. The card contains a column of widgets,
 /// including a container with an icon, a title, and rich text displaying time.
 ///
 /// ```dart
-/// buildOverviewCard(index, context);
+/// buildOverviewCard(index, context, screenWidth);
 /// ```
 ///
-/// The above code will produce an overview card widget with a given index and context.
-/// The card will contain a column of widgets, including a container with an icon, a title,
-/// and rich text displaying time.
+/// The above code will produce an overview card widget with a given index, context,
+/// and screen width. The card will contain a column of widgets, including a container
+/// with an icon, a title, and rich text displaying time.
 ///
 /// Parameters:
 /// * [index]: The index of the overview card.
 /// * [context]: The build context.
+/// * [screenWidth]: The width of the screen to calculate the responsive card width.
 ///
 /// Returns:
 /// An [OverviewCard] widget with the specified parameters.
-Widget buildOverviewCard(int index, BuildContext context) {
+Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
+  // Extra 8 pixels for padding
+  // NOTE: I'm not sure why this needs padding and the other doesn't...
+  double responsiveCardWidth = screenWidth / 6 - 8;
+
   return Container(
-    width: 200,
+    width: screenWidth < minimumResponsiveWidth
+        ? overviewCardWidth
+        : responsiveCardWidth,
     height: 135,
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surface,
@@ -140,29 +150,34 @@ Widget buildOverviewCard(int index, BuildContext context) {
 
 /// Builds a phase card widget with the specified parameters.
 ///
-/// This function creates a phase card widget with a given index and context.
+/// This function creates a phase card widget with a given index, context,
+/// and screen width.
 /// The card has a width of 625 and height of 160, with a decoration that includes
 /// a color scheme and a border radius. The card contains a column of widgets,
 /// including a row with a title and time, and rows of labels with corresponding times.
 /// Depending on the index, different labels are shown.
 ///
-/// ```
-/// buildPhaseCard(index, context);
+/// ```dart
+/// buildPhaseCard(index, context, screenWidth);
 /// ```
 ///
-/// The above code will produce a phase card widget with a given index and context.
-/// The card will contain a column of widgets, including a row with a title and time,
-/// and rows of labels with corresponding times. Depending on the index, different
-/// labels are shown.
+/// The above code will produce a phase card widget with a given index, context,
+/// and screen width. The card will contain a column of widgets, including a row
+/// with a title and time, and rows of labels with corresponding times. Depending
+/// on the index, different labels are shown.
 ///
 /// Parameters:
 /// * [index]: The index of the phase card.
 /// * [context]: The build context.
+/// * [screenWidth]: The width of the screen to calculate the responsive card width.
 ///
 /// Returns:
 /// A [PhaseCard] widget with the specified parameters.
-Widget buildPhaseCard(int index, BuildContext context) {
+Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
+  double responsiveCardWidth = screenWidth / 2;
+
   const List<String> labels = ['Shields', 'Legs', 'Body', 'Pylons'];
+
   List<Widget> rows;
 
   List<String> overviewList = phaseCards[index].overviewList;
@@ -190,7 +205,9 @@ Widget buildPhaseCard(int index, BuildContext context) {
   }
 
   return Container(
-    width: 625,
+    width: screenWidth < minimumResponsiveWidth
+        ? phaseCardWidth
+        : responsiveCardWidth,
     height: 160,
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surface,
