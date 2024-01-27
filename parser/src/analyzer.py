@@ -398,17 +398,6 @@ class Analyzer:
                 dict: the status of the parser.
             """
             return {'status': 'ok'}
-        
-        @app.route("/post_run", methods = ['POST'])
-        def post_run():
-            """Store the latest completed run
-
-            Returns:
-                response: OK
-            """
-            self.lastRun = request.json
-
-            return dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
         try:
             Thread(target=lambda: serve(app, host="127.0.0.1", port=5000)).start()
@@ -481,10 +470,7 @@ class Analyzer:
                     try:
                         run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
                         formattedRun = run.to_json()
-                        
-                        header = {'Content-Type':'application/json', 'Accept':'application/json'}
-                        post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
-
+                        self.lastRun = formattedRun
                         self.runs.append(run)
                         self.proper_runs.append(run)
                         require_heist_start = True
@@ -537,10 +523,7 @@ class Analyzer:
 
                 formattedRun = run.to_json()
                 print(type(formattedRun))
-
-                header = {'Content-Type':'application/json', 'Accept':'application/json'}
-                post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
-
+                self.lastRun = formattedRun
                 run.pretty_print()
                 self.print_summary()
             except RunAbort as abort:
