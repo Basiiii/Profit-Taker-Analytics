@@ -7,10 +7,10 @@ from time import sleep
 from typing import Iterator, Callable, Optional, Union
 
 from flask import Flask, request
-import threading
-import json
+from threading import Thread
+from json import dumps, load
 from datetime import datetime
-import requests
+from requests import post
 
 from sty import rs, fg
 
@@ -218,7 +218,7 @@ class RelRun:
         fullRunFormat["phase_4"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[4]]
 
         print(fullRunFormat, type(fullRunFormat))
-        fullRunFormat = json.dumps(fullRunFormat)
+        fullRunFormat = dumps(fullRunFormat)
         return fullRunFormat
         
 
@@ -402,18 +402,22 @@ class Analyzer:
             """
             self.lastRun = request.json
 
-            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+            return dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
         try:
-            threading.Thread(target=lambda: app.run(use_reloader=False, port=5000)).start()
+            Thread(target=lambda: app.run(use_reloader=False, port=5000)).start()
         except Exception as e:
             print(e)
 
     def run(self):
         self.initAPI()
 
-        with open("parser\\src\\json\\run_format.json") as file:
-            runFormat.RUNFORMAT = json.load(file)
+        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        
+        json_path = os.path.join(root_dir, "src", "json", "run_format.json")
+
+        with open(json_path) as file:
+            runFormat.RUNFORMAT = load(file)
 
         filename = self.get_file()
         if self.follow_mode:
@@ -471,9 +475,10 @@ class Analyzer:
                     try:
                         run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
                         formattedRun = run.to_json()
-                        print(type(formattedRun))
+                        
                         header = {'Content-Type':'application/json', 'Accept':'application/json'}
-                        requests.post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
+                        post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
+
                         self.runs.append(run)
                         self.proper_runs.append(run)
                         require_heist_start = True
@@ -515,11 +520,7 @@ class Analyzer:
         while True:
             try:
                 run = self.read_run(it, len(self.runs) + 1, require_heist_start).to_rel()
-                formattedRun = run.to_json()
-                print(type(formattedRun))
-
-                header = {'Content-Type':'application/json', 'Accept':'application/json'}
-                requests.post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
+                
                 self.runs.append(run)
                 self.proper_runs.append(run)
                 require_heist_start = True
@@ -527,6 +528,13 @@ class Analyzer:
                 if run.length < best_time:
                     best_time = run.length
                     run.best_run_yet = True
+
+                formattedRun = run.to_json()
+                print(type(formattedRun))
+
+                header = {'Content-Type':'application/json', 'Accept':'application/json'}
+                post("http://127.0.0.1:5000/post_run", data = formattedRun, headers=header)
+
                 run.pretty_print()
                 self.print_summary()
             except RunAbort as abort:
