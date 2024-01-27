@@ -11,6 +11,7 @@ from threading import Thread
 from json import dumps, load
 from datetime import datetime
 from requests import post
+from waitress import serve
 
 from sty import rs, fg
 
@@ -172,6 +173,11 @@ class RelRun:
         print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_sum:7.3f}s')
 
     def to_json(self):
+        """Convert a RelRun object into a json object suitable for display on the GUI.
+
+        Returns:
+            json: Full run object.
+        """
         fullRunFormat = runFormat.RUNFORMAT
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
@@ -405,7 +411,7 @@ class Analyzer:
             return dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
         try:
-            Thread(target=lambda: app.run(use_reloader=False, port=5000)).start()
+            Thread(target=lambda: serve(app, host="127.0.0.1", port=5000)).start()
         except Exception as e:
             print(e)
 
