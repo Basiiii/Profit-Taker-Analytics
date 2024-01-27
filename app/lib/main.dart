@@ -1,6 +1,6 @@
 /// main.dart - Entry point for Profit Taker Analytics.
 ///
-/// **Author**: [Basi]
+/// **Author**: [Basi] - Enrique Rodrigues
 ///
 /// **Date**: January 26, 2024
 ///
@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:window_manager/window_manager.dart';
+
+import 'package:profit_taker_analyzer/constants/constants.dart';
 
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/services/parser.dart';
@@ -52,8 +54,8 @@ void main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(1500, 750),
-    minimumSize: Size(870, 600),
+    size: Size(startingWidth, startingHeight),
+    minimumSize: Size(minimumWidth, minimumHeight),
     center: true,
   );
 
