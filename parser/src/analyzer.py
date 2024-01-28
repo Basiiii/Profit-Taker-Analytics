@@ -6,11 +6,10 @@ from statistics import median
 from time import sleep
 from typing import Iterator, Callable, Optional, Union
 
-from flask import Flask, request
+from flask import Flask
 from threading import Thread
 from json import dumps, load
 from datetime import datetime
-from requests import post
 from waitress import serve
 
 from sty import rs, fg
