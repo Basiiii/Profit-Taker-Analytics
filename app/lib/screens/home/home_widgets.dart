@@ -229,7 +229,8 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  phaseCards[index].title,
+                  FlutterI18n.translate(
+                      context, "phase_cards.${phaseCards[index].title}"),
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,

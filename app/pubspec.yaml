@@ -54,6 +54,8 @@ flutter:
  assets:
     - assets/
     - assets/i18n/en.json
+    - assets/i18n/pt.json
+    - assets/i18n/zh.json
  fonts:
     - family: Poppins
       fonts:

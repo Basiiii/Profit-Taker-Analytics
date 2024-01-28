@@ -45,42 +45,36 @@ void showErrorDialog(BuildContext context) {
 /// This function shows a dialog with a title of "Error!" and content advising the user
 /// to restart the program. If the problem persists, they are instructed to contact Basi.
 /// The user can close the dialog by pressing the "OK" button.
-void showParserConnectionErrorDialog(BuildContext context) {
+void showParserConnectionErrorDialog(
+    BuildContext context, String errorText, String errorTitle) {
   showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          FlutterI18n.translate(context, "errors.error"),
-        ),
-        content: Text(
-          FlutterI18n.translate(context, "errors.parser_connection_error"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(errorText),
+            content: Text(errorTitle),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ]);
+      });
 }
 
 /// Displays an about dialog with information about the app.
 ///
 /// This function shows a dialog with a title of "About", and a small easter egg.
 /// The user can close the dialog by pressing the "OK" button.
-void showAboutAppDialog(BuildContext context) {
+void showAboutAppDialog(
+    BuildContext context, String aboutTitle, String aboutDescription) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(FlutterI18n.translate(context, "settings.about_app")),
-        content: Text(
-            FlutterI18n.translate(context, "settings.about_app_description")),
+        title: Text(aboutTitle),
+        content: Text(aboutDescription),
         actions: <Widget>[
           TextButton(
             child: Text(FlutterI18n.translate(context, "buttons.ok")),
@@ -99,12 +93,12 @@ void showAboutAppDialog(BuildContext context) {
 /// This function shows a dialog with a title of "Contact Basi", and content describing
 /// the author of the app and instructions for contacting. The user can close the
 /// dialog by pressing the "OK" button.
-void showContactsAppDialog(BuildContext context) {
+void showContactsAppDialog(BuildContext context, String contactText) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Contact Basi'),
+        title: Text(contactText),
         content: Text(FlutterI18n.translate(
             context, "settings.basi_contacts_description")),
         actions: <Widget>[

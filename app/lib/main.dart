@@ -21,6 +21,9 @@ import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:profit_taker_analyzer/utils/language.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:profit_taker_analyzer/constants/constants.dart';
@@ -63,6 +66,9 @@ final FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final prefs = await SharedPreferences.getInstance();
+  String language = prefs.getString('language') ?? "en";
+
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
@@ -86,41 +92,47 @@ void main() async {
     ),
   );
 
-  runApp(
-    MaterialApp(
-      localizationsDelegates: [
-        flutterI18nDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      home: FlutterSplashScreen.fadeIn(
-        backgroundColor: const Color(0xFF121212),
-        childWidget: SizedBox(
-          height: 75,
-          width: 75,
-          child: Image.asset("assets/AppIcon.png"),
-        ),
-        onAnimationEnd: () => debugPrint("On Fade In End"),
-        nextScreen: const MyApp(),
-        duration: const Duration(milliseconds: 3500),
-        onInit: () async {
-          // debugPrint("onInit");
-          ProcessHolder().parserProcess = startParser();
-        },
-        onEnd: () async {
-          // debugPrint("onEnd 1");
-        },
-      ),
-    ),
-  );
+  runApp(ChangeNotifierProvider(
+      create: (context) => LocaleModel(prefs),
+      child: MaterialApp(
+          localizationsDelegates: [
+            flutterI18nDelegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'), // English
+            Locale('pt', 'PT'), // Portuguese
+            Locale('zh', 'CN'), // Chinese
+          ],
+          home: FlutterSplashScreen.fadeIn(
+              backgroundColor: const Color(0xFF121212),
+              childWidget: SizedBox(
+                height: 75,
+                width: 75,
+                child: Image.asset("assets/AppIcon.png"),
+              ),
+              onAnimationEnd: () => debugPrint("On Fade In End"),
+              nextScreen: MyApp(
+                language: language,
+              ),
+              duration: const Duration(milliseconds: 3500),
+              onInit: () async {
+                // debugPrint("onInit");
+                ProcessHolder().parserProcess = startParser();
+              },
+              onEnd: () async {
+                // debugPrint("onEnd 1");
+              }))));
 }
 
 /// Main widget of the application.
 class MyApp extends StatefulWidget {
-  /// Constructor for MyApp.
-  const MyApp({super.key});
+  final String language;
 
-  /// Creates the mutable state for this widget at a given location in the tree.
+  const MyApp({super.key, required this.language});
+
   @override
   State<MyApp> createState() => _MyAppState();
 
@@ -148,6 +160,17 @@ class _MyAppState extends State<MyApp> with WindowListener {
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
     _init();
+    _loadLanguage();
+  }
+
+  void _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    var language = prefs.getString('language');
+    if (language != null) {
+      if (mounted) {
+        Provider.of<LocaleModel>(context, listen: false).set(Locale(language));
+      }
+    }
   }
 
   /// Cleans up the resources used by this widget.
@@ -189,58 +212,62 @@ class _MyAppState extends State<MyApp> with WindowListener {
           return ValueListenableBuilder<ThemeMode>(
               valueListenable: MyApp.themeNotifier,
               builder: (_, ThemeMode currentMode, __) {
-                return LoadingOverlay(
-                  child: MaterialApp(
-                    theme: lightTheme,
-                    darkTheme: darkTheme,
-                    themeMode: currentMode,
-                    localizationsDelegates: [
-                      FlutterI18nDelegate(
-                        translationLoader: FileTranslationLoader(
-                          useCountryCode: false,
-                          fallbackFile: 'en',
-                          basePath: 'assets/i18n',
-                        ),
-                      ),
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                    ],
-                    supportedLocales: const [
-                      Locale('en', 'US'), // English
-                      // Add other locales here
-                    ],
-                    home: Scaffold(
-                      body: Row(
-                        children: <Widget>[
-                          /// Navigation bar widget.
-                          custom_nav.NavigationBar(
-                            /// Callback function when a tab is selected.
-                            onTabSelected: (index) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            },
-                          ),
-                          Expanded(
-                            child: IndexedStack(
-                              index: _currentIndex,
-                              children: const <Widget>[
-                                /// Home screen widget.
-                                HomeScreen(),
+                return Consumer<LocaleModel>(
+                    builder: (context, localeModel, child) => LoadingOverlay(
+                          child: MaterialApp(
+                            locale: localeModel.locale,
+                            theme: lightTheme,
+                            darkTheme: darkTheme,
+                            themeMode: currentMode,
+                            localizationsDelegates: [
+                              FlutterI18nDelegate(
+                                translationLoader: FileTranslationLoader(
+                                  useCountryCode: false,
+                                  fallbackFile: 'en',
+                                  basePath: 'assets/i18n',
+                                ),
+                              ),
+                              GlobalMaterialLocalizations.delegate,
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                            ],
+                            supportedLocales: const [
+                              Locale('en', 'US'), // English
+                              Locale('pt', 'PT'), // Portuguese
+                              Locale('zh', 'CN'), // Chinese
+                            ],
+                            home: Scaffold(
+                              body: Row(
+                                children: <Widget>[
+                                  /// Navigation bar widget.
+                                  custom_nav.NavigationBar(
+                                    /// Callback function when a tab is selected.
+                                    onTabSelected: (index) {
+                                      setState(() {
+                                        _currentIndex = index;
+                                      });
+                                    },
+                                  ),
+                                  Expanded(
+                                    child: IndexedStack(
+                                      index: _currentIndex,
+                                      children: const <Widget>[
+                                        /// Home screen widget.
+                                        HomeScreen(),
 
-                                /// Advanced screen widget.
-                                RunStorage(),
+                                        /// Advanced screen widget.
+                                        RunStorage(),
 
-                                /// Settings screen widget.
-                                SettingsScreen(),
-                              ],
+                                        /// Settings screen widget.
+                                        SettingsScreen(),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        ));
               });
         } else {
           return const CircularProgressIndicator();

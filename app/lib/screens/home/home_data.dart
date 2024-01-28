@@ -176,25 +176,25 @@ List<Map<String, dynamic>> legsPhase4 = [
 /// time, overview list, shields list, and legs list.
 List<PhaseCards> phaseCards = [
   PhaseCards(
-      title: "First Phase",
+      title: "phase_1",
       time: "0.000",
       overviewList: overviewPhase1,
       shieldsList: shieldsPhase1,
       legsList: legsPhase1),
   PhaseCards(
-      title: "Second Phase",
+      title: "phase_2",
       time: "0.000",
       overviewList: overviewPhase2,
       shieldsList: [],
       legsList: legsPhase2),
   PhaseCards(
-      title: "Third Phase",
+      title: "phase_3",
       time: "0.000",
       overviewList: overviewPhase3,
       shieldsList: shieldsPhase3,
       legsList: legsPhase3),
   PhaseCards(
-      title: "Fourth Phase",
+      title: "phase_4",
       time: "0.000",
       overviewList: overviewPhase4,
       shieldsList: shieldsPhase4,

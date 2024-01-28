@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ScreenshotController screenshotController = ScreenshotController();
 
+  Future<void> setLanguageBasedOnUserPreference() async {
+    // Get the user's preferred language from the system settings
+    String languageCode = Platform.localeName.split("_")[0];
+    String countryCode = Platform.localeName.split("_")[1];
+
+    if (kDebugMode) {
+      print("Device language code: $languageCode");
+      print("Device country code: $countryCode");
+    }
+
+    // Create a Locale object from the language and country codes
+    Locale locale = Locale(languageCode, countryCode);
+
+    // Refresh the localization with the user's preferred language
+    await FlutterI18n.refresh(context, locale);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setLanguageBasedOnUserPreference();
+  }
+
+  @override
   void dispose() {
     _healthCheck?.cancel();
     _dataFetch?.cancel();
@@ -92,6 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
   /// an AppBar and a Body.
   @override
   Widget build(BuildContext context) {
+    String errorTitle = FlutterI18n.translate(context, "errors.error");
+    String parserErrorMessage =
+        FlutterI18n.translate(context, "errors.parser_connection_error");
+
     double screenWidth =
         MediaQuery.of(context).size.width - (totalLeftPaddingHome);
 
@@ -122,12 +150,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Theme.of(context).colorScheme.error,
                                       ),
                                       onPressed: () {
-                                        showParserConnectionErrorDialog(
-                                            context);
+                                        showParserConnectionErrorDialog(context,
+                                            errorTitle, parserErrorMessage);
                                       },
                                     );
                                   } else {
-                                    return Container(); // Returns an empty container when connected
+                                    return Container();
                                   }
                                 },
                               ),
@@ -136,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MyApp.themeNotifier.value == ThemeMode.light
                                         ? Icons.nightlight
                                         : Icons.wb_sunny),
-                                onPressed: switchTheme,
+                                onPressed: () => switchTheme(),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(right: 15),

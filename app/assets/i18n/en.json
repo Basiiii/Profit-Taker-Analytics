@@ -13,6 +13,10 @@
         "pylon_destruction": "Pylon\nDestruction"
     },
     "phase_cards": {
+        "phase_1": "First Phase",
+        "phase_2": "Second Phase",
+        "phase_3": "Third Phase",
+        "phase_4": "Fourth Phase",
         "shields": "Shields",
         "legs": "Legs",
         "body": "Body",
@@ -28,6 +32,8 @@
         "report_bugs": "Report Bugs",
         "about": "About",
         "theme": "Theme",
+        "language": "Language",
+        "change_language": "Change language",
         "pt_discord": "Profit Taker Discord",
         "github_repo": "Github Repository",
         "pt_guide": "Profit Taker Guide",
@@ -37,6 +43,11 @@
         "version": "Version",
         "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文"
     },
     "buttons": {
         "ok": "Okay"
