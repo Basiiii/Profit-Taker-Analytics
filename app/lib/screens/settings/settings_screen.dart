@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 
+import 'package:profit_taker_analyzer/constants/constants.dart';
+
 import 'package:profit_taker_analyzer/main.dart';
+
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
+
 import 'package:profit_taker_analyzer/utils/utils.dart';
+
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
 /// The main settings screen of the application.
@@ -28,10 +33,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               settingsListBackground: Theme.of(context).colorScheme.background),
           sections: [
             SettingsSection(
-              title: const Text('General'),
+              title: Text(FlutterI18n.translate(context, "settings.general")),
               tiles: [
                 SettingsTile(
-                    title: const Text('Theme'),
+                    title:
+                        Text(FlutterI18n.translate(context, "settings.theme")),
                     leading: const Icon(Icons.contrast),
                     trailing: ValueListenableBuilder(
                         valueListenable: MyApp.themeNotifier,
@@ -46,17 +52,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             SettingsSection(
-              title: const Text('Links'),
+              title: Text(FlutterI18n.translate(context, "settings.links")),
               tiles: [
                 SettingsTile(
-                  title: const Text('Official PT Discord'),
+                  title: Text(
+                      FlutterI18n.translate(context, "settings.pt_discord")),
                   leading: const Icon(CustomIcons.discord),
                   onPressed: (BuildContext context) {
                     launchURL('https://discord.gg/WVpfZFMeUs');
                   },
                 ),
                 SettingsTile(
-                  title: const Text('Github Repository'),
+                  title: Text(
+                      FlutterI18n.translate(context, "settings.github_repo")),
                   leading: const Icon(CustomIcons.github),
                   onPressed: (BuildContext context) {
                     launchURL(
@@ -64,7 +72,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 SettingsTile(
-                  title: const Text('Profit Taker Guide'),
+                  title:
+                      Text(FlutterI18n.translate(context, "settings.pt_guide")),
                   leading: const Icon(CustomIcons.book),
                   onPressed: (BuildContext context) {
                     launchURL(
@@ -74,10 +83,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             SettingsSection(
-              title: const Text('Report Bugs'),
+              title:
+                  Text(FlutterI18n.translate(context, "settings.report_bugs")),
               tiles: [
                 SettingsTile(
-                  title: const Text('Report a Bug'),
+                  title: Text(
+                      FlutterI18n.translate(context, "settings.report_bug")),
                   leading: const Icon(Icons.bug_report),
                   onPressed: (BuildContext context) {
                     launchURL(
@@ -87,18 +98,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             SettingsSection(
-              title: const Text('About'),
+              title: Text(FlutterI18n.translate(context, "settings.about")),
               tiles: [
                 SettingsTile(
-                  title: const Text('About'),
+                  title: Text(
+                      FlutterI18n.translate(context, "settings.contact_basi")),
+                  leading: const Icon(Icons.contact_page),
+                  onPressed: (BuildContext context) {
+                    showContactsAppDialog(context);
+                  },
+                ),
+                SettingsTile(
+                  title: Text(
+                      FlutterI18n.translate(context, "settings.about_app")),
                   leading: const Icon(Icons.info),
                   onPressed: (BuildContext context) {
                     showAboutAppDialog(context);
                   },
                 ),
                 SettingsTile(
-                  title: const Text('Version'),
-                  trailing: const Text('ALPHA 0.1.0'),
+                  title:
+                      Text(FlutterI18n.translate(context, "settings.version")),
+                  trailing: const Text(version),
                 ),
               ],
             ),

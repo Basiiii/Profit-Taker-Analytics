@@ -12,11 +12,15 @@
 /// tool that bridges the gap between textual data and intuitive visual representation.
 ///
 ///
+library;
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:profit_taker_analyzer/constants/constants.dart';
@@ -47,10 +51,18 @@ class ProcessHolder {
   ProcessHolder._internal();
 }
 
+final FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
+  translationLoader: FileTranslationLoader(
+    useCountryCode: false,
+    fallbackFile: 'en',
+    basePath: 'assets/i18n',
+  ),
+);
+
 /// Main function to run the application.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
+
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
@@ -66,8 +78,21 @@ void main() async {
 
   windowManager.show();
 
+  final FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
+    translationLoader: FileTranslationLoader(
+      useCountryCode: false,
+      fallbackFile: 'en',
+      basePath: 'assets/i18n',
+    ),
+  );
+
   runApp(
     MaterialApp(
+      localizationsDelegates: [
+        flutterI18nDelegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       home: FlutterSplashScreen.fadeIn(
         backgroundColor: const Color(0xFF121212),
         childWidget: SizedBox(
@@ -169,6 +194,21 @@ class _MyAppState extends State<MyApp> with WindowListener {
                     theme: lightTheme,
                     darkTheme: darkTheme,
                     themeMode: currentMode,
+                    localizationsDelegates: [
+                      FlutterI18nDelegate(
+                        translationLoader: FileTranslationLoader(
+                          useCountryCode: false,
+                          fallbackFile: 'en',
+                          basePath: 'assets/i18n',
+                        ),
+                      ),
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                    ],
+                    supportedLocales: const [
+                      Locale('en', 'US'), // English
+                      // Add other locales here
+                    ],
                     home: Scaffold(
                       body: Row(
                         children: <Widget>[

@@ -76,7 +76,7 @@ class PhaseCards {
 /// - Index 3: Pylons
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase1 = ['N/A', 'N/A', 'N/A', 'N/A'];
+List<String> overviewPhase1 = ['0.000', '0.000', '0.000', '0.000'];
 
 /// List of strings representing the overview for the second phase.
 ///
@@ -85,7 +85,7 @@ List<String> overviewPhase1 = ['N/A', 'N/A', 'N/A', 'N/A'];
 /// - Index 1: Body
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase2 = ['N/A', 'N/A'];
+List<String> overviewPhase2 = ['0.000', '0.000'];
 
 /// List of strings representing the overview for the third phase.
 ///
@@ -96,7 +96,7 @@ List<String> overviewPhase2 = ['N/A', 'N/A'];
 /// - Index 3: Pylons
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase3 = ['N/A', 'N/A', 'N/A', 'N/A'];
+List<String> overviewPhase3 = ['0.000', '0.000', '0.000', '0.000'];
 
 /// List of strings representing the overview for the fourth phase.
 ///
@@ -106,7 +106,7 @@ List<String> overviewPhase3 = ['N/A', 'N/A', 'N/A', 'N/A'];
 /// - Index 2: Body
 ///
 /// The strings represent time durations for each aspect.
-List<String> overviewPhase4 = ['N/A', 'N/A', 'N/A'];
+List<String> overviewPhase4 = ['0.000', '0.000', '0.000'];
 
 /// List of maps representing the shields for the first phase.
 ///
@@ -131,10 +131,10 @@ List<Map<String, dynamic>> shieldsPhase4 = [];
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase1 = [
-  {'icon': CustomIcons.fl, 'text': 'N/A'},
-  {'icon': CustomIcons.fr, 'text': 'N/A'},
-  {'icon': CustomIcons.bl, 'text': 'N/A'},
-  {'icon': CustomIcons.br, 'text': 'N/A'},
+  {'icon': CustomIcons.fl, 'text': '0.000'},
+  {'icon': CustomIcons.fr, 'text': '0.000'},
+  {'icon': CustomIcons.bl, 'text': '0.000'},
+  {'icon': CustomIcons.br, 'text': '0.000'},
 ];
 
 /// List of maps representing the legs for the second phase.
@@ -142,10 +142,10 @@ List<Map<String, dynamic>> legsPhase1 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase2 = [
-  {'icon': CustomIcons.fl, 'text': 'N/A'},
-  {'icon': CustomIcons.fr, 'text': 'N/A'},
-  {'icon': CustomIcons.bl, 'text': 'N/A'},
-  {'icon': CustomIcons.br, 'text': 'N/A'},
+  {'icon': CustomIcons.fl, 'text': '0.000'},
+  {'icon': CustomIcons.fr, 'text': '0.000'},
+  {'icon': CustomIcons.bl, 'text': '0.000'},
+  {'icon': CustomIcons.br, 'text': '0.000'},
 ];
 
 /// List of maps representing the legs for the third phase.
@@ -153,10 +153,10 @@ List<Map<String, dynamic>> legsPhase2 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase3 = [
-  {'icon': CustomIcons.fl, 'text': 'N/A'},
-  {'icon': CustomIcons.fr, 'text': 'N/A'},
-  {'icon': CustomIcons.bl, 'text': 'N/A'},
-  {'icon': CustomIcons.br, 'text': 'N/A'},
+  {'icon': CustomIcons.fl, 'text': '0.000'},
+  {'icon': CustomIcons.fr, 'text': '0.000'},
+  {'icon': CustomIcons.bl, 'text': '0.000'},
+  {'icon': CustomIcons.br, 'text': '0.000'},
 ];
 
 /// List of maps representing the legs for the fourth phase.
@@ -164,10 +164,10 @@ List<Map<String, dynamic>> legsPhase3 = [
 /// Each map in the list corresponds to a leg, with the key being the icon and the value being the text.
 /// The order of the legs is: Front Left, Front Right, Back Left, Back Right.
 List<Map<String, dynamic>> legsPhase4 = [
-  {'icon': CustomIcons.fl, 'text': 'N/A'},
-  {'icon': CustomIcons.fr, 'text': 'N/A'},
-  {'icon': CustomIcons.bl, 'text': 'N/A'},
-  {'icon': CustomIcons.br, 'text': 'N/A'},
+  {'icon': CustomIcons.fl, 'text': '0.000'},
+  {'icon': CustomIcons.fr, 'text': '0.000'},
+  {'icon': CustomIcons.bl, 'text': '0.000'},
+  {'icon': CustomIcons.br, 'text': '0.000'},
 ];
 
 /// List of PhaseCards objects representing the phases of the game.
@@ -177,25 +177,25 @@ List<Map<String, dynamic>> legsPhase4 = [
 List<PhaseCards> phaseCards = [
   PhaseCards(
       title: "First Phase",
-      time: "N/A",
+      time: "0.000",
       overviewList: overviewPhase1,
       shieldsList: shieldsPhase1,
       legsList: legsPhase1),
   PhaseCards(
       title: "Second Phase",
-      time: "N/A",
+      time: "0.000",
       overviewList: overviewPhase2,
       shieldsList: [],
       legsList: legsPhase2),
   PhaseCards(
       title: "Third Phase",
-      time: "N/A",
+      time: "0.000",
       overviewList: overviewPhase3,
       shieldsList: shieldsPhase3,
       legsList: legsPhase3),
   PhaseCards(
       title: "Fourth Phase",
-      time: "N/A",
+      time: "0.000",
       overviewList: overviewPhase4,
       shieldsList: shieldsPhase4,
       legsList: legsPhase4),
@@ -209,37 +209,37 @@ List<OverviewCards> overviewCards = [
   OverviewCards(
     color: const Color(0xFF68ADFF),
     icon: Icons.access_time,
-    title: "Total\nDuration",
-    time: "N/A",
+    title: "total_duration",
+    time: "0.000",
   ),
   OverviewCards(
     color: const Color(0xFFFFB054),
     icon: Icons.flight,
-    title: "Flight\nTime",
-    time: "N/A",
+    title: "flight_time",
+    time: "0.000",
   ),
   OverviewCards(
     color: const Color(0xFF7C8AE7),
     icon: Icons.shield,
-    title: "Shield\nBreak",
-    time: "N/A",
+    title: "shield_break",
+    time: "0.000",
   ),
   OverviewCards(
     color: const Color(0xFF59D5D9),
     icon: Icons.airline_seat_legroom_extra,
-    title: "Leg\nBreak",
-    time: "N/A",
+    title: "leg_break",
+    time: "0.000",
   ),
   OverviewCards(
     color: const Color(0xFFDB5858),
     icon: Icons.my_location,
-    title: "Body\nKill",
-    time: "N/A",
+    title: "body_kill",
+    time: "0.000",
   ),
   OverviewCards(
     color: const Color(0xFFE888DE),
     icon: Icons.workspaces_outline,
-    title: "Pylon\nDestruction",
-    time: "N/A",
+    title: "pylon_destruction",
+    time: "0.000",
   ),
 ];

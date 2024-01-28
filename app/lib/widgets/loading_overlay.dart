@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatefulWidget {
-  const LoadingOverlay({Key? key, required this.child}) : super(key: key);
+  const LoadingOverlay({super.key, required this.child});
 
   final Widget child;
 

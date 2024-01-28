@@ -59,9 +59,12 @@ class _NavigationBarState extends State<NavigationBar> {
           child: IconButton(
             icon: SvgPicture.asset(
               svgAsset,
-              color: _currentIndex == index
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.tertiary,
+              colorFilter: ColorFilter.mode(
+                _currentIndex == index
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.tertiary,
+                BlendMode.srcIn,
+              ),
             ),
             onPressed: () {
               setState(() {

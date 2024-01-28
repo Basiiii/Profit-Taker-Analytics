@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import 'package:profit_taker_analyzer/constants/constants.dart';
 
@@ -112,7 +113,8 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        overviewCards[index].title,
+                        FlutterI18n.translate(context,
+                            "overview_cards.${overviewCards[index].title}"),
                         style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -176,7 +178,12 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
 Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
   double responsiveCardWidth = screenWidth / 2;
 
-  const List<String> labels = ['Shields', 'Legs', 'Body', 'Pylons'];
+  List<String> labels = [
+    FlutterI18n.translate(context, "phase_cards.shields"),
+    FlutterI18n.translate(context, "phase_cards.legs"),
+    FlutterI18n.translate(context, "phase_cards.body"),
+    FlutterI18n.translate(context, "phase_cards.pylons"),
+  ];
 
   List<Widget> rows;
 

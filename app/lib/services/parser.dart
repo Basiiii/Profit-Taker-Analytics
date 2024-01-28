@@ -344,7 +344,7 @@ Future<void> loadData() async {
     var data = jsonDecode(response.body);
 
     /// Update username with space behind for formatting
-    username = ' ${data['nickname']}';
+    username = '${data['nickname']}';
 
     /// Update overview cards data
     updateOverviewCardTime(overviewCards, 0, data['total_duration']);

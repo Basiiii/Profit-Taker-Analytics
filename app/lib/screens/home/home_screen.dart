@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/constants/constants.dart';
-import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import 'package:profit_taker_analyzer/main.dart';
+
+import 'package:profit_taker_analyzer/constants/constants.dart';
 
 import 'package:profit_taker_analyzer/services/parser.dart';
 
@@ -16,6 +17,7 @@ import 'package:profit_taker_analyzer/utils/screenshot.dart';
 import 'package:profit_taker_analyzer/screens/home/home_widgets.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
+import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 
@@ -145,11 +147,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    titleText('Hello$username!', 24, FontWeight.normal),
+                    titleText(
+                        username == ''
+                            ? FlutterI18n.translate(context, "home.hello")
+                            : FlutterI18n.translate(context, "home.hello_name",
+                                translationParams: {"name": username}),
+                        24,
+                        FontWeight.normal),
                     const SizedBox(height: 25),
                     Row(
                       children: [
-                        titleText('Your last run', 20, FontWeight.w500),
+                        titleText(
+                            FlutterI18n.translate(context, "home.last_run"),
+                            20,
+                            FontWeight.w500),
                         IconButton(
                           icon: const Icon(Icons.share, size: 18),
                           onPressed: () {

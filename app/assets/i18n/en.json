@@ -1,0 +1,44 @@
+{
+    "home": {
+        "hello": "Hello!",
+        "hello_name": "Hello {name}!",
+        "last_run": "Your last run"
+    },
+    "overview_cards": {
+        "total_duration": "Total\nDuration",
+        "flight_time": "Flight\nTime",
+        "shield_break": "Shield\nBreak",
+        "leg_break": "Leg\nBreak",
+        "body_kill": "Body\nKill",
+        "pylon_destruction": "Pylon\nDestruction"
+    },
+    "phase_cards": {
+        "shields": "Shields",
+        "legs": "Legs",
+        "body": "Body",
+        "pylons": "Pylons"
+    },
+    "errors": {
+        "error": "Error!",
+        "parser_connection_error": "The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.\nContacts are available in the app settings."
+    },
+    "settings": {
+        "general": "General",
+        "links": "Links",
+        "report_bugs": "Report Bugs",
+        "about": "About",
+        "theme": "Theme",
+        "pt_discord": "Profit Taker Discord",
+        "github_repo": "Github Repository",
+        "pt_guide": "Profit Taker Guide",
+        "report_bug": "Report a Bug on Github",
+        "contact_basi": "Contact Basi",
+        "about_app": "About App",
+        "version": "Version",
+        "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+    },
+    "buttons": {
+        "ok": "Okay"
+    }
+}
