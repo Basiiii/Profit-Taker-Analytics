@@ -1,0 +1,55 @@
+{
+    "home": {
+        "hello": "你好!",
+        "hello_name": "你好， {name}!",
+        "last_run": "你的上一次记录"
+    },
+    "overview_cards": {
+        "total_duration": "总时长",
+        "flight_time": "飞行耗时",
+        "shield_break": "破盾耗时",
+        "leg_break": "破腿耗时",
+        "body_kill": "本体耗时",
+        "pylon_destruction": "信标耗时"
+    },
+    "phase_cards": {
+        "phase_1": "First Phase",
+        "phase_2": "Second Phase",
+        "phase_3": "Third Phase",
+        "phase_4": "Fourth Phase",
+        "shields": "护盾",
+        "legs": "腿",
+        "body": "本体",
+        "pylons": "信标"
+    },
+    "errors": {
+        "error": "错误！",
+        "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图"
+    },
+    "settings": {
+        "general": "通用",
+        "links": "链接",
+        "report_bugs": "反馈BUG",
+        "about": "关于",
+        "theme": "主题",
+        "language": "语言",
+        "change_language": "更改语言",
+        "pt_discord": "利润收割者Discord",
+        "github_repo": "Github仓库",
+        "pt_guide": "利润收割者攻略",
+        "report_bug": "在Github上反馈BUG",
+        "contact_basi": "联系Basi",
+        "about_app": "关于APP",
+        "version": "版本",
+        "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文"
+    },
+    "buttons": {
+        "ok": "OK"
+    }
+}

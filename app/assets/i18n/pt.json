@@ -1,0 +1,55 @@
+{
+    "home": {
+        "hello": "Olá!",
+        "hello_name": "Olá {name}!",
+        "last_run": "Última missão"
+    },
+    "overview_cards": {
+        "total_duration": "Tempo\nTotal",
+        "flight_time": "Tempo\nVoo",
+        "shield_break": "Quebra\nEscudos",
+        "leg_break": "Quebra\nPerna",
+        "body_kill": "Morte\nCorpo",
+        "pylon_destruction": "Destruição\nPilones"
+    },
+    "phase_cards": {
+        "phase_1": "Primeira Phase",
+        "phase_2": "Segunda Phase",
+        "phase_3": "Terceira Phase",
+        "phase_4": "Quarta Phase",
+        "shields": "Escudos",
+        "legs": "Pernas",
+        "body": "Corpo",
+        "pylons": "Pilones"
+    },
+    "errors": {
+        "error": "Erro!",
+        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação."
+    },
+    "settings": {
+        "general": "Geral",
+        "links": "Ligações",
+        "report_bugs": "Reportar erros",
+        "about": "Sobre",
+        "theme": "Tema",
+        "language": "Idioma",
+        "change_language": "Alterar idioma",
+        "pt_discord": "Discord Profit Taker",
+        "github_repo": "Repositório Github",
+        "pt_guide": "Guia do Profit Taker",
+        "report_bug": "Reportar um erro no Github",
+        "contact_basi": "Contactar Basi",
+        "about_app": "Sobre a aplicação",
+        "version": "Versão",
+        "about_app_description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM de uma manga no discord.",
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文"
+    },
+    "buttons": {
+        "ok": "Ok"
+    }
+}

@@ -1,3 +1,6 @@
+/// App details
+const String version = 'ALPHA 0.1.0';
+
 /// Minimum & starting screen sizes
 const double startingWidth = 1500; // Initial width of the application at launch
 const double startingHeight =

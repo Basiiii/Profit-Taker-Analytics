@@ -19,11 +19,11 @@ dependencies:
  # Windows window control
  window_manager: ^0.3.7
  # Provider for state management
- provider: ^6.0.0
+ provider: ^6.1.1
  # Shared preferences
  shared_preferences: ^2.0.8
  # SVG rendering
- flutter_svg: ^0.22.0
+ flutter_svg: ^2.0.9
  # Screenshot functionality
  screenshot: ^2.1.0
  # Path provider for file access
@@ -31,24 +31,31 @@ dependencies:
  # Super clipboard for copy/paste operations
  super_clipboard: ^0.8.4
  # Used to execute the compiled parser
- process_run: ^0.13.0
+ process_run: ^0.14.1+3
  # Settings screen
  flutter_settings_ui: ^3.0.0
  # Launch URL's
  url_launcher: ^6.0.10
  # Establish HTTP connection with parser
  http: ^1.2.0
+ # Internationalization (i18n)
+ flutter_i18n: ^0.35.0
+ flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
  flutter_test:
     sdk: flutter
  # Recommended lints for good coding practices
- flutter_lints: ^2.0.0
+ flutter_lints: ^3.0.1
 
 flutter:
  uses-material-design: true
  assets:
     - assets/
+    - assets/i18n/en.json
+    - assets/i18n/pt.json
+    - assets/i18n/zh.json
  fonts:
     - family: Poppins
       fonts:

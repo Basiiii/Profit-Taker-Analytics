@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -44,17 +45,39 @@ void showErrorDialog(BuildContext context) {
 /// This function shows a dialog with a title of "Error!" and content advising the user
 /// to restart the program. If the problem persists, they are instructed to contact Basi.
 /// The user can close the dialog by pressing the "OK" button.
-void showParserConnectionErrorDialog(BuildContext context) {
+void showParserConnectionErrorDialog(
+    BuildContext context, String errorText, String errorTitle) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(errorText),
+            content: Text(errorTitle),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ]);
+      });
+}
+
+/// Displays an about dialog with information about the app.
+///
+/// This function shows a dialog with a title of "About", and a small easter egg.
+/// The user can close the dialog by pressing the "OK" button.
+void showAboutAppDialog(
+    BuildContext context, String aboutTitle, String aboutDescription) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Error!'),
-        content: const Text(
-            'The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.'),
+        title: Text(aboutTitle),
+        content: Text(aboutDescription),
         actions: <Widget>[
           TextButton(
-            child: const Text('OK'),
+            child: Text(FlutterI18n.translate(context, "buttons.ok")),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -65,19 +88,19 @@ void showParserConnectionErrorDialog(BuildContext context) {
   );
 }
 
-/// Displays an about dialog with information about the app.
+/// Displays a contacts dialog with information about how to contact Basi.
 ///
-/// This function shows a dialog with a title of "About", and content describing
-/// the author of the app and instructions for reaching out via Discord. The user
-/// can close the dialog by pressing the "OK" button.
-void showAboutAppDialog(BuildContext context) {
+/// This function shows a dialog with a title of "Contact Basi", and content describing
+/// the author of the app and instructions for contacting. The user can close the
+/// dialog by pressing the "OK" button.
+void showContactsAppDialog(BuildContext context, String contactText) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('About'),
-        content: const Text(
-            'Made with love by Basi.\nIf you found this, send me a DM\nof a mango on discord.'),
+        title: Text(contactText),
+        content: Text(FlutterI18n.translate(
+            context, "settings.basi_contacts_description")),
         actions: <Widget>[
           TextButton(
             child: const Text('OK'),
