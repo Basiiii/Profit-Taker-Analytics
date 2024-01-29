@@ -47,7 +47,8 @@
     "languages": {
         "en": "English",
         "pt": "Português",
-        "zh": "中文"
+        "zh": "中文",
+        "ru": "Русский"
     },
     "buttons": {
         "ok": "OK"

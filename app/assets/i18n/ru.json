@@ -1,0 +1,56 @@
+{
+    "home": {
+        "hello": "Привет!",
+        "hello_name": "Привет {name}!",
+        "last_run": "Твой последний заход"
+    },
+    "overview_cards": {
+        "total_duration": "Суммарная\nДлитеьность",
+        "flight_time": "Время\nПолёта",
+        "shield_break": "Ломка\nЩита",
+        "leg_break": "Ломка\nНог",
+        "body_kill": "Килл\nТела",
+        "pylon_destruction": "Разрушение\nПилонов"
+    },
+    "phase_cards": {
+        "phase_1": "Первая Фаза",
+        "phase_2": "Вторая Фаза",
+        "phase_3": "Третья Фаза",
+        "phase_4": "Четвёртая Фаза",
+        "shields": "Щиты",
+        "legs": "Ноги",
+        "body": "Тело",
+        "pylons": "Пилоны"
+    },
+    "errors": {
+        "error": "Ошибка!",
+        "parser_connection_error": "Приложение не может соединиться с парсером.\nПожалуйста перезапустите программу.\n\nЕсли дальше будут проблемы пожалуйста свяжитесь с Basi (англ).\nКонтакты можно найти в настройках."
+    },
+    "settings": {
+        "general": "Общее",
+        "links": "Ссылки",
+        "report_bugs": "Баг-репорт",
+        "about": "О приложении",
+        "theme": "темы",
+        "language": "язык",
+        "change_language": "Изменить язык",
+        "pt_discord": "Английский Сферный Дискорд",
+        "github_repo": "Гитхаб",
+        "pt_guide": "Английский Гайд на Сферу",
+        "report_bug": "Баг-репорт на Гитхабе",
+        "contact_basi": "Контактировать Basi",
+        "about_app": "О приложении",
+        "version": "Версия",
+        "about_app_description": "Сделано с любовью Basi.\nЕсли ты это нащёл, пришли мне мангу в лс на дискорде.",
+        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文",
+        "ru": "Русский"
+    },
+    "buttons": {
+        "ok": "Ок"
+    }
+}

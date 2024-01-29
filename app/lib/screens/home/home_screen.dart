@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,28 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ScreenshotController screenshotController = ScreenshotController();
 
-  Future<void> setLanguageBasedOnUserPreference() async {
-    // Get the user's preferred language from the system settings
-    String languageCode = Platform.localeName.split("_")[0];
-    String countryCode = Platform.localeName.split("_")[1];
-
-    if (kDebugMode) {
-      print("Device language code: $languageCode");
-      print("Device country code: $countryCode");
-    }
-
-    // Create a Locale object from the language and country codes
-    Locale locale = Locale(languageCode, countryCode);
-
-    // Refresh the localization with the user's preferred language
-    await FlutterI18n.refresh(context, locale);
-  }
-
   @override
   void initState() {
     super.initState();
 
-    _healthCheck = Timer.periodic(const Duration(seconds: 10), (timer) async {
+    _healthCheck =
+        Timer.periodic(const Duration(milliseconds: 5555), (timer) async {
       bool isConnected = await checkConnection();
       _connectionStatus.value = isConnected;
       if (kDebugMode) {
@@ -85,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    _dataFetch = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _dataFetch = Timer.periodic(const Duration(seconds: 2), (timer) async {
       if (await checkForNewData() == true && mounted) {
         LoadingOverlay.of(context).show();
         await loadData().then((_) {
@@ -94,12 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setLanguageBasedOnUserPreference();
   }
 
   @override
