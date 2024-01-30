@@ -258,7 +258,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
                                 children: <Widget>[
                                   /// Navigation bar widget.
                                   custom_nav.NavigationBar(
-                                    /// Callback function when a tab is selected.
+                                    currentIndex: _currentIndex,
                                     onTabSelected: (index) {
                                       setState(() {
                                         _currentIndex = index;

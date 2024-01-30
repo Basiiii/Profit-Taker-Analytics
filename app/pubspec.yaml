@@ -1,63 +1,64 @@
 name: profit_taker_analyzer
 description: "Warframe Profit Taker analysis app."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0+1
 
 environment:
- sdk: '>=3.2.0-199.0.dev <4.0.0'
+  sdk: ">=3.2.0-199.0.dev <4.0.0"
 
 topics:
- - warframe
- - profit-taker
- - analysis
+  - warframe
+  - profit-taker
+  - analysis
 
 dependencies:
- flutter:
+  flutter:
     sdk: flutter
- # Splash screen
- another_flutter_splash_screen: ^1.2.0
- # Windows window control
- window_manager: ^0.3.7
- # Provider for state management
- provider: ^6.1.1
- # Shared preferences
- shared_preferences: ^2.0.8
- # SVG rendering
- flutter_svg: ^2.0.9
- # Screenshot functionality
- screenshot: ^2.1.0
- # Path provider for file access
- path_provider: ^2.1.2
- # Super clipboard for copy/paste operations
- super_clipboard: ^0.8.4
- # Shell commands to run and kill parser
- process_run: ^0.14.1+3
- # Settings screen
- flutter_settings_ui: ^3.0.0
- # Launch URL's
- url_launcher: ^6.0.10
- # Establish HTTP connection with parser
- http: ^1.2.0
- # Internationalization (i18n)
- flutter_i18n: ^0.35.0
- flutter_localizations:
+  # Splash screen
+  another_flutter_splash_screen: ^1.2.0
+  # Windows window control
+  window_manager: ^0.3.7
+  # Provider for state management
+  provider: ^6.1.1
+  # Shared preferences
+  shared_preferences: ^2.0.8
+  # SVG rendering
+  flutter_svg: ^2.0.9
+  # Screenshot functionality
+  screenshot: ^2.1.0
+  # Path provider for file access
+  path_provider: ^2.1.2
+  # Super clipboard for copy/paste operations
+  super_clipboard: ^0.8.4
+  # Shell commands to run and kill parser
+  process_run: ^0.14.1+3
+  # Settings screen
+  flutter_settings_ui: ^3.0.0
+  # Launch URL's
+  url_launcher: ^6.0.10
+  # Establish HTTP connection with parser
+  http: ^1.2.0
+  # Internationalization (i18n)
+  flutter_i18n: ^0.35.0
+  flutter_localizations:
     sdk: flutter
 
 dev_dependencies:
- flutter_test:
+  flutter_test:
     sdk: flutter
- # Recommended lints for good coding practices
- flutter_lints: ^3.0.1
+  # Recommended lints for good coding practices
+  flutter_lints: ^3.0.1
 
 flutter:
- uses-material-design: true
- assets:
+  uses-material-design: true
+  assets:
     - assets/
+    - assets/icons/
     - assets/i18n/en.json
     - assets/i18n/pt.json
     - assets/i18n/zh.json
     - assets/i18n/ru.json
- fonts:
+  fonts:
     - family: Poppins
       fonts:
         - asset: fonts/Poppins-Black.ttf
