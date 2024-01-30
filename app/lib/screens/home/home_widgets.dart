@@ -337,7 +337,7 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                             ? const SizedBox(height: 6)
                             : const SizedBox.shrink(),
                         Wrap(
-                          spacing: 8.0,
+                          spacing: 20.0,
                           runSpacing: 8.0,
                           direction: Axis.horizontal,
                           children: phaseCards[index].legsList.map((pair) {

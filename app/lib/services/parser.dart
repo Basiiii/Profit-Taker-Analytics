@@ -30,7 +30,7 @@ void startParser() async {
   var parserPath = "$binPath\\parser.exe";
 
   try {
-    var processResults = await Shell().run(parserPath);
+    var processResults = await Shell().run('"$parserPath"');
 
     if (processResults[0].exitCode == 0) {
       if (kDebugMode) {

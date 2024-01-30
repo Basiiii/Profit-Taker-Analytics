@@ -121,6 +121,7 @@ void main() async {
               onInit: () async {
                 debugPrint("Starting parser");
                 startParser();
+                await Future.delayed(const Duration(seconds: 2));
 
                 debugPrint("Preparing language");
                 // Get the user's preferred language from shared preferences
