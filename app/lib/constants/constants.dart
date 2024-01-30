@@ -28,3 +28,8 @@ const double totalLeftPaddingHome = navigationBarWidth +
 /// Home cards default sizes
 const double overviewCardWidth = 200; // Width of the overview card
 const double phaseCardWidth = 625; // Width of the phase card
+
+/// Connection constants
+const noNewDataAvailable = 0;
+const newDataAvailable = 1;
+const connectionError = 2;

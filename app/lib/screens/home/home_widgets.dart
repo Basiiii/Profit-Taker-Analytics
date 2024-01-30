@@ -306,13 +306,13 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                       children: [
                         index != 1
                             ? Wrap(
-                                spacing: 8.0,
+                                spacing: 20.0,
                                 runSpacing: 8.0,
                                 direction: Axis.horizontal,
                                 children:
                                     phaseCards[index].shieldsList.map((pair) {
                                   return SizedBox(
-                                    width: 75,
+                                    width: 65,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -342,7 +342,7 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                           direction: Axis.horizontal,
                           children: phaseCards[index].legsList.map((pair) {
                             return SizedBox(
-                              width: 75,
+                              width: 65,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

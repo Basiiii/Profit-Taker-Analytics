@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -46,9 +45,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
+  ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
 
-  Timer? _healthCheck;
   Timer? _dataFetch;
 
   ScreenshotController screenshotController = ScreenshotController();
@@ -57,31 +55,31 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _healthCheck =
-        Timer.periodic(const Duration(milliseconds: 5555), (timer) async {
-      bool isConnected = await checkConnection();
-      _connectionStatus.value = isConnected;
-      if (kDebugMode) {
-        _connectionStatus.value
-            ? print("There is connection")
-            : print("No connection");
+    _dataFetch =
+        Timer.periodic(const Duration(milliseconds: 1500), (timer) async {
+      int result = await checkForNewData();
+      if (result == noNewDataAvailable) {
+        _connectionStatus = ValueNotifier<bool>(true);
+        return;
       }
-    });
-
-    _dataFetch = Timer.periodic(const Duration(seconds: 2), (timer) async {
-      if (await checkForNewData() == true && mounted) {
+      if (result == newDataAvailable && mounted) {
+        _connectionStatus = ValueNotifier<bool>(true);
         LoadingOverlay.of(context).show();
         await loadData().then((_) {
           setState(() {});
           LoadingOverlay.of(context).hide();
         });
+        return;
+      }
+      if (result == connectionError) {
+        _connectionStatus == ValueNotifier<bool>(false);
+        return;
       }
     });
   }
 
   @override
   void dispose() {
-    _healthCheck?.cancel();
     _dataFetch?.cancel();
     super.dispose();
   }
