@@ -175,8 +175,8 @@ class _MyAppState extends State<MyApp> with WindowListener {
     super.initState();
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
-    _init();
     _loadLanguage();
+    _init();
   }
 
   void _loadLanguage() async {

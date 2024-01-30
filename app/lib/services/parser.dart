@@ -26,12 +26,10 @@ void startParser() async {
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
   var binPath = "$mainPath\\bin\\";
-  var parserPath = "$binPath\\parser.exe";
-  var cmdowPath = "$binPath\\cmdow.exe";
+  var parserPath = "$binPath\\parserr.exe";
 
   try {
-    var processResults =
-        await Shell().run("$cmdowPath /run /hid \"$parserPath\"");
+    var processResults = await Shell().run(parserPath);
 
     if (processResults[0].exitCode == 0) {
       if (kDebugMode) {
