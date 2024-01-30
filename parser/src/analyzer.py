@@ -379,6 +379,16 @@ class Analyzer:
         """
         app = Flask(__name__)
         self.lastRun = {}
+        self.lastRunTime = {}
+
+        @app.route("/last_run_time", methods= ['GET'])
+        def last_run_time():
+            """Return the time of the last logged run.
+
+            Returns:
+                dict: The last logged run.
+            """
+            return self.lastRunTime
         
         @app.route("/last_run", methods= ['GET'])
         def last_run():
@@ -389,14 +399,14 @@ class Analyzer:
             """
             return self.lastRun
         
-        @app.route("/healthcheck", methods= ['GET'])
-        def healthcheck():
-            """Return the status of the parser.
+        # @app.route("/healthcheck", methods= ['GET'])
+        # def healthcheck():
+        #     """Return the status of the parser.
 
-            Returns:
-                dict: the status of the parser.
-            """
-            return {'status': 'ok'}
+        #     Returns:
+        #         dict: the status of the parser.
+        #     """
+        #     return {'status': 'ok'}
 
         try:
             Thread(target=lambda: serve(app, host="127.0.0.1", port=5000)).start()
@@ -525,6 +535,7 @@ class Analyzer:
                 self.lastRun = formattedRun
                 run.pretty_print()
                 self.print_summary()
+                self.lastRunTime = {"date": datetime.now().isoformat()}
             except RunAbort as abort:
                 print(abort)
                 self.runs.append(abort)

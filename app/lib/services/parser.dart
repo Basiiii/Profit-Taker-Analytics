@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:process_run/shell.dart';
+import 'package:profit_taker_analyzer/constants/constants.dart';
 
 import 'package:profit_taker_analyzer/utils/utils.dart';
 
@@ -21,21 +23,33 @@ DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 ///
 /// Returns a [Future] that completes with a [Process] object if the process starts
 /// successfully, or `null` otherwise.
-Future<Process?> startParser() async {
-  if (!kIsWeb) {
-    var mainPath = Platform.resolvedExecutable;
-    mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
-    var exeFilePath = "$mainPath\\bin\\parserLogic.exe";
-    try {
-      var process = await Process.start('"$exeFilePath"', []);
-      return process;
-    } catch (e) {
+void startParser() async {
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var binPath = "$mainPath\\bin\\";
+  var parserPath = "$binPath\\parser.exe";
+
+  try {
+    var processResults = await Shell().run('"$parserPath"');
+
+    if (processResults[0].exitCode == 0) {
       if (kDebugMode) {
-        print('Failed to run .exe file: $e');
+        print('Process ran successfully');
+      }
+    } else {
+      if (kDebugMode) {
+        print('Process exited with code ${processResults[0].exitCode}');
       }
     }
+  } catch (e) {
+    if (kDebugMode) {
+      print('An error occurred: $e');
+    }
   }
-  return null;
+}
+
+Future<void> killParserInstances() async {
+  await Shell().run('taskkill /F /IM parser.exe');
 }
 
 /// Checks the connection to the server by sending a GET request to the '/healthcheck' endpoint.
@@ -98,37 +112,26 @@ Future<bool> checkConnection() async {
 ///   // No new data available
 /// }
 /// ```
-Future<bool> checkForNewData() async {
-  if (kDebugMode) {
-    print("Checking for new data...");
-  }
-  var url = Uri.parse('http://127.0.0.1:5000/last_run');
+Future<int> checkForNewData() async {
+  var url = Uri.parse('http://127.0.0.1:5000/last_run_time');
   try {
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-      DateTime currentTimestamp =
-          DateTime.parse(data['time_stamp'].split('.')[0]);
+      DateTime currentTimestamp = DateTime.parse(data['date'].split('.')[0]);
 
       if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
         lastUpdateTimestamp = currentTimestamp;
-        return true; // New data is available
+        return newDataAvailable;
       }
     } else {
       throw Exception('Failed to load data');
     }
-
-    if (kDebugMode) {
-      print("There is no new data.");
-    }
-    return false; // No new data is available
+    return noNewDataAvailable;
   } catch (e) {
-    if (kDebugMode) {
-      print("Failed to connect: $e");
-    }
-    return false;
+    return connectionError;
   }
 }
 

@@ -31,6 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Locale('en', 'US'), // English
     Locale('pt', 'PT'), // Portuguese
     Locale('zh', 'CN'), // Chinese
+    Locale('ru'), // Russian
   ];
 
   late Locale _currentLocale;

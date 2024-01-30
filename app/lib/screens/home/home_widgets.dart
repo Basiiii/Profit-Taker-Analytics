@@ -79,6 +79,27 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
   // NOTE: I'm not sure why this needs padding and the other doesn't...
   double responsiveCardWidth = screenWidth / 6 - 8;
 
+  Color color;
+  if (index == 0) {
+    double timeValue = double.parse(overviewCards[index].time);
+
+    if (timeValue < 52.000) {
+      color = const Color(0xFFA488FF);
+    } else if (timeValue < 60.000) {
+      color = const Color(0xFF7361D8);
+    } else if (timeValue < 70.000) {
+      color = const Color(0xFF33BDCC);
+    } else if (timeValue < 90.000) {
+      color = const Color(0xFF35967D);
+    } else if (timeValue > 90.000) {
+      color = const Color(0xFFB85E2C);
+    } else {
+      color = Theme.of(context).colorScheme.onSurface;
+    }
+  } else {
+    color = Theme.of(context).colorScheme.onSurface;
+  }
+
   return Container(
     width: screenWidth < minimumResponsiveWidth
         ? overviewCardWidth
@@ -116,9 +137,10 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                         FlutterI18n.translate(context,
                             "overview_cards.${overviewCards[index].title}"),
                         style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.05),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          height: 1.05,
+                        ),
                       ),
                     ],
                   ),
@@ -137,9 +159,8 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                 generateRichText(context, [
                   generateTextSpan(
                       overviewCards[index].time, 32, FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface),
-                  generateTextSpan('s ', 20, FontWeight.w400,
-                      color: Theme.of(context).colorScheme.onSurface),
+                      color: color),
+                  generateTextSpan('s ', 20, FontWeight.w400, color: color),
                 ]),
               ],
             ),
@@ -285,13 +306,13 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                       children: [
                         index != 1
                             ? Wrap(
-                                spacing: 8.0,
+                                spacing: 20.0,
                                 runSpacing: 8.0,
                                 direction: Axis.horizontal,
                                 children:
                                     phaseCards[index].shieldsList.map((pair) {
                                   return SizedBox(
-                                    width: 75,
+                                    width: 65,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -316,12 +337,12 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                             ? const SizedBox(height: 6)
                             : const SizedBox.shrink(),
                         Wrap(
-                          spacing: 8.0,
+                          spacing: 20.0,
                           runSpacing: 8.0,
                           direction: Axis.horizontal,
                           children: phaseCards[index].legsList.map((pair) {
                             return SizedBox(
-                              width: 75,
+                              width: 65,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

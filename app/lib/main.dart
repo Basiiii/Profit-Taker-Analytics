@@ -28,7 +28,6 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:profit_taker_analyzer/constants/constants.dart';
 
-import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/services/parser.dart';
 
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
@@ -105,6 +104,7 @@ void main() async {
             Locale('en', 'US'), // English
             Locale('pt', 'PT'), // Portuguese
             Locale('zh', 'CN'), // Chinese
+            Locale('ru'), // Russian
           ],
           home: FlutterSplashScreen.fadeIn(
               backgroundColor: const Color(0xFF121212),
@@ -119,8 +119,25 @@ void main() async {
               ),
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
-                // debugPrint("onInit");
-                ProcessHolder().parserProcess = startParser();
+                debugPrint("Starting parser");
+                startParser();
+                await Future.delayed(const Duration(seconds: 2));
+
+                debugPrint("Preparing language");
+                // Get the user's preferred language from shared preferences
+                final prefs = await SharedPreferences.getInstance();
+                var languageCode = prefs.getString('language');
+
+                // If there's no language set in shared preferences, use the device's locale
+                if (languageCode == null) {
+                  // Get device locale
+                  languageCode = Platform.localeName.split("_")[0];
+                  String countryCode = Platform.localeName.split("_")[1];
+
+                  // Create a Locale object from the language and country codes
+                  Locale locale = Locale(languageCode, countryCode);
+                  await prefs.setString('language', locale.toString());
+                }
               },
               onEnd: () async {
                 // debugPrint("onEnd 1");
@@ -159,8 +176,8 @@ class _MyAppState extends State<MyApp> with WindowListener {
     super.initState();
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
-    _init();
     _loadLanguage();
+    _init();
   }
 
   void _loadLanguage() async {
@@ -235,13 +252,14 @@ class _MyAppState extends State<MyApp> with WindowListener {
                               Locale('en', 'US'), // English
                               Locale('pt', 'PT'), // Portuguese
                               Locale('zh', 'CN'), // Chinese
+                              Locale('ru'), // Russian
                             ],
                             home: Scaffold(
                               body: Row(
                                 children: <Widget>[
                                   /// Navigation bar widget.
                                   custom_nav.NavigationBar(
-                                    /// Callback function when a tab is selected.
+                                    currentIndex: _currentIndex,
                                     onTabSelected: (index) {
                                       setState(() {
                                         _currentIndex = index;
@@ -294,23 +312,16 @@ class _MyAppState extends State<MyApp> with WindowListener {
   /// * [WindowListener](https://pub.dev/documentation/window_manager/latest/)
   @override
   void onWindowClose() async {
-    bool isPreventClose = await windowManager.isPreventClose();
-
     /// Attempt to kill Parser process
-    ProcessHolder().parserProcess?.then((process) async {
-      /// `process` will be null if it failed to start the parser executable in the beginning
-      if (process != null) {
-        bool success = process.kill();
+    await killParserInstances().whenComplete(() async {
+      /// Close app window
+      await windowManager.destroy();
 
-        /// If there was an error killing process, display error
-        if (isPreventClose && !success && mounted) {
-          showErrorDialog(context);
-        } else {
-          await windowManager.destroy();
-        }
-      } else {
-        await windowManager.destroy();
-      }
+      // /// Delay for a short period
+      // await Future.delayed(const Duration(seconds: 1));
+
+      // /// Force kill app
+      // await Shell().run('taskkill /F /IM profit_taker_analyzer.exe');
     });
   }
 }
