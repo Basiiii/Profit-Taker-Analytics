@@ -19,6 +19,7 @@ import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
+import 'package:profit_taker_analyzer/widgets/last_runs.dart';
 
 /// The HomeScreen widget represents the main screen of the application.
 ///
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    /// Fetch the data for last run
     _dataFetch =
         Timer.periodic(const Duration(milliseconds: 1500), (timer) async {
       int result = await checkForNewData();
