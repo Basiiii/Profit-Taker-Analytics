@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// This class defines our custom navigation bar widget, used on left side.
+/// A custom navigation bar widget used on the left side of the application.
+///
+/// The `NavigationBar` widget provides a vertical navigation bar with
+/// customizable icons for different tabs. It includes a callback function
+/// to notify when a tab is selected.
 class NavigationBar extends StatelessWidget {
+  /// The current selected index of the navigation bar.
   final int currentIndex;
+
+  /// A callback function to be called when a tab is selected.
   final Function(int) onTabSelected;
 
+  /// Constructs a [NavigationBar] widget.
+  ///
+  /// Parameters:
+  ///   - `currentIndex`: The current selected index of the navigation bar.
+  ///   - `onTabSelected`: A callback function to be called when a tab is selected.
   const NavigationBar({
     super.key,
     required this.currentIndex,
@@ -33,6 +45,12 @@ class NavigationBar extends StatelessWidget {
     );
   }
 
+  /// Builds a navigation item with an icon.
+  ///
+  /// Parameters:
+  ///   - `greyIconAsset`: The asset path for the grey version of the icon.
+  ///   - `selectedIconAsset`: The asset path for the selected version of the icon.
+  ///   - `index`: The index associated with the navigation item.
   Widget _buildNavItem(
       String greyIconAsset, String selectedIconAsset, int index) {
     return Stack(

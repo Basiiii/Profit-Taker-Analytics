@@ -16,13 +16,16 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 /// Inicialize the time to epoch 0 to ensure all API records will be newer
 DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
-/// Starts a parser process and returns the resulting [Process] object.
+/// Starts the parser process asynchronously.
 ///
-/// This function is only effective when the application is not running in web mode.
-/// In debug mode, it prints an error message if the process fails to start.
+/// This method constructs the path to the parser executable based on the
+/// current platform. It then uses the shell to run the parser process.
 ///
-/// Returns a [Future] that completes with a [Process] object if the process starts
-/// successfully, or `null` otherwise.
+/// The method logs information about the process execution, including success
+/// or failure and the exit code if applicable.
+///
+/// Note: The parser process is assumed to be located in the 'bin' directory
+/// relative to the Dart executable.
 void startParser() async {
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
@@ -48,70 +51,29 @@ void startParser() async {
   }
 }
 
+/// Kills instances of the parser process.
+///
+/// This method uses the shell to run a command that forcefully terminates
+/// all instances of the parser.exe process. It is asynchronous and returns
+/// a [Future<void>] to indicate completion.
 Future<void> killParserInstances() async {
   await Shell().run('taskkill /F /IM parser.exe');
 }
 
-/// Checks the connection to the server by sending a GET request to the '/healthcheck' endpoint.
+/// Checks for new data by comparing the last update timestamp with the server.
 ///
-/// This function sends an HTTP GET request to the '/healthcheck' endpoint and checks the response.
-/// If the response status code is 200 and the body contains '{"status":"ok"}', the function returns `true`.
-/// Otherwise, it returns `false`. If an exception occurs during the request, the function prints the error message
-/// (if the app is in debug mode) and returns `false`.
+/// This method performs an HTTP GET request to the 'http://127.0.0.1:5000/last_run_time'
+/// endpoint, retrieves the timestamp of the last data update, and compares it with
+/// the locally stored timestamp (`lastUpdateTimestamp`). If a newer timestamp is
+/// detected, it indicates new data is available, and the method returns [newDataAvailable].
 ///
-/// Returns a `Future<bool>` that completes with `true` if the connection is okay and `false` otherwise.
+/// If the HTTP request is successful and there's no new data, the method returns [noNewDataAvailable].
+/// If an exception occurs during the process, it returns [connectionError].
 ///
-/// Example usage:
-/// ```dart
-/// bool isConnected = await checkConnection();
-/// if (!isConnected) {
-///   print('No connection.');
-/// }
-/// ```
-Future<bool> checkConnection() async {
-  try {
-    if (kDebugMode) {
-      print("Checking connection...");
-    }
-    var url = Uri.parse('http://127.0.0.1:5000/healthcheck');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var responseBody = jsonDecode(response.body);
-      if (responseBody['status'] == 'ok') {
-        return true;
-      }
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Failed to connect: $e');
-    }
-    return false;
-  }
-  return false;
-}
-
-/// Asynchronously checks for new data by making a request to the specified URL.
-///
-/// If [kDebugMode] is true, a message is printed indicating that the function
-/// is checking for new data. The function sends a GET request to the 'http://127.0.0.1:5000/last_run' URL
-/// to retrieve the timestamp of the last data update. If the response status code
-/// is 200, it compares the timestamp with the [lastUpdateTimestamp].
-///
-/// If the timestamp indicates that new data is available, it updates the [lastUpdateTimestamp]
-/// and returns `true`. If no new data is available or there's an issue with the request,
-/// it returns `false`.
-///
-/// Throws an [Exception] if the request fails with a non-200 status code.
-///
-/// Example:
-/// ```dart
-/// bool newDataAvailable = await checkForNewData();
-/// if (newDataAvailable) {
-///   // Process the new data
-/// } else {
-///   // No new data available
-/// }
-/// ```
+/// Returns:
+///   - [newDataAvailable]: Indicates that new data is available.
+///   - [noNewDataAvailable]: Indicates that no new data is available.
+///   - [connectionError]: Indicates an error occurred during the connection.
 Future<int> checkForNewData() async {
   var url = Uri.parse('http://127.0.0.1:5000/last_run_time');
   try {

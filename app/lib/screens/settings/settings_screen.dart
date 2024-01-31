@@ -26,7 +26,13 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
+/// The state for the [SettingsScreen], managing language settings and UI behavior.
+///
+/// This class is responsible for handling user interactions and updating the UI
+/// based on selected language preferences. It also manages the list of supported
+/// languages and provides methods for changing the app's language dynamically.
 class _SettingsScreenState extends State<SettingsScreen> {
+  /// List of supported languages with corresponding [Locale] objects.
   final List<Locale> supportedLanguages = const [
     Locale('en', 'US'), // English
     Locale('pt', 'PT'), // Portuguese
@@ -34,13 +40,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Locale('ru'), // Russian
   ];
 
+  /// The currently selected locale.
   late Locale _currentLocale;
 
+  /// Returns the localized name of the currently selected language.
   String _currentLanguage() {
     return FlutterI18n.translate(
         context, "languages.${_currentLocale.languageCode}");
   }
 
+  /// Displays a dialog for selecting the app's language.
+  ///
+  /// Parameters:
+  ///   - `context`: The build context providing access to the theme.
+  ///   - `changeLanguage`: The localized text for the change language option.
   void _selectLanguage(BuildContext context, String changeLanguage) {
     showDialog(
       context: context,
@@ -62,6 +75,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Changes the app's language based on the selected locale.
+  ///
+  /// Parameters:
+  ///   - `locale`: The selected locale representing the new language.
   void _changeLanguage(Locale locale) async {
     await FlutterI18n.refresh(context, locale);
     _currentLocale = locale;
