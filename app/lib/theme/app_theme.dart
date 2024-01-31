@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// The light theme for the application.
+///
+/// This theme provides a set of visual properties for the light mode of the app,
+/// including colors, fonts, and brightness settings.
 final ThemeData lightTheme = ThemeData(
   fontFamily: 'Rubik',
   colorScheme: const ColorScheme(
@@ -20,6 +24,10 @@ final ThemeData lightTheme = ThemeData(
   ),
 );
 
+/// The dark theme for the application.
+///
+/// This theme provides a set of visual properties for the dark mode of the app,
+/// including colors, fonts, and brightness settings.
 final ThemeData darkTheme = ThemeData(
   fontFamily: 'Rubik',
   colorScheme: const ColorScheme(

@@ -51,34 +51,25 @@ Widget buildRow(BuildContext context, String label, String time) {
   );
 }
 
-/// Builds an overview card widget with the specified parameters.
+/// Builds and returns a card widget for displaying overview information.
 ///
-/// This function creates an overview card widget with a given index, context,
-/// and screen width.
-/// The card has a width of 200 and height of 135, with a decoration that includes
-/// a color scheme and a border radius. The card contains a column of widgets,
-/// including a container with an icon, a title, and rich text displaying time.
-///
-/// ```dart
-/// buildOverviewCard(index, context, screenWidth);
-/// ```
-///
-/// The above code will produce an overview card widget with a given index, context,
-/// and screen width. The card will contain a column of widgets, including a container
-/// with an icon, a title, and rich text displaying time.
+/// This method creates a card with specific styling based on the provided [index],
+/// [BuildContext], and [screenWidth]. The card displays information such as title,
+/// icon, and time value with color-coding based on predefined thresholds.
 ///
 /// Parameters:
-/// * [index]: The index of the overview card.
-/// * [context]: The build context.
-/// * [screenWidth]: The width of the screen to calculate the responsive card width.
+///   - `index`: The index of the card in the overviewCards list.
+///   - `context`: The build context providing access to the theme and localization.
+///   - `screenWidth`: The available width of the screen.
 ///
 /// Returns:
-/// An [OverviewCard] widget with the specified parameters.
+///   A widget representing an overview card with dynamic styling.
 Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
   // Extra 8 pixels for padding
   // NOTE: I'm not sure why this needs padding and the other doesn't...
   double responsiveCardWidth = screenWidth / 6 - 8;
 
+  /// Determines the color for the total time value
   Color color;
   if (index == 0) {
     double timeValue = double.parse(overviewCards[index].time);
@@ -171,31 +162,19 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
   );
 }
 
-/// Builds a phase card widget with the specified parameters.
+/// Builds and returns a card widget for displaying phase information.
 ///
-/// This function creates a phase card widget with a given index, context,
-/// and screen width.
-/// The card has a width of 625 and height of 160, with a decoration that includes
-/// a color scheme and a border radius. The card contains a column of widgets,
-/// including a row with a title and time, and rows of labels with corresponding times.
-/// Depending on the index, different labels are shown.
-///
-/// ```dart
-/// buildPhaseCard(index, context, screenWidth);
-/// ```
-///
-/// The above code will produce a phase card widget with a given index, context,
-/// and screen width. The card will contain a column of widgets, including a row
-/// with a title and time, and rows of labels with corresponding times. Depending
-/// on the index, different labels are shown.
+/// This method creates a card with specific styling based on the provided [index],
+/// [BuildContext], and [screenWidth]. The card displays information such as phase title,
+/// duration, and details about shields, legs, and other phase-specific data.
 ///
 /// Parameters:
-/// * [index]: The index of the phase card.
-/// * [context]: The build context.
-/// * [screenWidth]: The width of the screen to calculate the responsive card width.
+///   - `index`: The index of the card in the phaseCards list.
+///   - `context`: The build context providing access to the theme and localization.
+///   - `screenWidth`: The available width of the screen.
 ///
 /// Returns:
-/// A [PhaseCard] widget with the specified parameters.
+///   A widget representing a phase card with dynamic styling and details.
 Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
   double responsiveCardWidth = screenWidth / 2;
 
@@ -375,23 +354,17 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
   );
 }
 
-/// Creates an IconButton widget for drawer.
+/// Builds and returns an [IconButton] for opening the end drawer.
 ///
-/// This function generates an IconButton widget with a specific icon. When
-/// the button is pressed, it opens the end drawer of the scaffold.
-///
-/// ```dart
-/// drawerButton(GlobalKey<ScaffoldState> scaffoldKey);
-/// ```
-///
-/// The above code will produce an IconButton with a specific icon. When
-/// the button is pressed, it will open the end drawer of the scaffold.
+/// This method creates an [IconButton] with the specified icon and size.
+/// When pressed, it triggers the opening of the end drawer associated with
+/// the provided [scaffoldKey].
 ///
 /// Parameters:
-/// * [scaffoldKey]: The key of the scaffold.
+///   - `scaffoldKey`: A [GlobalKey] for the [Scaffold] widget to control the drawer.
 ///
 /// Returns:
-/// An [IconButton] widget that opens the end drawer when pressed.
+///   An [IconButton] with an icon for opening the end drawer.
 IconButton drawerButton(GlobalKey<ScaffoldState> scaffoldKey) {
   return IconButton(
     icon: const Icon(

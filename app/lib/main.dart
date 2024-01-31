@@ -11,7 +11,6 @@
 /// existing simple command line application, transforming it into a sophisticated
 /// tool that bridges the gap between textual data and intuitive visual representation.
 ///
-///
 library;
 
 import 'dart:io';
@@ -41,48 +40,38 @@ import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
 import 'package:profit_taker_analyzer/theme/theme_control.dart';
 import 'package:profit_taker_analyzer/theme/app_theme.dart';
 
-class ProcessHolder {
-  static final ProcessHolder _singleton = ProcessHolder._internal();
-
-  factory ProcessHolder() {
-    return _singleton;
-  }
-
-  Future<Process?>? parserProcess;
-
-  ProcessHolder._internal();
-}
-
-final FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
-  translationLoader: FileTranslationLoader(
-    useCountryCode: false,
-    fallbackFile: 'en',
-    basePath: 'assets/i18n',
-  ),
-);
-
-/// Main function to run the application.
+/// The main function that runs the application.
+///
+/// This function is responsible for initializing the application environment.
+/// It ensures that Widget bindings have been initialized, retrieves the user's
+/// preferred language from shared preferences, initializes the window manager,
+/// sets up the window options, and finally runs the application with specific
+/// localization delegates and supported locales.
 void main() async {
+  // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
   String language = prefs.getString('language') ?? "en";
 
+  // Initializes the window manager.
   await windowManager.ensureInitialized();
 
+  // Sets up the window options.
   WindowOptions windowOptions = const WindowOptions(
     size: Size(startingWidth, startingHeight),
     minimumSize: Size(minimumWidth, minimumHeight),
     center: true,
   );
 
+  // Waits until the window is ready to be shown, then shows the window and focuses it.
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();
   });
 
-  windowManager.show();
-
+  // Creates a FlutterI18nDelegate with a FileTranslationLoader.
   final FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
     translationLoader: FileTranslationLoader(
       useCountryCode: false,
@@ -91,6 +80,7 @@ void main() async {
     ),
   );
 
+  // Runs the application with the specified localization delegates and supported locales.
   runApp(ChangeNotifierProvider(
       create: (context) => LocaleModel(prefs),
       child: MaterialApp(
@@ -139,12 +129,16 @@ void main() async {
                   await prefs.setString('language', locale.toString());
                 }
               },
-              onEnd: () async {
-                // debugPrint("onEnd 1");
-              }))));
+              onEnd: () async {}))));
 }
 
-/// Main widget of the application.
+/// The main widget of the application.
+///
+/// This class extends `StatefulWidget`, which allows the widget to maintain state
+/// that can change over time.
+///
+/// The [language] parameter is passed into the constructor and is used to determine
+/// the language settings for the app.
 class MyApp extends StatefulWidget {
   final String language;
 
@@ -158,6 +152,9 @@ class MyApp extends StatefulWidget {
 }
 
 /// The mutable state for the MyApp widget.
+///
+/// This class manages the state of the MyApp widget. It includes methods for
+/// initialization and disposal, as well as handling changes in the language and theme.
 class _MyAppState extends State<MyApp> with WindowListener {
   /// Current index of selected tab.
   int _currentIndex = 0;
@@ -180,6 +177,12 @@ class _MyAppState extends State<MyApp> with WindowListener {
     _init();
   }
 
+  /// Loads the saved language from shared preferences and sets the locale.
+  ///
+  /// This method is asynchronous because it needs to wait for the shared preferences to load.
+  /// It retrieves the saved language using the 'language' key. If a language is found,
+  /// it sets the locale to the retrieved language.
+  /// Note that this only happens if the widget is still mounted, i.e., not disposed of.
   void _loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
     var language = prefs.getString('language');
@@ -294,22 +297,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
     );
   }
 
-  /// Handles the event when the window is being closed.
+  /// Handles the window close event.
   ///
-  /// When the window is being closed, this method attempts to kill the Parser process.
-  /// If the window should not be closed (`isPreventClose` is true), and the Parser process could not be killed successfully,
-  /// it shows an error dialog. Otherwise, it destroys the window.
-  ///
-  /// The method is asynchronous because it involves waiting for the Parser process to be killed, and possibly showing a dialog.
-  ///
-  /// The `@override` annotation indicates that this method overrides a method from a superclass.
-  /// In this case, it's overriding the `onWindowClose` method from the `WindowListener` mixin.
-  ///
-  /// See also:
-  /// * [windowManager.isPreventClose](https://pub.dev/documentation/window_manager/latest/)
-  /// * [windowManager.destroy](https://pub.dev/documentation/window_manager/latest/)
-  /// * [ProcessHolder](https://api.dart.dev/stable/2.14.4/dart-io/Process-class.html)
-  /// * [WindowListener](https://pub.dev/documentation/window_manager/latest/)
+  /// When the window close event occurs, this method is called. It first attempts to
+  /// kill parser instances and then destroys the window. This ensures that any
+  /// ongoing processes are properly terminated before the window closes.
   @override
   void onWindowClose() async {
     /// Attempt to kill Parser process

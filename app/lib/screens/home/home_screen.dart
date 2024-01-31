@@ -20,17 +20,12 @@ import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 
-/// The HomeScreen widget represents the home screen of the application.
+/// The HomeScreen widget represents the main screen of the application.
 ///
 /// This widget uses a Scaffold to provide a basic structure for the app,
 /// including an AppBar and a Body. The body of the scaffold is a single
 /// child scroll view, containing various widgets such as titles, buttons,
 /// and cards.
-///
-/// Example usage:
-/// ```dart
-/// HomeScreen()
-/// ```
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -38,19 +33,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-/// The _HomeScreenState class represents the mutable state for the HomeScreen widget.
+/// The `_HomeScreenState` class represents the mutable state for the `HomeScreen` widget.
 ///
-/// This class contains a GlobalKey for the Scaffold, which allows for
+/// This class contains a [GlobalKey] for the [Scaffold], which allows for
 /// opening and closing of drawers programmatically.
 class _HomeScreenState extends State<HomeScreen> {
+  /// A [GlobalKey] for the [Scaffold] widget, enabling programmatic control over the drawer.
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  /// A [ValueNotifier] that holds the current connection status.
   ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
 
+  /// A timer for periodic data fetching.
   Timer? _dataFetch;
 
+  /// A controller for taking screenshots.
   ScreenshotController screenshotController = ScreenshotController();
 
+  /// Initializes the state of the `_HomeScreenState` class.
+  ///
+  /// This method sets up the periodic data fetching timer and handles various scenarios
+  /// such as checking for new data, handling connection errors, and loading data.
   @override
   void initState() {
     super.initState();
@@ -78,26 +81,43 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  /// Disposes of resources used by the `_HomeScreenState` class.
+  ///
+  /// This method is automatically called when the associated widget is removed from the widget tree.
+  /// It cancels the periodic data fetching timer [_dataFetch], preventing memory leaks
+  /// and ensuring proper cleanup.
   @override
   void dispose() {
     _dataFetch?.cancel();
     super.dispose();
   }
 
-  /// Overrides the build method to construct the widget tree.
+  /// Builds and returns the widget tree for the `_HomeScreenState`.
   ///
-  /// This method returns a Scaffold widget, which provides a framework
-  /// for major parts of the material design visual layout structure, such as
-  /// an AppBar and a Body.
+  /// This method is responsible for constructing the UI components and layout
+  /// of the `HomeScreen` widget. It utilizes localized error messages and calculates
+  /// the available screen width based on the device's screen size and padding.
+  ///
+  /// The resulting widget tree is wrapped in a [Scaffold] for the overall structure,
+  /// and a [SingleChildScrollView] for scrollable content.
+  ///
+  /// Parameters:
+  ///   - `context`: The build context providing access to the localization and theme.
+  ///
+  /// Returns:
+  ///   A widget tree representing the visual elements of the `HomeScreen`.
   @override
   Widget build(BuildContext context) {
+    // Localized error messages
     String errorTitle = FlutterI18n.translate(context, "errors.error");
     String parserErrorMessage =
         FlutterI18n.translate(context, "errors.parser_connection_error");
 
+    // Calculate available screen width
     double screenWidth =
         MediaQuery.of(context).size.width - (totalLeftPaddingHome);
 
+    // Build the overall widget tree
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
