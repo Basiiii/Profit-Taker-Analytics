@@ -9,7 +9,7 @@ from typing import Iterator, Callable, Optional, Union
 from flask import Flask
 from threading import Thread
 from json import dumps, load, dump
-from datetime import datetime
+from datetime import datetime, timedelta
 from waitress import serve
 
 from sty import rs, fg
@@ -40,10 +40,13 @@ class PTConstants:
                   4: ''}
     FINAL_PHASE = 4
 
-class runFormat:
+class Globals:
     RUNFORMAT = {}
+    STARTINGTIME = None
+    LASTRUNTIME = None
 
 class MiscConstants:
+    STARTTIME = 'Sys [Diag]: Current time:'
     NICKNAME = 'Net [Info]: name: '
     SQUAD_MEMBER = 'loadout loader finished.'
     HEIST_START = 'jobId=/Lotus/Types/Gameplay/Venus/Jobs/Heists/HeistProfitTakerBountyFour'
@@ -177,7 +180,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
-        fullRunFormat = runFormat.RUNFORMAT
+        fullRunFormat = Globals.RUNFORMAT
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
         fullRunFormat["total_leg"] = self.leg_sum
@@ -223,7 +226,6 @@ class RelRun:
         fullRunFormat["phase_4"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[4]]
 
         print(fullRunFormat, type(fullRunFormat))
-        fullRunFormat = dumps(fullRunFormat)
         return fullRunFormat
         
 
@@ -421,7 +423,7 @@ class Analyzer:
         json_path = os.path.join(root_dir, "src", "json", "run_format.json")
 
         with open(json_path) as file:
-            runFormat.RUNFORMAT = load(file)
+            Globals.RUNFORMAT = load(file)
 
         filename = self.get_file()
         if self.follow_mode:
@@ -515,11 +517,13 @@ class Analyzer:
         input()  # input(prompt) doesn't work with color coding, so we separate it in a print and an empty input.
 
     def store_run(self, run):
-        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        
-        json_path = os.path.join(root_dir)
+        """
+        Store the run in a json file so the app can use it later.
 
-        fileName = ".." + "\\" + datetime.now().strftime('%Y%m%d_%H%M%S') + str(datetime.now().microsecond) + ".json"
+        Args:
+            run (json): The run to be saved, in json format.
+        """
+        fileName = "..\\storage\\" + (Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)).strftime('%Y%m%d_%H%M%S') + ".json"
         print(fileName)
         with open(fileName, "w") as file:
             dump(run, file)
@@ -527,6 +531,8 @@ class Analyzer:
 
     def follow_log(self, filename: str):
         it = Analyzer.follow(filename)
+        self.store_start_time(it)
+        print(Globals.STARTINGTIME)
         best_time = float('inf')
         require_heist_start = True
         while True:
@@ -542,7 +548,11 @@ class Analyzer:
                     run.best_run_yet = True
 
                 formattedRun = run.to_json()
+
                 self.store_run(formattedRun)
+
+                formattedRun = dumps(formattedRun)
+                
                 self.lastRun = formattedRun
                 run.pretty_print()
                 self.print_summary()
@@ -578,6 +588,26 @@ class Analyzer:
         run.post_process()  # Apply shield phase corrections & check for run integrity
 
         return run
+    
+    def store_start_time(self, log: Iterator[str]):
+        """
+        Get the time the log was generated.
+
+        Args:
+            log (Iterator[str]): The log in question.
+
+        Raises:
+            LogEnd: The log has ended.
+        """
+        while True:
+            try:
+                line = next(log)
+            except StopIteration:
+                raise LogEnd()
+            if MiscConstants.STARTTIME in line:
+                Globals.STARTINGTIME = datetime.strptime(" ".join(line.split()[6:10]), "%b %d %H:%M:%S %Y")
+                return
+        
 
     def register_phase(self, log: Iterator[str], run: AbsRun, phase: int) -> None:
         """
@@ -643,6 +673,7 @@ class Analyzer:
             elif MiscConstants.ELEVATOR_EXIT in line:  # Elevator exit (start of speedrun timing)
                 if not run.heist_start:  # Only use the first time that the zone is left aka heist is started.
                     run.heist_start = Analyzer.time_from_line(line)
+                    Globals.LASTRUNTIME = run.heist_start
             elif MiscConstants.HEIST_START in line:  # New heist start found
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
