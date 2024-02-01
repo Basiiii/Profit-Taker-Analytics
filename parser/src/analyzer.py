@@ -8,7 +8,7 @@ from typing import Iterator, Callable, Optional, Union
 
 from flask import Flask
 from threading import Thread
-from json import dumps, load
+from json import dumps, load, dump
 from datetime import datetime
 from waitress import serve
 
@@ -514,6 +514,17 @@ class Analyzer:
         print(f'{rs.fg}Press ENTER to exit...')
         input()  # input(prompt) doesn't work with color coding, so we separate it in a print and an empty input.
 
+    def store_run(self, run):
+        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        
+        json_path = os.path.join(root_dir)
+
+        fileName = ".." + "\\" + datetime.now().strftime('%Y%m%d_%H%M%S') + str(datetime.now().microsecond) + ".json"
+        print(fileName)
+        with open(fileName, "w") as file:
+            dump(run, file)
+            
+
     def follow_log(self, filename: str):
         it = Analyzer.follow(filename)
         best_time = float('inf')
@@ -531,7 +542,7 @@ class Analyzer:
                     run.best_run_yet = True
 
                 formattedRun = run.to_json()
-                print(type(formattedRun))
+                self.store_run(formattedRun)
                 self.lastRun = formattedRun
                 run.pretty_print()
                 self.print_summary()
