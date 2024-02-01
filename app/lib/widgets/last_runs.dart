@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/last_runs.dart';
 
@@ -6,19 +9,70 @@ import 'package:profit_taker_analyzer/services/last_runs.dart';
 /// This widget is our home page drawer, it's where we will store past runs.
 /// It contains a ListView with a list of items. Each item in the list is represented by a ListTile widget.
 class HomePageDrawer extends StatefulWidget {
-  const HomePageDrawer({super.key});
+  final int maxItems;
+
+  const HomePageDrawer({super.key, required this.maxItems});
 
   @override
   State<HomePageDrawer> createState() => _HomePageDrawerState();
 }
 
 class _HomePageDrawerState extends State<HomePageDrawer> {
-  List<String> lastRuns = [];
+  List<File> allRuns = [];
+  List<String> allRunsNames = [];
+  List<String> displayedRuns = [];
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  bool startupLoading = true;
+  int itemsLoaded = 0;
+  int itemsPerLoad = 0;
 
   @override
   void initState() {
     super.initState();
-    lastRuns = getNamesStoredRuns();
+    itemsPerLoad = widget.maxItems;
+    _scrollController.addListener(_onScroll);
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await Future.delayed(const Duration(milliseconds: 280));
+    allRuns = getStoredRuns();
+    allRunsNames = getNamesRuns(allRuns, allRuns.length);
+    displayedRuns = allRunsNames.take(itemsPerLoad).toList();
+    if (mounted) {
+      setState(() {
+        startupLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoading) {
+      _loadMoreData();
+    }
+  }
+
+  Future<void> _loadMoreData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    int remainingItems = allRuns.length - itemsLoaded;
+    int newItemsLoaded = itemsLoaded + min(remainingItems, itemsPerLoad);
+    displayedRuns
+        .addAll(allRunsNames.skip(displayedRuns.length).take(newItemsLoaded));
+    itemsLoaded = newItemsLoaded;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -40,29 +94,34 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
                 ),
               ),
             ),
-            Wrap(
-              spacing: 8.0, // gap between adjacent chips
-              runSpacing: 4.0, // gap between lines
-              children: lastRuns
-                  .take(10)
-                  .map(
-                    (item) => Material(
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: startupLoading ? 1 : displayedRuns.length,
+                itemBuilder: (context, index) {
+                  if (startupLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return Material(
                       type: MaterialType.transparency,
                       child: ListTile(
                         hoverColor:
                             Theme.of(context).colorScheme.surfaceVariant,
                         title: Text(
-                          item,
+                          displayedRuns[index],
                           style: const TextStyle(fontSize: 14),
                         ),
                         onTap: () {
                           Navigator.pop(context);
                         },
                       ),
-                    ),
-                  )
-                  .toList(),
-            ),
+                    );
+                  }
+                },
+              ),
+            )
           ],
         ),
       ),

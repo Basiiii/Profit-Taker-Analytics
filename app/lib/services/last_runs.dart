@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
-List<String> getNamesStoredRuns() {
+List<File> getStoredRuns() {
   try {
     var mainPath = Platform.resolvedExecutable;
     mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
@@ -16,14 +17,7 @@ List<String> getNamesStoredRuns() {
     // Sort files lexicographically by filename
     jsonFiles.sort((a, b) => a.path.compareTo(b.path));
 
-    // Get the 10 most recent files.
-    List<File> recentFiles = jsonFiles.take(10).toList();
-
-    // Extract the file names from these files.
-    List<String> recentFileNames =
-        recentFiles.map((file) => path.basename(file.path)).toList();
-
-    return recentFileNames;
+    return jsonFiles;
   } catch (e) {
     if (kDebugMode) {
       print('An error occurred: $e');
@@ -34,4 +28,18 @@ List<String> getNamesStoredRuns() {
       print('Finished getting stored runs');
     }
   }
+}
+
+List<String> getNamesRuns(List<File> storedRuns, int numberRuns) {
+  // Get most recent files
+  List<File> recentFiles = storedRuns;
+
+  // Limit the number of files based on the numberRuns parameter
+  recentFiles = recentFiles.sublist(0, min(numberRuns, recentFiles.length));
+
+  // Extract the file names from these files
+  List<String> recentFileNames =
+      recentFiles.map((file) => path.basename(file.path)).toList();
+
+  return recentFileNames;
 }

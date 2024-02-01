@@ -115,6 +115,12 @@ class _HomeScreenState extends State<HomeScreen> {
     String parserErrorMessage =
         FlutterI18n.translate(context, "errors.parser_connection_error");
 
+    /// Calculate available spaces for Last Run elements
+    ///
+    /// We need to know how many runs we can fit in the last runs drawer widget, so
+    /// we calculate the max here and then send it to the Drawer
+    int maxLastRunItems = (MediaQuery.of(context).size.height / 50).ceil();
+
     // Calculate available screen width
     double screenWidth =
         MediaQuery.of(context).size.width - (totalLeftPaddingHome);
@@ -227,7 +233,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         )),
                     const SizedBox(height: 12), // Space between elements
                   ]))),
-      endDrawer: const HomePageDrawer(),
+      endDrawer: HomePageDrawer(
+        maxItems: maxLastRunItems,
+      ),
     );
   }
 }
