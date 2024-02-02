@@ -10,8 +10,10 @@ import 'package:profit_taker_analyzer/services/last_runs.dart';
 /// It contains a ListView with a list of items. Each item in the list is represented by a ListTile widget.
 class HomePageDrawer extends StatefulWidget {
   final int maxItems;
+  final Function(String) onItemSelected;
 
-  const HomePageDrawer({super.key, required this.maxItems});
+  const HomePageDrawer(
+      {super.key, required this.maxItems, required this.onItemSelected});
 
   @override
   State<HomePageDrawer> createState() => _HomePageDrawerState();
@@ -115,6 +117,7 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
                         ),
                         onTap: () {
                           Navigator.pop(context);
+                          widget.onItemSelected(displayedRuns[index]);
                         },
                       ),
                     );

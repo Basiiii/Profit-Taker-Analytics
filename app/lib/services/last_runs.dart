@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
@@ -37,9 +38,15 @@ List<String> getNamesRuns(List<File> storedRuns, int numberRuns) {
   // Limit the number of files based on the numberRuns parameter
   recentFiles = recentFiles.sublist(0, min(numberRuns, recentFiles.length));
 
-  // Extract the file names from these files
-  List<String> recentFileNames =
-      recentFiles.map((file) => path.basename(file.path)).toList();
+  // Extract the custom names from these files
+  List<String> recentCustomNames = recentFiles.map((file) {
+    String fileContent = file.readAsStringSync();
+    Map<String, dynamic> jsonContent = jsonDecode(fileContent);
+    String fileName = path.basename(file.path);
+    String customName = jsonContent['pretty_name'] ?? '';
 
-  return recentFileNames;
+    return customName.isEmpty ? fileName : customName;
+  }).toList();
+
+  return recentCustomNames;
 }

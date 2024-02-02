@@ -51,6 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
   /// A controller for taking screenshots.
   ScreenshotController screenshotController = ScreenshotController();
 
+  void loadLastRunData(String fileName) {
+    LoadingOverlay.of(context).show();
+    loadDataFile(fileName).then((_) {
+      setState(() {});
+      LoadingOverlay.of(context).hide();
+    });
+  }
+
   /// Initializes the state of the `_HomeScreenState` class.
   ///
   /// This method sets up the periodic data fetching timer and handles various scenarios
@@ -70,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (result == newDataAvailable && mounted) {
         _connectionStatus = ValueNotifier<bool>(true);
         LoadingOverlay.of(context).show();
-        await loadData().then((_) {
+        await loadDataAPI().then((_) {
           setState(() {});
           LoadingOverlay.of(context).hide();
         });
@@ -234,8 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 12), // Space between elements
                   ]))),
       endDrawer: HomePageDrawer(
-        maxItems: maxLastRunItems,
-      ),
+          maxItems: maxLastRunItems, onItemSelected: loadLastRunData),
     );
   }
 }

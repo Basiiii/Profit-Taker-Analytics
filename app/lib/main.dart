@@ -34,7 +34,7 @@ import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
     as custom_nav;
 
 import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
-import 'package:profit_taker_analyzer/screens/run_storage/runs_screen.dart';
+import 'package:profit_taker_analyzer/screens/storage/runs_screen.dart';
 import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
 
 import 'package:profit_taker_analyzer/theme/theme_control.dart';
@@ -277,7 +277,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
                                         HomeScreen(),
 
                                         /// Advanced screen widget.
-                                        RunStorage(),
+                                        StorageScreen(),
 
                                         /// Settings screen widget.
                                         SettingsScreen(),

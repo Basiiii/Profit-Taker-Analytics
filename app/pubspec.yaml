@@ -42,7 +42,10 @@ dependencies:
   flutter_i18n: ^0.35.0
   flutter_localizations:
     sdk: flutter
+  # To be able to get path from File objects
   path: any
+  # Table for run storage screen
+  data_table_2: ^2.5.10
 
 dev_dependencies:
   flutter_test:

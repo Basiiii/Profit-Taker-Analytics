@@ -301,7 +301,7 @@ void updatePhaseCard(
 ///   print('Error loading data: $e');
 /// }
 /// ```
-Future<void> loadData() async {
+Future<void> loadDataAPI() async {
   var url = Uri.parse('http://127.0.0.1:5000/last_run');
   var response = await http.get(url);
 
@@ -327,6 +327,46 @@ Future<void> loadData() async {
     updatePhaseCardsWithJson(response.body, 3, 'phase_4');
   } else {
     throw Exception('Failed to load data');
+  }
+
+  await Future.delayed(const Duration(seconds: 1));
+}
+
+Future<void> loadDataFile(String fileName) async {
+  try {
+    var mainPath = Platform.resolvedExecutable;
+    mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+    var filePath = "$mainPath\\storage\\$fileName";
+    final file = File(filePath);
+
+    if (await file.exists()) {
+      final String contents = await file.readAsString();
+      final data = jsonDecode(contents);
+
+      /// Update username with space behind for formatting
+      username = '${data['nickname']}';
+
+      /// Update overview cards data
+      updateOverviewCardTime(overviewCards, 0, data['total_duration']);
+      updateOverviewCardTime(
+          overviewCards, 1, (data['flight_duration'] as num).toDouble());
+      updateOverviewCardTime(overviewCards, 2, data['total_shield']);
+      updateOverviewCardTime(overviewCards, 3, data['total_leg']);
+      updateOverviewCardTime(overviewCards, 4, data['total_body']);
+      updateOverviewCardTime(overviewCards, 5, data['total_pylon']);
+
+      /// Update phase cards data
+      updatePhaseCardsWithJson(contents, 0, 'phase_1');
+      updatePhaseCardsWithJson(contents, 1, 'phase_2');
+      updatePhaseCardsWithJson(contents, 2, 'phase_3');
+      updatePhaseCardsWithJson(contents, 3, 'phase_4');
+    } else {
+      throw Exception('File does not exist');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error reading file: $e');
+    }
   }
 
   await Future.delayed(const Duration(seconds: 1));
