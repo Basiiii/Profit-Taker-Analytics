@@ -11,6 +11,7 @@ from threading import Thread
 from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
+import pprint
 
 from sty import rs, fg
 
@@ -44,6 +45,7 @@ class Globals:
     RUNFORMAT = {}
     STARTINGTIME = None
     LASTRUNTIME = None
+    LASTBUGGEDRUN = None
 
 class MiscConstants:
     STARTTIME = 'Sys [Diag]: Current time:'
@@ -55,6 +57,7 @@ class MiscConstants:
     ELEVATOR_EXIT = 'EidolonMP.lua: EIDOLONMP: Avatar left the zone'
     BACK_TO_TOWN = 'EidolonMP.lua: EIDOLONMP: TryTownTransition'
     ABORT_MISSION = 'GameRulesImpl - changing state from SS_STARTED to SS_ENDING'
+
 
 
 class RelRun:
@@ -229,6 +232,27 @@ class RelRun:
         return fullRunFormat
         
 
+class BrokenRun(RelRun):
+
+    def __init__(self,
+                 nickname: str,
+                 squad_members: set[str],
+                 total_time: float):
+        self.nickname = nickname
+        self.squad_members = squad_members
+        self.total_time = total_time
+
+    def to_json(self):
+
+        fullRunFormat = Globals.RUNFORMAT
+        fullRunFormat["total_duration"] = self.total_time
+        fullRunFormat["squad_members"] = list(self.squad_members)
+        fullRunFormat["nickname"] = self.nickname
+        fullRunFormat["aborted_run"] = True
+        return fullRunFormat
+
+
+
 class AbsRun:
 
     def __init__(self, run_nr: int):
@@ -312,6 +336,18 @@ class AbsRun:
         if failure_reasons:
             raise BuggedRun(self, failure_reasons)
         # Else: return none implicitly
+
+    def to_broken(self) -> BrokenRun:
+        """
+        Convert the absolute timing run into a broken run object with relative timings.
+
+        Not all information will be present, but these ones are sure to be there (surely).
+
+        Returns:
+            BrokenRun: A broken run object containing minimal information about the run.
+        """
+        total_time = self.final_time - self.heist_start
+        return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
 
     def to_rel(self) -> RelRun:
         """
@@ -523,7 +559,18 @@ class Analyzer:
         Args:
             run (json): The run to be saved, in json format.
         """
-        fileName = "..\\storage\\" + (Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)).strftime('%Y%m%d_%H%M%S') + ".json"
+        # Determine the base directory based on whether we're running a .py or .exe file
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.realpath(__file__))
+
+        # Go back one directory and into "storage" folder
+        storage_folder = os.path.join(base_dir, '..', 'storage')
+        
+        # Create filename
+        time_diff = Globals.STARTINGTIME - timedelta(seconds=Globals.LASTRUNTIME)
+        fileName = os.path.join(storage_folder, time_diff.strftime('%Y%m%d_%H%M%S') + ".json")
         print(fileName)
         with open(fileName, "w") as file:
             dump(run, file)
@@ -558,6 +605,16 @@ class Analyzer:
                 self.print_summary()
                 self.lastRunTime = {"date": datetime.now().isoformat()}
             except RunAbort as abort:
+
+                # Get the latest run that was broken.
+                broken_run = Globals.LASTBUGGEDRUN.to_broken().to_json()
+
+                # Store the run in run history.
+                self.store_run(broken_run)
+                broken_run = dumps(broken_run)
+
+                # Make sure the run is available in the endpoint.
+                self.lastRun = broken_run
                 print(abort)
                 self.runs.append(abort)
                 require_heist_start = abort.require_heist_start
@@ -677,6 +734,8 @@ class Analyzer:
             elif MiscConstants.HEIST_START in line:  # New heist start found
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
+                # Save the run to convert it into a broken run.
+                Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
                 raise RunAbort(run, require_heist_start=True)
