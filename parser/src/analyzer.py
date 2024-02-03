@@ -12,6 +12,7 @@ from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
 import copy
+
 from sty import rs, fg
 
 from src.enums.damage_types import DT
@@ -345,7 +346,7 @@ class AbsRun:
         Returns:
             BrokenRun: A broken run object containing minimal information about the run.
         """
-        total_time = self.final_time - self.heist_start
+        total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0
         return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
 
     def to_rel(self) -> RelRun:
