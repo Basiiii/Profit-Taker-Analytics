@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:data_table_2/data_table_2.dart';
@@ -132,12 +133,16 @@ class _StorageScreenState extends State<StorageScreen> {
                                     DataCell(IconButton(
                                         icon: const Icon(Icons.edit),
                                         onPressed: () {
-                                          print('Edit $name');
+                                          if (kDebugMode) {
+                                            print('Edit $name');
+                                          }
                                         })),
                                     DataCell(IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () {
-                                          print('Delete $name');
+                                          if (kDebugMode) {
+                                            print('Delete $name');
+                                          }
                                         }))
                                   ]))
                           .toList()))

@@ -4,6 +4,11 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
 /// Display name.
 String username = '';
+String playersList = '';
+
+/// Defines if the run is solo and if it's most recent
+bool soloRun = true;
+bool mostRecentRun = true;
 
 /// Represents an overview card with a color, an icon, a title and a time.
 ///

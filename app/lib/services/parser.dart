@@ -77,22 +77,43 @@ Future<void> killParserInstances() async {
 Future<int> checkForNewData() async {
   var url = Uri.parse('http://127.0.0.1:5000/last_run_time');
   try {
-    var response = await http.get(url);
+    var response =
+        await http.get(url).timeout(const Duration(milliseconds: 500));
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-      DateTime currentTimestamp = DateTime.parse(data['date'].split('.')[0]);
+      // Check if the response contains the expected 'date' field
+      if (data.containsKey('date') && data['date'] != null) {
+        DateTime currentTimestamp = DateTime.parse(data['date'].split('.')[0]);
 
-      if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
-        lastUpdateTimestamp = currentTimestamp;
-        return newDataAvailable;
+        if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
+          lastUpdateTimestamp = currentTimestamp;
+          return newDataAvailable;
+        } else {
+          if (kDebugMode) {
+            print("No new data available.");
+          }
+          return noNewDataAvailable;
+        }
+      } else {
+        // If the 'date' field is missing or null, consider it a connection error or invalid response
+        if (kDebugMode) {
+          print("Invalid response received: 'date' field is missing or null.");
+        }
+        return connectionError;
       }
     } else {
-      throw Exception('Failed to load data');
+      // If the status code is not 200, consider it a connection error
+      if (kDebugMode) {
+        print("Status code indicates a connection error.");
+      }
+      return connectionError;
     }
-    return noNewDataAvailable;
   } catch (e) {
+    if (kDebugMode) {
+      print("Connection error: $e");
+    }
     return connectionError;
   }
 }
@@ -284,17 +305,19 @@ void updatePhaseCard(
   );
 }
 
-/// Asynchronously loads data from a specified URL and updates various components in the application.
+/// Asynchronously loads data from the specified URL and updates various components in the application.
 ///
 /// This function sends a GET request to the 'http://127.0.0.1:5000/last_run' URL to retrieve the latest data.
 /// If the response status code is 200, it decodes the JSON response and updates several components,
 /// including the [username], [overviewCards], and [phaseCards], using helper functions like [updateOverviewCardTime]
 /// and [updatePhaseCardsWithJson]. The data retrieved is assumed to follow a specific format.
 ///
+/// This method is typically used to fetch and update real-time information about the last run from a server.
+///
 /// Example:
 /// ```dart
 /// try {
-///   await loadData();
+///   await loadDataAPI();
 ///   // Data loaded successfully, update UI or perform additional actions
 /// } catch (e) {
 ///   // Handle the exception, e.g., show an error message
@@ -310,6 +333,18 @@ Future<void> loadDataAPI() async {
 
     /// Update username with space behind for formatting
     username = '${data['nickname']}';
+
+    /// Build string from squad_members array excluding nickname
+    String nickname = data['nickname'];
+    List<String> squadMembers = List<String>.from(data['squad_members']);
+    squadMembers.removeWhere((member) => member == nickname);
+    playersList = squadMembers.join(', ');
+
+    /// Update soloRun based on the size of squadMembers
+    soloRun = squadMembers.length > 1 ? false : true;
+
+    /// Loading from API means it's the most recent
+    mostRecentRun = true;
 
     /// Update overview cards data
     updateOverviewCardTime(overviewCards, 0, data['total_duration']);
@@ -332,6 +367,24 @@ Future<void> loadDataAPI() async {
   await Future.delayed(const Duration(seconds: 1));
 }
 
+/// Asynchronously loads data from a local file specified by [fileName] and updates various components in the application.
+///
+/// This function reads the contents of the file located at "$mainPath\\storage\\$fileName" and decodes the JSON data.
+/// If the file exists, it updates several components, including the [username], [overviewCards], and [phaseCards],
+/// using helper functions like [updateOverviewCardTime] and [updatePhaseCardsWithJson]. The data retrieved is assumed
+/// to follow a specific format.
+///
+/// This method is typically used to load historical data from a file for analysis or display purposes.
+///
+/// Example:
+/// ```dart
+/// try {
+///   await loadDataFile('example_data.json');
+///   // Data loaded successfully, update UI or perform additional actions
+/// } catch (e) {
+///   // Handle the exception, e.g., show an error message
+///   print('Error loading data from file: $e');
+/// }
 Future<void> loadDataFile(String fileName) async {
   try {
     var mainPath = Platform.resolvedExecutable;
@@ -345,6 +398,18 @@ Future<void> loadDataFile(String fileName) async {
 
       /// Update username with space behind for formatting
       username = '${data['nickname']}';
+
+      /// Build string from squad_members array excluding nickname
+      String nickname = data['nickname'];
+      List<String> squadMembers = List<String>.from(data['squad_members']);
+      squadMembers.removeWhere((member) => member == nickname);
+      playersList = squadMembers.join(', ');
+
+      /// Update soloRun based on the size of squadMembers
+      soloRun = squadMembers.length > 1 ? false : true;
+
+      /// Loading from File means it's not the most recent
+      mostRecentRun = false;
 
       /// Update overview cards data
       updateOverviewCardTime(overviewCards, 0, data['total_duration']);

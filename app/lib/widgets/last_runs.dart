@@ -22,6 +22,7 @@ class HomePageDrawer extends StatefulWidget {
 class _HomePageDrawerState extends State<HomePageDrawer> {
   List<File> allRuns = [];
   List<String> allRunsNames = [];
+  List<String> allRunsFilenames = [];
   List<String> displayedRuns = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
@@ -40,7 +41,9 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
   Future<void> loadData() async {
     await Future.delayed(const Duration(milliseconds: 280));
     allRuns = getStoredRuns();
-    allRunsNames = getNamesRuns(allRuns, allRuns.length);
+
+    getNamesRuns(allRuns, allRuns.length, allRunsNames, allRunsFilenames);
+
     displayedRuns = allRunsNames.take(itemsPerLoad).toList();
     if (mounted) {
       setState(() {
@@ -117,7 +120,7 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
                         ),
                         onTap: () {
                           Navigator.pop(context);
-                          widget.onItemSelected(displayedRuns[index]);
+                          widget.onItemSelected(allRunsFilenames[index]);
                         },
                       ),
                     );

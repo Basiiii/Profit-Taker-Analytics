@@ -2,7 +2,10 @@
     "home": {
         "hello": "Olá!",
         "hello_name": "Olá {name}!",
-        "last_run": "Última missão"
+        "last_run": "Última luta",
+        "last_run_with": "Última luta com ",
+        "run": "A tua luta",
+        "run_with": "A tua luta com "
     },
     "overview_cards": {
         "total_duration": "Tempo\nTotal",

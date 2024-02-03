@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// A [ValueNotifier] that holds the current connection status.
-  ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
 
   /// A timer for periodic data fetching.
   Timer? _dataFetch;
@@ -72,11 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
         Timer.periodic(const Duration(milliseconds: 1500), (timer) async {
       int result = await checkForNewData();
       if (result == noNewDataAvailable) {
-        _connectionStatus = ValueNotifier<bool>(true);
+        _connectionStatus.value = true;
         return;
       }
       if (result == newDataAvailable && mounted) {
-        _connectionStatus = ValueNotifier<bool>(true);
+        _connectionStatus.value = true;
         LoadingOverlay.of(context).show();
         await loadDataAPI().then((_) {
           setState(() {});
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return;
       }
       if (result == connectionError) {
-        _connectionStatus == ValueNotifier<bool>(false);
+        _connectionStatus.value = false;
         return;
       }
     });
@@ -196,10 +196,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 25),
                     Row(
                       children: [
-                        titleText(
-                            FlutterI18n.translate(context, "home.last_run"),
-                            20,
-                            FontWeight.w500),
+                        mostRecentRun == true
+                            ? titleText(
+                                soloRun == true
+                                    ? FlutterI18n.translate(
+                                        context, "home.last_run")
+                                    : (FlutterI18n.translate(
+                                            context, "home.last_run_with") +
+                                        playersList),
+                                20,
+                                FontWeight.w500)
+                            : titleText(
+                                soloRun == true
+                                    ? FlutterI18n.translate(context, "home.run")
+                                    : (FlutterI18n.translate(
+                                            context, "home.run_with") +
+                                        playersList),
+                                20,
+                                FontWeight.w500),
                         IconButton(
                           icon: const Icon(Icons.share, size: 18),
                           onPressed: () {
