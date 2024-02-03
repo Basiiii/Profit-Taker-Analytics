@@ -11,8 +11,7 @@ from threading import Thread
 from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
-import pprint
-
+import copy
 from sty import rs, fg
 
 from src.enums.damage_types import DT
@@ -183,7 +182,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
-        fullRunFormat = Globals.RUNFORMAT
+        fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
         fullRunFormat["total_leg"] = self.leg_sum
@@ -244,7 +243,7 @@ class BrokenRun(RelRun):
 
     def to_json(self):
 
-        fullRunFormat = Globals.RUNFORMAT
+        fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.total_time
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
