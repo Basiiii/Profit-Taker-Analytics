@@ -47,7 +47,8 @@ class _StorageScreenState extends State<StorageScreen> {
         allRunsDates, allRunsDurations);
   }
 
-  void _sort<T>(Comparable<T> Function(String) getField, int columnIndex) {
+  void _sortRunNames<T>(
+      Comparable<T> Function(String) getField, int columnIndex) {
     setState(() {
       _sortColumnIndex = 0; // Always set to 0 for 'Run Name' column
       _sortAscending = !_sortAscending; // Toggle the sort direction
@@ -61,9 +62,21 @@ class _StorageScreenState extends State<StorageScreen> {
     });
   }
 
+  void _sortRunTimes() {
+    setState(() {
+      _sortColumnIndex = 1; // Always set to 1 for 'Run Time' column
+      _sortAscending = !_sortAscending; // Toggle the sort direction
+      allRunsDurations.sort((a, b) {
+        int numA = int.parse(a.replaceAll(RegExp(r'\D'), ''));
+        int numB = int.parse(b.replaceAll(RegExp(r'\D'), ''));
+        return _sortAscending ? numA.compareTo(numB) : numB.compareTo(numA);
+      });
+    });
+  }
+
   void _sortDates() {
     setState(() {
-      _sortColumnIndex = 1; // Always set to 1 for 'Date' column
+      _sortColumnIndex = 2; // Always set to 2 for 'Date' column
       _sortAscending = !_sortAscending; // Toggle the sort direction
       allRunsDates.sort((a, b) {
         return _sortAscending ? a.compareTo(b) : b.compareTo(a);
@@ -137,17 +150,30 @@ class _StorageScreenState extends State<StorageScreen> {
                                 ]),
                                 size: ColumnSize.L,
                                 onSort: (columnIndex, _) =>
-                                    _sort<String>((n) => n, columnIndex),
+                                    _sortRunNames<String>(
+                                        (n) => n, columnIndex),
                               ),
-                              const DataColumn2(
-                                  label: Text('Run time'), size: ColumnSize.M),
+                              DataColumn2(
+                                label: Row(
+                                  children: [
+                                    const Text('Run Time'),
+                                    if (_sortColumnIndex == 1 && _sortAscending)
+                                      const Icon(Icons.arrow_upward),
+                                    if (_sortColumnIndex == 1 &&
+                                        !_sortAscending)
+                                      const Icon(Icons.arrow_downward),
+                                  ],
+                                ),
+                                size: ColumnSize.M,
+                                onSort: (_, __) => _sortRunTimes(),
+                              ),
                               DataColumn2(
                                 label: Row(
                                   children: [
                                     const Text('Date'),
-                                    if (_sortColumnIndex == 1 && _sortAscending)
+                                    if (_sortColumnIndex == 2 && _sortAscending)
                                       const Icon(Icons.arrow_upward),
-                                    if (_sortColumnIndex == 1 &&
+                                    if (_sortColumnIndex == 2 &&
                                         !_sortAscending)
                                       const Icon(Icons.arrow_downward),
                                   ],
@@ -186,7 +212,9 @@ class _StorageScreenState extends State<StorageScreen> {
                                               icon: const Icon(Icons.edit),
                                               onPressed: () {
                                                 if (kDebugMode) {
-                                                  print('Edit $name');
+                                                  var fileName =
+                                                      '${allRunsFilenames[allRunsNames.indexOf(name)]}.json';
+                                                  print('Edit $fileName');
                                                 }
                                               })),
                                           DataCell(IconButton(
@@ -202,7 +230,7 @@ class _StorageScreenState extends State<StorageScreen> {
                 )),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

@@ -5,7 +5,9 @@
         "last_run": "Твой последний заход",
         "last_run_with": "Твой последний заход с ",
         "run": "Заход",
-        "run_with": "Заход с "
+        "run_with": "Заход с ",
+        "and": " и ",
+        "named": "называется"
     },
     "overview_cards": {
         "total_duration": "Суммарная\nДлительность",

@@ -2,7 +2,12 @@
     "home": {
         "hello": "你好!",
         "hello_name": "你好， {name}!",
-        "last_run": "你的上一次记录"
+        "last_run": "上一次记录",
+        "last_run_with": "你的上一把记录，与 ",
+        "run": "你的记录",
+        "run_with": "你的记录，与 ",
+        "and": " 和 ",
+        "named": "称为"
     },
     "overview_cards": {
         "total_duration": "总时长",

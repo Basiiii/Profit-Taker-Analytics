@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -112,4 +116,70 @@ void showContactsAppDialog(BuildContext context, String contactText) {
       );
     },
   );
+}
+
+Future<void> displayTextInputDialog(
+    BuildContext context,
+    TextEditingController controller,
+    String fileName,
+    String hintText,
+    String changeFileNameText,
+    String cancelText,
+    String okText,
+    Function updateCallback) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(changeFileNameText),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(hintText: hintText),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(cancelText),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text(okText),
+            onPressed: () {
+              var newName = controller.text;
+              updateRunName(newName, fileName).then((_) => updateCallback());
+              Navigator.pop(context);
+              controller.clear();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> updateRunName(String newName, String fileName) async {
+  // Define the path to the JSON file
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var storagePath = "$mainPath\\storage\\$fileName.json";
+
+  // Load the JSON file
+  final File jsonFile = File(storagePath);
+  final String jsonString = await jsonFile.readAsString();
+
+  // Parse the JSON string into a Dart Map
+  final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+  // Update the value of the "pretty_name" key
+  jsonData['pretty_name'] = newName;
+
+  // Convert the updated Map back into a JSON string
+  final String updatedJsonString = jsonEncode(jsonData);
+
+  // Write the updated JSON string back to the file
+  await jsonFile.writeAsString(updatedJsonString);
+
+  // Update the variable
+  customRunName = newName;
 }

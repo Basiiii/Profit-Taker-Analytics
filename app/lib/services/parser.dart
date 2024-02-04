@@ -30,7 +30,7 @@ void startParser() async {
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
   var binPath = "$mainPath\\bin\\";
-  var parserPath = "$binPath\\parser.exe";
+  var parserPath = "$binPath\\run_parser.exe";
 
   try {
     var processResults = await Shell().run('"$parserPath"');
@@ -331,6 +331,11 @@ Future<void> loadDataAPI() async {
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
 
+    /// Update the file name and run name
+    runFileName =
+        'GET_FROM_API'; // TODO: get this data from the API once it's been added
+    customRunName = data["pretty_name"] ?? '';
+
     /// Update username with space behind for formatting
     username = '${data['nickname']}';
 
@@ -338,7 +343,15 @@ Future<void> loadDataAPI() async {
     String nickname = data['nickname'];
     List<String> squadMembers = List<String>.from(data['squad_members']);
     squadMembers.removeWhere((member) => member == nickname);
-    playersList = squadMembers.join(', ');
+
+    if (squadMembers.isNotEmpty) {
+      playersListStart =
+          squadMembers.sublist(0, squadMembers.length - 1).join(', ');
+      playersListEnd = squadMembers.last;
+    } else {
+      playersListStart = "";
+      playersListEnd = "";
+    }
 
     /// Update soloRun based on the size of squadMembers
     soloRun = squadMembers.length > 1 ? false : true;
@@ -396,6 +409,10 @@ Future<void> loadDataFile(String fileName) async {
       final String contents = await file.readAsString();
       final data = jsonDecode(contents);
 
+      /// Update the file name and run name
+      runFileName = fileName.replaceAll('.json', '');
+      customRunName = data["pretty_name"] ?? '';
+
       /// Update username with space behind for formatting
       username = '${data['nickname']}';
 
@@ -403,7 +420,15 @@ Future<void> loadDataFile(String fileName) async {
       String nickname = data['nickname'];
       List<String> squadMembers = List<String>.from(data['squad_members']);
       squadMembers.removeWhere((member) => member == nickname);
-      playersList = squadMembers.join(', ');
+
+      if (squadMembers.isNotEmpty) {
+        playersListStart =
+            squadMembers.sublist(0, squadMembers.length - 1).join(', ');
+        playersListEnd = squadMembers.last;
+      } else {
+        playersListStart = "";
+        playersListEnd = "";
+      }
 
       /// Update soloRun based on the size of squadMembers
       soloRun = squadMembers.length > 1 ? false : true;

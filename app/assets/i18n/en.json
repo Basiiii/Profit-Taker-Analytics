@@ -5,7 +5,9 @@
         "last_run": "Your last run",
         "last_run_with": "Your last run with ",
         "run": "Your run",
-        "run_with": "Your run with "
+        "run_with": "Your run with ",
+        "and": " and ",
+        "named": "called"
     },
     "overview_cards": {
         "total_duration": "Total\nDuration",

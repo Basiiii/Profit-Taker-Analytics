@@ -59,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  final _textFieldController = TextEditingController();
+
   /// Initializes the state of the `_HomeScreenState` class.
   ///
   /// This method sets up the periodic data fetching timer and handles various scenarios
@@ -118,6 +120,12 @@ class _HomeScreenState extends State<HomeScreen> {
   ///   A widget tree representing the visual elements of the `HomeScreen`.
   @override
   Widget build(BuildContext context) {
+    void updateCallback() {
+      LoadingOverlay.of(context).show();
+      setState(() {});
+      LoadingOverlay.of(context).hide();
+    }
+
     // Localized error messages
     String errorTitle = FlutterI18n.translate(context, "errors.error");
     String parserErrorMessage =
@@ -201,19 +209,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                 soloRun == true
                                     ? FlutterI18n.translate(
                                         context, "home.last_run")
-                                    : (FlutterI18n.translate(
+                                    : FlutterI18n.translate(
                                             context, "home.last_run_with") +
-                                        playersList),
+                                        (playersListStart.isNotEmpty
+                                            ? playersListStart +
+                                                FlutterI18n.translate(
+                                                    context, "home.and")
+                                            : "") +
+                                        playersListEnd,
                                 20,
                                 FontWeight.w500)
                             : titleText(
                                 soloRun == true
                                     ? FlutterI18n.translate(context, "home.run")
-                                    : (FlutterI18n.translate(
-                                            context, "home.run_with") +
-                                        playersList),
+                                    : FlutterI18n.translate(
+                                            context, "home.last_run_with") +
+                                        (playersListStart.isNotEmpty
+                                            ? playersListStart +
+                                                FlutterI18n.translate(
+                                                    context, "home.and")
+                                            : "") +
+                                        playersListEnd,
                                 20,
                                 FontWeight.w500),
+                        titleText(
+                            " ${FlutterI18n.translate(context, "home.named")} ",
+                            20,
+                            FontWeight.w500),
+                        titleText(
+                            customRunName.isEmpty
+                                ? "\"$runFileName\""
+                                : "\"$customRunName\"",
+                            20,
+                            FontWeight.w500),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 18),
+                          onPressed: () {
+                            displayTextInputDialog(
+                                context,
+                                _textFieldController,
+                                runFileName,
+                                customRunName.isEmpty
+                                    ? runFileName
+                                    : customRunName,
+                                "change file name",
+                                "cancel",
+                                "okay",
+                                updateCallback);
+                          },
+                        ),
                         IconButton(
                           icon: const Icon(Icons.share, size: 18),
                           onPressed: () {

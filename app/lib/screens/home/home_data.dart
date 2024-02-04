@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
-/// Display name.
+/// Custom and file name of current run
+String runFileName = '';
+String customRunName = '';
+
+/// Display name(s)
 String username = '';
-String playersList = '';
+String playersListStart = '';
+String playersListEnd = '';
 
 /// Defines if the run is solo and if it's most recent
 bool soloRun = true;

@@ -5,7 +5,9 @@
         "last_run": "Última luta",
         "last_run_with": "Última luta com ",
         "run": "A tua luta",
-        "run_with": "A tua luta com "
+        "run_with": "A tua luta com ",
+        "and": " e ",
+        "named": "chamada"
     },
     "overview_cards": {
         "total_duration": "Tempo\nTotal",
