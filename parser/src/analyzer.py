@@ -12,7 +12,6 @@ from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
 import copy
-import pprint
 import socket
 
 from sty import rs, fg
@@ -612,7 +611,6 @@ class Analyzer:
     def follow_log(self, filename: str):
         it = Analyzer.follow(filename)
         self.store_start_time(it)
-        print(Globals.STARTINGTIME)
         best_time = float('inf')
         require_heist_start = True
         while True:
@@ -768,7 +766,6 @@ class Analyzer:
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
                 # Save the run to convert it into a broken run.
-                pprint.pprint(vars(run))
                 Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
