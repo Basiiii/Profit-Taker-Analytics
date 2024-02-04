@@ -11,6 +11,8 @@ from threading import Thread
 from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
+import copy
+import socket
 
 from sty import rs, fg
 
@@ -44,6 +46,7 @@ class Globals:
     RUNFORMAT = {}
     STARTINGTIME = None
     LASTRUNTIME = None
+    LASTBUGGEDRUN = None
 
 class MiscConstants:
     STARTTIME = 'Sys [Diag]: Current time:'
@@ -55,6 +58,7 @@ class MiscConstants:
     ELEVATOR_EXIT = 'EidolonMP.lua: EIDOLONMP: Avatar left the zone'
     BACK_TO_TOWN = 'EidolonMP.lua: EIDOLONMP: TryTownTransition'
     ABORT_MISSION = 'GameRulesImpl - changing state from SS_STARTED to SS_ENDING'
+
 
 
 class RelRun:
@@ -180,7 +184,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
-        fullRunFormat = Globals.RUNFORMAT
+        fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
         fullRunFormat["total_leg"] = self.leg_sum
@@ -193,6 +197,7 @@ class RelRun:
 
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
+        fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
 
         fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
         fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
@@ -228,6 +233,30 @@ class RelRun:
         print(fullRunFormat, type(fullRunFormat))
         return fullRunFormat
         
+
+class BrokenRun(RelRun):
+
+    def __init__(self,
+                 nickname: str,
+                 squad_members: set[str],
+                 total_time: float):
+        self.nickname = nickname
+        self.squad_members = squad_members
+        self.total_time = total_time
+
+    def to_json(self):
+        """
+        Convert a broken run to json format, containing only the most important information.
+
+        Returns:
+            json: The run format.
+        """
+        fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
+        fullRunFormat["total_duration"] = self.total_time
+        fullRunFormat["squad_members"] = list(self.squad_members)
+        fullRunFormat["nickname"] = self.nickname
+        fullRunFormat["aborted_run"] = True
+        return fullRunFormat
 
 class AbsRun:
 
@@ -312,6 +341,18 @@ class AbsRun:
         if failure_reasons:
             raise BuggedRun(self, failure_reasons)
         # Else: return none implicitly
+
+    def to_broken(self) -> BrokenRun:
+        """
+        Convert the absolute timing run into a broken run object with relative timings.
+
+        Not all information will be present, but these ones are sure to be there (surely).
+
+        Returns:
+            BrokenRun: A broken run object containing minimal information about the run.
+        """
+        total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0
+        return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
 
     def to_rel(self) -> RelRun:
         """
@@ -411,9 +452,36 @@ class Analyzer:
         #     return {'status': 'ok'}
 
         try:
-            Thread(target=lambda: serve(app, host="127.0.0.1", port=5000)).start()
+            # Find an open port.
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.bind(('localhost', 0))
+            port = sock.getsockname()[1]
+            sock.close()
+
+            # Write the open port to a text file to be used by the application.
+            # Determine the base directory based on whether we're running a .py or .exe file
+            if getattr(sys, 'frozen', False):
+                bin_dir = os.path.dirname(sys.executable)
+            else:
+                bin_dir = os.path.dirname(os.path.realpath(__file__))
+
+            file_name = os.path.join(bin_dir, "port.txt")
+            with open(file_name, 'w') as port_file:
+                port_file.write(str(port))
+
+            # Start the application on a seperate thread.
+            Thread(target=lambda: serve(app, host="127.0.0.1", port=port)).start()
         except Exception as e:
             print(e)
+
+    @staticmethod
+    def get_run_time():
+        """
+        Get the absolute time a run took place.
+        Returns:
+            datetime: datetime object
+        """
+        return Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)
 
     def run(self):
         self.initAPI()
@@ -523,7 +591,18 @@ class Analyzer:
         Args:
             run (json): The run to be saved, in json format.
         """
-        fileName = "..\\storage\\" + (Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)).strftime('%Y%m%d_%H%M%S') + ".json"
+        # Determine the base directory based on whether we're running a .py or .exe file
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.realpath(__file__))
+
+        # Go back one directory and into "storage" folder
+        storage_folder = os.path.join(base_dir, '..', 'storage')
+        
+        # Create filename
+        time_diff = self.get_run_time()
+        fileName = os.path.join(storage_folder, time_diff.strftime('%Y%m%d_%H%M%S') + ".json")
         print(fileName)
         with open(fileName, "w") as file:
             dump(run, file)
@@ -532,7 +611,6 @@ class Analyzer:
     def follow_log(self, filename: str):
         it = Analyzer.follow(filename)
         self.store_start_time(it)
-        print(Globals.STARTINGTIME)
         best_time = float('inf')
         require_heist_start = True
         while True:
@@ -558,6 +636,16 @@ class Analyzer:
                 self.print_summary()
                 self.lastRunTime = {"date": datetime.now().isoformat()}
             except RunAbort as abort:
+
+                # Get the latest run that was broken.
+                broken_run = Globals.LASTBUGGEDRUN.to_broken().to_json()
+
+                # Store the run in run history.
+                self.store_run(broken_run)
+                broken_run = dumps(broken_run)
+
+                # Make sure the run is available in the endpoint.
+                self.lastRun = broken_run
                 print(abort)
                 self.runs.append(abort)
                 require_heist_start = abort.require_heist_start
@@ -677,6 +765,8 @@ class Analyzer:
             elif MiscConstants.HEIST_START in line:  # New heist start found
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
+                # Save the run to convert it into a broken run.
+                Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
                 raise RunAbort(run, require_heist_start=True)
