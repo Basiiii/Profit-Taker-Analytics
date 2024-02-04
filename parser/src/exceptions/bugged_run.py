@@ -4,8 +4,6 @@ from typing import TYPE_CHECKING
 
 from sty import fg
 
-from src.utils import time_str
-
 if TYPE_CHECKING:
     from src.analyzer import AbsRun
 
@@ -24,4 +22,4 @@ class BuggedRun(RuntimeError):
         reason_str = '\n'.join(self.reasons)
         return f'{fg.li_red}Profit-Taker Run #{self.run.run_nr} was bugged, no stats will be displayed. ' \
                f'Bugs found:\n{reason_str}\n' \
-               f'{self.run.failed_run_duration_str}'
+               # f'{self.run.failed_run_duration_str}'
