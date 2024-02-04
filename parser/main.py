@@ -1,4 +1,4 @@
-############################################################
+############################################################gi
 # Profit-Taker Analyzer by ReVoltage#3425                  #
 # Rewritten by Iterniam#5829                               #
 # Re-Rewritten by scamcat                                  #

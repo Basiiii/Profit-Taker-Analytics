@@ -21,4 +21,4 @@ class RunAbort(Exception):
 
     def __str__(self):
         return f'{fg.cyan}Profit-Taker Run #{self.run.run_nr} was aborted or had bugged logs.\n' \
-               f'{self.run.failed_run_duration_str}'
+               # f'{self.run.failed_run_duration_str}'

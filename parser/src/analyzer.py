@@ -2,7 +2,6 @@ import os
 import sys
 from collections import defaultdict
 from math import nan, isnan
-from statistics import median
 from time import sleep
 from typing import Iterator, Callable, Optional, Union
 
@@ -14,14 +13,10 @@ from waitress import serve
 import copy
 import socket
 
-from sty import rs, fg
-
 from src.enums.damage_types import DT
 from src.exceptions.bugged_run import BuggedRun
 from src.exceptions.log_end import LogEnd
 from src.exceptions.run_abort import RunAbort
-from src.utils import color, time_str, oxfordcomma
-
 
 class PTConstants:
     SHIELD_SWITCH = 'SwitchShieldVulnerability'
@@ -45,7 +40,7 @@ class PTConstants:
 class Globals:
     RUNFORMAT = {}
     STARTINGTIME = None
-    LASTRUNTIME = None
+    LASTRUNTIME = 0.0
     LASTBUGGEDRUN = None
 
 class MiscConstants:
@@ -122,61 +117,7 @@ class RelRun:
         """The shields without their phases, flattened."""
         return [shield_tuple for shield_phase in self.shield_phases.values() for shield_tuple in shield_phase]
 
-    def pretty_print(self):
-        print(color('-' * 72, fg.white))  # header
 
-        self.pretty_print_run_summary()
-
-        print(f'{fg.li_red}From elevator to Profit-Taker took {self.pt_found:.3f}s. '
-              f'Fight duration: {time_str(self.length - self.pt_found, "units")}.\n')
-
-        for i in [1, 2, 3, 4]:
-            self.pretty_print_phase(i)
-
-        self.pretty_print_sum_of_parts()
-
-        print(f'{fg.white}{"-" * 72}\n\n')  # footer
-
-    def pretty_print_run_summary(self):
-        players = oxfordcomma([self.nickname] + list(self.squad_members - {self.nickname}))
-        run_info = f'{fg.cyan}Profit-Taker Run #{self.run_nr} by {fg.li_cyan}{players}{fg.cyan} cleared in ' \
-                   f'{fg.li_cyan}{time_str(self.length, "units")}'
-        if self.best_run:
-            run_info += f'{fg.white} - {fg.li_magenta}Best run!'
-        elif self.best_run_yet:
-            run_info += f'{fg.white} - {fg.li_magenta}Best run yet!'
-        print(f'{run_info}\n')
-
-    def pretty_print_phase(self, phase: int):
-        white_dash = f'{fg.white} - '
-        print(f'{fg.li_green}> Phase {phase} {fg.li_cyan}{time_str(self.phase_durations[phase], "brackets")}')
-
-        if phase in self.shield_phases:
-            shield_sum = sum(time for _, time in self.shield_phases[phase] if not isnan(time))
-            shield_str = f'{fg.white} | '.join((f'{fg.li_yellow}{s_type} {"?" if isnan(s_time) else f"{s_time:.3f}"}s'
-                                                for s_type, s_time in self.shield_phases[phase]))
-            print(f'{fg.white} Shield change:\t{fg.li_green}{shield_sum:7.3f}s{white_dash}{fg.li_yellow}{shield_str}')
-
-        normal_legs = [f'{fg.li_yellow}{time:.3f}s' for time in self.legs[phase][:4]]
-        leg_regen = [f'{fg.red}{time:.3f}s' for time in self.legs[phase][4:]]
-        leg_str = f"{fg.white} | ".join(normal_legs + leg_regen)
-        print(f'{fg.white} Leg break:\t{fg.li_green}{sum(self.legs[phase]):7.3f}s{white_dash}{leg_str}')
-        print(f'{fg.white} Body killed:\t{fg.li_green}{self.body_dur[phase]:7.3f}s')
-
-        if phase in self.pylon_dur:
-            print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_dur[phase]:7.3f}s')
-
-        if phase == 3 and self.shield_phases[3.5]:  # Print phase 3.5
-            print(f'{fg.white} Extra shields:\t\t   {fg.li_yellow}'
-                  f'{" | ".join((str(shield) for shield, _ in self.shield_phases[3.5]))}')
-        print('')  # to print a newline
-
-    def pretty_print_sum_of_parts(self):
-        print(f'{fg.li_green}> Sum of parts {fg.li_cyan}{time_str(self.sum_of_parts, "brackets")}')
-        print(f'{fg.white} Shield change:\t{fg.li_green}{self.shield_sum:7.3f}s')
-        print(f'{fg.white} Leg Break:\t{fg.li_green}{self.leg_sum:7.3f}s')
-        print(f'{fg.white} Body Killed:\t{fg.li_green}{self.body_sum:7.3f}s')
-        print(f'{fg.white} Pylons:\t{fg.li_green}{self.pylon_sum:7.3f}s')
 
     def to_json(self):
         """Convert a RelRun object into a json object suitable for display on the GUI.
@@ -230,7 +171,6 @@ class RelRun:
         fullRunFormat["phase_4"]["shield_change_times"] = [i for _,i in self.shield_phases[4]]
         fullRunFormat["phase_4"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[4]]
 
-        print(fullRunFormat, type(fullRunFormat))
         return fullRunFormat
         
 
@@ -253,6 +193,7 @@ class BrokenRun(RelRun):
         """
         fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.total_time
+        fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
         fullRunFormat["aborted_run"] = True
@@ -317,12 +258,12 @@ class AbsRun:
             # If somehow more than 8 legs are taken out per phase, that signifies an even worse bug
             # Since 'even worse bugs' tend to corrupt the logs, so we print a warning to the user
             # This tool should still be able to convert and display it, so it doesn't fail the integrity check
-            if len(self.legs[phase]) > 8:
-                print(color(f'{len(self.legs[phase])} leg kills were recorded for phase {phase}.\n'
-                            f'If you have a recording of this run and the fight indeed bugged out, please '
-                            f'report the bug to Warframe.\n'
-                            f'If you think the bug is with the analyzer, contact the creator of this tool instead.',
-                            fg.li_red))
+            #if len(self.legs[phase]) > 8:
+               # print(color(f'{len(self.legs[phase])} leg kills were recorded for phase {phase}.\n'
+               #            f'If you have a recording of this run and the fight indeed bugged out, please '
+               #            f'report the bug to Warframe.\n'
+               #            f'If you think the bug is with the analyzer, contact the creator of this tool instead.',
+               #            fg.li_red))
 
             # The time at which the body becomes vulnerable and is killed during the armor phase has to be present
             if phase not in self.body_vuln:
@@ -351,7 +292,10 @@ class AbsRun:
         Returns:
             BrokenRun: A broken run object containing minimal information about the run.
         """
-        total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0
+        if self.final_time is not None and self.heist_start is not None:
+            total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0.0
+        else:
+            total_time = 0.0
         return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
 
     def to_rel(self) -> RelRun:
@@ -402,12 +346,12 @@ class AbsRun:
         return RelRun(self.run_nr, self.nickname, self.squad_members, pt_found,
                       phase_durations, shield_phases, legs, body_dur, pylon_dur)
 
-    @property
-    def failed_run_duration_str(self):
-        if self.final_time is not None and self.heist_start is not None:
-            return f'{fg.cyan}If Profit-Taker was killed, the run likely lasted around ' \
-                   f'{fg.li_cyan}{time_str(self.final_time - self.heist_start, "units")}.\n'
-        return ''
+    #@property
+    #def failed_run_duration_str(self):
+    #    if self.final_time is not None and self.heist_start is not None:
+    #        return f'{fg.cyan}If Profit-Taker was killed, the run likely lasted around ' \
+    #               f'{fg.li_cyan}{time_str(self.final_time - self.heist_start, "units")}.\n'
+    #    return ''
 
 
 class Analyzer:
@@ -466,7 +410,7 @@ class Analyzer:
                 bin_dir = os.path.dirname(os.path.realpath(__file__))
 
             file_name = os.path.join(bin_dir, "port.txt")
-            with open(file_name, 'w') as port_file:
+            with open(file_name, 'w', encoding="UTF-8") as port_file:
                 port_file.write(str(port))
 
             # Start the application on a seperate thread.
@@ -490,7 +434,7 @@ class Analyzer:
         
         json_path = os.path.join(root_dir, "src", "json", "run_format.json")
 
-        with open(json_path) as file:
+        with open(json_path, 'r', encoding="UTF-8") as file:
             Globals.RUNFORMAT = load(file)
 
         filename = self.get_file()
@@ -504,17 +448,17 @@ class Analyzer:
             self.follow_mode = False
             return sys.argv[1]
         except IndexError:
-            print(fr"{fg.li_grey}Opening Warframe's default log from %LOCALAPPDATA%/Warframe/EE.log in follow mode.")
-            print('Follow mode means that runs will appear as you play. '
-                  'The first shield will also be printed when Profit-Taker spawns.')
-            print('Note that you can analyze another file by dragging it into the exe file.')
+            # print(fr"{fg.li_grey}Opening Warframe's default log from %LOCALAPPDATA%/Warframe/EE.log in follow mode.")
+            # print('Follow mode means that runs will appear as you play. '
+            #       'The first shield will also be printed when Profit-Taker spawns.')
+            # print('Note that you can analyze another file by dragging it into the exe file.')
             self.follow_mode = True
             try:
                 return os.getenv('LOCALAPPDATA') + r'/Warframe/EE.log'
             except TypeError:
-                print(f'{fg.li_red}Hi there Linux user! Check the README on github.com/revoltage34/ptanalyzer or '
-                      f'idalon.com/pt to find out how to get follow mode to work.')
-                print(f'{rs.fg}Press ENTER to exit...')
+                #print(f'{fg.li_red}Hi there Linux user! Check the README on github.com/revoltage34/ptanalyzer or '
+                #      f'idalon.com/pt to find out how to get follow mode to work.')
+                #print(f'{rs.fg}Press ENTER to exit...')
                 input()  # input(prompt) doesn't work with color coding, so we separate it from the print.
                 exit(-1)
 
@@ -522,14 +466,14 @@ class Analyzer:
     def follow(filename: str):
         """generator function that yields new lines in a file"""
         known_size = os.stat(filename).st_size
-        with open(filename, 'r', encoding='latin-1') as file:
+        with open(filename, 'r', encoding="UTF-8") as file:
             # Start infinite loop
             cur_line = []  # Store multiple parts of the same line to deal with the logger committing incomplete lines.
             while True:
                 if (new_size := os.stat(filename).st_size) < known_size:
-                    print(f'{fg.white}Restart detected.')
+                    #print(f'{fg.white}Restart detected.')
                     file.seek(0)  # Go back to the start of the file
-                    print('Successfully reconnected to ee.log. Now listening for new Profit-Taker runs.')
+                    #print('Successfully reconnected to ee.log. Now listening for new Profit-Taker runs.')
                 known_size = new_size
 
                 # Yield lines until the last line of file and follow the end on a delay
@@ -542,7 +486,7 @@ class Analyzer:
                 sleep(.1)
 
     def analyze_log(self, dropped_file: str):
-        with open(dropped_file, 'r', encoding='latin-1') as it:
+        with open(dropped_file, 'r', encoding="UTF-8") as it:
             try:
                 require_heist_start = True
                 while True:
@@ -567,21 +511,6 @@ class Analyzer:
             best_run = min(self.proper_runs, key=lambda run_: run_.length)
             best_run.best_run = True
 
-        # Display all runs
-        if len(self.runs) > 0:
-            for run in self.runs:
-                if isinstance(run, RelRun):
-                    run.pretty_print()
-                else:  # Aborted or bugged run, just print the exception
-                    print(run)
-
-            if len(self.proper_runs) > 0:
-                self.print_summary()
-        else:
-            print(f'{fg.white}No valid Profit-Taker runs found.\n'
-                  f'Note that you have to be host throughout the entire run for it to show up as a valid run.')
-
-        print(f'{rs.fg}Press ENTER to exit...')
         input()  # input(prompt) doesn't work with color coding, so we separate it in a print and an empty input.
 
     def store_run(self, run):
@@ -603,8 +532,7 @@ class Analyzer:
         # Create filename
         time_diff = self.get_run_time()
         fileName = os.path.join(storage_folder, time_diff.strftime('%Y%m%d_%H%M%S') + ".json")
-        print(fileName)
-        with open(fileName, "w") as file:
+        with open(fileName, "w", encoding="UTF-8") as file:
             dump(run, file)
             
 
@@ -632,8 +560,6 @@ class Analyzer:
                 formattedRun = dumps(formattedRun)
                 
                 self.lastRun = formattedRun
-                run.pretty_print()
-                self.print_summary()
                 self.lastRunTime = {"date": datetime.now().isoformat()}
             except RunAbort as abort:
 
@@ -646,11 +572,11 @@ class Analyzer:
 
                 # Make sure the run is available in the endpoint.
                 self.lastRun = broken_run
-                print(abort)
+                #print(abort)
                 self.runs.append(abort)
                 require_heist_start = abort.require_heist_start
             except BuggedRun as buggedRun:
-                print(buggedRun)  # Print reasons why the run failed
+                #print(buggedRun)  # Print reasons why the run failed
                 self.runs.append(buggedRun)
                 require_heist_start = True
 
@@ -714,10 +640,6 @@ class Analyzer:
                 # Shield_phase '3.5' is for when shields swap during the pylon phase in phase 3.
                 shield_phase = 3.5 if phase == 3 and 3 in run.pylon_start else phase
                 run.shield_phases[shield_phase].append(Analyzer.shield_from_line(line))
-
-                # The first shield can help determine whether to abort.
-                if self.follow_mode and len(run.shield_phases[1]) == 1:
-                    print(f'{fg.white}First shield: {fg.li_cyan}{run.shield_phases[phase][0][0]}')
             elif any(True for shield_end in PTConstants.SHIELD_PHASE_ENDINGS.values() if shield_end in line):
                 run.shield_phase_endings[phase] = Analyzer.time_from_line(line)
             elif PTConstants.LEG_KILL in line:  # Leg kill
@@ -753,11 +675,11 @@ class Analyzer:
             # Non-pt specific messages
             if MiscConstants.NICKNAME in line:  # Nickname
                 # Note: Replacing "î\x80\x80" has to be done since the Veilbreaker update botched names
-                run.nickname = line.replace(',', '').replace("î\x80\x80", "").split()[-2]
+                run.nickname = line.replace(',', '').replace("\ue000", "").split()[-2]
             elif MiscConstants.SQUAD_MEMBER in line:  # Squad member
                 # Note: Replacing "î\x80\x80" has to be done since the Veilbreaker update botched names
                 # Note: The characters might represent the player's platform
-                run.squad_members.add(line.replace("î\x80\x80", "").split()[-4])
+                run.squad_members.add(line.replace("\ue000", "").split()[-4])
             elif MiscConstants.ELEVATOR_EXIT in line:  # Elevator exit (start of speedrun timing)
                 if not run.heist_start:  # Only use the first time that the zone is left aka heist is started.
                     run.heist_start = Analyzer.time_from_line(line)
@@ -788,24 +710,3 @@ class Analyzer:
             return line, next((i for i, cond in enumerate(conditions) if cond(line)))  # return the first passing index
         except StopIteration:
             raise LogEnd()
-
-    def print_summary(self):
-        assert len(self.proper_runs) > 0
-        best_run = min(self.proper_runs, key=lambda run: run.length)
-        print(f'{fg.li_green}Best run:\t\t'
-              f'{fg.li_cyan}{time_str(best_run.length, "units")} '
-              f'{fg.cyan}(Run #{best_run.run_nr})')
-        print(f'{fg.li_green}Median time:\t\t'
-              f'{fg.li_cyan}{time_str(median(run.length for run in self.proper_runs), "units")}')
-        print(f'{fg.li_green}Median fight duration:\t'
-              f'{fg.li_cyan}{time_str(median(run.length - run.pt_found for run in self.proper_runs), "units")}\n')
-        print(f'{fg.li_green}Median sum of parts {fg.li_cyan}'
-              f'{time_str(median(run.sum_of_parts for run in self.proper_runs), "brackets")}')
-        print(f'{fg.white} Median shield change:\t{fg.li_green}'
-              f'{median(run.shield_sum for run in self.proper_runs):7.3f}s')
-        print(f'{fg.white} Median leg break:\t{fg.li_green}'
-              f'{median(run.leg_sum for run in self.proper_runs):7.3f}s')
-        print(f'{fg.white} Median body killed:\t{fg.li_green}'
-              f'{median(run.body_sum for run in self.proper_runs):7.3f}s')
-        print(f'{fg.white} Median pylons:\t\t{fg.li_green}'
-              f'{median(run.pylon_sum for run in self.proper_runs):7.3f}s')
