@@ -12,6 +12,8 @@ from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
 import copy
+import pprint
+import socket
 
 from sty import rs, fg
 
@@ -196,6 +198,7 @@ class RelRun:
 
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
+        fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
 
         fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
         fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
@@ -243,15 +246,18 @@ class BrokenRun(RelRun):
         self.total_time = total_time
 
     def to_json(self):
+        """
+        Convert a broken run to json format, containing only the most important information.
 
+        Returns:
+            json: The run format.
+        """
         fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.total_time
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
         fullRunFormat["aborted_run"] = True
         return fullRunFormat
-
-
 
 class AbsRun:
 
@@ -447,9 +453,36 @@ class Analyzer:
         #     return {'status': 'ok'}
 
         try:
-            Thread(target=lambda: serve(app, host="127.0.0.1", port=5000)).start()
+            # Find an open port.
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.bind(('localhost', 0))
+            port = sock.getsockname()[1]
+            sock.close()
+
+            # Write the open port to a text file to be used by the application.
+            # Determine the base directory based on whether we're running a .py or .exe file
+            if getattr(sys, 'frozen', False):
+                bin_dir = os.path.dirname(sys.executable)
+            else:
+                bin_dir = os.path.dirname(os.path.realpath(__file__))
+
+            file_name = os.path.join(bin_dir, "port.txt")
+            with open(file_name, 'w') as port_file:
+                port_file.write(str(port))
+
+            # Start the application on a seperate thread.
+            Thread(target=lambda: serve(app, host="127.0.0.1", port=port)).start()
         except Exception as e:
             print(e)
+
+    @staticmethod
+    def get_run_time():
+        """
+        Get the absolute time a run took place.
+        Returns:
+            datetime: datetime object
+        """
+        return Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)
 
     def run(self):
         self.initAPI()
@@ -569,7 +602,7 @@ class Analyzer:
         storage_folder = os.path.join(base_dir, '..', 'storage')
         
         # Create filename
-        time_diff = Globals.STARTINGTIME - timedelta(seconds=Globals.LASTRUNTIME)
+        time_diff = self.get_run_time()
         fileName = os.path.join(storage_folder, time_diff.strftime('%Y%m%d_%H%M%S') + ".json")
         print(fileName)
         with open(fileName, "w") as file:
@@ -735,6 +768,7 @@ class Analyzer:
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
                 # Save the run to convert it into a broken run.
+                pprint.pprint(vars(run))
                 Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
