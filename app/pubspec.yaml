@@ -46,6 +46,8 @@ dependencies:
   path: any
   # Table for run storage screen
   data_table_2: ^2.5.10
+  # Used for manipulating datetime objects
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

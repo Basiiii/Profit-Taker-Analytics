@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void loadLastRunData(String fileName) {
     LoadingOverlay.of(context).show();
-    loadDataFile(fileName).then((_) {
+    loadDataFile('$fileName.json').then((_) {
       setState(() {});
       LoadingOverlay.of(context).hide();
     });
