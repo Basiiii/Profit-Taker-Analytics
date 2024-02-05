@@ -67,6 +67,24 @@ void showParserConnectionErrorDialog(
       });
 }
 
+void showBuggedRunWarningDialog(
+    BuildContext context, String errorText, String errorTitle) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(errorText),
+            content: Text(errorTitle),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ]);
+      });
+}
+
 /// Displays an about dialog with information about the app.
 ///
 /// This function shows a dialog with a title of "About", and a small easter egg.

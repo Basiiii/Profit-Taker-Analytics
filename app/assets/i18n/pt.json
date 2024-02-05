@@ -29,7 +29,8 @@
     },
     "errors": {
         "error": "Erro!",
-        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação."
+        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
+        "bugged_run_warning": "Esta corrida foi identificada como potencialmente com erros. Algumas corridas não são registadas com precisão pelo Warframe,\n o que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos."
     },
     "settings": {
         "general": "Geral",

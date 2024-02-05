@@ -109,10 +109,14 @@ void main() async {
               ),
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
+                /// Run the parser
                 debugPrint("Starting parser");
                 startParser();
+
+                /// Delay to give the parser time to initialize
                 await Future.delayed(const Duration(seconds: 2));
 
+                /// Prepare app language
                 debugPrint("Preparing language");
                 // Get the user's preferred language from shared preferences
                 final prefs = await SharedPreferences.getInstance();
@@ -127,6 +131,16 @@ void main() async {
                   // Create a Locale object from the language and country codes
                   Locale locale = Locale(languageCode, countryCode);
                   await prefs.setString('language', locale.toString());
+                }
+
+                /// Delay to give the parser time to initialize
+                await Future.delayed(const Duration(seconds: 1));
+
+                /// Set the port number
+                debugPrint("Setting port number");
+                var result = await setPortNumber();
+                if (result == errorSettingPort) {
+                  debugPrint("Error setting the port number");
                 }
               },
               onEnd: () async {}))));

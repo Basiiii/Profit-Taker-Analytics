@@ -1,5 +1,5 @@
 /// App details
-const String version = 'ALPHA 0.1.0';
+const String version = 'ALPHA 0.2.1';
 
 /// Starting screen sizes
 const double startingWidth = 1500; // Initial width of the app at launch
@@ -31,3 +31,7 @@ const double phaseCardWidth = 625; // Width of the phase card
 const noNewDataAvailable = 0;
 const newDataAvailable = 1;
 const connectionError = 2;
+
+/// Error codes setting port number
+const successSettingPort = 0;
+const errorSettingPort = 1;

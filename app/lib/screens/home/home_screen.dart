@@ -130,6 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
     String errorTitle = FlutterI18n.translate(context, "errors.error");
     String parserErrorMessage =
         FlutterI18n.translate(context, "errors.parser_connection_error");
+    String buggedRunWarningMessage =
+        FlutterI18n.translate(context, "errors.bugged_run_warning");
 
     /// Calculate available spaces for Last Run elements
     ///
@@ -273,7 +275,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             });
                           },
-                        )
+                        ),
+                        isBuggedRun == true
+                            ? IconButton(
+                                icon: Icon(
+                                  Icons.warning,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                onPressed: () {
+                                  showBuggedRunWarningDialog(context,
+                                      errorTitle, buggedRunWarningMessage);
+                                },
+                              )
+                            : Container(),
                       ],
                     ),
                     const SizedBox(height: 15),

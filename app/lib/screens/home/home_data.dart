@@ -6,6 +6,9 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 String runFileName = '';
 String customRunName = '';
 
+/// Specific run flags
+bool isBuggedRun = false;
+
 /// Display name(s)
 String username = '';
 String playersListStart = '';

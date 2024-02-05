@@ -16,6 +16,36 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 /// Inicialize the time to epoch 0 to ensure all API records will be newer
 DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
+/// Port number for where API is running
+int portNumber = 0;
+
+Future<int> setPortNumber() async {
+  try {
+    if (kDebugMode) {
+      print("Setting port number");
+    }
+    var mainPath = Platform.resolvedExecutable;
+    mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+    var portFilePath = "$mainPath\\bin\\port.txt";
+    final file = File(portFilePath);
+
+    String contents = await file.readAsString();
+    int port = int.parse(contents.trim());
+
+    portNumber = port;
+    if (kDebugMode) {
+      print("Port number: $portNumber");
+    }
+
+    return successSettingPort;
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error reading port number from file: $e');
+    }
+    return errorSettingPort;
+  }
+}
+
 /// Starts the parser process asynchronously.
 ///
 /// This method constructs the path to the parser executable based on the
@@ -75,7 +105,7 @@ Future<void> killParserInstances() async {
 ///   - [noNewDataAvailable]: Indicates that no new data is available.
 ///   - [connectionError]: Indicates an error occurred during the connection.
 Future<int> checkForNewData() async {
-  var url = Uri.parse('http://127.0.0.1:5000/last_run_time');
+  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run_time');
   try {
     var response =
         await http.get(url).timeout(const Duration(milliseconds: 500));
@@ -325,16 +355,20 @@ void updatePhaseCard(
 /// }
 /// ```
 Future<void> loadDataAPI() async {
-  var url = Uri.parse('http://127.0.0.1:5000/last_run');
+  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   var response = await http.get(url);
 
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
 
     /// Update the file name and run name
-    runFileName =
-        'GET_FROM_API'; // TODO: get this data from the API once it's been added
+    runFileName = data["file_name"];
     customRunName = data["pretty_name"] ?? '';
+
+    /// Update run flags
+    // If run is bugged or aborted or if we can't read JSON we mark it as true
+    isBuggedRun = ((data["bugged_run"] ?? false) == true ||
+        (data["aborted_run"] ?? false) == true);
 
     /// Update username with space behind for formatting
     username = '${data['nickname']}';
@@ -412,6 +446,11 @@ Future<void> loadDataFile(String fileName) async {
       /// Update the file name and run name
       runFileName = fileName.replaceAll('.json', '');
       customRunName = data["pretty_name"] ?? '';
+
+      /// Update run flags
+      // If run is bugged or aborted or if we can't read JSON we mark it as true
+      isBuggedRun = ((data["bugged_run"] ?? false) == true ||
+          (data["aborted_run"] ?? false) == true);
 
       /// Update username with space behind for formatting
       username = '${data['nickname']}';

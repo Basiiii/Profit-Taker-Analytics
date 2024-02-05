@@ -21,6 +21,7 @@ final ThemeData lightTheme = ThemeData(
     onTertiary: Colors.black,
     onError: Colors.black,
     brightness: Brightness.light,
+    surfaceTint: Color(0xFFF2F3F5),
   ),
 );
 
@@ -45,5 +46,6 @@ final ThemeData darkTheme = ThemeData(
     onTertiary: Colors.white,
     onError: Colors.white,
     brightness: Brightness.dark,
+    surfaceTint: Color(0xFF121212),
   ),
 );
