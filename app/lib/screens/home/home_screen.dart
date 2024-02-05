@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -38,7 +39,8 @@ class HomeScreen extends StatefulWidget {
 ///
 /// This class contains a [GlobalKey] for the [Scaffold], which allows for
 /// opening and closing of drawers programmatically.
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   /// A [GlobalKey] for the [Scaffold] widget, enabling programmatic control over the drawer.
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -50,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// A controller for taking screenshots.
   ScreenshotController screenshotController = ScreenshotController();
+
+  @override
+  bool get wantKeepAlive => true;
 
   void loadLastRunData(String fileName) {
     LoadingOverlay.of(context).show();
@@ -68,6 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    if (kDebugMode) {
+      print("Opened home screen");
+    }
+
+    /// Reset timestamp
+    lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
     /// Fetch the data for last run
     _dataFetch =
@@ -120,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ///   A widget tree representing the visual elements of the `HomeScreen`.
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     void updateCallback() {
       LoadingOverlay.of(context).show();
       setState(() {});

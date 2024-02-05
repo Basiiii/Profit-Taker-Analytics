@@ -34,7 +34,7 @@ import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
     as custom_nav;
 
 import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
-import 'package:profit_taker_analyzer/screens/storage/runs_screen.dart';
+import 'package:profit_taker_analyzer/screens/storage/storage_screen.dart';
 import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
 
 import 'package:profit_taker_analyzer/theme/theme_control.dart';
@@ -135,15 +135,18 @@ void main() async {
                   Locale locale = Locale(languageCode, countryCode);
                   await prefs.setString('language', locale.toString());
                 }
-              },
-              onEnd: () async {
+
+                /// Give parser time to initialize
+                await Future.delayed(const Duration(seconds: 4));
+
                 /// Set the port number
                 debugPrint("Setting port number");
                 var result = await setPortNumber();
                 if (result == errorSettingPort) {
                   debugPrint("Error setting the port number");
                 }
-              }))));
+              },
+              onEnd: () async {}))));
 }
 
 /// The main widget of the application.
@@ -172,6 +175,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WindowListener {
   /// Current index of selected tab.
   int _currentIndex = 0;
+  Widget? _activeScreen;
 
   /// Future for loading the theme mode.
   Future<void>? _themeModeFuture;
@@ -188,6 +192,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
     _loadLanguage();
+    _activeScreen = const HomeScreen();
     _init();
   }
 
@@ -204,6 +209,29 @@ class _MyAppState extends State<MyApp> with WindowListener {
       if (mounted) {
         Provider.of<LocaleModel>(context, listen: false).set(Locale(language));
       }
+    }
+  }
+
+  void _selectTab(int index) {
+    setState(() {
+      _currentIndex = index;
+      // Dynamically load the new screen only if it's not already loaded
+      if (_activeScreen != _getScreenByIndex(index)) {
+        _activeScreen = _getScreenByIndex(index);
+      }
+    });
+  }
+
+  Widget _getScreenByIndex(int index) {
+    switch (index) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const StorageScreen();
+      case 2:
+        return const SettingsScreen();
+      default:
+        return const HomeScreen();
     }
   }
 
@@ -277,26 +305,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
                                   /// Navigation bar widget.
                                   custom_nav.NavigationBar(
                                     currentIndex: _currentIndex,
-                                    onTabSelected: (index) {
-                                      setState(() {
-                                        _currentIndex = index;
-                                      });
-                                    },
+                                    onTabSelected: _selectTab,
                                   ),
                                   Expanded(
-                                    child: IndexedStack(
-                                      index: _currentIndex,
-                                      children: const <Widget>[
-                                        /// Home screen widget.
-                                        HomeScreen(),
-
-                                        /// Advanced screen widget.
-                                        StorageScreen(),
-
-                                        /// Settings screen widget.
-                                        SettingsScreen(),
-                                      ],
-                                    ),
+                                    child:
+                                        _activeScreen!, // Dynamic screen loading
                                   ),
                                 ],
                               ),

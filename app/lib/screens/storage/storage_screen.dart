@@ -105,6 +105,9 @@ class _StorageScreenState extends State<StorageScreen> {
   @override
   void initState() {
     super.initState();
+    if (kDebugMode) {
+      print("Opened storage screen");
+    }
     _dataLoad = loadData();
     setState(() {});
   }
