@@ -1,12 +1,14 @@
 {
-    "total_duration": 0,
-    "total_shield": 0,
-    "total_leg": 0,
-    "total_body": 0,
-    "total_pylon": 0,
-    "time_stamp": 0,
+    "total_duration": 0.0,
+    "total_shield": 0.0,
+    "total_leg": 0.0,
+    "total_body": 0.0,
+    "total_pylon": 0.0,
+    "time_stamp": 0.0,
+    "pretty_name": "",
+    "file_name": "",
 
-    "flight_duration": 0,
+    "flight_duration": 0.0,
 
     "bugged_run": false,
     "aborted_run": false,
@@ -16,41 +18,41 @@
     "nickname": "",
 
     "phase_1": {
-        "phase_time": 0,
-        "total_shield": 0,
-        "total_leg": 0,
+        "phase_time": 0.0,
+        "total_shield": 0.0,
+        "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
-        "body_kill_time": 0,
-        "pylon_time": 0
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
+        "body_kill_time": 0.0,
+        "pylon_time": 0.0
     },
 
     "phase_2": {
-        "phase_time": 0,
-        "total_leg": 0,
-        "leg_break_times": [],
-        "body_kill_time": 0
+        "phase_time": 0.0,
+        "total_leg": 0.0,
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
+        "body_kill_time": 0.0
     },
 
     "phase_3": {
-        "phase_time": 0,
-        "total_shield": 0,
-        "total_leg": 0,
+        "phase_time": 0.0,
+        "total_shield": 0.0,
+        "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
-        "body_kill_time": 0,
-        "pylon_time": 0
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
+        "body_kill_time": 0.0,
+        "pylon_time": 0.0
     },
 
     "phase_4": {
-        "phase_time": 0,
-        "total_shield": 0,
-        "total_leg": 0,
+        "phase_time": 0.0,
+        "total_shield": 0.0,
+        "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
-        "body_kill_time": 0
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
+        "body_kill_time": 0.0
     }
 }

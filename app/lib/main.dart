@@ -109,12 +109,15 @@ void main() async {
               ),
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
+                /// Delete port text file if it exists
+                await deletePortFileIfExists(); // done to ensure fresh port every time
+
+                /// Kill old existing parser instances
+                await killParserInstances(); // kill old instances if they exist
+
                 /// Run the parser
                 debugPrint("Starting parser");
                 startParser();
-
-                /// Delay to give the parser time to initialize
-                await Future.delayed(const Duration(seconds: 2));
 
                 /// Prepare app language
                 debugPrint("Preparing language");
@@ -132,18 +135,15 @@ void main() async {
                   Locale locale = Locale(languageCode, countryCode);
                   await prefs.setString('language', locale.toString());
                 }
-
-                /// Delay to give the parser time to initialize
-                await Future.delayed(const Duration(seconds: 1));
-
+              },
+              onEnd: () async {
                 /// Set the port number
                 debugPrint("Setting port number");
                 var result = await setPortNumber();
                 if (result == errorSettingPort) {
                   debugPrint("Error setting the port number");
                 }
-              },
-              onEnd: () async {}))));
+              }))));
 }
 
 /// The main widget of the application.

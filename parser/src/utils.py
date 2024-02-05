@@ -1,11 +1,9 @@
 from math import isnan
 from typing import Iterable, Literal
 
-from sty import rs
-
 
 def color(text: str, col: str) -> str:
-    return col + text + rs.fg
+    return col + text
 
 
 def oxfordcomma(collection: Iterable[str]):

@@ -8,7 +8,6 @@
 ############################################################
 
 import traceback
-from sty import fg
 from src.analyzer import Analyzer
 from src.utils import color
 
@@ -17,9 +16,7 @@ VERSION = 'v1.0.0'
 
 def error_msg():
     traceback.print_exc()
-    print(color('\nAn unknown error occurred. Please screenshot this and report this along with your EE.log attached.',
-                fg.li_red))
-    input('Press ENTER to exit..')
+    print('An unknown error occurred. Please screenshot this and report this along with your EE.log attached.')
 
 
 def main():

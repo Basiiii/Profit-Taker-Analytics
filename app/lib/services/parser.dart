@@ -19,7 +19,9 @@ DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 /// Port number for where API is running
 int portNumber = 0;
 
-Future<int> setPortNumber() async {
+Future<int> setPortNumber(
+    {int retries = 5,
+    Duration delayBetweenRetries = const Duration(milliseconds: 1000)}) async {
   try {
     if (kDebugMode) {
       print("Setting port number");
@@ -29,20 +31,61 @@ Future<int> setPortNumber() async {
     var portFilePath = "$mainPath\\bin\\port.txt";
     final file = File(portFilePath);
 
-    String contents = await file.readAsString();
-    int port = int.parse(contents.trim());
+    for (int i = 0; i < retries; i++) {
+      try {
+        String contents = await file.readAsString();
+        int port = int.parse(contents.trim());
 
-    portNumber = port;
-    if (kDebugMode) {
-      print("Port number: $portNumber");
+        portNumber = port;
+        if (kDebugMode) {
+          print("Port number: $portNumber");
+        }
+
+        return successSettingPort; // Assuming successSettingPort is a non-null integer
+      } catch (e) {
+        if (i < retries - 1) {
+          if (kDebugMode) {
+            print('Error reading port number from file: $e');
+            print('Retrying in ${delayBetweenRetries.inSeconds} seconds...');
+          }
+          await Future.delayed(delayBetweenRetries);
+        } else {
+          // All retries have failed, throw an exception
+          throw Exception('Failed to read port number after all retries');
+        }
+      }
     }
-
-    return successSettingPort;
   } catch (e) {
     if (kDebugMode) {
-      print('Error reading port number from file: $e');
+      print('Error reading port number from file after all retries: $e');
     }
-    return errorSettingPort;
+    // Return a future that completes with an error
+    return Future.error(
+        Exception('Failed to read port number after all retries'));
+  }
+
+  // Default return statement to ensure the function always returns a value
+  return errorSettingPort; // Assuming errorSettingPort is a non-null integer
+}
+
+Future<void> deletePortFileIfExists() async {
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var portFilePath = "$mainPath\\bin\\port.txt";
+  final file = File(portFilePath);
+
+  // Check if the file exists
+  bool exists = await file.exists();
+  if (exists) {
+    // Delete the file
+    await file.delete();
+    if (kDebugMode) {
+      print('Deleted existing port file at $portFilePath');
+    }
+  } else {
+    if (kDebugMode) {
+      print('No existing port file found at $portFilePath');
+    }
   }
 }
 
@@ -87,12 +130,19 @@ void startParser() async {
 /// all instances of the parser.exe process. It is asynchronous and returns
 /// a [Future<void>] to indicate completion.
 Future<void> killParserInstances() async {
-  await Shell().run('taskkill /F /IM parser.exe');
+  try {
+    await Shell().run('taskkill /F /IM parser.exe');
+  } catch (e) {
+    // Print the exception to the console
+    if (kDebugMode) {
+      print('An error occurred while trying to kill parser.exe processes: $e');
+    }
+  }
 }
 
 /// Checks for new data by comparing the last update timestamp with the server.
 ///
-/// This method performs an HTTP GET request to the 'http://127.0.0.1:5000/last_run_time'
+/// This method performs an HTTP GET request to the 'http://127.0.0.1:PORT/last_run_time'
 /// endpoint, retrieves the timestamp of the last data update, and compares it with
 /// the locally stored timestamp (`lastUpdateTimestamp`). If a newer timestamp is
 /// detected, it indicates new data is available, and the method returns [newDataAvailable].
@@ -105,31 +155,53 @@ Future<void> killParserInstances() async {
 ///   - [noNewDataAvailable]: Indicates that no new data is available.
 ///   - [connectionError]: Indicates an error occurred during the connection.
 Future<int> checkForNewData() async {
-  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run_time');
+  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   try {
     var response =
-        await http.get(url).timeout(const Duration(milliseconds: 500));
+        await http.get(url).timeout(const Duration(milliseconds: 2000));
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-      // Check if the response contains the expected 'date' field
-      if (data.containsKey('date') && data['date'] != null) {
-        DateTime currentTimestamp = DateTime.parse(data['date'].split('.')[0]);
+      // Check if the response contains the expected 'file_name' field
+      if (data.containsKey('file_name') && data['file_name'] != null) {
+        // Parse the 'file_name' string into a DateTime object
+        // Assuming the format is YYYYMMDD_HHMMSS
+        String fileName = data['file_name'];
+        RegExp pattern = RegExp(r'(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})');
+        RegExpMatch? match = pattern.firstMatch(fileName);
+        if (match != null) {
+          int year = int.parse(match.group(1)!);
+          int month = int.parse(match.group(2)!);
+          int day = int.parse(match.group(3)!);
+          int hour = int.parse(match.group(4)!);
+          int minute = int.parse(match.group(5)!);
+          int second = int.parse(match.group(6)!);
 
-        if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
-          lastUpdateTimestamp = currentTimestamp;
-          return newDataAvailable;
-        } else {
-          if (kDebugMode) {
-            print("No new data available.");
+          DateTime currentTimestamp =
+              DateTime(year, month, day, hour, minute, second);
+
+          if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
+            lastUpdateTimestamp = currentTimestamp;
+            return newDataAvailable;
+          } else {
+            if (kDebugMode) {
+              print("No new data available.");
+            }
+            return noNewDataAvailable;
           }
-          return noNewDataAvailable;
+        } else {
+          // If the 'file_name' does not match the expected format, consider it an error
+          if (kDebugMode) {
+            print("Invalid 'file_name' format: $fileName");
+          }
+          return connectionError;
         }
       } else {
-        // If the 'date' field is missing or null, consider it a connection error or invalid response
+        // If the 'file_name' field is missing or null, consider it a connection error or invalid response
         if (kDebugMode) {
-          print("Invalid response received: 'date' field is missing or null.");
+          print(
+              "Invalid response received: 'file_name' field is missing or null.");
         }
         return connectionError;
       }

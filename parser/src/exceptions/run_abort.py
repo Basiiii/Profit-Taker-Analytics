@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sty import fg
-
 from src.utils import time_str
 
 if TYPE_CHECKING:
@@ -20,5 +18,5 @@ class RunAbort(Exception):
         self.require_heist_start = require_heist_start
 
     def __str__(self):
-        return f'{fg.cyan}Profit-Taker Run #{self.run.run_nr} was aborted or had bugged logs.\n' \
-               f'{self.run.failed_run_duration_str}'
+        return f'Profit-Taker Run #{self.run.run_nr} was aborted or had bugged logs.\n' \
+               # f'{self.run.failed_run_duration_str}'
