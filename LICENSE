@@ -1,5 +1,9 @@
 Profit Taker Analytics
 
-The application portion of this project (located in the 'app' folder) is proprietary and all rights are reserved. Unauthorized use, reproduction, or distribution is prohibited without explicit permission from the project owner.
+The Profit Taker Analytics project consists of two main components: the application and the parser.
 
-The parser portion of this project (located in the 'parser' folder) is licensed under the GNU General Public License v3.0 (GPL-3.0). See the parser/LICENSE.txt file for details.
+Application Component: The application portion of this project (located in the 'app' folder) is proprietary, and all rights are reserved. This means that unauthorized use, reproduction, or distribution of this component is strictly prohibited without explicit permission from the project owner (Basi). This decision was made to protect the intellectual property and ensure control over the distribution and usage of the application.
+
+Parser Component: In contrast, the parser portion of this project (located in the 'parser' folder) is licensed under the GNU General Public License v3.0 (GPL-3.0). This license grants users the freedom to use, modify, and distribute the parser component according to the terms specified in the GPL-3.0 license. This choice reflects our commitment to open-source principles and encourages collaboration and innovation within the developer community.
+
+Please refer to the respective license files (located in the 'parser' and 'app' folders) for detailed information on the licensing terms and conditions.
