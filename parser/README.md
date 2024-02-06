@@ -18,4 +18,5 @@ The Profit Taker Analytics Parser is a tool designed to extract data from `EE.lo
 
 We extend our sincere gratitude to the original repository, [revoltage34/ptanalyzer](https://github.com/revoltage34/ptanalyzer), for laying the foundation of the command-line version. Our project builds upon this exceptional work, taking the code to new heights.
 
-Special thanks to [ScamCat](https://github.com/ScamCatt) for working on this parser, they made excellent contributions to this project.
+Special thanks to [ScamCat](https://github.com/ScamCatt) for their valuable contributions to the parser component of this
+project. Their dedication, expertise, and commitment to excellence have significantly enriched the project, enhancing its functionality and overall quality.

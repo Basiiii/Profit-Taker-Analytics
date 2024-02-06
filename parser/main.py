@@ -1,8 +1,7 @@
 ############################################################
-# Profit-Taker Analyzer by ReVoltage#3425                  #
-# Rewritten by Iterniam#5829                               #
-# Re-Rewritten by scamcat                                  #
-# Original repo: https://github.com/revoltage34/ptanalyzer #
+# Profit-Taker Analytics Parser                            #
+# Main parser development contributions by ScamCat         #
+# Minor parser development contributions by Basi           #
 # Repo: https://github.com/Basiiii/Profit-Taker-Analytics  #
 # Requires Python 3.10                                     #
 ############################################################
@@ -10,9 +9,6 @@
 import traceback
 from src.analyzer import Analyzer
 from src.utils import color
-
-VERSION = 'v1.0.0'
-
 
 def error_msg():
     traceback.print_exc()
