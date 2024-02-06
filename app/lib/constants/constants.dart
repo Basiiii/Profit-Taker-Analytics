@@ -1,5 +1,5 @@
 /// App details
-const String version = 'ALPHA 0.2.2';
+const String version = 'ALPHA 0.3.0';
 
 /// Starting screen sizes
 const double startingWidth = 1500; // Initial width of the app at launch

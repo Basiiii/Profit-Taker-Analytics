@@ -50,6 +50,14 @@
         "about_app_description": "Сделано с любовью Basi.\nЕсли ты это нащёл, пришли мне мангу в лс на дискорде.",
         "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii"
     },
+    "storage" : {
+        "title": "Ваше место хранения",
+        "run_name": "название миссии",
+        "run_time": "время миссии",
+        "date": "дата",
+        "edit": "редактировать",
+        "delete": "удалить"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
@@ -57,6 +65,13 @@
         "ru": "Русский"
     },
     "buttons": {
-        "ok": "Ок"
+        "ok": "Ок",
+        "cancel": "отменить",
+        "delete": "удалить"
+    },
+    "alerts": {
+        "name_title": "Изменить имя файла",
+        "delete_title": "Подтвердите удаление",
+        "confirm_delete": "Вы уверены, что хотите удалить выбранный(ые) прогон(ы)?"
     }
 }

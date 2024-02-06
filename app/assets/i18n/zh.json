@@ -50,6 +50,14 @@
         "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
     },
+    "storage" : {
+        "title": "您的存储区域",
+        "run_name": "任务名称",
+        "run_time": "任务时间",
+        "date": "日期",
+        "edit": "编辑",
+        "delete": "删除"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
@@ -57,6 +65,13 @@
         "ru": "Русский"
     },
     "buttons": {
-        "ok": "OK"
+        "ok": "OK",
+        "cancel": "取消",
+        "delete": "删除"
+    },
+    "alerts": {
+        "name_title": "更改文件名",
+        "delete_title": "确认删除",
+        "confirm_delete": "您确定要删除所选运行吗？"
     }
 }

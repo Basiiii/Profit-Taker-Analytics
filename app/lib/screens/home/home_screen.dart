@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     /// Reset timestamp
-    lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
+    // lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
     /// Fetch the data for last run
     _dataFetch =
@@ -132,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    void updateCallback() {
+
+    void updateCallback(String newName, String fileName) {
       LoadingOverlay.of(context).show();
       setState(() {});
       LoadingOverlay.of(context).hide();
@@ -144,6 +145,9 @@ class _HomeScreenState extends State<HomeScreen>
         FlutterI18n.translate(context, "errors.parser_connection_error");
     String buggedRunWarningMessage =
         FlutterI18n.translate(context, "errors.bugged_run_warning");
+    String editTitle = FlutterI18n.translate(context, "alerts.name_title");
+    String okButton = FlutterI18n.translate(context, "buttons.ok");
+    String cancelButton = FlutterI18n.translate(context, "buttons.cancel");
 
     /// Calculate available spaces for Last Run elements
     ///
@@ -267,9 +271,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 customRunName.isEmpty
                                     ? runFileName
                                     : customRunName,
-                                "change file name",
-                                "cancel",
-                                "okay",
+                                editTitle,
+                                cancelButton,
+                                okButton,
                                 updateCallback);
                           },
                         ),

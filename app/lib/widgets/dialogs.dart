@@ -165,15 +165,53 @@ Future<void> displayTextInputDialog(
             child: Text(okText),
             onPressed: () {
               var newName = controller.text;
-              updateRunName(newName, fileName).then((_) => updateCallback());
-              Navigator.pop(context);
-              controller.clear();
+              updateRunName(newName, fileName).then((_) {
+                updateCallback(newName, fileName);
+                Navigator.pop(context);
+                controller.clear();
+              });
             },
           ),
         ],
       );
     },
   );
+}
+
+Future<bool> showConfirmationDialog(BuildContext context, String title,
+    String confirmation, String cancelButton, String deleteButton) async {
+  return await showDialog<bool>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(confirmation),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(cancelButton),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text(deleteButton,
+                    style: const TextStyle(color: Colors.red)),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      ) ??
+      false;
 }
 
 Future<void> updateRunName(String newName, String fileName) async {

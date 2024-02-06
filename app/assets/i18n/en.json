@@ -50,6 +50,14 @@
         "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
     },
+    "storage" : {
+        "title": "Your storage area",
+        "run_name": "Run Name",
+        "run_time": "Run Time",
+        "date": "Date",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
@@ -57,6 +65,13 @@
         "ru": "Русский"
     },
     "buttons": {
-        "ok": "Okay"
+        "ok": "Okay",
+        "cancel": "Cancel",
+        "delete": "Delete"
+    },
+    "alerts": {
+        "name_title": "Change File Name",
+        "delete_title": "Confirm Deletion",
+        "confirm_delete": "Are you sure you want to delete the selected run(s)?"
     }
 }
