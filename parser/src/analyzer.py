@@ -198,6 +198,7 @@ class BrokenRun(RelRun):
         fullRunFormat["nickname"] = self.nickname
         fullRunFormat["aborted_run"] = True
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
+
         return fullRunFormat
 
 class AbsRun:
