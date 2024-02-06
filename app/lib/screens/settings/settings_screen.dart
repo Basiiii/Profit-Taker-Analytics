@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
@@ -26,12 +27,15 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-/// The state for the [SettingsScreen], managing language settings and UI behavior.
-///
-/// This class is responsible for handling user interactions and updating the UI
-/// based on selected language preferences. It also manages the list of supported
-/// languages and provides methods for changing the app's language dynamically.
 class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      print("Opened settings screen");
+    }
+  }
+
   /// List of supported languages with corresponding [Locale] objects.
   final List<Locale> supportedLanguages = const [
     Locale('en', 'US'), // English
@@ -91,6 +95,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {});
   }
 
+  /// Overrides the method called when a dependency of this [State] object changes.
+  ///
+  /// This method is called whenever the dependencies of this [State] object change.
+  /// It updates the [_currentLocale] variable with the current locale obtained from
+  /// the [BuildContext].
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -99,6 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Localized strings
     String changeLanguageText =
         FlutterI18n.translate(context, "settings.change_language");
     String contactText =

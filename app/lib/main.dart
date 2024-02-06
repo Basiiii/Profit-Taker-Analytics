@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:profit_taker_analyzer/services/version_control.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +35,7 @@ import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
     as custom_nav;
 
 import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
-import 'package:profit_taker_analyzer/screens/run_storage/runs_screen.dart';
+import 'package:profit_taker_analyzer/screens/storage/storage_screen.dart';
 import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
 
 import 'package:profit_taker_analyzer/theme/theme_control.dart';
@@ -50,6 +51,9 @@ import 'package:profit_taker_analyzer/theme/app_theme.dart';
 void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Check version
+  versionControl();
 
   // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
@@ -109,10 +113,17 @@ void main() async {
               ),
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
+                /// Delete port text file if it exists
+                await deletePortFileIfExists(); // done to ensure fresh port every time
+
+                /// Kill old existing parser instances
+                await killParserInstances(); // kill old instances if they exist
+
+                /// Run the parser
                 debugPrint("Starting parser");
                 startParser();
-                await Future.delayed(const Duration(seconds: 2));
 
+                /// Prepare app language
                 debugPrint("Preparing language");
                 // Get the user's preferred language from shared preferences
                 final prefs = await SharedPreferences.getInstance();
@@ -127,6 +138,16 @@ void main() async {
                   // Create a Locale object from the language and country codes
                   Locale locale = Locale(languageCode, countryCode);
                   await prefs.setString('language', locale.toString());
+                }
+
+                /// Give parser time to initialize
+                await Future.delayed(const Duration(seconds: 4));
+
+                /// Set the port number
+                debugPrint("Setting port number");
+                var result = await setPortNumber();
+                if (result == errorSettingPort) {
+                  debugPrint("Error setting the port number");
                 }
               },
               onEnd: () async {}))));
@@ -158,6 +179,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WindowListener {
   /// Current index of selected tab.
   int _currentIndex = 0;
+  Widget? _activeScreen;
 
   /// Future for loading the theme mode.
   Future<void>? _themeModeFuture;
@@ -174,6 +196,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
     _loadLanguage();
+    _activeScreen = const HomeScreen();
     _init();
   }
 
@@ -190,6 +213,47 @@ class _MyAppState extends State<MyApp> with WindowListener {
       if (mounted) {
         Provider.of<LocaleModel>(context, listen: false).set(Locale(language));
       }
+    }
+  }
+
+  /// Handles the selection of a tab.
+  ///
+  /// Updates the state to reflect the selected tab index and dynamically loads the
+  /// new screen only if it's not already loaded.
+  ///
+  /// Parameters:
+  ///   - index: The index of the tab to be selected.
+  ///
+  /// Returns: void.
+  void _selectTab(int index) {
+    setState(() {
+      _currentIndex = index;
+      // Dynamically load the new screen only if it's not already loaded
+      if (_activeScreen != _getScreenByIndex(index)) {
+        _activeScreen = _getScreenByIndex(index);
+      }
+    });
+  }
+
+  /// Returns a screen widget based on the provided index.
+  ///
+  /// This function returns a screen widget based on the given index.
+  ///
+  /// Parameters:
+  ///   - index: The index of the tab to determine which screen widget to return.
+  ///
+  /// Returns:
+  ///   - A widget representing the screen corresponding to the provided index.
+  Widget _getScreenByIndex(int index) {
+    switch (index) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const StorageScreen();
+      case 2:
+        return const SettingsScreen();
+      default:
+        return const HomeScreen();
     }
   }
 
@@ -263,26 +327,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
                                   /// Navigation bar widget.
                                   custom_nav.NavigationBar(
                                     currentIndex: _currentIndex,
-                                    onTabSelected: (index) {
-                                      setState(() {
-                                        _currentIndex = index;
-                                      });
-                                    },
+                                    onTabSelected: _selectTab,
                                   ),
                                   Expanded(
-                                    child: IndexedStack(
-                                      index: _currentIndex,
-                                      children: const <Widget>[
-                                        /// Home screen widget.
-                                        HomeScreen(),
-
-                                        /// Advanced screen widget.
-                                        RunStorage(),
-
-                                        /// Settings screen widget.
-                                        SettingsScreen(),
-                                      ],
-                                    ),
+                                    child:
+                                        _activeScreen!, // Dynamic screen loading
                                   ),
                                 ],
                               ),
@@ -297,23 +346,17 @@ class _MyAppState extends State<MyApp> with WindowListener {
     );
   }
 
-  /// Handles the window close event.
+  /// Overrides the method to handle window close event.
   ///
-  /// When the window close event occurs, this method is called. It first attempts to
-  /// kill parser instances and then destroys the window. This ensures that any
-  /// ongoing processes are properly terminated before the window closes.
+  /// This method attempts to kill the parser process and then closes the app window.
+  ///
+  /// Returns: A future that completes when the window is closed.
   @override
   void onWindowClose() async {
     /// Attempt to kill Parser process
     await killParserInstances().whenComplete(() async {
       /// Close app window
       await windowManager.destroy();
-
-      // /// Delay for a short period
-      // await Future.delayed(const Duration(seconds: 1));
-
-      // /// Force kill app
-      // await Shell().run('taskkill /F /IM profit_taker_analyzer.exe');
     });
   }
 }

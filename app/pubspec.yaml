@@ -1,7 +1,7 @@
 name: profit_taker_analyzer
 description: "Warframe Profit Taker analysis app."
 publish_to: "none"
-version: 0.2.0+1
+version: 0.3.0+1
 
 environment:
   sdk: ">=3.2.0-199.0.dev <4.0.0"
@@ -42,6 +42,12 @@ dependencies:
   flutter_i18n: ^0.35.0
   flutter_localizations:
     sdk: flutter
+  # To be able to get path from File objects
+  path: any
+  # Table for run storage screen
+  data_table_2: ^2.5.10
+  # Used for manipulating datetime objects
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

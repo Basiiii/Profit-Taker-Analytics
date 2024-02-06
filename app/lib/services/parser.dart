@@ -16,6 +16,93 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 /// Inicialize the time to epoch 0 to ensure all API records will be newer
 DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
+/// Port number for where API is running
+int portNumber = 0;
+
+/// Sets the port number by reading from a file.
+///
+/// This method attempts to read the port number from a file and sets it.
+///
+/// Parameters:
+///   - retries: The number of retries in case of failure. Default is 5.
+///   - delayBetweenRetries: The delay between retries. Default is 1000 milliseconds.
+///
+/// Returns: A future that completes with the set port number or throws an exception.
+Future<int> setPortNumber(
+    {int retries = 5,
+    Duration delayBetweenRetries = const Duration(milliseconds: 1000)}) async {
+  try {
+    if (kDebugMode) {
+      print("Setting port number");
+    }
+    var mainPath = Platform.resolvedExecutable;
+    mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+    var portFilePath = "$mainPath\\bin\\port.txt";
+    final file = File(portFilePath);
+
+    for (int i = 0; i < retries; i++) {
+      try {
+        String contents = await file.readAsString();
+        int port = int.parse(contents.trim());
+
+        portNumber = port;
+        if (kDebugMode) {
+          print("Port number: $portNumber");
+        }
+
+        return successSettingPort; // Assuming successSettingPort is a non-null integer
+      } catch (e) {
+        if (i < retries - 1) {
+          if (kDebugMode) {
+            print('Error reading port number from file: $e');
+            print('Retrying in ${delayBetweenRetries.inSeconds} seconds...');
+          }
+          await Future.delayed(delayBetweenRetries);
+        } else {
+          // All retries have failed, throw an exception
+          throw Exception('Failed to read port number after all retries');
+        }
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error reading port number from file after all retries: $e');
+    }
+    // Return a future that completes with an error
+    return Future.error(
+        Exception('Failed to read port number after all retries'));
+  }
+
+  // Default return statement to ensure the function always returns a value
+  return errorSettingPort; // Assuming errorSettingPort is a non-null integer
+}
+
+/// Deletes the port file if it exists.
+///
+/// This method deletes the port file if it exists at the specified location.
+///
+/// Returns: A future that completes when the operation is done.
+Future<void> deletePortFileIfExists() async {
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var portFilePath = "$mainPath\\bin\\port.txt";
+  final file = File(portFilePath);
+
+  // Check if the file exists
+  bool exists = await file.exists();
+  if (exists) {
+    // Delete the file
+    await file.delete();
+    if (kDebugMode) {
+      print('Deleted existing port file at $portFilePath');
+    }
+  } else {
+    if (kDebugMode) {
+      print('No existing port file found at $portFilePath');
+    }
+  }
+}
+
 /// Starts the parser process asynchronously.
 ///
 /// This method constructs the path to the parser executable based on the
@@ -30,7 +117,7 @@ void startParser() async {
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
   var binPath = "$mainPath\\bin\\";
-  var parserPath = "$binPath\\parser.exe";
+  var parserPath = "$binPath\\run_parser.exe";
 
   try {
     var processResults = await Shell().run('"$parserPath"');
@@ -57,12 +144,19 @@ void startParser() async {
 /// all instances of the parser.exe process. It is asynchronous and returns
 /// a [Future<void>] to indicate completion.
 Future<void> killParserInstances() async {
-  await Shell().run('taskkill /F /IM parser.exe');
+  try {
+    await Shell().run('taskkill /F /IM parser.exe');
+  } catch (e) {
+    // Print the exception to the console
+    if (kDebugMode) {
+      print('An error occurred while trying to kill parser.exe processes: $e');
+    }
+  }
 }
 
 /// Checks for new data by comparing the last update timestamp with the server.
 ///
-/// This method performs an HTTP GET request to the 'http://127.0.0.1:5000/last_run_time'
+/// This method performs an HTTP GET request to the 'http://127.0.0.1:PORT/last_run_time'
 /// endpoint, retrieves the timestamp of the last data update, and compares it with
 /// the locally stored timestamp (`lastUpdateTimestamp`). If a newer timestamp is
 /// detected, it indicates new data is available, and the method returns [newDataAvailable].
@@ -75,24 +169,67 @@ Future<void> killParserInstances() async {
 ///   - [noNewDataAvailable]: Indicates that no new data is available.
 ///   - [connectionError]: Indicates an error occurred during the connection.
 Future<int> checkForNewData() async {
-  var url = Uri.parse('http://127.0.0.1:5000/last_run_time');
+  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   try {
-    var response = await http.get(url);
+    var response =
+        await http.get(url).timeout(const Duration(milliseconds: 2000));
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-      DateTime currentTimestamp = DateTime.parse(data['date'].split('.')[0]);
+      // Check if the response contains the expected 'file_name' field
+      if (data.containsKey('file_name') && data['file_name'] != null) {
+        // Parse the 'file_name' string into a DateTime object
+        // Assuming the format is YYYYMMDD_HHMMSS
+        String fileName = data['file_name'];
+        RegExp pattern = RegExp(r'(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})');
+        RegExpMatch? match = pattern.firstMatch(fileName);
+        if (match != null) {
+          int year = int.parse(match.group(1)!);
+          int month = int.parse(match.group(2)!);
+          int day = int.parse(match.group(3)!);
+          int hour = int.parse(match.group(4)!);
+          int minute = int.parse(match.group(5)!);
+          int second = int.parse(match.group(6)!);
 
-      if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
-        lastUpdateTimestamp = currentTimestamp;
-        return newDataAvailable;
+          DateTime currentTimestamp =
+              DateTime(year, month, day, hour, minute, second);
+
+          if (currentTimestamp.isAfter(lastUpdateTimestamp)) {
+            lastUpdateTimestamp = currentTimestamp;
+            return newDataAvailable;
+          } else {
+            if (kDebugMode) {
+              print("No new data available.");
+            }
+            return noNewDataAvailable;
+          }
+        } else {
+          // If the 'file_name' does not match the expected format, consider it an error
+          if (kDebugMode) {
+            print("Invalid 'file_name' format: $fileName");
+          }
+          return connectionError;
+        }
+      } else {
+        // If the 'file_name' field is missing or null, consider it a connection error or invalid response
+        if (kDebugMode) {
+          print(
+              "Invalid response received: 'file_name' field is missing or null.");
+        }
+        return connectionError;
       }
     } else {
-      throw Exception('Failed to load data');
+      // If the status code is not 200, consider it a connection error
+      if (kDebugMode) {
+        print("Status code indicates a connection error.");
+      }
+      return connectionError;
     }
-    return noNewDataAvailable;
   } catch (e) {
+    if (kDebugMode) {
+      print("Connection error: $e");
+    }
     return connectionError;
   }
 }
@@ -284,32 +421,63 @@ void updatePhaseCard(
   );
 }
 
-/// Asynchronously loads data from a specified URL and updates various components in the application.
+/// Asynchronously loads data from the specified URL and updates various components in the application.
 ///
 /// This function sends a GET request to the 'http://127.0.0.1:5000/last_run' URL to retrieve the latest data.
 /// If the response status code is 200, it decodes the JSON response and updates several components,
 /// including the [username], [overviewCards], and [phaseCards], using helper functions like [updateOverviewCardTime]
 /// and [updatePhaseCardsWithJson]. The data retrieved is assumed to follow a specific format.
 ///
+/// This method is typically used to fetch and update real-time information about the last run from a server.
+///
 /// Example:
 /// ```dart
 /// try {
-///   await loadData();
+///   await loadDataAPI();
 ///   // Data loaded successfully, update UI or perform additional actions
 /// } catch (e) {
 ///   // Handle the exception, e.g., show an error message
 ///   print('Error loading data: $e');
 /// }
 /// ```
-Future<void> loadData() async {
-  var url = Uri.parse('http://127.0.0.1:5000/last_run');
+Future<void> loadDataAPI() async {
+  var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   var response = await http.get(url);
 
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
 
+    /// Update the file name and run name
+    runFileName = data["file_name"];
+    customRunName = data["pretty_name"] ?? '';
+
+    /// Update run flags
+    // If run is bugged or aborted or if we can't read JSON we mark it as true
+    isBuggedRun = ((data["bugged_run"] ?? false) == true ||
+        (data["aborted_run"] ?? false) == true);
+
     /// Update username with space behind for formatting
     username = '${data['nickname']}';
+
+    /// Build string from squad_members array excluding nickname
+    String nickname = data['nickname'];
+    List<String> squadMembers = List<String>.from(data['squad_members']);
+    squadMembers.removeWhere((member) => member == nickname);
+
+    if (squadMembers.isNotEmpty) {
+      playersListStart =
+          squadMembers.sublist(0, squadMembers.length - 1).join(', ');
+      playersListEnd = squadMembers.last;
+    } else {
+      playersListStart = "";
+      playersListEnd = "";
+    }
+
+    /// Update soloRun based on the size of squadMembers
+    soloRun = squadMembers.length > 1 ? false : true;
+
+    /// Loading from API means it's the most recent
+    mostRecentRun = true;
 
     /// Update overview cards data
     updateOverviewCardTime(overviewCards, 0, data['total_duration']);
@@ -327,6 +495,93 @@ Future<void> loadData() async {
     updatePhaseCardsWithJson(response.body, 3, 'phase_4');
   } else {
     throw Exception('Failed to load data');
+  }
+
+  await Future.delayed(const Duration(seconds: 1));
+}
+
+/// Asynchronously loads data from a local file specified by [fileName] and updates various components in the application.
+///
+/// This function reads the contents of the file located at "$mainPath\\storage\\$fileName" and decodes the JSON data.
+/// If the file exists, it updates several components, including the [username], [overviewCards], and [phaseCards],
+/// using helper functions like [updateOverviewCardTime] and [updatePhaseCardsWithJson]. The data retrieved is assumed
+/// to follow a specific format.
+///
+/// This method is typically used to load historical data from a file for analysis or display purposes.
+///
+/// Example:
+/// ```dart
+/// try {
+///   await loadDataFile('example_data.json');
+///   // Data loaded successfully, update UI or perform additional actions
+/// } catch (e) {
+///   // Handle the exception, e.g., show an error message
+///   print('Error loading data from file: $e');
+/// }
+Future<void> loadDataFile(String fileName) async {
+  try {
+    var mainPath = Platform.resolvedExecutable;
+    mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+    var filePath = "$mainPath\\storage\\$fileName";
+    final file = File(filePath);
+
+    if (await file.exists()) {
+      final String contents = await file.readAsString();
+      final data = jsonDecode(contents);
+
+      /// Update the file name and run name
+      runFileName = fileName.replaceAll('.json', '');
+      customRunName = data["pretty_name"] ?? '';
+
+      /// Update run flags
+      // If run is bugged or aborted or if we can't read JSON we mark it as true
+      isBuggedRun = ((data["bugged_run"] ?? false) == true ||
+          (data["aborted_run"] ?? false) == true);
+
+      /// Update username with space behind for formatting
+      username = '${data['nickname']}';
+
+      /// Build string from squad_members array excluding nickname
+      String nickname = data['nickname'];
+      List<String> squadMembers = List<String>.from(data['squad_members']);
+      squadMembers.removeWhere((member) => member == nickname);
+
+      if (squadMembers.isNotEmpty) {
+        playersListStart =
+            squadMembers.sublist(0, squadMembers.length - 1).join(', ');
+        playersListEnd = squadMembers.last;
+      } else {
+        playersListStart = "";
+        playersListEnd = "";
+      }
+
+      /// Update soloRun based on the size of squadMembers
+      soloRun = squadMembers.length > 1 ? false : true;
+
+      /// Loading from File means it's not the most recent
+      mostRecentRun = false;
+
+      /// Update overview cards data
+      updateOverviewCardTime(overviewCards, 0, data['total_duration']);
+      updateOverviewCardTime(
+          overviewCards, 1, (data['flight_duration'] as num).toDouble());
+      updateOverviewCardTime(overviewCards, 2, data['total_shield']);
+      updateOverviewCardTime(overviewCards, 3, data['total_leg']);
+      updateOverviewCardTime(overviewCards, 4, data['total_body']);
+      updateOverviewCardTime(overviewCards, 5, data['total_pylon']);
+
+      /// Update phase cards data
+      updatePhaseCardsWithJson(contents, 0, 'phase_1');
+      updatePhaseCardsWithJson(contents, 1, 'phase_2');
+      updatePhaseCardsWithJson(contents, 2, 'phase_3');
+      updatePhaseCardsWithJson(contents, 3, 'phase_4');
+    } else {
+      throw Exception('File does not exist');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error reading file: $e');
+    }
   }
 
   await Future.delayed(const Duration(seconds: 1));

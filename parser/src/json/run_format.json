@@ -23,7 +23,7 @@
         "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
         "body_kill_time": 0.0,
         "pylon_time": 0.0
     },
@@ -31,7 +31,7 @@
     "phase_2": {
         "phase_time": 0.0,
         "total_leg": 0.0,
-        "leg_break_times": [],
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
         "body_kill_time": 0.0
     },
 
@@ -41,7 +41,7 @@
         "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
         "body_kill_time": 0.0,
         "pylon_time": 0.0
     },
@@ -52,7 +52,7 @@
         "total_leg": 0.0,
         "shield_change_times": [],
         "shield_change_types": [],
-        "leg_break_times": [],
+        "leg_break_times": [0.0, 0.0, 0.0, 0.0],
         "body_kill_time": 0.0
     }
 }

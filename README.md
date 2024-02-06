@@ -17,9 +17,7 @@ Coming soon.
 ## Features
 
 - **Intuitive GUI Design:** Benefit from an intuitive and user-friendly Graphical User Interface (GUI), transforming raw data into a visually appealing format for easy interpretation.
-
 - **Compiled Application:** Eliminate the need for Python installation, making it hassle-free to seamlessly integrate the application into your Warframe speedrunning toolkit.
-
 - **Designed for Elite Speedrunners:** Embraced by some of the best speedrunners in the Warframe community, the Profit Taker Analytics app is designed to meet the high standards and demands of elite gaming strategies.
 
 ## FAQ

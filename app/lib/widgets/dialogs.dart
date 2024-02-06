@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -46,6 +50,32 @@ void showErrorDialog(BuildContext context) {
 /// to restart the program. If the problem persists, they are instructed to contact Basi.
 /// The user can close the dialog by pressing the "OK" button.
 void showParserConnectionErrorDialog(
+    BuildContext context, String errorText, String errorTitle) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(errorText),
+            content: Text(errorTitle),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ]);
+      });
+}
+
+/// Shows a dialog warning about a bugged run.
+///
+/// This method displays a dialog with a warning message about a bugged run.
+///
+/// Parameters:
+///   - context: The build context.
+///   - errorText: The text content of the dialog.
+///   - errorTitle: The title of the dialog.
+void showBuggedRunWarningDialog(
     BuildContext context, String errorText, String errorTitle) {
   showDialog(
       context: context,
@@ -112,4 +142,148 @@ void showContactsAppDialog(BuildContext context, String contactText) {
       );
     },
   );
+}
+
+/// Displays a text input dialog.
+///
+/// This method shows a dialog with a text input field, allowing the user to enter a new name.
+/// When the user confirms the input, the [updateCallback] function is called with the new name
+/// and the file name.
+///
+/// Parameters:
+///   - context: The build context.
+///   - controller: The text editing controller for the input field.
+///   - fileName: The name of the file associated with the input.
+///   - hintText: The hint text displayed in the input field.
+///   - changeFileNameText: The title of the dialog.
+///   - cancelText: The text for the cancel button.
+///   - okText: The text for the confirm button.
+///   - updateCallback: The callback function to be called after updating the name.
+///
+/// Returns: A future that completes when the dialog is closed.
+Future<void> displayTextInputDialog(
+    BuildContext context,
+    TextEditingController controller,
+    String fileName,
+    String hintText,
+    String changeFileNameText,
+    String cancelText,
+    String okText,
+    Function updateCallback) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(changeFileNameText),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(hintText: hintText),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(cancelText),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text(okText),
+            onPressed: () {
+              var newName = controller.text;
+              updateRunName(newName, fileName).then((_) {
+                updateCallback(newName, fileName);
+                Navigator.pop(context);
+                controller.clear();
+              });
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/// Shows a confirmation dialog.
+///
+/// This method displays a dialog with a confirmation message and two buttons: one for canceling
+/// the action and the other for confirming the action. Returns a future that completes with a boolean
+/// value indicating whether the action was confirmed or canceled.
+///
+/// Parameters:
+///   - context: The build context.
+///   - title: The title of the dialog.
+///   - confirmation: The confirmation message.
+///   - cancelButton: The text for the cancel button.
+///   - deleteButton: The text for the delete button.
+///
+/// Returns: A future that completes with a boolean value indicating whether the action was confirmed.
+Future<bool> showConfirmationDialog(BuildContext context, String title,
+    String confirmation, String cancelButton, String deleteButton) async {
+  return await showDialog<bool>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(confirmation),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(cancelButton),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text(deleteButton,
+                    style: const TextStyle(color: Colors.red)),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      ) ??
+      false;
+}
+
+/// Updates the name of a run in the corresponding JSON file.
+///
+/// This method updates the name of a run in the JSON file associated with the given [fileName].
+///
+/// Parameters:
+///   - newName: The new name to be set.
+///   - fileName: The name of the JSON file to be updated.
+///
+/// Returns: A future that completes when the update is done.
+Future<void> updateRunName(String newName, String fileName) async {
+  // Define the path to the JSON file
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var storagePath = "$mainPath\\storage\\$fileName.json";
+
+  // Load the JSON file
+  final File jsonFile = File(storagePath);
+  final String jsonString = await jsonFile.readAsString();
+
+  // Parse the JSON string into a Dart Map
+  final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+  // Update the value of the "pretty_name" key
+  jsonData['pretty_name'] = newName;
+
+  // Convert the updated Map back into a JSON string
+  final String updatedJsonString = jsonEncode(jsonData);
+
+  // Write the updated JSON string back to the file
+  await jsonFile.writeAsString(updatedJsonString);
+
+  // Update the variable
+  customRunName = newName;
 }

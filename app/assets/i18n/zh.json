@@ -2,7 +2,12 @@
     "home": {
         "hello": "你好!",
         "hello_name": "你好， {name}!",
-        "last_run": "你的上一次记录"
+        "last_run": "上一次记录",
+        "last_run_with": "你的上一把记录，与 ",
+        "run": "你的记录",
+        "run_with": "你的记录，与 ",
+        "and": " 和 ",
+        "named": "称为"
     },
     "overview_cards": {
         "total_duration": "总时长",
@@ -24,7 +29,8 @@
     },
     "errors": {
         "error": "错误！",
-        "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图"
+        "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
+        "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。"
     },
     "settings": {
         "general": "通用",
@@ -44,6 +50,14 @@
         "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
     },
+    "storage" : {
+        "title": "您的存储区域",
+        "run_name": "任务名称",
+        "run_time": "任务时间",
+        "date": "日期",
+        "edit": "编辑",
+        "delete": "删除"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
@@ -51,6 +65,13 @@
         "ru": "Русский"
     },
     "buttons": {
-        "ok": "OK"
+        "ok": "OK",
+        "cancel": "取消",
+        "delete": "删除"
+    },
+    "alerts": {
+        "name_title": "更改文件名",
+        "delete_title": "确认删除",
+        "confirm_delete": "您确定要删除所选运行吗？"
     }
 }

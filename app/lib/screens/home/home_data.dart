@@ -2,8 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
-/// Display name.
+/// Custom and file name of current run
+String runFileName = '';
+String customRunName = '';
+
+/// Specific run flags
+bool isBuggedRun = false;
+
+/// Display name(s)
 String username = '';
+String playersListStart = '';
+String playersListEnd = '';
+
+/// Defines if the run is solo and if it's most recent
+bool soloRun = true;
+bool mostRecentRun = true;
 
 /// Represents an overview card with a color, an icon, a title and a time.
 ///

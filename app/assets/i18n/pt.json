@@ -2,7 +2,12 @@
     "home": {
         "hello": "Olá!",
         "hello_name": "Olá {name}!",
-        "last_run": "Última missão"
+        "last_run": "Última luta",
+        "last_run_with": "Última luta com ",
+        "run": "A tua luta",
+        "run_with": "A tua luta com ",
+        "and": " e ",
+        "named": "chamada"
     },
     "overview_cards": {
         "total_duration": "Tempo\nTotal",
@@ -24,7 +29,8 @@
     },
     "errors": {
         "error": "Erro!",
-        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação."
+        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
+        "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos."
     },
     "settings": {
         "general": "Geral",
@@ -44,6 +50,14 @@
         "about_app_description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM de uma manga no discord.",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
     },
+    "storage" : {
+        "title": "A sua área de armazenamento",
+        "run_name": "Nome Missão",
+        "run_time": "Tempo Missão",
+        "date": "Data",
+        "edit": "Editar",
+        "delete": "Apagar"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
@@ -51,6 +65,13 @@
         "ru": "Русский"
     },
     "buttons": {
-        "ok": "Ok"
+        "ok": "Ok",
+        "cancel": "Cancelar",
+        "delete": "Apagar"
+    },
+    "alerts": {
+        "name_title": "Mudar Nome Ficheiro",
+        "delete_title": "Confirmar Apagar",
+        "confirm_delete": "Tem a certeza que deseja apagar a(s) missão(ões) escolhida(s)?"
     }
 }
