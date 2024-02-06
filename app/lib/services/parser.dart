@@ -19,6 +19,15 @@ DateTime lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 /// Port number for where API is running
 int portNumber = 0;
 
+/// Sets the port number by reading from a file.
+///
+/// This method attempts to read the port number from a file and sets it.
+///
+/// Parameters:
+///   - retries: The number of retries in case of failure. Default is 5.
+///   - delayBetweenRetries: The delay between retries. Default is 1000 milliseconds.
+///
+/// Returns: A future that completes with the set port number or throws an exception.
 Future<int> setPortNumber(
     {int retries = 5,
     Duration delayBetweenRetries = const Duration(milliseconds: 1000)}) async {
@@ -68,6 +77,11 @@ Future<int> setPortNumber(
   return errorSettingPort; // Assuming errorSettingPort is a non-null integer
 }
 
+/// Deletes the port file if it exists.
+///
+/// This method deletes the port file if it exists at the specified location.
+///
+/// Returns: A future that completes when the operation is done.
 Future<void> deletePortFileIfExists() async {
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));

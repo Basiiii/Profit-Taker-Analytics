@@ -22,12 +22,6 @@ import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 import 'package:profit_taker_analyzer/widgets/last_runs.dart';
 
-/// The HomeScreen widget represents the main screen of the application.
-///
-/// This widget uses a Scaffold to provide a basic structure for the app,
-/// including an AppBar and a Body. The body of the scaffold is a single
-/// child scroll view, containing various widgets such as titles, buttons,
-/// and cards.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -35,10 +29,6 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-/// The `_HomeScreenState` class represents the mutable state for the `HomeScreen` widget.
-///
-/// This class contains a [GlobalKey] for the [Scaffold], which allows for
-/// opening and closing of drawers programmatically.
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   /// A [GlobalKey] for the [Scaffold] widget, enabling programmatic control over the drawer.
@@ -47,15 +37,27 @@ class _HomeScreenState extends State<HomeScreen>
   /// A [ValueNotifier] that holds the current connection status.
   final ValueNotifier<bool> _connectionStatus = ValueNotifier<bool>(true);
 
+  /// Controller for file name edit field.
+  final _textFieldController = TextEditingController();
+
   /// A timer for periodic data fetching.
   Timer? _dataFetch;
 
   /// A controller for taking screenshots.
   ScreenshotController screenshotController = ScreenshotController();
 
+  /// Indicates whether the state should be kept alive (mounted) even when it's not visible.
   @override
   bool get wantKeepAlive => true;
 
+  /// Loads the data from the last run based on the provided file name.
+  ///
+  /// This method displays a loading overlay, loads the data file with the given file name,
+  /// and updates the UI after the data is loaded. Once the data is loaded, the loading overlay
+  /// is hidden.
+  ///
+  /// Parameters:
+  ///   - fileName: The name of the file containing the data to be loaded.
   void loadLastRunData(String fileName) {
     LoadingOverlay.of(context).show();
     loadDataFile('$fileName.json').then((_) {
@@ -64,12 +66,6 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  final _textFieldController = TextEditingController();
-
-  /// Initializes the state of the `_HomeScreenState` class.
-  ///
-  /// This method sets up the periodic data fetching timer and handles various scenarios
-  /// such as checking for new data, handling connection errors, and loading data.
   @override
   void initState() {
     super.initState();
@@ -77,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen>
       print("Opened home screen");
     }
 
-    /// Reset timestamp
+    // Reset timestamp
     // lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
 
     /// Fetch the data for last run
@@ -115,24 +111,17 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  /// Builds and returns the widget tree for the `_HomeScreenState`.
-  ///
-  /// This method is responsible for constructing the UI components and layout
-  /// of the `HomeScreen` widget. It utilizes localized error messages and calculates
-  /// the available screen width based on the device's screen size and padding.
-  ///
-  /// The resulting widget tree is wrapped in a [Scaffold] for the overall structure,
-  /// and a [SingleChildScrollView] for scrollable content.
-  ///
-  /// Parameters:
-  ///   - `context`: The build context providing access to the localization and theme.
-  ///
-  /// Returns:
-  ///   A widget tree representing the visual elements of the `HomeScreen`.
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
+    /// Callback function for updating data.
+    ///
+    /// This function displays a loading overlay, updates the state, and then hides the loading overlay.
+    ///
+    /// Parameters:
+    ///   - newName: The new name to be updated.
+    ///   - fileName: The file name associated with the update.
     void updateCallback(String newName, String fileName) {
       LoadingOverlay.of(context).show();
       setState(() {});

@@ -67,6 +67,14 @@ void showParserConnectionErrorDialog(
       });
 }
 
+/// Shows a dialog warning about a bugged run.
+///
+/// This method displays a dialog with a warning message about a bugged run.
+///
+/// Parameters:
+///   - context: The build context.
+///   - errorText: The text content of the dialog.
+///   - errorTitle: The title of the dialog.
 void showBuggedRunWarningDialog(
     BuildContext context, String errorText, String errorTitle) {
   showDialog(
@@ -136,6 +144,23 @@ void showContactsAppDialog(BuildContext context, String contactText) {
   );
 }
 
+/// Displays a text input dialog.
+///
+/// This method shows a dialog with a text input field, allowing the user to enter a new name.
+/// When the user confirms the input, the [updateCallback] function is called with the new name
+/// and the file name.
+///
+/// Parameters:
+///   - context: The build context.
+///   - controller: The text editing controller for the input field.
+///   - fileName: The name of the file associated with the input.
+///   - hintText: The hint text displayed in the input field.
+///   - changeFileNameText: The title of the dialog.
+///   - cancelText: The text for the cancel button.
+///   - okText: The text for the confirm button.
+///   - updateCallback: The callback function to be called after updating the name.
+///
+/// Returns: A future that completes when the dialog is closed.
 Future<void> displayTextInputDialog(
     BuildContext context,
     TextEditingController controller,
@@ -178,6 +203,20 @@ Future<void> displayTextInputDialog(
   );
 }
 
+/// Shows a confirmation dialog.
+///
+/// This method displays a dialog with a confirmation message and two buttons: one for canceling
+/// the action and the other for confirming the action. Returns a future that completes with a boolean
+/// value indicating whether the action was confirmed or canceled.
+///
+/// Parameters:
+///   - context: The build context.
+///   - title: The title of the dialog.
+///   - confirmation: The confirmation message.
+///   - cancelButton: The text for the cancel button.
+///   - deleteButton: The text for the delete button.
+///
+/// Returns: A future that completes with a boolean value indicating whether the action was confirmed.
 Future<bool> showConfirmationDialog(BuildContext context, String title,
     String confirmation, String cancelButton, String deleteButton) async {
   return await showDialog<bool>(
@@ -214,6 +253,15 @@ Future<bool> showConfirmationDialog(BuildContext context, String title,
       false;
 }
 
+/// Updates the name of a run in the corresponding JSON file.
+///
+/// This method updates the name of a run in the JSON file associated with the given [fileName].
+///
+/// Parameters:
+///   - newName: The new name to be set.
+///   - fileName: The name of the JSON file to be updated.
+///
+/// Returns: A future that completes when the update is done.
 Future<void> updateRunName(String newName, String fileName) async {
   // Define the path to the JSON file
   var mainPath = Platform.resolvedExecutable;

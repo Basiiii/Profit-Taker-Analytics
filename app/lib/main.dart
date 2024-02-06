@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:profit_taker_analyzer/services/version_control.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +51,9 @@ import 'package:profit_taker_analyzer/theme/app_theme.dart';
 void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Check version
+  versionControl();
 
   // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
@@ -212,6 +216,15 @@ class _MyAppState extends State<MyApp> with WindowListener {
     }
   }
 
+  /// Handles the selection of a tab.
+  ///
+  /// Updates the state to reflect the selected tab index and dynamically loads the
+  /// new screen only if it's not already loaded.
+  ///
+  /// Parameters:
+  ///   - index: The index of the tab to be selected.
+  ///
+  /// Returns: void.
   void _selectTab(int index) {
     setState(() {
       _currentIndex = index;
@@ -222,6 +235,15 @@ class _MyAppState extends State<MyApp> with WindowListener {
     });
   }
 
+  /// Returns a screen widget based on the provided index.
+  ///
+  /// This function returns a screen widget based on the given index.
+  ///
+  /// Parameters:
+  ///   - index: The index of the tab to determine which screen widget to return.
+  ///
+  /// Returns:
+  ///   - A widget representing the screen corresponding to the provided index.
   Widget _getScreenByIndex(int index) {
     switch (index) {
       case 0:
@@ -324,23 +346,17 @@ class _MyAppState extends State<MyApp> with WindowListener {
     );
   }
 
-  /// Handles the window close event.
+  /// Overrides the method to handle window close event.
   ///
-  /// When the window close event occurs, this method is called. It first attempts to
-  /// kill parser instances and then destroys the window. This ensures that any
-  /// ongoing processes are properly terminated before the window closes.
+  /// This method attempts to kill the parser process and then closes the app window.
+  ///
+  /// Returns: A future that completes when the window is closed.
   @override
   void onWindowClose() async {
     /// Attempt to kill Parser process
     await killParserInstances().whenComplete(() async {
       /// Close app window
       await windowManager.destroy();
-
-      // /// Delay for a short period
-      // await Future.delayed(const Duration(seconds: 1));
-
-      // /// Force kill app
-      // await Shell().run('taskkill /F /IM profit_taker_analyzer.exe');
     });
   }
 }
