@@ -428,6 +428,9 @@ class Analyzer:
             datetime: datetime object
         """
         return Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)
+    
+    def setLastRun(self, data):
+        self.lastRun = data
 
     def run(self):
         self.initAPI()
@@ -466,7 +469,7 @@ class Analyzer:
 
     @staticmethod
     def follow(filename: str):
-        """generator function that yields new lines in a file"""
+        """generator function that yields new lines in a file"""            
         known_size = os.stat(filename).st_size
         with open(filename, 'r', encoding="UTF-8") as file:
             # Start infinite loop
@@ -537,8 +540,30 @@ class Analyzer:
         with open(fileName, "w", encoding="UTF-8") as file:
             dump(run, file)
             
+    def set_format_fields(self, kvpair: dict, format: dict):
+        """Set specific fields in the run format to specific values.
+
+        Args:
+            kvpair (dict): The keys and values to insert.
+            format (dict): The format to modify.
+        """
+        runFormat = copy.deepcopy(format)
+        for key, value in kvpair.items():
+            runFormat[key] = value
+
+        return runFormat
+
 
     def follow_log(self, filename: str):
+
+        # Wait for the log file to be generated.
+        while not self.check_log_file_status(filename):
+            sleep(1)
+            self.setLastRun(dumps(self.set_format_fields({"status": "LogFileMissing"}, Globals.RUNFORMAT)))
+
+        # Initialize the endpoint to inform the parser that no runs were found.
+        self.setLastRun(dumps(self.set_format_fields({"status": "LogFileEmpty"}, Globals.RUNFORMAT)))
+
         it = Analyzer.follow(filename)
         self.store_start_time(it)
         best_time = float('inf')
@@ -605,6 +630,9 @@ class Analyzer:
 
         return run
     
+    def check_log_file_status(self, path):
+        return os.path.exists(path)
+
     def store_start_time(self, log: Iterator[str]):
         """
         Get the time the log was generated.
