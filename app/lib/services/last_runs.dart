@@ -65,6 +65,16 @@ void getNamesRuns(List<File> storedRuns, int numberRuns,
   }
 }
 
+/// Retrieves filenames from a list of stored runs [storedRuns] and adds them to [allRunsFilenames].
+///
+/// The function selects the most recent files from [storedRuns] and limits the number of files
+/// based on the [numberRuns] parameter. It then extracts the filenames from these files
+/// and adds them to the [allRunsFilenames] list.
+///
+/// Parameters:
+///   - storedRuns: A list of [File] objects representing stored runs.
+///   - numberRuns: An integer specifying the maximum number of runs to consider.
+///   - allRunsFilenames: A list of [String] objects to which the filenames will be added.
 void getRunFileNames(
     List<File> storedRuns, int numberRuns, List<String> allRunsFilenames) {
   // Get most recent files
