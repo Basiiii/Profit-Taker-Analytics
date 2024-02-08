@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/services/last_runs.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 
@@ -58,17 +60,27 @@ class _HomeScreenState extends State<HomeScreen>
   ///
   /// Parameters:
   ///   - fileName: The name of the file containing the data to be loaded.
-  void loadLastRunData(String fileName) {
+  void loadLastRunData(String fileName, int index) {
     LoadingOverlay.of(context).show();
     loadDataFile('$fileName.json').then((_) {
       setState(() {});
       LoadingOverlay.of(context).hide();
+      currentIndex = index;
     });
   }
+
+  List<File> allRuns = [];
+  List<String> runFilenames = []; // List to store all run filenames
+  int currentIndex = 0; // Current index in the list of run filenames
 
   @override
   void initState() {
     super.initState();
+
+    /// Populate lists with run history
+    allRuns = getStoredRuns();
+    getRunFileNames(allRuns, allRuns.length, runFilenames);
+
     if (kDebugMode) {
       print("Opened home screen");
     }
@@ -128,6 +140,28 @@ class _HomeScreenState extends State<HomeScreen>
       LoadingOverlay.of(context).hide();
     }
 
+    void onBackButtonPressed() {
+      if (currentIndex < runFilenames.length - 1) {
+        LoadingOverlay.of(context).show();
+        currentIndex++;
+        loadDataFile(runFilenames[currentIndex]).then((_) {
+          setState(() {});
+          LoadingOverlay.of(context).hide();
+        });
+      }
+    }
+
+    void onForwardButtonPressed() {
+      if (currentIndex > 0) {
+        LoadingOverlay.of(context).show();
+        currentIndex--;
+        loadDataFile(runFilenames[currentIndex]).then((_) {
+          setState(() {});
+          LoadingOverlay.of(context).hide();
+        });
+      }
+    }
+
     // Localized error messages
     String errorTitle = FlutterI18n.translate(context, "errors.error");
     String parserErrorMessage =
@@ -145,8 +179,9 @@ class _HomeScreenState extends State<HomeScreen>
     int maxLastRunItems = (MediaQuery.of(context).size.height / 50).ceil();
 
     // Calculate available screen width
-    double screenWidth =
-        MediaQuery.of(context).size.width - (totalLeftPaddingHome);
+    double screenWidth = MediaQuery.of(context).size.width -
+        (totalLeftPaddingHome) -
+        13; // 13 pixels to make left side padding the same as the right side
 
     // Build the overall widget tree
     return Scaffold(
@@ -165,6 +200,14 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back),
+                                onPressed: onBackButtonPressed,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.arrow_forward),
+                                onPressed: onForwardButtonPressed,
+                              ),
                               ValueListenableBuilder<bool>(
                                 valueListenable: _connectionStatus,
                                 builder: (context, isConnected, _) {
@@ -195,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen>
                               Padding(
                                 padding: const EdgeInsets.only(right: 15),
                                 child: drawerButton(_scaffoldKey),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -300,21 +343,16 @@ class _HomeScreenState extends State<HomeScreen>
                         controller: screenshotController,
                         child: Column(
                           children: [
-                            Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Wrap(
-                                    spacing: 12.0,
-                                    runSpacing: 12.0,
-                                    children: [
-                                      ...List.generate(
-                                          6,
-                                          (index) => buildOverviewCard(
-                                              index, context, screenWidth)),
-                                      ...List.generate(
-                                          4,
-                                          (index) => buildPhaseCard(
-                                              index, context, screenWidth)),
-                                    ])),
+                            Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+                              ...List.generate(
+                                  6,
+                                  (index) => buildOverviewCard(
+                                      index, context, screenWidth)),
+                              ...List.generate(
+                                  4,
+                                  (index) => buildPhaseCard(
+                                      index, context, screenWidth)),
+                            ]),
                           ],
                         )),
                     const SizedBox(height: 12), // Space between elements

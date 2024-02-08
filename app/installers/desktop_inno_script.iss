@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Profit Taker Analytics"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.4.0"
 #define MyAppPublisher "Basi"
 #define MyAppURL "https://basi.is-a.dev/"
 #define MyAppExeName "profit_taker_analyzer.exe"
@@ -28,6 +28,9 @@ SetupIconFile=C:\Users\user\Desktop\app_icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+
+[Dirs]
+Name: "{app}\storage"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
