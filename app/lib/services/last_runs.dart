@@ -23,7 +23,7 @@ List<File> getStoredRuns() {
         .toList();
 
     // Sort files lexicographically by filename
-    jsonFiles.sort((a, b) => a.path.compareTo(b.path));
+    jsonFiles.sort((a, b) => b.path.compareTo(a.path));
 
     return jsonFiles;
   } catch (e) {
@@ -61,6 +61,21 @@ void getNamesRuns(List<File> storedRuns, int numberRuns,
     String customName = jsonContent['pretty_name'] ?? '';
 
     allRunsNames.add(customName.isEmpty ? fileName : customName);
+    allRunsFilenames.add(fileName);
+  }
+}
+
+void getRunFileNames(
+    List<File> storedRuns, int numberRuns, List<String> allRunsFilenames) {
+  // Get most recent files
+  List<File> recentFiles = storedRuns;
+
+  // Limit the number of files based on the numberRuns parameter
+  recentFiles = recentFiles.sublist(0, min(numberRuns, recentFiles.length));
+
+  // Extract the filenames from these files
+  for (var file in recentFiles) {
+    String fileName = path.basename(file.path);
     allRunsFilenames.add(fileName);
   }
 }

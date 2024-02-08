@@ -48,6 +48,8 @@ dependencies:
   data_table_2: ^2.5.10
   # Used for manipulating datetime objects
   intl: ^0.18.1
+  crypto: ^3.0.3
+  encrypt: ^5.0.1
 
 dev_dependencies:
   flutter_test:
