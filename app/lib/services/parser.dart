@@ -171,11 +171,21 @@ Future<void> killParserInstances() async {
 Future<int> checkForNewData() async {
   var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   try {
-    var response =
-        await http.get(url).timeout(const Duration(milliseconds: 2000));
+    var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+
+      // If JSON displays error in EE.log, exit early with no new data
+      if (data.containsKey('status') && data['status'] != null) {
+        switch (data['status']) {
+          case 'LogFileMissing':
+            return noNewDataAvailable;
+
+          case 'LogFileEmpty':
+            return noNewDataAvailable;
+        }
+      }
 
       // Check if the response contains the expected 'file_name' field
       if (data.containsKey('file_name') && data['file_name'] != null) {

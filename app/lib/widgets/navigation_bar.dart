@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 
 /// A custom navigation bar widget used on the left side of the application.
 ///
@@ -11,7 +12,9 @@ class NavigationBar extends StatelessWidget {
   final int currentIndex;
 
   /// A callback function to be called when a tab is selected.
-  final Function(int) onTabSelected;
+  final Function(int, {String? fileName, int? runIndex}) onTabSelected;
+
+  final String? fileName;
 
   /// Constructs a [NavigationBar] widget.
   ///
@@ -22,6 +25,7 @@ class NavigationBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
+    this.fileName,
   });
 
   @override
@@ -34,13 +38,13 @@ class NavigationBar extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _buildNavItem('assets/icons/HOME_GREY.svg',
+            _buildNavItem(context, 'assets/icons/HOME_GREY.svg',
                 'assets/icons/HOME_SELECTED.svg', 0),
             const SizedBox(height: 20),
-            _buildNavItem('assets/icons/STORAGE_GREY.svg',
+            _buildNavItem(context, 'assets/icons/STORAGE_GREY.svg',
                 'assets/icons/STORAGE_SELECTED.svg', 1),
             const SizedBox(height: 20),
-            _buildNavItem('assets/icons/SETTINGS_GREY.svg',
+            _buildNavItem(context, 'assets/icons/SETTINGS_GREY.svg',
                 'assets/icons/SETTINGS_SELECTED.svg', 2),
           ],
         ),
@@ -48,14 +52,8 @@ class NavigationBar extends StatelessWidget {
     );
   }
 
-  /// Builds a navigation item with an icon.
-  ///
-  /// Parameters:
-  ///   - `greyIconAsset`: The asset path for the grey version of the icon.
-  ///   - `selectedIconAsset`: The asset path for the selected version of the icon.
-  ///   - `index`: The index associated with the navigation item.
-  Widget _buildNavItem(
-      String greyIconAsset, String selectedIconAsset, int index) {
+  Widget _buildNavItem(BuildContext context, String greyIconAsset,
+      String selectedIconAsset, int index) {
     return Stack(
       alignment: Alignment.centerLeft,
       children: [
@@ -67,7 +65,12 @@ class NavigationBar extends StatelessWidget {
               height: 22,
             ),
             onPressed: () {
-              onTabSelected(index);
+              // Determine the fileName and runIndex values here
+              String? fileNameValue = ''; // Replace with actual value
+              int? runIndexValue = 0; // Replace with actual value
+
+              onTabSelected(index,
+                  fileName: fileNameValue, runIndex: runIndexValue);
             },
           ),
         ),

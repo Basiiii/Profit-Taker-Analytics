@@ -28,7 +28,11 @@ import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 import 'package:profit_taker_analyzer/widgets/last_runs.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String fileName;
+  final int fileIndex;
+
+  const HomeScreen(
+      {super.key, required this.fileName, required this.fileIndex});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -83,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
 
+    if (kDebugMode) {
+      print("Opened home screen");
+    }
+
     /// Listen for changes in screen dimensions
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateShortcutEnabled();
@@ -95,12 +103,19 @@ class _HomeScreenState extends State<HomeScreen>
     allRuns = getStoredRuns();
     getRunFileNames(allRuns, allRuns.length, runFilenames);
 
-    if (kDebugMode) {
-      print("Opened home screen");
-    }
-
     // Reset timestamp
     // lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
+
+    // Load specific run chosen from Storage Screen
+    if (widget.fileName != '') {
+      // Prevent updating to data from API
+      lastUpdateTimestamp = DateTime.now();
+      loadDataFile("${widget.fileName}.json").then((_) {
+        currentIndex = widget.fileIndex;
+        setState(() {});
+        LoadingOverlay.of(context).hide();
+      });
+    }
 
     /// Fetch the data for last run
     _dataFetch =
