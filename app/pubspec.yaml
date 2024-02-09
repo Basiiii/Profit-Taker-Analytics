@@ -50,6 +50,8 @@ dependencies:
   intl: ^0.18.1
   crypto: ^3.0.3
   encrypt: ^5.0.1
+  # Analytics
+  syncfusion_flutter_charts: ^24.2.4+3
 
 dev_dependencies:
   flutter_test:
@@ -60,8 +62,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    # App icon
+    - assets/AppIcon.png
+    # Icons
     - assets/icons/
+    # I18n language JSON's
     - assets/i18n/en.json
     - assets/i18n/pt.json
     - assets/i18n/zh.json

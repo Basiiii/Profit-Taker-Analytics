@@ -61,6 +61,9 @@
         "edit": "Editar",
         "delete": "Apagar"
     },
+    "analytics" : {
+        "title": "Dados das tuas missões"
+    },
     "languages": {
         "en": "English",
         "pt": "Português",
