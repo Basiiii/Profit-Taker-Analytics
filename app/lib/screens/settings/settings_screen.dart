@@ -34,7 +34,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   /// Indicates whether the system is currently waiting for a key press.
-  bool waitingForKeyPress = false;
+  bool upWaitingForKeyPress = false;
+  bool downWaitingForKeyPress = false;
 
   /// Starts listening for key events and invokes the provided callback when a key is set.
   ///
@@ -266,18 +267,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingsTile(
                     title: Text(FlutterI18n.translate(
                         context, "settings.config_up_key")),
-                    trailing: Text(upActionKey.toString()),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (upWaitingForKeyPress)
+                          Container(
+                            width: 30,
+                            height: 30,
+                            padding: const EdgeInsets.all(5),
+                            child: const CircularProgressIndicator(
+                              backgroundColor: Color(0xFF86BCFC),
+                              color: Colors.grey,
+                              strokeWidth: 4,
+                            ),
+                          ),
+                        if (upWaitingForKeyPress) const SizedBox(width: 10),
+                        Text(upActionKey.keyLabel),
+                      ],
+                    ),
                     onPressed: (BuildContext context) {
-                      if (!waitingForKeyPress) {
+                      if (!upWaitingForKeyPress) {
                         startListeningForKeys((key) {
                           setState(() {
                             upActionKey = key;
                             saveUpActionKey();
-                            waitingForKeyPress = false;
+                            upWaitingForKeyPress = false;
                           });
                         });
                         setState(() {
-                          waitingForKeyPress = true;
+                          upWaitingForKeyPress = true;
                         });
                       }
                     },
@@ -285,18 +303,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingsTile(
                     title: Text(FlutterI18n.translate(
                         context, "settings.config_down_key")),
-                    trailing: Text(downActionKey.toString()),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (downWaitingForKeyPress)
+                          Container(
+                            width: 30,
+                            height: 30,
+                            padding: const EdgeInsets.all(5),
+                            child: const CircularProgressIndicator(
+                              backgroundColor: Color(0xFF86BCFC),
+                              color: Colors.grey,
+                              strokeWidth: 4,
+                            ),
+                          ),
+                        if (downWaitingForKeyPress) const SizedBox(width: 10),
+                        Text(downActionKey.keyLabel),
+                      ],
+                    ),
                     onPressed: (BuildContext context) {
-                      if (!waitingForKeyPress) {
+                      if (!downWaitingForKeyPress) {
                         startListeningForKeys((key) {
                           setState(() {
                             downActionKey = key;
                             saveDownActionKey();
-                            waitingForKeyPress = false;
+                            downWaitingForKeyPress = false;
                           });
                         });
                         setState(() {
-                          waitingForKeyPress = true;
+                          downWaitingForKeyPress = true;
                         });
                       }
                     },

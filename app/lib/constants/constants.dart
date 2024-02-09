@@ -1,5 +1,5 @@
 /// App details
-const String version = 'BETA 0.4.0';
+const String version = 'BETA 0.5.0';
 
 /// Starting screen sizes
 const double startingWidth = 1700; // Initial width of the app at launch

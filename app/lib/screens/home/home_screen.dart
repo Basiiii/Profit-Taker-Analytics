@@ -262,7 +262,6 @@ class _HomeScreenState extends State<HomeScreen>
           builder: (BuildContext context, bool shortcutEnabled, Widget? child) {
             return Listener(
               onPointerSignal: (PointerSignalEvent event) {
-                print(shortcutEnabled);
                 if (event is PointerScrollEvent && shortcutEnabled) {
                   final delta = event.scrollDelta.dy;
                   if (delta < 0) {
