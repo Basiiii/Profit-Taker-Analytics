@@ -48,7 +48,10 @@
         "about_app": "关于APP",
         "version": "版本",
         "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "快捷键配置",
+        "config_up_key": "前进键",
+        "config_down_key": "后键"
     },
     "storage" : {
         "title": "您的存储区域",

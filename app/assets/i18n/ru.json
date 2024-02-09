@@ -48,7 +48,10 @@
         "about_app": "О приложении",
         "version": "Версия",
         "about_app_description": "Сделано с любовью Basi.\nЕсли ты это нащёл, пришли мне мангу в лс на дискорде.",
-        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii",
+        "key_config": "Конфигурация ярлыков",
+        "config_up_key": "клавиша перемотки",
+        "config_down_key": "клавиша обратного хода" 
     },
     "storage" : {
         "title": "Ваше место хранения",

@@ -48,7 +48,10 @@
         "about_app": "About App",
         "version": "Version",
         "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "Shortcut Configuration",
+        "config_up_key": "Configure Forward Key",
+        "config_down_key": "Configure Back key" 
     },
     "storage" : {
         "title": "Your storage area",

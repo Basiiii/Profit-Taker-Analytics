@@ -496,8 +496,6 @@ Future<void> loadDataAPI() async {
   } else {
     throw Exception('Failed to load data');
   }
-
-  await Future.delayed(const Duration(seconds: 1));
 }
 
 /// Asynchronously loads data from a local file specified by [fileName] and updates various components in the application.
@@ -518,6 +516,7 @@ Future<void> loadDataAPI() async {
 ///   // Handle the exception, e.g., show an error message
 ///   print('Error loading data from file: $e');
 /// }
+/// ```
 Future<void> loadDataFile(String fileName) async {
   try {
     var mainPath = Platform.resolvedExecutable;
@@ -583,6 +582,4 @@ Future<void> loadDataFile(String fileName) async {
       print('Error reading file: $e');
     }
   }
-
-  await Future.delayed(const Duration(seconds: 1));
 }

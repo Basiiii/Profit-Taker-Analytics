@@ -48,7 +48,10 @@
         "about_app": "Sobre a aplicação",
         "version": "Versão",
         "about_app_description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM de uma manga no discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "Configuração de Atalhos",
+        "config_up_key": "Configurar Tecla de Avanço",
+        "config_down_key": "Configurar Tecla de Retrocesso" 
     },
     "storage" : {
         "title": "A sua área de armazenamento",
