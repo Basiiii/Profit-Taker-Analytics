@@ -42,6 +42,7 @@ class Globals:
     STARTINGTIME = None
     LASTRUNTIME = 0.0
     LASTBUGGEDRUN = None
+    RUNCOUNT = None
 
 class MiscConstants:
     STARTTIME = 'Sys [Diag]: Current time:'
@@ -118,7 +119,6 @@ class RelRun:
         return [shield_tuple for shield_phase in self.shield_phases.values() for shield_tuple in shield_phase]
 
 
-
     def to_json(self):
         """Convert a RelRun object into a json object suitable for display on the GUI.
 
@@ -139,6 +139,7 @@ class RelRun:
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
         fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
+        fullRunFormat["pretty_name"] = Analyzer.get_next_run_string()
 
         fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
         fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
@@ -198,6 +199,7 @@ class BrokenRun(RelRun):
         fullRunFormat["nickname"] = self.nickname
         fullRunFormat["aborted_run"] = True
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
+        fullRunFormat["pretty_name"] = Analyzer.get_next_run_string()
 
         return fullRunFormat
 
@@ -428,6 +430,22 @@ class Analyzer:
             datetime: datetime object
         """
         return Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)
+
+    def get_next_run_string():
+        if Globals.RUNCOUNT is None:
+            # Determine the base directory based on whether we're running a .py or .exe file
+            if getattr(sys, 'frozen', False):
+                base_dir = os.path.dirname(sys.executable)
+            else:
+                base_dir = os.path.dirname(os.path.realpath(__file__))
+
+            # Go back one directory and into "storage" folder
+            storage_folder = os.path.join(base_dir, '..', 'storage')
+            directory = storage_folder
+
+            Globals.RUNCOUNT = len([f for f in os.listdir(directory) if f.endswith('.json')])
+        Globals.RUNCOUNT += 1
+        return f"Run #{Globals.RUNCOUNT}"
     
     def setLastRun(self, data):
         self.lastRun = data
@@ -537,8 +555,15 @@ class Analyzer:
         # Create filename
         time_diff = self.get_run_time()
         fileName = os.path.join(storage_folder, time_diff.strftime('%Y%m%d_%H%M%S') + ".json")
-        with open(fileName, "w", encoding="UTF-8") as file:
-            dump(run, file)
+        
+        # Check if file exists before writing
+        if not os.path.exists(fileName):
+            with open(fileName, "w", encoding="UTF-8") as file:
+                dump(run, file)
+        else:
+            # Lower the count by 1 because the run was ignored
+            Globals.RUNCOUNT -= 1
+            # print(f"File {fileName} already exists. Skipping writing.")
             
     def set_format_fields(self, kvpair: dict, format: dict):
         """Set specific fields in the run format to specific values.
