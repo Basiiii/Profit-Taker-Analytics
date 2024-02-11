@@ -178,11 +178,17 @@ class BrokenRun(RelRun):
 
     def __init__(self,
                  nickname: str,
+                 pylon_dur: dict[int, float],
                  squad_members: set[str],
+                 legs: dict[int, list[float]],                          # phase -> list(rev time)
                  total_time: float):
+        self.pylon_dur = pylon_dur
         self.nickname = nickname
         self.squad_members = squad_members
+        self.legs = legs
         self.total_time = total_time
+
+    
 
     def to_json(self):
         """
@@ -196,6 +202,7 @@ class BrokenRun(RelRun):
         fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
+        fullRunFormat["phase_1"]["pylon_time"] = self.pylon_dur[1]
         fullRunFormat["aborted_run"] = True
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
 
@@ -285,6 +292,17 @@ class AbsRun:
             raise BuggedRun(self, failure_reasons)
         # Else: return none implicitly
 
+    def check_leg_integrity(self) -> bool:
+        print(self.shield_phase_endings.values(), self.final_time - self.heist_start)
+        if len(self.shield_phase_endings.values()) < 2:
+            return False
+        return True
+    
+    def check_pylon_integrity(self) -> bool:
+        if len(self.pylon_end.values()) < 1 or len(self.pylon_start.values()) < 2:
+            return False
+        return True
+
     def to_broken(self) -> BrokenRun:
         """
         Convert the absolute timing run into a broken run object with relative timings.
@@ -294,11 +312,16 @@ class AbsRun:
         Returns:
             BrokenRun: A broken run object containing minimal information about the run.
         """
+        pylon_dur = {1: 0.0}
+        if (self.check_pylon_integrity()):
+            print(self.pylon_start, self.pylon_end)
+            pylon_dur[1] = self.pylon_end[1] - self.pylon_start[1]
+            print(pylon_dur)
         if self.final_time is not None and self.heist_start is not None:
             total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0.0
         else:
             total_time = 0.0
-        return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
+        return BrokenRun(legs={}, total_time=total_time, squad_members=self.squad_members, nickname=self.nickname, pylon_dur=pylon_dur)
 
     def to_rel(self) -> RelRun:
         """
@@ -393,7 +416,7 @@ class Analyzer:
         #     """Return the status of the parser.
 
         #     Returns:
-        #         dict: the status of the parser.
+        #         dict: the of the parser.
         #     """
         #     return {'status': 'ok'}
 
