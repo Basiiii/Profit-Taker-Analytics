@@ -17,6 +17,14 @@
         "body_kill": "本体耗时",
         "pylon_destruction": "信标耗时"
     },
+    "average_cards": {
+        "total_avg": "平均总时长",
+        "flight_avg": "平均飞行耗时",
+        "shield_avg": "平均破盾耗时",
+        "leg_avg": "平均破腿耗时",
+        "body_avg": "平均本体耗时",
+        "pylon_avg": "平均信标耗时"
+    },
     "phase_cards": {
         "phase_1": "第一阶段",
         "phase_2": "第二阶段",
@@ -48,7 +56,10 @@
         "about_app": "关于APP",
         "version": "版本",
         "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "快捷键配置",
+        "config_up_key": "前进键",
+        "config_down_key": "后键"
     },
     "storage" : {
         "title": "您的存储区域",
@@ -57,6 +68,9 @@
         "date": "日期",
         "edit": "编辑",
         "delete": "删除"
+    },
+    "analytics" : {
+        "title": "Your analytics"
     },
     "languages": {
         "en": "English",

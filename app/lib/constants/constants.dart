@@ -1,5 +1,5 @@
 /// App details
-const String version = 'BETA 0.4.0';
+const String version = 'BETA 0.5.0';
 
 /// Starting screen sizes
 const double startingWidth = 1700; // Initial width of the app at launch
@@ -25,6 +25,9 @@ const double totalLeftPaddingHome = navigationBarWidth +
 /// Home cards default sizes
 const double overviewCardWidth = 245; // Width of the overview card
 const double phaseCardWidth = 760; // Width of the phase card
+
+/// Analytics cards default sizes
+const double graphCardWidth = 760; // Width of the graph card
 
 /// Connection constants
 const noNewDataAvailable = 0;

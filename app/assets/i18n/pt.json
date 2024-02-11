@@ -17,6 +17,14 @@
         "body_kill": "Morte\nCorpo",
         "pylon_destruction": "Destruição\nPilones"
     },
+    "average_cards": {
+        "total_avg": "Média\nDuração Total",
+        "flight_avg": "Média\nTempo Voo",
+        "shield_avg": "Média Quebra\nEscudos",
+        "leg_avg": "Média Quebra\nPerna",
+        "body_avg": "Média Morte\nCorpo",
+        "pylon_avg": "Média Destruição\nPilones"
+    },
     "phase_cards": {
         "phase_1": "Primeira Phase",
         "phase_2": "Segunda Phase",
@@ -48,7 +56,10 @@
         "about_app": "Sobre a aplicação",
         "version": "Versão",
         "about_app_description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM de uma manga no discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "Configuração de Atalhos",
+        "config_up_key": "Configurar Tecla de Avanço",
+        "config_down_key": "Configurar Tecla de Retrocesso" 
     },
     "storage" : {
         "title": "A sua área de armazenamento",
@@ -57,6 +68,9 @@
         "date": "Data",
         "edit": "Editar",
         "delete": "Apagar"
+    },
+    "analytics" : {
+        "title": "Dados das tuas missões"
     },
     "languages": {
         "en": "English",

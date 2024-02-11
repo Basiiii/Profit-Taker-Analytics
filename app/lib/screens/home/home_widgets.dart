@@ -75,15 +75,17 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
     double timeValue = double.parse(overviewCards[index].time);
 
     if (timeValue < 52.000) {
-      color = const Color(0xFFA488FF);
+      color = const Color(0xFFb33dc6);
     } else if (timeValue < 60.000) {
-      color = const Color(0xFF7361D8);
-    } else if (timeValue < 70.000) {
-      color = const Color(0xFF33BDCC);
-    } else if (timeValue < 90.000) {
+      color = const Color(0xFF27aeef);
+    } else if (timeValue < 80.000) {
+      color = const Color(0xFFbdcf32);
+    } else if (timeValue < 120.000) {
       color = const Color(0xFF35967D);
-    } else if (timeValue > 90.000) {
-      color = const Color(0xFFB85E2C);
+    } else if (timeValue < 150.000) {
+      color = const Color(0xFFef9b20);
+    } else if (timeValue > 150.000) {
+      color = const Color(0xFFea5545);
     } else {
       color = Theme.of(context).colorScheme.onSurface;
     }

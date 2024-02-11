@@ -17,6 +17,14 @@
         "body_kill": "Килл\nТела",
         "pylon_destruction": "Разрушение\nПилонов"
     },
+    "average_cards": {
+        "total_avg": "Средняя \nДлительность",
+        "flight_avg": "Среднее Время\nПолёта",
+        "shield_avg": "Средняя Ломка\nЩита",
+        "leg_avg": "Средняя Ломка\nНог",
+        "body_avg": "Средний Килл\nТела",
+        "pylon_avg": "Среднее Разрушение\nПилонов"
+    },
     "phase_cards": {
         "phase_1": "Первая Фаза",
         "phase_2": "Вторая Фаза",
@@ -48,7 +56,10 @@
         "about_app": "О приложении",
         "version": "Версия",
         "about_app_description": "Сделано с любовью Basi.\nЕсли ты это нащёл, пришли мне мангу в лс на дискорде.",
-        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii"
+        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii",
+        "key_config": "Конфигурация ярлыков",
+        "config_up_key": "клавиша перемотки",
+        "config_down_key": "клавиша обратного хода" 
     },
     "storage" : {
         "title": "Ваше место хранения",
@@ -57,6 +68,9 @@
         "date": "дата",
         "edit": "редактировать",
         "delete": "удалить"
+    },
+    "analytics" : {
+        "title": "Your analytics"
     },
     "languages": {
         "en": "English",

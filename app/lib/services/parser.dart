@@ -171,11 +171,21 @@ Future<void> killParserInstances() async {
 Future<int> checkForNewData() async {
   var url = Uri.parse('http://127.0.0.1:$portNumber/last_run');
   try {
-    var response =
-        await http.get(url).timeout(const Duration(milliseconds: 2000));
+    var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+
+      // If JSON displays error in EE.log, exit early with no new data
+      if (data.containsKey('status') && data['status'] != null) {
+        switch (data['status']) {
+          case 'LogFileMissing':
+            return noNewDataAvailable;
+
+          case 'LogFileEmpty':
+            return noNewDataAvailable;
+        }
+      }
 
       // Check if the response contains the expected 'file_name' field
       if (data.containsKey('file_name') && data['file_name'] != null) {
@@ -496,8 +506,6 @@ Future<void> loadDataAPI() async {
   } else {
     throw Exception('Failed to load data');
   }
-
-  await Future.delayed(const Duration(seconds: 1));
 }
 
 /// Asynchronously loads data from a local file specified by [fileName] and updates various components in the application.
@@ -518,6 +526,7 @@ Future<void> loadDataAPI() async {
 ///   // Handle the exception, e.g., show an error message
 ///   print('Error loading data from file: $e');
 /// }
+/// ```
 Future<void> loadDataFile(String fileName) async {
   try {
     var mainPath = Platform.resolvedExecutable;
@@ -583,6 +592,4 @@ Future<void> loadDataFile(String fileName) async {
       print('Error reading file: $e');
     }
   }
-
-  await Future.delayed(const Duration(seconds: 1));
 }
