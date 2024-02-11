@@ -17,6 +17,14 @@
         "body_kill": "Body\nKill",
         "pylon_destruction": "Pylon\nDestruction"
     },
+    "average_cards": {
+        "total_avg": "Total Duration\nAverage",
+        "flight_avg": "Flight Time\nAverage",
+        "shield_avg": "Shield Break\nAverage",
+        "leg_avg": "Leg Break\nAverage",
+        "body_avg": "Body Kill\nAverage",
+        "pylon_avg": "Pylons \nAverage"
+    },
     "phase_cards": {
         "phase_1": "First Phase",
         "phase_2": "Second Phase",

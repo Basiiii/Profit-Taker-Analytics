@@ -17,6 +17,14 @@
         "body_kill": "本体耗时",
         "pylon_destruction": "信标耗时"
     },
+    "average_cards": {
+        "total_avg": "平均总时长",
+        "flight_avg": "平均飞行耗时",
+        "shield_avg": "平均破盾耗时",
+        "leg_avg": "平均破腿耗时",
+        "body_avg": "平均本体耗时",
+        "pylon_avg": "平均信标耗时"
+    },
     "phase_cards": {
         "phase_1": "第一阶段",
         "phase_2": "第二阶段",

@@ -252,28 +252,28 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     // Build the overall widget tree
-    return Scaffold(
-      key: _scaffoldKey,
-      body: RawKeyboardListener(
-        focusNode: FocusNode(),
-        onKey: handleArrowKeys,
-        child: ValueListenableBuilder<bool>(
-          valueListenable: _shortcutEnabled,
-          builder: (BuildContext context, bool shortcutEnabled, Widget? child) {
-            return Listener(
-              onPointerSignal: (PointerSignalEvent event) {
-                if (event is PointerScrollEvent && shortcutEnabled) {
-                  final delta = event.scrollDelta.dy;
-                  if (delta < 0) {
-                    // Scrolling up, go forward
-                    onForwardButtonPressed();
-                  } else if (delta > 0) {
-                    // Scrolling down, go backward
-                    onBackButtonPressed();
-                  }
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: handleArrowKeys,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _shortcutEnabled,
+        builder: (BuildContext context, bool shortcutEnabled, Widget? child) {
+          return Listener(
+            onPointerSignal: (PointerSignalEvent event) {
+              if (event is PointerScrollEvent && shortcutEnabled) {
+                final delta = event.scrollDelta.dy;
+                if (delta < 0) {
+                  // Scrolling up, go forward
+                  onForwardButtonPressed();
+                } else if (delta > 0) {
+                  // Scrolling down, go backward
+                  onBackButtonPressed();
                 }
-              },
-              child: SingleChildScrollView(
+              }
+            },
+            child: Scaffold(
+              key: _scaffoldKey,
+              body: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 60, top: 30),
                   child: Column(
@@ -452,12 +452,12 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
               ),
-            );
-          },
-        ),
+              endDrawer: HomePageDrawer(
+                  maxItems: maxLastRunItems, onItemSelected: loadLastRunData),
+            ),
+          );
+        },
       ),
-      endDrawer: HomePageDrawer(
-          maxItems: maxLastRunItems, onItemSelected: loadLastRunData),
     );
   }
 }

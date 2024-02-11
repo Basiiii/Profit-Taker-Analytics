@@ -26,6 +26,9 @@ const double totalLeftPaddingHome = navigationBarWidth +
 const double overviewCardWidth = 245; // Width of the overview card
 const double phaseCardWidth = 760; // Width of the phase card
 
+/// Analytics cards default sizes
+const double graphCardWidth = 760; // Width of the graph card
+
 /// Connection constants
 const noNewDataAvailable = 0;
 const newDataAvailable = 1;

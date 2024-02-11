@@ -17,6 +17,14 @@
         "body_kill": "Morte\nCorpo",
         "pylon_destruction": "Destruição\nPilones"
     },
+    "average_cards": {
+        "total_avg": "Média\nDuração Total",
+        "flight_avg": "Média\nTempo Voo",
+        "shield_avg": "Média Quebra\nEscudos",
+        "leg_avg": "Média Quebra\nPerna",
+        "body_avg": "Média Morte\nCorpo",
+        "pylon_avg": "Média Destruição\nPilones"
+    },
     "phase_cards": {
         "phase_1": "Primeira Phase",
         "phase_2": "Segunda Phase",
