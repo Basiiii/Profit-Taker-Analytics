@@ -11,6 +11,7 @@ from json import dumps, load, dump
 from datetime import datetime, timedelta
 from waitress import serve
 import copy
+import pprint
 import socket
 
 from src.enums.damage_types import DT
@@ -60,6 +61,7 @@ class RelRun:
 
     def __init__(self,
                  run_nr: int,
+                 bugged_run: bool,
                  nickname: str,
                  squad_members: set[str],
                  pt_found: float,
@@ -69,6 +71,7 @@ class RelRun:
                  body_dur: dict[int, float],
                  pylon_dur: dict[int, float]):
         self.run_nr = run_nr
+        self.bugged_run = bugged_run
         self.nickname = nickname
         self.squad_members = squad_members
         self.pt_found = pt_found
@@ -125,6 +128,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
+
         fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
@@ -132,6 +136,7 @@ class RelRun:
         fullRunFormat["total_body"] = self.body_sum
         fullRunFormat["total_pylon"] = self.pylon_sum
         fullRunFormat["flight_duration"] = self.pt_found
+        fullRunFormat["bugged_run"] = self.bugged_run
 
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
         fullRunFormat["best_run"] = self.best_run_yet
@@ -161,7 +166,10 @@ class RelRun:
         fullRunFormat["phase_3"]["total_shield"] = sum(i for _, i in self.shield_phases[3])
         fullRunFormat["phase_3"]["shield_change_times"] = [i for _,i in self.shield_phases[3]]
         fullRunFormat["phase_3"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[3]]
-        fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
+
+        if len(self.pylon_dur) > 1:
+            print("adding third pylon")
+            fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
 
         fullRunFormat["phase_4"]["phase_time"] = self.phase_durations[4]
         fullRunFormat["phase_4"]["total_leg"] = sum(self.legs[4])
@@ -212,6 +220,7 @@ class AbsRun:
 
     def __init__(self, run_nr: int):
         self.run_nr = run_nr
+        self.bugged_run = False
         self.nickname = ''
         self.squad_members: set[str] = set()
         self.heist_start = 0.0
@@ -238,10 +247,11 @@ class AbsRun:
             self.shield_phases[4] = [self.shield_phases[3.5].pop()] + self.shield_phases[4]
 
         # Remove the extra shield from phase 4.
-        try:
-            self.shield_phases[4].pop()
-        except IndexError:
-            raise BuggedRun(self, ['No shields were recorded in phase 4.']) from None
+        if (not self.bugged_run):
+            try:
+                self.shield_phases[4].pop()
+            except IndexError:
+                raise BuggedRun(self, ['No shields were recorded in phase 4.']) from None
 
     def check_run_integrity(self) -> None:
         """
@@ -285,7 +295,8 @@ class AbsRun:
             if phase in [1, 3]:
                 if phase not in self.pylon_start:
                     failure_reasons.append(f'No pylon phase start time was recorded in phase {phase}.')
-                if phase not in self.pylon_end:
+                if phase not in self.pylon_end and not self.bugged_run:
+                    print("You done fucked up")
                     failure_reasons.append(f'No pylon phase end time was recorded in phase {phase}.')
 
         if failure_reasons:
@@ -293,12 +304,25 @@ class AbsRun:
         # Else: return none implicitly
 
     def check_leg_integrity(self) -> bool:
+        """
+        Check whether enough information is available to calculate the leg phase times.
+
+        Returns:
+            bool: Leg phases integrity.
+        """
         print(self.shield_phase_endings.values(), self.final_time - self.heist_start)
         if len(self.shield_phase_endings.values()) < 2:
             return False
+
+
         return True
     
     def check_pylon_integrity(self) -> bool:
+        """
+        Check whether the bugged run has enough information to calculate the first pylon phase time.
+        Returns:
+            bool: First pylon phase integrity.
+        """
         if len(self.pylon_end.values()) < 1 or len(self.pylon_start.values()) < 2:
             return False
         return True
@@ -311,12 +335,22 @@ class AbsRun:
 
         Returns:
             BrokenRun: A broken run object containing minimal information about the run.
-        """
+        """ 
         pylon_dur = {1: 0.0}
+        leg_phases = defaultdict[list]
+        # Set the duration of the first pylon phase. In most cases, the end time
+        # for the second pylon phase will not be logged.
         if (self.check_pylon_integrity()):
+            print(Globals.LASTRUNTIME)
             print(self.pylon_start, self.pylon_end)
             pylon_dur[1] = self.pylon_end[1] - self.pylon_start[1]
             print(pylon_dur)
+
+        # Set the durations of the leg phases. The shield phase end time of phase 4 will most likely
+        # not have been logged, meaning we can not calculate the time of the first leg of phase 4.
+        # if (self.check_leg_integrity()):
+            
+        
         if self.final_time is not None and self.heist_start is not None:
             total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0.0
         else:
@@ -330,7 +364,7 @@ class AbsRun:
         If not all information is present, a `BuggedRun` exception is thrown.
         """
         self.check_run_integrity()
-
+        print(f"Bugged run: {self.bugged_run}")
         pt_found = self.pt_found - self.heist_start
         phase_durations = {}
         shield_phases = defaultdict(list)
@@ -345,7 +379,13 @@ class AbsRun:
                 for i in range(len(self.shield_phases[phase]) - 1):
                     shield_type, _ = self.shield_phases[phase][i]
                     _, shield_end = self.shield_phases[phase][i + 1]
-                    shield_phases[phase].append((shield_type, shield_end - previous_timestamp))
+
+                    # If the run is bugged, the first shield phase time can not
+                    # be calculated in phase 4.
+                    if (self.bugged_run and phase == 4 and i == 0):
+                        shield_phases[phase].append((shield_type, 0.0))
+                    else:
+                        shield_phases[phase].append((shield_type, shield_end - previous_timestamp))
                     previous_timestamp = shield_end
                 # The time of the final shield is determined by the shield_end transmission
                 shield_phases[phase].append((self.shield_phases[phase][-1][0],
@@ -359,8 +399,9 @@ class AbsRun:
             previous_timestamp = self.body_kill[phase]
 
             if phase in [1, 3]:  # Phases with pylon phases
-                pylon_dur[phase] = self.pylon_end[phase] - self.pylon_start[phase]
-                previous_timestamp = self.pylon_end[phase]
+                if not (self.bugged_run and phase == 3):
+                    pylon_dur[phase] = self.pylon_end[phase] - self.pylon_start[phase]
+                    previous_timestamp = self.pylon_end[phase]
 
             # Set phase duration
             phase_durations[phase] = previous_timestamp - self.heist_start
@@ -368,7 +409,7 @@ class AbsRun:
         # Set phase 3.5 shields (possibly none on very fast runs)
         shield_phases[3.5] = [(shield, nan) for shield, _ in self.shield_phases[3.5]]
 
-        return RelRun(self.run_nr, self.nickname, self.squad_members, pt_found,
+        return RelRun(self.run_nr, self.bugged_run, self.nickname, self.squad_members, pt_found,
                       phase_durations, shield_phases, legs, body_dur, pylon_dur)
 
     #@property
@@ -681,6 +722,8 @@ class Analyzer:
         Registers information to `self` for the current phase based on the information found in the logs.
         """
         kill_sequence = 0
+        last_shield_time = 0.0
+        shield_count = 0
         while True:  # match exists for phases 1-3, kill_sequence for phase 4.
             pt_line_match = True
             try:
@@ -693,6 +736,16 @@ class Analyzer:
                 # Shield_phase '3.5' is for when shields swap during the pylon phase in phase 3.
                 shield_phase = 3.5 if phase == 3 and 3 in run.pylon_start else phase
                 run.shield_phases[shield_phase].append(Analyzer.shield_from_line(line))
+                
+                if phase == 3 and kill_sequence == 2 and 3 in run.shield_phase_endings and 3 in run.pylon_start:
+                    if shield_count == 1:
+                        print(f"Run: {run.run_nr}, marked as bugged: {run.bugged_run}, time since last shield: {Analyzer.time_from_line(line) - last_shield_time}")
+                        run.bugged_run = True
+                        return
+                    else:
+                        shield_count += 1
+                
+                last_shield_time = Analyzer.time_from_line(line)
             elif any(True for shield_end in PTConstants.SHIELD_PHASE_ENDINGS.values() if shield_end in line):
                 run.shield_phase_endings[phase] = Analyzer.time_from_line(line)
             elif PTConstants.LEG_KILL in line:  # Leg kill
@@ -701,8 +754,10 @@ class Analyzer:
                 if kill_sequence == 0:  # Only register the first invuln message on each phase
                     run.body_vuln[phase] = Analyzer.time_from_line(line)
                 kill_sequence += 1  # 3x BODY_VULNERABLE in one phase means PT dies.
-                if kill_sequence == 3:  # PT dies.
+                if kill_sequence == 3 or (phase == 4 and run.bugged_run):  # PT dies.
                     run.body_kill[phase] = Analyzer.time_from_line(line)
+                    if (run.bugged_run):
+                        pprint.pprint(vars(run))
                     return
             elif PTConstants.STATE_CHANGE in line:  # Generic state change
                 # Generic match on state change to find things we can't reliably find otherwise
@@ -741,6 +796,7 @@ class Analyzer:
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
                 # Save the run to convert it into a broken run.
+                pprint.pprint(vars(run))
                 Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
