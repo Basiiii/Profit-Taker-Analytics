@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 
@@ -177,6 +178,9 @@ Future<void> displayTextInputDialog(
         title: Text(changeFileNameText),
         content: TextField(
           controller: controller,
+          maxLength: 20,
+          maxLengthEnforcement:
+              MaxLengthEnforcement.truncateAfterCompositionEnds,
           decoration: InputDecoration(hintText: hintText),
         ),
         actions: <Widget>[

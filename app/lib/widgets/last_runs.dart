@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 import 'package:profit_taker_analyzer/services/last_runs.dart';
 
 /// The home page drawer widget.
@@ -33,6 +34,7 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
   @override
   void initState() {
     super.initState();
+    isDrawerOpen = true;
     itemsPerLoad = widget.maxItems;
     _scrollController.addListener(_onScroll);
     loadData();
@@ -55,6 +57,7 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
   @override
   void dispose() {
     _scrollController.dispose();
+    isDrawerOpen = false;
     super.dispose();
   }
 

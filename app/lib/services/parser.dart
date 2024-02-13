@@ -462,9 +462,8 @@ Future<void> loadDataAPI() async {
     customRunName = data["pretty_name"] ?? '';
 
     /// Update run flags
-    // If run is bugged or aborted or if we can't read JSON we mark it as true
-    isBuggedRun = ((data["bugged_run"] ?? false) == true ||
-        (data["aborted_run"] ?? false) == true);
+    isBuggedRun = ((data["bugged_run"] ?? false) == true);
+    isAbortedRun = ((data["aborted_run"] ?? false) == true);
 
     /// Update username with space behind for formatting
     username = '${data['nickname']}';
@@ -543,9 +542,8 @@ Future<void> loadDataFile(String fileName) async {
       customRunName = data["pretty_name"] ?? '';
 
       /// Update run flags
-      // If run is bugged or aborted or if we can't read JSON we mark it as true
-      isBuggedRun = ((data["bugged_run"] ?? false) == true ||
-          (data["aborted_run"] ?? false) == true);
+      isBuggedRun = ((data["bugged_run"] ?? false) == true);
+      isAbortedRun = ((data["aborted_run"] ?? false) == true);
 
       /// Update username with space behind for formatting
       username = '${data['nickname']}';
