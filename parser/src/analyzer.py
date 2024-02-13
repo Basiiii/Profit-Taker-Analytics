@@ -69,7 +69,8 @@ class RelRun:
                  shield_phases: dict[float, list[tuple[DT, float]]],    # phase -> list(tuple(type, rev time))
                  legs: dict[int, list[float]],                          # phase -> list(rev time)
                  body_dur: dict[int, float],
-                 pylon_dur: dict[int, float]):
+                 pylon_dur: dict[int, float],
+                 run_duration: float):
         self.run_nr = run_nr
         self.bugged_run = bugged_run
         self.nickname = nickname
@@ -82,13 +83,14 @@ class RelRun:
         self.pylon_dur = pylon_dur
         self.best_run = False
         self.best_run_yet = False
+        self.run_duration = run_duration
 
     def __str__(self):
         return '\n'.join((f'{key}: {val}' for key, val in vars(self).items()))
 
     @property
     def length(self):
-        return self.phase_durations[4]
+        return self.phase_durations[4] if not self.bugged_run else self.run_duration
 
     @property
     def shield_sum(self) -> float:
@@ -167,8 +169,8 @@ class RelRun:
         fullRunFormat["phase_3"]["shield_change_times"] = [i for _,i in self.shield_phases[3]]
         fullRunFormat["phase_3"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[3]]
 
+        # Check if there are enough pylon phases to indicate a second pylon phase was recorded.
         if len(self.pylon_dur) > 1:
-            print("adding third pylon")
             fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
 
         fullRunFormat["phase_4"]["phase_time"] = self.phase_durations[4]
@@ -186,14 +188,10 @@ class BrokenRun(RelRun):
 
     def __init__(self,
                  nickname: str,
-                 pylon_dur: dict[int, float],
                  squad_members: set[str],
-                 legs: dict[int, list[float]],                          # phase -> list(rev time)
                  total_time: float):
-        self.pylon_dur = pylon_dur
         self.nickname = nickname
         self.squad_members = squad_members
-        self.legs = legs
         self.total_time = total_time
 
     
@@ -210,7 +208,6 @@ class BrokenRun(RelRun):
         fullRunFormat["file_name"] = Analyzer.get_run_time().strftime('%Y%m%d_%H%M%S')
         fullRunFormat["squad_members"] = list(self.squad_members)
         fullRunFormat["nickname"] = self.nickname
-        fullRunFormat["phase_1"]["pylon_time"] = self.pylon_dur[1]
         fullRunFormat["aborted_run"] = True
         fullRunFormat["time_stamp"] = datetime.now().isoformat()
 
@@ -303,29 +300,6 @@ class AbsRun:
             raise BuggedRun(self, failure_reasons)
         # Else: return none implicitly
 
-    def check_leg_integrity(self) -> bool:
-        """
-        Check whether enough information is available to calculate the leg phase times.
-
-        Returns:
-            bool: Leg phases integrity.
-        """
-        print(self.shield_phase_endings.values(), self.final_time - self.heist_start)
-        if len(self.shield_phase_endings.values()) < 2:
-            return False
-
-
-        return True
-    
-    def check_pylon_integrity(self) -> bool:
-        """
-        Check whether the bugged run has enough information to calculate the first pylon phase time.
-        Returns:
-            bool: First pylon phase integrity.
-        """
-        if len(self.pylon_end.values()) < 1 or len(self.pylon_start.values()) < 2:
-            return False
-        return True
 
     def to_broken(self) -> BrokenRun:
         """
@@ -336,26 +310,12 @@ class AbsRun:
         Returns:
             BrokenRun: A broken run object containing minimal information about the run.
         """ 
-        pylon_dur = {1: 0.0}
-        leg_phases = defaultdict[list]
-        # Set the duration of the first pylon phase. In most cases, the end time
-        # for the second pylon phase will not be logged.
-        if (self.check_pylon_integrity()):
-            print(Globals.LASTRUNTIME)
-            print(self.pylon_start, self.pylon_end)
-            pylon_dur[1] = self.pylon_end[1] - self.pylon_start[1]
-            print(pylon_dur)
-
-        # Set the durations of the leg phases. The shield phase end time of phase 4 will most likely
-        # not have been logged, meaning we can not calculate the time of the first leg of phase 4.
-        # if (self.check_leg_integrity()):
             
-        
         if self.final_time is not None and self.heist_start is not None:
             total_time = (self.final_time - self.heist_start) if (self.final_time - self.heist_start) > 0 else 0.0
         else:
             total_time = 0.0
-        return BrokenRun(legs={}, total_time=total_time, squad_members=self.squad_members, nickname=self.nickname, pylon_dur=pylon_dur)
+        return BrokenRun(total_time=total_time, squad_members=self.squad_members, nickname=self.nickname)
 
     def to_rel(self) -> RelRun:
         """
@@ -364,7 +324,6 @@ class AbsRun:
         If not all information is present, a `BuggedRun` exception is thrown.
         """
         self.check_run_integrity()
-        print(f"Bugged run: {self.bugged_run}")
         pt_found = self.pt_found - self.heist_start
         phase_durations = {}
         shield_phases = defaultdict(list)
@@ -399,6 +358,8 @@ class AbsRun:
             previous_timestamp = self.body_kill[phase]
 
             if phase in [1, 3]:  # Phases with pylon phases
+
+                # If the run is bugged, information on pylon phase 3 will not be available.
                 if not (self.bugged_run and phase == 3):
                     pylon_dur[phase] = self.pylon_end[phase] - self.pylon_start[phase]
                     previous_timestamp = self.pylon_end[phase]
@@ -409,8 +370,10 @@ class AbsRun:
         # Set phase 3.5 shields (possibly none on very fast runs)
         shield_phases[3.5] = [(shield, nan) for shield, _ in self.shield_phases[3.5]]
 
+        run_duration = self.final_time - self.heist_start
+
         return RelRun(self.run_nr, self.bugged_run, self.nickname, self.squad_members, pt_found,
-                      phase_durations, shield_phases, legs, body_dur, pylon_dur)
+                      phase_durations, shield_phases, legs, body_dur, pylon_dur, run_duration)
 
     #@property
     #def failed_run_duration_str(self):
@@ -644,12 +607,16 @@ class Analyzer:
                     best_time = run.length
                     run.best_run_yet = True
 
+                # Format the run to json format.
                 formattedRun = run.to_json()
 
+                # Store the run in a json file.
                 self.store_run(formattedRun)
 
+                # Convert the run to a dictionary.
                 formattedRun = dumps(formattedRun)
                 
+                # Add the run to the last_run endpoint.
                 self.lastRun = formattedRun
                 self.lastRunTime = {"date": datetime.now().isoformat()}
             except RunAbort as abort:
@@ -722,8 +689,8 @@ class Analyzer:
         Registers information to `self` for the current phase based on the information found in the logs.
         """
         kill_sequence = 0
-        last_shield_time = 0.0
         shield_count = 0
+        last_shield_time = 0
         while True:  # match exists for phases 1-3, kill_sequence for phase 4.
             pt_line_match = True
             try:
@@ -737,18 +704,21 @@ class Analyzer:
                 shield_phase = 3.5 if phase == 3 and 3 in run.pylon_start else phase
                 run.shield_phases[shield_phase].append(Analyzer.shield_from_line(line))
                 
+                # Check if the run is bugged based on the current phase, how many times the body has been killed and
+                # if the second pylon phase has started. If the 
                 if phase == 3 and kill_sequence == 2 and 3 in run.shield_phase_endings and 3 in run.pylon_start:
-                    if shield_count == 1:
-                        print(f"Run: {run.run_nr}, marked as bugged: {run.bugged_run}, time since last shield: {Analyzer.time_from_line(line) - last_shield_time}")
+                    if (Analyzer.time_from_line(line) - last_shield_time) < 25 and shield_count > 0:
                         run.bugged_run = True
                         return
                     else:
                         shield_count += 1
-                
                 last_shield_time = Analyzer.time_from_line(line)
+
             elif any(True for shield_end in PTConstants.SHIELD_PHASE_ENDINGS.values() if shield_end in line):
                 run.shield_phase_endings[phase] = Analyzer.time_from_line(line)
-            elif PTConstants.LEG_KILL in line:  # Leg kill
+            
+            # Leg kill
+            elif PTConstants.LEG_KILL in line:  
                 run.legs[phase].append(Analyzer.time_from_line(line))
             elif PTConstants.BODY_VULNERABLE in line:  # Body vulnerable / phase 4 end
                 if kill_sequence == 0:  # Only register the first invuln message on each phase
@@ -756,8 +726,7 @@ class Analyzer:
                 kill_sequence += 1  # 3x BODY_VULNERABLE in one phase means PT dies.
                 if kill_sequence == 3 or (phase == 4 and run.bugged_run):  # PT dies.
                     run.body_kill[phase] = Analyzer.time_from_line(line)
-                    if (run.bugged_run):
-                        pprint.pprint(vars(run))
+                    run.final_time = Analyzer.time_from_line(line)
                     return
             elif PTConstants.STATE_CHANGE in line:  # Generic state change
                 # Generic match on state change to find things we can't reliably find otherwise
@@ -796,7 +765,6 @@ class Analyzer:
                 raise RunAbort(run, require_heist_start=False)
             elif MiscConstants.BACK_TO_TOWN in line or MiscConstants.ABORT_MISSION in line:
                 # Save the run to convert it into a broken run.
-                pprint.pprint(vars(run))
                 Globals.LASTBUGGEDRUN = run
                 raise RunAbort(run, require_heist_start=True)
             elif MiscConstants.HOST_MIGRATION in line:  # Host migration
