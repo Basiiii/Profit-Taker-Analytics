@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from collections import defaultdict
@@ -470,10 +471,9 @@ class Analyzer:
             directory = storage_folder
 
             count = len([f for f in os.listdir(directory) if f.endswith('.json')])
-            if (count == 0):
-                Globals.RUNCOUNT = count
-            if (count > 0):
-                Globals.RUNCOUNT = count - 1
+            Globals.RUNCOUNT = count + 1
+            return f'Run #{Globals.RUNCOUNT}'
+
         Globals.RUNCOUNT += 1
         return f"Run #{Globals.RUNCOUNT}"
     
@@ -593,7 +593,6 @@ class Analyzer:
         else:
             # Lower the count by 1 because the run was ignored
             Globals.RUNCOUNT -= 1
-            # print(f"File {fileName} already exists. Skipping writing.")
             
     def set_format_fields(self, kvpair: dict, format: dict):
         """Set specific fields in the run format to specific values.
@@ -640,9 +639,11 @@ class Analyzer:
 
                 # Store the run in a json file.
                 self.store_run(formattedRun)
-
-                # Convert the run to a dictionary.
-                formattedRun = dumps(formattedRun)
+            
+                # Ensure the run numbering is up to date
+                formattedRun['pretty_name'] = f'Run #{Globals.RUNCOUNT}'
+                modifiedFormattedRun = json.dumps(formattedRun)
+                formattedRun = modifiedFormattedRun
                 
                 # Add the run to the last_run endpoint.
                 self.lastRun = formattedRun

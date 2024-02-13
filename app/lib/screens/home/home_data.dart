@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
+/// Compact mode for layout
+bool compactModeEnabled = false;
+
 /// Custom and file name of current run
 String runFileName = '';
 String customRunName = '';
 
 /// Specific run flags
 bool isBuggedRun = false;
+bool isAbortedRun = false;
 
 /// Display name(s)
 String username = '';
