@@ -469,7 +469,11 @@ class Analyzer:
             storage_folder = os.path.join(base_dir, '..', 'storage')
             directory = storage_folder
 
-            Globals.RUNCOUNT = len([f for f in os.listdir(directory) if f.endswith('.json')])
+            count = len([f for f in os.listdir(directory) if f.endswith('.json')])
+            if (count == 0):
+                Globals.RUNCOUNT = count
+            if (count > 0):
+                Globals.RUNCOUNT = count - 1
         Globals.RUNCOUNT += 1
         return f"Run #{Globals.RUNCOUNT}"
     
