@@ -68,7 +68,8 @@
         "run_time": "任务时间",
         "date": "日期",
         "edit": "编辑",
-        "delete": "删除"
+        "delete": "删除",
+        "actions": "行动"
     },
     "analytics" : {
         "title": "Your analytics"
@@ -88,5 +89,10 @@
         "name_title": "更改文件名",
         "delete_title": "确认删除",
         "confirm_delete": "您确定要删除所选运行吗？"
+    },
+    "donate": {
+        "button": "捐赠",
+        "title": "捐赠",
+        "main": "您的支持让这个项目得以继续。这个应用程序耗费了数百个小时和巨大的精力。\n您的捐赠有助于支付成本和推动进一步开发。谢谢您的支持！<3"
     }
 }

@@ -1,10 +1,10 @@
 /// App details
-const String version = 'BETA 0.5.0';
+const String version = 'BETA 0.6.1';
 
 /// Starting screen sizes
 const double startingWidth = 1700; // Initial width of the app at launch
 const double startingHeight = 750; // Initial height of the app at launch
-const double minimumWidth = 960; // Minimum width required for the app
+const double minimumWidth = 970; // Minimum width required for the app
 const double minimumHeight = 400; // Minimum height required for the app
 
 /// Responsive breakpoints for width and height
