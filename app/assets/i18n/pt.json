@@ -68,7 +68,8 @@
         "run_time": "Tempo Missão",
         "date": "Data",
         "edit": "Editar",
-        "delete": "Apagar"
+        "delete": "Apagar",
+        "actions": "Ações"
     },
     "analytics" : {
         "title": "Dados das tuas missões"
@@ -88,5 +89,10 @@
         "name_title": "Mudar Nome Ficheiro",
         "delete_title": "Confirmar Apagar",
         "confirm_delete": "Tem a certeza que deseja apagar a(s) missão(ões) escolhida(s)?"
+    },
+    "donate": {
+        "button": "Doar",
+        "title": "Donativos",
+        "main": "O seu apoio mantém este projeto vivo.\nCentenas de horas e um enorme esforço foram dedicados a esta app.\nOs seus donativos ajudam a cobrir os custos e a motivar o desenvolvimento futuro.\nObrigado! <3"
     }
 }

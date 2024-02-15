@@ -68,7 +68,8 @@
         "run_time": "Run Time",
         "date": "Date",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "actions": "Actions"
     },
     "analytics" : {
         "title": "Your analytics"
@@ -88,5 +89,10 @@
         "name_title": "Change File Name",
         "delete_title": "Confirm Deletion",
         "confirm_delete": "Are you sure you want to delete the selected run(s)?"
+    },
+    "donate": {
+        "button": "Donate",
+        "title": "Donations",
+        "main": "Your support keeps this project alive.\nHundreds of hours and immense effort have gone into this app.\nYour donations help cover costs and motivate further development.\n\nThank you! <3"
     }
 }
