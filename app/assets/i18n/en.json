@@ -83,7 +83,8 @@
     "buttons": {
         "ok": "Okay",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "download": "Download"
     },
     "alerts": {
         "name_title": "Change File Name",
@@ -94,5 +95,17 @@
         "button": "Donate",
         "title": "Donations",
         "main": "Your support keeps this project alive.\nHundreds of hours and immense effort have gone into this app.\nYour donations help cover costs and motivate further development.\n\nThank you! <3"
+    },
+    "update": {
+        "title": "Update Available",
+        "text": "There is a more recent version of the app available. Would you like to download it now?"
+    },
+    "graph": {
+        "total": "Total",
+        "flight": "Flight",
+        "shields": "Shields",
+        "legs": "Legs",
+        "body": "Body",
+        "pylons": "Pylons"
     }
 }
