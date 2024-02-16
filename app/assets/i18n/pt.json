@@ -83,7 +83,8 @@
     "buttons": {
         "ok": "Ok",
         "cancel": "Cancelar",
-        "delete": "Apagar"
+        "delete": "Apagar",
+        "download": "Descarregar"
     },
     "alerts": {
         "name_title": "Mudar Nome Ficheiro",
@@ -94,5 +95,17 @@
         "button": "Doar",
         "title": "Donativos",
         "main": "O seu apoio mantém este projeto vivo.\nCentenas de horas e um enorme esforço foram dedicados a esta app.\nOs seus donativos ajudam a cobrir os custos e a motivar o desenvolvimento futuro.\nObrigado! <3"
+    },
+    "update": {
+        "title": "Atualização Disponível",
+        "text": "Existe uma versão mais recente disponível. Deseja descarregar agora?"
+    },
+    "graph": {
+        "total": "Total",
+        "flight": "Voo",
+        "shields": "Escudos",
+        "legs": "Pernas",
+        "body": "Corpo",
+        "pylons": "Pilones"
     }
 }
