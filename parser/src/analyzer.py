@@ -68,7 +68,7 @@ class RelRun:
                  pt_found: float,
                  phase_durations: dict[int, float],
                  shield_phases: dict[float, list[tuple[DT, float]]],    # phase -> list(tuple(type, rev time))
-                 legs: dict[int, list[float]],                          # phase -> list(rev time)
+                 legs: dict[int, list[tuple[str, float]]],                          # phase -> list(rev time)
                  body_dur: dict[int, float],
                  pylon_dur: dict[int, float],
                  run_duration: float):
@@ -101,7 +101,7 @@ class RelRun:
     @property
     def leg_sum(self) -> float:
         """Sum of the leg times over all phases."""
-        return sum(time for times in self.legs.values() for time in times)
+        return sum(time[1] for times in self.legs.values() for time in times)
 
     @property
     def body_sum(self) -> float:
@@ -130,7 +130,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
-
+        print(self.legs[2])
         fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
@@ -150,21 +150,24 @@ class RelRun:
 
         fullRunFormat["phase_1"]["phase_time"] = self.phase_durations[1]
         fullRunFormat["phase_1"]["total_shield"] = sum(i for _, i in self.shield_phases[1])
-        fullRunFormat["phase_1"]["total_leg"] = sum(self.legs[1])
+        fullRunFormat["phase_1"]["total_leg"] = sum(leg[1] for leg in self.legs[1])
         fullRunFormat["phase_1"]["shield_change_times"] = [i for _,i in self.shield_phases[1]]
         fullRunFormat["phase_1"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[1]]
-        fullRunFormat["phase_1"]["leg_break_times"] = self.legs[1]
+        fullRunFormat["phase_1"]["leg_break_times"] = [leg[1] for leg in self.legs[1]]
+        fullRunFormat["phase_1"]["leg_break_order"] = [leg[0] for leg in self.legs[1]]
         fullRunFormat["phase_1"]["body_kill_time"] = self.body_dur[1]
         fullRunFormat["phase_1"]["pylon_time"] = self.pylon_dur[1]
         
         fullRunFormat["phase_2"]["phase_time"] = self.phase_durations[2]
-        fullRunFormat["phase_2"]["total_leg"] = sum(self.legs[2])
-        fullRunFormat["phase_2"]["leg_break_times"] = self.legs[2]
+        fullRunFormat["phase_2"]["total_leg"] = sum(leg[1] for leg in self.legs[2])
+        fullRunFormat["phase_2"]["leg_break_times"] = [leg[1] for leg in self.legs[2]]
+        fullRunFormat["phase_2"]["leg_break_order"] = [leg[0] for leg in self.legs[2]]
         fullRunFormat["phase_2"]["body_kill_time"] = self.body_dur[2]
 
         fullRunFormat["phase_3"]["phase_time"] = self.phase_durations[3]
-        fullRunFormat["phase_3"]["total_leg"] = sum(self.legs[3])
-        fullRunFormat["phase_3"]["leg_break_times"] = self.legs[3]
+        fullRunFormat["phase_3"]["total_leg"] = sum(leg[1] for leg in self.legs[3])
+        fullRunFormat["phase_3"]["leg_break_times"] = [leg[1] for leg in self.legs[3]]
+        fullRunFormat["phase_3"]["leg_break_order"] = [leg[0] for leg in self.legs[3]]
         fullRunFormat["phase_3"]["body_kill_time"] = self.body_dur[3]
         fullRunFormat["phase_3"]["total_shield"] = sum(i for _, i in self.shield_phases[3])
         fullRunFormat["phase_3"]["shield_change_times"] = [i for _,i in self.shield_phases[3]]
@@ -175,8 +178,9 @@ class RelRun:
             fullRunFormat["phase_3"]["pylon_time"] = self.pylon_dur[3]
 
         fullRunFormat["phase_4"]["phase_time"] = self.phase_durations[4]
-        fullRunFormat["phase_4"]["total_leg"] = sum(self.legs[4])
-        fullRunFormat["phase_4"]["leg_break_times"] = self.legs[4]
+        fullRunFormat["phase_4"]["total_leg"] = sum(leg[1] for leg in self.legs[4])
+        fullRunFormat["phase_4"]["leg_break_times"] = [leg[1] for leg in self.legs[4]]
+        fullRunFormat["phase_4"]["leg_break_order"] = [leg[0] for leg in self.legs[4]]
         fullRunFormat["phase_4"]["body_kill_time"] = self.body_dur[4]
         fullRunFormat["phase_4"]["total_shield"] = sum(i for _, i in self.shield_phases[4])
         fullRunFormat["phase_4"]["shield_change_times"] = [i for _,i in self.shield_phases[4]]
@@ -226,7 +230,7 @@ class AbsRun:
         self.pt_found = 0.0
         self.shield_phases: dict[float, list[tuple[DT, float]]] = defaultdict(list)  # phase -> list((type, abs time))
         self.shield_phase_endings: dict[int, float] = defaultdict(float)  # phase -> abs time
-        self.legs: dict[int, list[float]] = defaultdict(list)  # phase -> list(absolute time)
+        self.legs: dict[int, list[tuple[str, float]]] = defaultdict(list)  # phase -> list(absolute time)
         self.body_vuln: dict[int, float] = {}  # phase -> vuln-time
         self.body_kill: dict[int, float] = {}  # phase -> kill-time
         self.pylon_start: dict[int, float] = {}  # phase -> start-time
@@ -354,8 +358,10 @@ class AbsRun:
                 previous_timestamp = self.shield_phase_endings[phase]
             # Every phase has an armor phase
             for leg in self.legs[phase]:
-                legs[phase].append(leg - previous_timestamp)
-                previous_timestamp = leg
+                leg_time = leg[1]
+                leg_type = leg[0]
+                legs[phase].append((leg_type, leg_time - previous_timestamp))
+                previous_timestamp = leg_time
             body_dur[phase] = self.body_kill[phase] - self.body_vuln[phase]
             previous_timestamp = self.body_kill[phase]
 
@@ -712,6 +718,12 @@ class Analyzer:
                 Globals.STARTINGTIME = datetime.strptime(" ".join(line.split()[6:10]), "%b %d %H:%M:%S %Y")
                 return
         
+    def idLeg(self, line):
+        legNames = {"ARM_LEFT": "FL", "ARM_RIGHT": "FR", "LEG_LEFT": "BL", "LEG_RIGHT": "BR"}
+
+        for key in legNames.keys():
+            if key in line:
+                return legNames[key]
 
     def register_phase(self, log: Iterator[str], run: AbsRun, phase: int) -> None:
         """
@@ -747,8 +759,10 @@ class Analyzer:
                 run.shield_phase_endings[phase] = Analyzer.time_from_line(line)
             
             # Leg kill
-            elif PTConstants.LEG_KILL in line:  
-                run.legs[phase].append(Analyzer.time_from_line(line))
+            elif PTConstants.LEG_KILL in line:
+                legName = self.idLeg(line)
+                run.legs[phase].append((legName, Analyzer.time_from_line(line)))
+
             elif PTConstants.BODY_VULNERABLE in line:  # Body vulnerable / phase 4 end
                 if kill_sequence == 0:  # Only register the first invuln message on each phase
                     run.body_vuln[phase] = Analyzer.time_from_line(line)
