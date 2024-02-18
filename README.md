@@ -6,19 +6,23 @@ The Profit Taker Analytics project is designed to enhance the experience for Pro
 
 The original command line application offered essential parsing capabilities, but it was limited to displaying information in a text format. The Profit Taker Analytics project elevates this functionality by introducing a seamlessly integrated GUI, enabling users to interact with the data effortlessly.
 
+Download [here](https://basi.is-a.dev/pta/).
+
 ## Trusted by Elite Speedrunners
 
 Our project proudly stands as the tool of choice for a majority of the top-tier speedrunners within the Warframe community. Renowned for their exceptional skills and dedication, these elite players have embraced our project to elevate their speedrunning experience. Join the best by incorporating our tool into your strategy, and experience firsthand why it's the preferred choice among Warframe's finest speedrunning experts.
 
 ## Screenshots
 
-Coming soon.
+![home page](assets/home_page.png)
+![storage page](assets/storage_screen.png)
 
 ## Features
 
 - **Intuitive GUI Design:** Benefit from an intuitive and user-friendly Graphical User Interface (GUI), transforming raw data into a visually appealing format for easy interpretation.
 - **Compiled Application:** Eliminate the need for Python installation, making it hassle-free to seamlessly integrate the application into your Warframe speedrunning toolkit.
 - **Designed for Elite Speedrunners:** Embraced by some of the best speedrunners in the Warframe community, the Profit Taker Analytics app is designed to meet the high standards and demands of elite gaming strategies.
+- **Parse bugged runs:** Compared to the old analyzer, this one can parse bugged runs. You'll no longer lose out on valuable runs!
 
 ## FAQ
 
