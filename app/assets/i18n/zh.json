@@ -39,7 +39,9 @@
         "error": "错误！",
         "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
         "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。",
-        "aborted_run_warning": "比赛提前结束。"
+        "aborted_run_warning": "比赛提前结束。",
+        "existing_name": "已存在具有此名称的文件。请选择另一个。",
+        "unexpected": "出现意外错误。"
     },
     "settings": {
         "general": "通用",
@@ -84,7 +86,9 @@
         "ok": "OK",
         "cancel": "取消",
         "delete": "删除",
-        "download": "下载"
+        "download": "下载",
+        "yes": "是",
+        "no": "无"
     },
     "alerts": {
         "name_title": "更改文件名",
@@ -106,6 +110,8 @@
         "shields": "盾牌",
         "legs": "腿部",
         "body": "身体",
-        "pylons": "铁塔"
+        "pylons": "铁塔",
+        "view_question": "您想观看 ",
+        "after_question": "吗？"
     }
 }
