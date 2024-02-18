@@ -719,6 +719,14 @@ class Analyzer:
                 return
         
     def idLeg(self, line):
+        """
+        Identify which leg was destroyed, based on the line in the log.
+        Args:
+            line (str): The line indicating a leg was destroyed.
+
+        Returns:
+            str: The initials of the leg that was destroyed.
+        """
         legNames = {"ARM_LEFT": "FL", "ARM_RIGHT": "FR", "LEG_LEFT": "BL", "LEG_RIGHT": "BR"}
 
         for key in legNames.keys():
