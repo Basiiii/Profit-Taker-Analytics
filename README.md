@@ -14,8 +14,13 @@ Our project proudly stands as the tool of choice for a majority of the top-tier 
 
 ## Screenshots
 
-![home page](assets/home_page.png)
+![home page](assets/home_screen.png)
 ![storage page](assets/storage_screen.png)
+
+
+
+https://github.com/Basiiii/Profit-Taker-Analytics/assets/90209339/68ba883b-8360-4d5e-a094-2f63d58eaf59
+
 
 ## Features
 
