@@ -63,7 +63,7 @@
         "config_down_key": "Configurer la touche arrière" 
     },
     "storage" : {
-        "title": Votre espace de stockage",
+        "title": "Votre espace de stockage",
         "run_name": "Nom de la Mission",
         "run_time": "Temps de la Mission",
         "date": "Date",
