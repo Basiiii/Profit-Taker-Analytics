@@ -90,3 +90,4 @@ We extend our sincere gratitude to the original repository, [revoltage34/ptanaly
 
 - Mebius - Contributed Chinese translations
 - Kalaay - Contributed Russian translations
+- [Reava](https://github.com/Reava) - Contributed French translations
