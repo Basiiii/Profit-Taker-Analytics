@@ -78,7 +78,8 @@
         "en": "English",
         "pt": "Português",
         "zh": "中文",
-        "ru": "Русский"
+        "ru": "Русский",
+        "fr": "Français"
     },
     "buttons": {
         "ok": "Ок",

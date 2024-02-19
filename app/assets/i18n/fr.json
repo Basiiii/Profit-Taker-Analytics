@@ -1,0 +1,112 @@
+{
+    "home": {
+        "hello": "Bonjour!",
+        "hello_name": "Bonjour {name}!",
+        "last_run": "Votre dernière mission",
+        "last_run_with": "Votre dernière mission avec ",
+        "run": "Votre mission",
+        "run_with": "Votre mission avec ",
+        "and": " et ",
+        "named": "appelée"
+    },
+    "overview_cards": {
+        "total_duration": "Durée\nTotale",
+        "flight_time": "Temps de\nVol",
+        "shield_break": "Boucliers\nDétruits",
+        "leg_break": "Jambe\nDétruite",
+        "body_kill": "Carapace\nDétruite",
+        "pylon_destruction": "Pylônes\nDétruits"
+    },
+    "average_cards": {
+        "total_avg": "Moyenne\nDurée Totale",
+        "flight_avg": "Moyenne\nTemps de vol",
+        "shield_avg": "Moyenne\nBoucliers Détruits",
+        "leg_avg": "Moyenne\nPatte Brisée",
+        "body_avg": "Moyenne\nCarapace Détruite",
+        "pylon_avg": "Moyenne\nPylônes"
+    },
+    "phase_cards": {
+        "phase_1": "Première Phase",
+        "phase_2": "Seconde Phase",
+        "phase_3": "Troisième Phase",
+        "phase_4": "Quatrième Phase",
+        "shields": "Boucliers",
+        "legs": "Pattes",
+        "body": "Carapace",
+        "pylons": "Pylônes"
+    },
+    "errors": {
+        "error": "Erreur!",
+        "parser_connection_error": "L'application ne peut pas établir de connexion avec l'analyseur.\nVeuillez redémarrer le programme.\n\nSi vous continuez à rencontrer des problèmes, veuillez contacter Basi.\nLes contacts sont disponibles dans les paramètres de l'application.",
+        "bugged_run_warning": "Cette mission a été identifiée comme potentiellement buggée. Certaines missions ne sont pas enregistrées avec précision par Warframe,\nce qui nous empêche de récupérer toutes les données.\n\nMalheureusement, ce problème est hors de notre contrôle, mais nous vous montrerons quand même toutes les informations possibles.",
+        "aborted_run_warning": "Cette mission a été interrompue prématurément."
+    },
+    "settings": {
+        "general": "Général",
+        "links": "Liens",
+        "report_bugs": "Signaler un Problème",
+        "about": "À propos",
+        "theme": "Thème",
+        "language": "Language",
+        "change_language": "Changer de Langue",
+        "pt_discord": "Discord pour Preneur de Profit",
+        "github_repo": "Dépôt Github",
+        "pt_guide": "Guide du Preneur de Profit",
+        "report_bug": "Signaler un bug sur Github",
+        "contact_basi": "Contacter Basi",
+        "about_app": "A propos de l'application",
+        "version": "Version",
+        "about_app_description": "Fabriqué avec amour par Basi.\nSi vous avez trouvé ceci, envoyez-moi un DM d'une mangue sur Discord.",
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "Configuration des touches",
+        "config_up_key": "Configurer la touche suivante",
+        "config_down_key": "Configurer la touche arrière" 
+    },
+    "storage" : {
+        "title": "Votre espace de stockage",
+        "run_name": "Nom de la Mission",
+        "run_time": "Temps de la Mission",
+        "date": "Date",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "actions": "Actions"
+    },
+    "analytics" : {
+        "title": "Vos Statistiques"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文",
+        "ru": "Русский",
+        "fr": "Français"
+    },
+    "buttons": {
+        "ok": "Ok",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "download": "Télécharger"
+    },
+    "alerts": {
+        "name_title": "Changer le nom du fichier",
+        "delete_title": "Confirmer la suppresion",
+        "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce run(s)?"
+    },
+    "donate": {
+        "button": "Faire un don",
+        "title": "Dons",
+        "main": "Votre soutien maintient ce projet en vie.\nDes centaines d'heures et d'immenses efforts ont été consacrés à cette application.\nVos dons aident à couvrir les coûts et à motiver le développement ultérieur.\n\nMerci ! <3"
+    },
+    "update": {
+        "title": "Mise à jour disponible",
+        "text": "Une version plus récente de l'application est disponible. Souhaitez-vous la télécharger maintenant?"
+    },
+    "graph": {
+        "total": "Total",
+        "flight": "Vol",
+        "shields": "Boucliers",
+        "legs": "Pattes",
+        "body": "Carapace",
+        "pylons": "Pylônes"
+    }
+}
