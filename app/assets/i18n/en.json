@@ -40,8 +40,7 @@
         "parser_connection_error": "The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.\nContacts are available in the app settings.",
         "bugged_run_warning": "This run has been identified as potentially bugged. Some runs are not accurately recorded by Warframe,\nmaking it impossible for us to retrieve all the data.\n\nUnfortunately, this issue is beyond our control, but we will still show you all the information we can.",
         "aborted_run_warning": "This run was aborted early.",
-        "existing_name": "A file with this name already exists.\nPlease choose another.",
-        "unexpected": "There was an unexpected error."
+        "name_already_exists": "The name already exists. Please choose a different name."
     },
     "settings": {
         "general": "General",
@@ -80,15 +79,14 @@
         "en": "English",
         "pt": "Português",
         "zh": "中文",
-        "ru": "Русский"
+        "ru": "Русский",
+        "fr": "Français"
     },
     "buttons": {
         "ok": "Okay",
         "cancel": "Cancel",
         "delete": "Delete",
-        "download": "Download",
-        "yes": "Yes",
-        "no": "No"
+        "download": "Download"
     },
     "alerts": {
         "name_title": "Change File Name",
@@ -110,8 +108,6 @@
         "shields": "Shields",
         "legs": "Legs",
         "body": "Body",
-        "pylons": "Pylons",
-        "view_question": "Would you like to view ",
-        "after_question": "?"
+        "pylons": "Pylons"
     }
 }

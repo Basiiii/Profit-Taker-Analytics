@@ -11,11 +11,11 @@
     },
     "overview_cards": {
         "total_duration": "Tempo\nTotal",
-        "flight_time": "Tempo\nVoo",
-        "shield_break": "Quebra\nEscudos",
-        "leg_break": "Quebra\nPerna",
-        "body_kill": "Morte\nCorpo",
-        "pylon_destruction": "Destruição\nPilones"
+        "flight_time": "Tempo de\nVoo",
+        "shield_break": "Quebra dos\nEscudos",
+        "leg_break": "Quebra das\nPernas",
+        "body_kill": "Morte do\nCorpo",
+        "pylon_destruction": "Destruição dos\nPilares"
     },
     "average_cards": {
         "total_avg": "Média\nDuração Total",
@@ -23,7 +23,7 @@
         "shield_avg": "Média Quebra\nEscudos",
         "leg_avg": "Média Quebra\nPerna",
         "body_avg": "Média Morte\nCorpo",
-        "pylon_avg": "Média Destruição\nPilones"
+        "pylon_avg": "Média Destruição\nPilares"
     },
     "phase_cards": {
         "phase_1": "Primeira Phase",
@@ -33,15 +33,14 @@
         "shields": "Escudos",
         "legs": "Pernas",
         "body": "Corpo",
-        "pylons": "Pilones"
+        "pylons": "Pilares"
     },
     "errors": {
         "error": "Erro!",
         "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
         "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos.",
         "aborted_run_warning": "Esta luta foi interrompida precocemente.",
-        "existing_name": "Um ficheiro com este nome já existe.\nPor favor escolha outro.",
-        "unexpected": "Houve um erro inesperado."
+        "name_already_exists": "Este nome já existe. Por favor escolha outro nome."
     },
     "settings": {
         "general": "Geral",
@@ -80,15 +79,14 @@
         "en": "English",
         "pt": "Português",
         "zh": "中文",
-        "ru": "Русский"
+        "ru": "Русский",
+        "fr": "Français"
     },
     "buttons": {
         "ok": "Ok",
         "cancel": "Cancelar",
         "delete": "Apagar",
-        "download": "Descarregar",
-        "yes": "Sim",
-        "no": "Não"
+        "download": "Descarregar"
     },
     "alerts": {
         "name_title": "Mudar Nome Ficheiro",
@@ -110,8 +108,6 @@
         "shields": "Escudos",
         "legs": "Pernas",
         "body": "Corpo",
-        "pylons": "Pilones",
-        "view_question": "Deseja ver os dados da missão ",
-        "after_question": "?"
+        "pylons": "Pilares"
     }
 }

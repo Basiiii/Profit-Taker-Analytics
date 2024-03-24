@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Profit Taker Analytics"
-#define MyAppVersion "0.9.0"
+#define MyAppVersion "0.9.1"
 #define MyAppPublisher "Basi"
 #define MyAppURL "https://basi.is-a.dev/pta"
 #define MyAppExeName "profit_taker_analyzer.exe"
@@ -19,12 +19,12 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={commonpf}\..\Profit-Taker-Analytics
-DisableDirPage=yes
+DisableDirPage=no
 DisableProgramGroupPage=yes
-LicenseFile=C:\Github\portfolio\ptdocssource\End User License Agreement (EULA).txt
+LicenseFile=C:\Github\portfolio\ptdocssource\docs\docs\eula.md
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=pta_0.9.0
+OutputBaseFilename=pta_0.9.1
 SolidCompression=yes
 Compression=lzma2/ultra64
 LZMAUseSeparateProcess=yes

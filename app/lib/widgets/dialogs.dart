@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
+import 'package:profit_taker_analyzer/utils/utils.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -124,14 +125,14 @@ void showAboutAppDialog(
 /// This function shows a dialog with a title of "Contact Basi", and content describing
 /// the author of the app and instructions for contacting. The user can close the
 /// dialog by pressing the "OK" button.
-void showContactsAppDialog(BuildContext context, String contactText) {
+void showContactsAppDialog(
+    BuildContext context, String contactText, String description) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(contactText),
-        content: Text(FlutterI18n.translate(
-            context, "settings.basi_contacts_description")),
+        content: Text(description),
         actions: <Widget>[
           TextButton(
             child: const Text('OK'),
@@ -139,6 +140,38 @@ void showContactsAppDialog(BuildContext context, String contactText) {
               Navigator.of(context).pop();
             },
           )
+        ],
+      );
+    },
+  );
+}
+
+/// Displays a dialog with information about donating to Basi.
+///
+/// This function shows a dialog with a title of "Donations", and content describing
+/// the author of the app and reasonings for donations. The user can close the
+/// dialog by pressing the "OK" button.
+void showDonationDialog(BuildContext context, String title, String main,
+    String donatePaypalButton, String okayText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(main),
+        actions: <Widget>[
+          TextButton(
+            child: Text(donatePaypalButton),
+            onPressed: () {
+              launchURL("https://www.paypal.com/paypalme/basigraphics");
+            },
+          ),
+          TextButton(
+            child: Text(okayText),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ],
       );
     },
@@ -170,6 +203,7 @@ Future<void> displayTextInputDialog(
     String changeFileNameText,
     String cancelText,
     String okText,
+    String errorNameExists,
     Function updateCallback) async {
   return showDialog(
     context: context,
@@ -178,7 +212,7 @@ Future<void> displayTextInputDialog(
         title: Text(changeFileNameText),
         content: TextField(
           controller: controller,
-          maxLength: 20,
+          maxLength: 14,
           maxLengthEnforcement:
               MaxLengthEnforcement.truncateAfterCompositionEnds,
           decoration: InputDecoration(hintText: hintText),
@@ -192,19 +226,68 @@ Future<void> displayTextInputDialog(
           ),
           TextButton(
             child: Text(okText),
-            onPressed: () {
+            onPressed: () async {
               var newName = controller.text;
-              updateRunName(newName, fileName).then((_) {
+              bool updateSuccess =
+                  await updateRunName(newName, fileName, context);
+
+              if (updateSuccess) {
                 updateCallback(newName, fileName);
                 Navigator.pop(context);
                 controller.clear();
-              });
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Error'),
+                    content: Text(errorNameExists),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text(okText),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
             },
           ),
         ],
       );
     },
   );
+}
+
+/// Checks if a given name already exists in JSON files within a specified storage directory.
+///
+/// This function iterates through all JSON files in the specified storage directory,
+/// reads their contents, and checks if the provided `newName` matches any `pretty_name`
+/// found in the JSON data. If a match is found, the function returns `true`, indicating
+/// that the name already exists. If no match is found after checking all files, the
+/// function returns `false`, indicating that the name does not exist.
+///
+/// @param newName The name to check for existence.
+/// @return `true` if the name already exists, `false` otherwise.
+Future<bool> isNameExisting(String newName) async {
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var storagePath = "$mainPath\\storage";
+
+  final Directory storageDir = Directory(storagePath);
+  final List<FileSystemEntity> files = storageDir.listSync();
+
+  for (var file in files) {
+    if (file is File && file.path.endsWith('.json')) {
+      final String jsonString = await file.readAsString();
+      final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+      if (jsonData['pretty_name'] == newName) {
+        return true; // Name already exists
+      }
+    }
+  }
+  return false; // Name does not exist
 }
 
 /// Shows a confirmation dialog.
@@ -266,7 +349,13 @@ Future<bool> showConfirmationDialog(BuildContext context, String title,
 ///   - fileName: The name of the JSON file to be updated.
 ///
 /// Returns: A future that completes when the update is done.
-Future<void> updateRunName(String newName, String fileName) async {
+Future<bool> updateRunName(
+    String newName, String fileName, BuildContext context) async {
+  if (await isNameExisting(newName)) {
+    // Name already exists
+    return false;
+  }
+
   // Define the path to the JSON file
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
@@ -290,4 +379,7 @@ Future<void> updateRunName(String newName, String fileName) async {
 
   // Update the variable
   customRunName = newName;
+
+  // Success
+  return true;
 }
