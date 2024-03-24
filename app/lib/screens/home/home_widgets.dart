@@ -30,7 +30,8 @@ import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 ///
 /// Returns:
 /// A [Row] widget with the specified parameters.
-Widget buildRow(BuildContext context, String label, String time) {
+Widget buildRow(
+    BuildContext context, String label, String time, bool isBugged) {
   return Row(
     children: <Widget>[
       Text(
@@ -43,7 +44,9 @@ Widget buildRow(BuildContext context, String label, String time) {
           style: TextStyle(
               fontSize: 16,
               fontFamily: 'DMMono',
-              color: Theme.of(context).colorScheme.surfaceVariant),
+              color: isBugged
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).colorScheme.surfaceVariant),
           textAlign: TextAlign.right,
         ),
       ),
@@ -70,7 +73,8 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
   double responsiveCardWidth = screenWidth / 6 - 8;
 
   /// Determines the color for the total time value
-  Color color;
+  Color color = Theme.of(context).colorScheme.onSurface;
+
   if (index == 0) {
     double timeValue = double.parse(overviewCards[index].time);
 
@@ -82,22 +86,22 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
       color = const Color(0xFFbdcf32);
     } else if (timeValue < 120.000) {
       color = const Color(0xFF35967D);
-    } else if (timeValue < 150.000) {
+    } else if (timeValue > 120.000) {
       color = const Color(0xFFef9b20);
-    } else if (timeValue > 150.000) {
-      color = const Color(0xFFea5545);
     } else {
       color = Theme.of(context).colorScheme.onSurface;
     }
-  } else {
-    color = Theme.of(context).colorScheme.onSurface;
+  } else if (index == 2 || index == 4 || index == 5) {
+    isBuggedRun
+        ? color = Theme.of(context).colorScheme.error
+        : color = Theme.of(context).colorScheme.onSurface;
   }
 
   return Container(
     width: screenWidth < minimumResponsiveWidth
         ? overviewCardWidth
         : responsiveCardWidth,
-    height: 135,
+    height: 145,
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(10),
@@ -148,6 +152,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
             alignment: Alignment.topLeft,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 generateRichText(context, [
                   generateTextSpan(
@@ -155,8 +160,145 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                       color: color),
                   generateTextSpan('s ', 20, FontWeight.w400, color: color),
                 ]),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        (double.parse(overviewCards[index].time) -
+                                    bestValues[index])
+                                .isNegative
+                            ? (double.parse(overviewCards[index].time) -
+                                    bestValues[index])
+                                .toStringAsFixed(3)
+                            : '+${(double.parse(overviewCards[index].time) - bestValues[index]).toStringAsFixed(3)}',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: (double.parse(overviewCards[index].time) -
+                                      bestValues[index])
+                                  .isNegative
+                              ? Colors.green
+                              : Colors.red,
+                          height: 0,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      "BEST ",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white, // Adjust the color as needed
+                      ),
+                    ),
+                    Text(
+                      "${bestValues[index].toStringAsFixed(3)}s    ",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white, // Adjust the color as needed
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Builds and returns a compact card widget for displaying overview information.
+///
+/// This method creates a compact card with specific styling based on the provided [index],
+/// [BuildContext], and [screenWidth]. The card displays information such as icon and
+/// time value with color-coding based on predefined thresholds.
+///
+/// Parameters:
+///   - `index`: The index of the card in the overviewCards list.
+///   - `context`: The build context providing access to the theme and localization.
+///   - `screenWidth`: The available width of the screen.
+///
+/// Returns:
+///   A widget representing an overview card with dynamic styling.
+Widget buildCompactOverviewCard(
+    int index, BuildContext context, double screenWidth) {
+  // Extra 8 pixels for padding
+  // NOTE: I'm not sure why this needs padding and the other doesn't...
+  double responsiveCardWidth = screenWidth / 6 - 8;
+
+  /// Determines the color for the total time value
+  Color color = Theme.of(context).colorScheme.onSurface;
+
+  if (index == 0) {
+    double timeValue = double.parse(overviewCards[index].time);
+
+    if (timeValue < 52.000) {
+      color = const Color(0xFFb33dc6);
+    } else if (timeValue < 60.000) {
+      color = const Color(0xFF27aeef);
+    } else if (timeValue < 80.000) {
+      color = const Color(0xFFbdcf32);
+    } else if (timeValue < 120.000) {
+      color = const Color(0xFF35967D);
+    } else if (timeValue > 120.000) {
+      color = const Color(0xFFef9b20);
+    } else {
+      color = Theme.of(context).colorScheme.onSurface;
+    }
+  } else if (index == 2 || index == 4 || index == 5) {
+    isBuggedRun
+        ? color = Theme.of(context).colorScheme.error
+        : Theme.of(context).colorScheme.onSurface;
+  }
+
+  return Container(
+    width: screenWidth < minimumResponsiveWidth
+        ? overviewCardWidth
+        : responsiveCardWidth,
+    height: 66,
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: overviewCards[index].color,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Icon(overviewCards[index].icon,
+                          size: 25,
+                          color: Theme.of(context).colorScheme.surface)),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      generateRichText(context, [
+                        generateTextSpan(
+                            overviewCards[index].time, 32, FontWeight.w600,
+                            color: color),
+                        generateTextSpan('s ', 20, FontWeight.w400,
+                            color: color),
+                      ]),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
@@ -196,20 +338,30 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
         .sublist(1, 3)
         .asMap()
         .entries
-        .map((entry) => buildRow(context, entry.value, overviewList[entry.key]))
+        .map((entry) =>
+            buildRow(context, entry.value, overviewList[entry.key], false))
+        .toList();
+  } else if (index == 2) {
+    rows = labels
+        .asMap()
+        .entries
+        .map((entry) => buildRow(context, entry.value, overviewList[entry.key],
+            entry.key == 3 && isBuggedRun))
         .toList();
   } else if (index == 3) {
     rows = labels
         .sublist(0, 3)
         .asMap()
         .entries
-        .map((entry) => buildRow(context, entry.value, overviewList[entry.key]))
+        .map((entry) => buildRow(context, entry.value, overviewList[entry.key],
+            entry.key == 0 && isBuggedRun || entry.key == 2 && isBuggedRun))
         .toList();
   } else {
     rows = labels
         .asMap()
         .entries
-        .map((entry) => buildRow(context, entry.value, overviewList[entry.key]))
+        .map((entry) =>
+            buildRow(context, entry.value, overviewList[entry.key], false))
         .toList();
   }
 
@@ -285,6 +437,7 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 2),
                         index != 1
                             ? Wrap(
                                 spacing: 20.0,
@@ -292,6 +445,230 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                                 direction: Axis.horizontal,
                                 children:
                                     phaseCards[index].shieldsList.map((pair) {
+                                  bool isFirstPairAndIndexThreeAndBuggedRun =
+                                      index == 3 &&
+                                          pair ==
+                                              phaseCards[index]
+                                                  .shieldsList
+                                                  .first &&
+                                          isBuggedRun;
+                                  return SizedBox(
+                                    width: 65,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Icon(pair['icon'], size: 13),
+                                        Text(
+                                          pair['text'],
+                                          style: TextStyle(
+                                              fontFamily: 'DMMono',
+                                              fontSize: 12,
+                                              color:
+                                                  isFirstPairAndIndexThreeAndBuggedRun
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .error
+                                                      : Theme.of(context)
+                                                          .colorScheme
+                                                          .surfaceVariant),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const SizedBox.shrink(),
+                        index != 1
+                            ? const SizedBox(height: 6)
+                            : const SizedBox.shrink(),
+                        Wrap(
+                          spacing: 20.0,
+                          runSpacing: 8.0,
+                          direction: Axis.horizontal,
+                          children: phaseCards[index].legsList.map((pair) {
+                            return SizedBox(
+                              width: 65,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Icon(pair['icon'], size: 8),
+                                  Text(
+                                    pair['text'],
+                                    style: TextStyle(
+                                        fontFamily: 'DMMono',
+                                        fontSize: 12,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+/// Builds and returns a compact card widget for displaying phase information.
+///
+/// This method creates a card with specific styling based on the provided [index],
+/// [BuildContext], and [screenWidth]. The card displays information such as phase title,
+/// duration, and details about shields, legs, and other phase-specific data.
+///
+/// The second phase card will have a reduced height to be more compact.
+///
+/// Parameters:
+///   - `index`: The index of the card in the phaseCards list.
+///   - `context`: The build context providing access to the theme and localization.
+///   - `screenWidth`: The available width of the screen.
+///
+/// Returns:
+///   A widget representing a phase card with dynamic styling and details.
+Widget buildCompactPhaseCard(
+    int index, BuildContext context, double screenWidth) {
+  double responsiveCardWidth = screenWidth / 2;
+
+  List<String> labels = [
+    FlutterI18n.translate(context, "phase_cards.shields"),
+    FlutterI18n.translate(context, "phase_cards.legs"),
+    FlutterI18n.translate(context, "phase_cards.body"),
+    FlutterI18n.translate(context, "phase_cards.pylons"),
+  ];
+
+  List<Widget> rows;
+
+  List<String> overviewList = phaseCards[index].overviewList;
+
+  if (index == 1) {
+    rows = labels
+        .sublist(1, 3)
+        .asMap()
+        .entries
+        .map((entry) =>
+            buildRow(context, entry.value, overviewList[entry.key], false))
+        .toList();
+  } else if (index == 2) {
+    rows = labels
+        .asMap()
+        .entries
+        .map((entry) => buildRow(context, entry.value, overviewList[entry.key],
+            entry.key == 3 && isBuggedRun))
+        .toList();
+  } else if (index == 3) {
+    rows = labels
+        .sublist(0, 3)
+        .asMap()
+        .entries
+        .map((entry) => buildRow(context, entry.value, overviewList[entry.key],
+            entry.key == 0 && isBuggedRun || entry.key == 2 && isBuggedRun))
+        .toList();
+  } else {
+    rows = labels
+        .asMap()
+        .entries
+        .map((entry) =>
+            buildRow(context, entry.value, overviewList[entry.key], false))
+        .toList();
+  }
+
+  return Container(
+    width: screenWidth < minimumResponsiveWidth
+        ? phaseCardWidth
+        : responsiveCardWidth,
+    height: index == 1 && screenWidth < minimumResponsiveWidth ? 110 : 160,
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 20, right: 10),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  FlutterI18n.translate(
+                      context, "phase_cards.${phaseCards[index].title}"),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).colorScheme.onSurface),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      generateRichText(context, [
+                        generateTextSpan(
+                            phaseCards[index].time, 20, FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface),
+                        generateTextSpan('s ', 20, FontWeight.w400,
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ]),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 20),
+          child: IntrinsicHeight(
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 150,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: rows,
+                  ),
+                ),
+                const SizedBox(
+                  width: 30,
+                  child: VerticalDivider(
+                    thickness: 2,
+                    width: 100,
+                    color: Color(0xFFAFAFAF),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        index != 1
+                            ? Wrap(
+                                spacing: 20.0,
+                                runSpacing: 8.0,
+                                direction: Axis.horizontal,
+                                children:
+                                    phaseCards[index].shieldsList.map((pair) {
+                                  bool isFirstPairAndIndexThreeAndBuggedRun =
+                                      index == 3 &&
+                                          pair ==
+                                              phaseCards[index]
+                                                  .shieldsList
+                                                  .first &&
+                                          isBuggedRun;
                                   return SizedBox(
                                     width: 65,
                                     child: Row(
@@ -304,9 +681,14 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                                           style: TextStyle(
                                               fontFamily: 'DMMono',
                                               fontSize: 12,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surfaceVariant),
+                                              color:
+                                                  isFirstPairAndIndexThreeAndBuggedRun
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .error
+                                                      : Theme.of(context)
+                                                          .colorScheme
+                                                          .surfaceVariant),
                                         ),
                                       ],
                                     ),

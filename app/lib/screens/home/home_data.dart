@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
+/// Check if app is recent version
+bool isMostRecentVersion = false;
+
 /// Compact mode for layout
 bool compactModeEnabled = false;
 
@@ -21,6 +24,16 @@ String playersListEnd = '';
 /// Defines if the run is solo and if it's most recent
 bool soloRun = true;
 bool mostRecentRun = true;
+
+/// Best times
+List<double> bestValues = [
+  double.infinity, // bestTotal
+  double.infinity, // bestFlight
+  double.infinity, // bestShield
+  double.infinity, // bestLeg
+  double.infinity, // bestBody
+  double.infinity, // bestPylon
+];
 
 /// Represents an overview card with a color, an icon, a title and a time.
 ///

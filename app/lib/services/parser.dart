@@ -155,6 +155,22 @@ Future<void> killParserInstances() async {
   }
 }
 
+/// Kills instances of the update process.
+///
+/// This method uses the shell to run a command that forcefully terminates
+/// all instances of the update.exe process. It is asynchronous and returns
+/// a [Future<void>] to indicate completion.
+Future<void> killUpdateInstances() async {
+  try {
+    await Shell().run('taskkill /F /IM update.exe');
+  } catch (e) {
+    // Print the exception to the console
+    if (kDebugMode) {
+      print('An error occurred while trying to kill parser.exe processes: $e');
+    }
+  }
+}
+
 /// Checks for new data by comparing the last update timestamp with the server.
 ///
 /// This method performs an HTTP GET request to the 'http://127.0.0.1:PORT/last_run_time'
@@ -331,7 +347,10 @@ Future<void> updatePhaseCardsWithJson(
 
   /// Get the data for the specified phase
   Map<String, dynamic> phaseData = jsonData[phaseKey];
-  List<dynamic> legBreakTimes = phaseData['leg_break_times'];
+  List<dynamic> legBreakTimes =
+      phaseData['leg_break_times'] ?? ['0.0', '0.0', '0.0', '0.0'];
+  List<dynamic> legBreakOrder =
+      phaseData['leg_break_order'] ?? ['FL', 'FR', 'BL', 'BR'];
   List<dynamic> shieldTimes = [];
   List<dynamic> shieldElements = [];
   List<Map<String, dynamic>> shieldsPhase = [];
@@ -371,24 +390,38 @@ Future<void> updatePhaseCardsWithJson(
   }
 
   /// Create the legs list
-  List<Map<String, dynamic>> legsPhase = [
-    {
-      'icon': CustomIcons.fl,
-      'text': roundToThreeDecimalPlaces(legBreakTimes[0]).toStringAsFixed(3),
-    },
-    {
-      'icon': CustomIcons.fr,
-      'text': roundToThreeDecimalPlaces(legBreakTimes[1]).toStringAsFixed(3)
-    },
-    {
-      'icon': CustomIcons.bl,
-      'text': roundToThreeDecimalPlaces(legBreakTimes[2]).toStringAsFixed(3)
-    },
-    {
-      'icon': CustomIcons.br,
-      'text': roundToThreeDecimalPlaces(legBreakTimes[3]).toStringAsFixed(3)
-    },
-  ];
+  List<Map<String, dynamic>> legsPhase = [];
+  if (legBreakOrder.isNotEmpty && legBreakTimes.isNotEmpty) {
+    legsPhase = List.generate(legBreakTimes.length, (index) {
+      String legOrder = legBreakOrder[index];
+      IconData icon;
+      switch (legOrder) {
+        case 'FL':
+          icon = CustomIcons.fl;
+          break;
+        case 'FR':
+          icon = CustomIcons.fr;
+          break;
+        case 'BL':
+          icon = CustomIcons.bl;
+          break;
+        case 'BR':
+          icon = CustomIcons.br;
+          break;
+        default:
+          icon = Icons.error;
+      }
+      return {
+        'icon': icon,
+        'text':
+            roundToThreeDecimalPlaces(legBreakTimes[index]).toStringAsFixed(3),
+      };
+    });
+  } else {
+    if (kDebugMode) {
+      print('Error: legBreakOrder or legBreakTimes array is empty.');
+    }
+  }
 
   // Update the PhaseCards objects
   updatePhaseCard(
@@ -584,6 +617,9 @@ Future<void> loadDataFile(String fileName) async {
       updatePhaseCardsWithJson(contents, 2, 'phase_3');
       updatePhaseCardsWithJson(contents, 3, 'phase_4');
     } else {
+      if (kDebugMode) {
+        print('File does not exist');
+      }
       throw Exception('File does not exist');
     }
   } catch (e) {

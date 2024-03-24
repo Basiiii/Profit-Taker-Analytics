@@ -203,7 +203,7 @@ Future<void> displayTextInputDialog(
     String changeFileNameText,
     String cancelText,
     String okText,
-    String errorNameExists,
+    List<String> existingNames,
     Function updateCallback) async {
   return showDialog(
     context: context,
@@ -226,31 +226,35 @@ Future<void> displayTextInputDialog(
           ),
           TextButton(
             child: Text(okText),
-            onPressed: () async {
+            onPressed: () {
               var newName = controller.text;
-              bool updateSuccess =
-                  await updateRunName(newName, fileName, context);
-
-              if (updateSuccess) {
-                updateCallback(newName, fileName);
-                Navigator.pop(context);
-                controller.clear();
-              } else {
+              if (existingNames.contains(newName)) {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Error'),
-                    content: Text(errorNameExists),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text(okText),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
+                  builder: (context) {
+                    return AlertDialog(
+                      title:
+                          Text(FlutterI18n.translate(context, 'errors.error')),
+                      content: Text(FlutterI18n.translate(
+                          context, 'errors.existing_name')),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text(
+                              FlutterI18n.translate(context, 'buttons.ok')),
+                          onPressed: () {
+                            Navigator.pop(context); // Close the error dialog
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 );
+              } else {
+                updateRunName(newName, fileName).then((_) {
+                  updateCallback(newName, fileName);
+                  Navigator.pop(context);
+                  controller.clear();
+                });
               }
             },
           ),
@@ -258,36 +262,6 @@ Future<void> displayTextInputDialog(
       );
     },
   );
-}
-
-/// Checks if a given name already exists in JSON files within a specified storage directory.
-///
-/// This function iterates through all JSON files in the specified storage directory,
-/// reads their contents, and checks if the provided `newName` matches any `pretty_name`
-/// found in the JSON data. If a match is found, the function returns `true`, indicating
-/// that the name already exists. If no match is found after checking all files, the
-/// function returns `false`, indicating that the name does not exist.
-///
-/// @param newName The name to check for existence.
-/// @return `true` if the name already exists, `false` otherwise.
-Future<bool> isNameExisting(String newName) async {
-  var mainPath = Platform.resolvedExecutable;
-  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
-  var storagePath = "$mainPath\\storage";
-
-  final Directory storageDir = Directory(storagePath);
-  final List<FileSystemEntity> files = storageDir.listSync();
-
-  for (var file in files) {
-    if (file is File && file.path.endsWith('.json')) {
-      final String jsonString = await file.readAsString();
-      final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-      if (jsonData['pretty_name'] == newName) {
-        return true; // Name already exists
-      }
-    }
-  }
-  return false; // Name does not exist
 }
 
 /// Shows a confirmation dialog.
@@ -349,13 +323,7 @@ Future<bool> showConfirmationDialog(BuildContext context, String title,
 ///   - fileName: The name of the JSON file to be updated.
 ///
 /// Returns: A future that completes when the update is done.
-Future<bool> updateRunName(
-    String newName, String fileName, BuildContext context) async {
-  if (await isNameExisting(newName)) {
-    // Name already exists
-    return false;
-  }
-
+Future<void> updateRunName(String newName, String fileName) async {
   // Define the path to the JSON file
   var mainPath = Platform.resolvedExecutable;
   mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
@@ -379,7 +347,4 @@ Future<bool> updateRunName(
 
   // Update the variable
   customRunName = newName;
-
-  // Success
-  return true;
 }
