@@ -40,7 +40,7 @@
         "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
         "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。",
         "aborted_run_warning": "比赛提前结束。",
-        "name_already_exists": "该名称已存在。请选择其他名称。"
+        "existing_name": "该名称已存在。请选择其他名称。"
     },
     "settings": {
         "general": "通用",

@@ -71,6 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Locale('pt', 'PT'), // Portuguese
     Locale('zh', 'CN'), // Chinese
     Locale('ru'), // Russian
+    Locale('fr'), // French
   ];
 
   /// The currently selected locale.
@@ -142,9 +143,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         FlutterI18n.translate(context, "settings.change_language");
     String contactText =
         FlutterI18n.translate(context, "settings.contact_basi");
+    String contactContent =
+        FlutterI18n.translate(context, "settings.basi_contacts_description");
     String aboutTitle = FlutterI18n.translate(context, "settings.about_app");
     String aboutDescription =
         FlutterI18n.translate(context, "settings.about_app_description");
+    String okayText = FlutterI18n.translate(context, "buttons.ok");
+    String donateTitle = FlutterI18n.translate(context, "donate.title");
+    String donateMainText = FlutterI18n.translate(context, "donate.main");
 
     return FocusTraversalGroup(
       descendantsAreFocusable: false,
@@ -159,19 +165,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: Text(FlutterI18n.translate(context, "settings.general")),
                 tiles: [
                   SettingsTile(
-                      title: Text(
-                          FlutterI18n.translate(context, "settings.theme")),
-                      leading: const Icon(Icons.contrast),
-                      trailing: ValueListenableBuilder(
-                          valueListenable: MyApp.themeNotifier,
-                          builder: (context, ThemeMode mode, _) {
-                            return IconButton(
-                              icon: Icon(mode == ThemeMode.light
-                                  ? Icons.nightlight
-                                  : Icons.wb_sunny),
-                              onPressed: () => switchTheme(),
-                            );
-                          })),
+                    title:
+                        Text(FlutterI18n.translate(context, "settings.theme")),
+                    leading: const Icon(Icons.contrast),
+                    trailing: ValueListenableBuilder(
+                      valueListenable: MyApp.themeNotifier,
+                      builder: (context, ThemeMode mode, _) {
+                        return IconButton(
+                          icon: Icon(mode == ThemeMode.light
+                              ? Icons.nightlight
+                              : Icons.wb_sunny),
+                          onPressed: () => switchTheme(),
+                        );
+                      },
+                    ),
+                  ),
+                  SettingsTile(
+                    title: Text(FlutterI18n.translate(
+                        context, "settings.change_language")),
+                    leading: const Icon(Icons.language),
+                    trailing: Text(_currentLanguage()),
+                    onPressed: (BuildContext context) {
+                      _selectLanguage(context, changeLanguageText);
+                    },
+                  ),
+                  SettingsTile(
+                    title:
+                        Text(FlutterI18n.translate(context, "donate.button")),
+                    leading: const Icon(Icons.wallet_giftcard_rounded),
+                    onPressed: (BuildContext context) {
+                      showDonationDialog(context, donateTitle, donateMainText,
+                          "PayPal", okayText);
+                    },
+                  )
                 ],
               ),
               SettingsSection(
@@ -202,27 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       launchURL(
                           'https://docs.google.com/document/d/1DWY-ZNv7cUA6egxDZKYu0e8qz7z-yHT2KncyYAo5NHU/edit?pli=1');
                     },
-                  )
-                ],
-              ),
-              SettingsSection(
-                  title:
-                      Text(FlutterI18n.translate(context, "settings.language")),
-                  tiles: [
-                    SettingsTile(
-                      title: Text(FlutterI18n.translate(
-                          context, "settings.change_language")),
-                      leading: const Icon(Icons.language),
-                      trailing: Text(_currentLanguage()),
-                      onPressed: (BuildContext context) {
-                        _selectLanguage(context, changeLanguageText);
-                      },
-                    )
-                  ]),
-              SettingsSection(
-                title: Text(
-                    FlutterI18n.translate(context, "settings.report_bugs")),
-                tiles: [
+                  ),
                   SettingsTile(
                     title: Text(
                         FlutterI18n.translate(context, "settings.report_bug")),
@@ -235,38 +241,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: Text(FlutterI18n.translate(context, "settings.about")),
-                tiles: [
-                  SettingsTile(
-                    title: Text(FlutterI18n.translate(
-                        context, "settings.contact_basi")),
-                    leading: const Icon(Icons.contact_page),
-                    onPressed: (BuildContext context) {
-                      showContactsAppDialog(context, contactText);
-                    },
-                  ),
-                  SettingsTile(
-                    title: Text(
-                        FlutterI18n.translate(context, "settings.about_app")),
-                    leading: const Icon(Icons.info),
-                    onPressed: (BuildContext context) {
-                      showAboutAppDialog(context, aboutTitle, aboutDescription);
-                    },
-                  ),
-                  SettingsTile(
-                    title: Text(
-                        FlutterI18n.translate(context, "settings.version")),
-                    trailing: const Text(version),
-                  ),
-                ],
-              ),
-              SettingsSection(
                 title:
                     Text(FlutterI18n.translate(context, "settings.key_config")),
                 tiles: [
                   SettingsTile(
                     title: Text(FlutterI18n.translate(
                         context, "settings.config_up_key")),
+                    leading: const Icon(Icons.arrow_forward_rounded),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -303,6 +284,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingsTile(
                     title: Text(FlutterI18n.translate(
                         context, "settings.config_down_key")),
+                    leading: const Icon(Icons.arrow_back_rounded),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -335,6 +317,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         });
                       }
                     },
+                  ),
+                ],
+              ),
+              SettingsSection(
+                title: Text(FlutterI18n.translate(context, "settings.about")),
+                tiles: [
+                  SettingsTile(
+                    title: Text(FlutterI18n.translate(
+                        context, "settings.contact_basi")),
+                    leading: const Icon(Icons.contact_page),
+                    onPressed: (BuildContext context) {
+                      showContactsAppDialog(
+                          context, contactText, contactContent);
+                    },
+                  ),
+                  SettingsTile(
+                    title: Text(
+                        FlutterI18n.translate(context, "settings.about_app")),
+                    leading: const Icon(Icons.info),
+                    onPressed: (BuildContext context) {
+                      showAboutAppDialog(context, aboutTitle, aboutDescription);
+                    },
+                  ),
+                  SettingsTile(
+                    title: Text(
+                        FlutterI18n.translate(context, "settings.version")),
+                    trailing: const Text(version),
                   ),
                 ],
               ),

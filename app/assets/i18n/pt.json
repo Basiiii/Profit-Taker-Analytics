@@ -40,7 +40,7 @@
         "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
         "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos.",
         "aborted_run_warning": "Esta luta foi interrompida precocemente.",
-        "name_already_exists": "Este nome já existe. Por favor escolha outro nome."
+        "existing_name": "Este nome já existe. Por favor escolha outro nome."
     },
     "settings": {
         "general": "Geral",

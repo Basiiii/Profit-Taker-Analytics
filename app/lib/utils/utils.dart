@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,4 +77,42 @@ String getRoundedJsonValueAsString(Map<String, dynamic> jsonData, String key) {
 
   // Return the rounded value as a string
   return value.toStringAsFixed(3);
+}
+
+Future<List<String>> getExistingFileNames() async {
+  // Create a list to store the pretty names
+  List<String> prettyNames = [];
+
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  String storagePath = "$mainPath\\storage\\";
+
+  // Get the directory
+  final directory = Directory(storagePath);
+
+  // Check if the directory exists
+  if (await directory.exists()) {
+    // List all files in the directory
+    List<FileSystemEntity> files = directory.listSync();
+
+    // Iterate over each file
+    for (FileSystemEntity file in files) {
+      // Check if the file is a JSON file
+      if (file is File && file.path.endsWith('.json')) {
+        // Read the file content
+        String fileContent = await file.readAsString();
+
+        // Parse the JSON content
+        Map<String, dynamic> jsonContent = jsonDecode(fileContent);
+
+        // Extract the pretty_name field
+        if (jsonContent.containsKey('pretty_name')) {
+          prettyNames.add(jsonContent['pretty_name']);
+        }
+      }
+    }
+  }
+
+  // Return the list of pretty names
+  return prettyNames;
 }

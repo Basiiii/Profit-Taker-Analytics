@@ -18,9 +18,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:profit_taker_analyzer/screens/analytics/analytics_screen.dart';
+import 'package:profit_taker_analyzer/screens/home/home_data.dart';
+import 'package:profit_taker_analyzer/services/verify_hash.dart';
 import 'package:profit_taker_analyzer/services/version_control.dart';
+import 'package:profit_taker_analyzer/utils/action_keys.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,12 +57,20 @@ void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Check integrity with hash
+  var verify = await isAppIntegrityValid();
+  await confirmVerification(verify);
+
   // Check version
-  versionControl();
+  isMostRecentVersion = await versionControl();
 
   // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
   String language = prefs.getString('language') ?? "en";
+
+  // Retrieves the user's preferred action keys for Home page from shared preferences.
+  upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+  downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
 
   // Initializes the window manager.
   await windowManager.ensureInitialized();
@@ -99,6 +112,7 @@ void main() async {
             Locale('pt', 'PT'), // Portuguese
             Locale('zh', 'CN'), // Chinese
             Locale('ru'), // Russian
+            Locale('fr'), // French
           ],
           home: FlutterSplashScreen.fadeIn(
               backgroundColor: const Color(0xFF121212),
@@ -114,10 +128,13 @@ void main() async {
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
                 /// Delete port text file if it exists
-                await deletePortFileIfExists(); // done to ensure fresh port every time
+                await deletePortFileIfExists();
 
                 /// Kill old existing parser instances
-                await killParserInstances(); // kill old instances if they exist
+                await killParserInstances();
+
+                /// Kill old existing updater instances
+                await killUpdateInstances();
 
                 /// Run the parser
                 debugPrint("Starting parser");
@@ -196,7 +213,10 @@ class _MyAppState extends State<MyApp> with WindowListener {
     _themeModeFuture = loadThemeMode();
     windowManager.addListener(this);
     _loadLanguage();
-    _activeScreen = const HomeScreen();
+    _activeScreen = const HomeScreen(
+      fileName: '',
+      fileIndex: 0,
+    );
     _init();
   }
 
@@ -225,13 +245,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
   ///   - index: The index of the tab to be selected.
   ///
   /// Returns: void.
-  void _selectTab(int index) {
+  void _selectTab(int navIndex, int runIndex, {String? fileName}) {
     setState(() {
-      _currentIndex = index;
-      // Dynamically load the new screen only if it's not already loaded
-      if (_activeScreen != _getScreenByIndex(index)) {
-        _activeScreen = _getScreenByIndex(index);
-      }
+      _currentIndex = navIndex;
+      _activeScreen =
+          _getScreenByIndex(navIndex, fileName: fileName, runIndex: runIndex);
     });
   }
 
@@ -244,16 +262,28 @@ class _MyAppState extends State<MyApp> with WindowListener {
   ///
   /// Returns:
   ///   - A widget representing the screen corresponding to the provided index.
-  Widget _getScreenByIndex(int index) {
+  Widget _getScreenByIndex(int index, {String? fileName, int runIndex = -1}) {
     switch (index) {
       case 0:
-        return const HomeScreen();
+        return HomeScreen(
+          fileName: fileName ?? '',
+          fileIndex: runIndex,
+        );
       case 1:
-        return const StorageScreen();
+        return StorageScreen(
+          onSelectHomeTab: _selectTab,
+        );
       case 2:
+        return AnalyticsScreen(
+          onSelectHomeTab: _selectTab,
+        );
+      case 3:
         return const SettingsScreen();
       default:
-        return const HomeScreen();
+        return const HomeScreen(
+          fileName: '',
+          fileIndex: 0,
+        );
     }
   }
 
@@ -320,6 +350,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
                               Locale('pt', 'PT'), // Portuguese
                               Locale('zh', 'CN'), // Chinese
                               Locale('ru'), // Russian
+                              Locale('fr'), // French
                             ],
                             home: Scaffold(
                               body: Row(
@@ -327,7 +358,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
                                   /// Navigation bar widget.
                                   custom_nav.NavigationBar(
                                     currentIndex: _currentIndex,
-                                    onTabSelected: _selectTab,
+                                    onTabSelected: (index,
+                                        {String? fileName, int? runIndex}) {
+                                      _selectTab(index, runIndex ?? -1,
+                                          fileName: fileName);
+                                    },
                                   ),
                                   Expanded(
                                     child:

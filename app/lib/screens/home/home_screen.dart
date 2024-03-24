@@ -9,6 +9,7 @@ import 'package:profit_taker_analyzer/utils/action_keys.dart';
 import 'package:profit_taker_analyzer/services/last_runs.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:process_run/shell.dart';
 
 import 'package:profit_taker_analyzer/main.dart';
 
@@ -26,6 +27,9 @@ import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/loading_overlay.dart';
 import 'package:profit_taker_analyzer/widgets/last_runs.dart';
+
+/// Track if the drawer is open to disable scroll shortcut
+bool isDrawerOpen = false;
 
 class HomeScreen extends StatefulWidget {
   final String fileName;
@@ -62,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen>
   /// A [ValueNotifier] that tracks whether the shortcut is enabled.
   final ValueNotifier<bool> _shortcutEnabled = ValueNotifier<bool>(true);
 
+  final _keyboardListenerFocus = FocusNode();
+
   /// Loads the data from the last run based on the provided file name.
   ///
   /// This method displays a loading overlay, loads the data file with the given file name,
@@ -90,6 +96,9 @@ class _HomeScreenState extends State<HomeScreen>
     if (kDebugMode) {
       print("Opened home screen");
     }
+
+    /// Get best times
+    findLowestTimes();
 
     /// Listen for changes in screen dimensions
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -129,6 +138,15 @@ class _HomeScreenState extends State<HomeScreen>
         _connectionStatus.value = true;
         LoadingOverlay.of(context).show();
         await loadDataAPI().then((_) {
+          /// Get best times
+          findLowestTimes();
+
+          /// Populate lists with run history
+          allRuns = getStoredRuns();
+          getRunFileNames(allRuns, allRuns.length, runFilenames);
+          currentIndex = 0;
+
+          /// Refresh UI
           setState(() {});
           LoadingOverlay.of(context).hide();
         });
@@ -137,6 +155,41 @@ class _HomeScreenState extends State<HomeScreen>
       if (result == connectionError) {
         _connectionStatus.value = false;
         return;
+      }
+    });
+
+    _keyboardListenerFocus.requestFocus();
+
+    // Schedule a callback for the end of this frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!isMostRecentVersion) {
+        // Show the dialog if the app is not the most recent version
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(FlutterI18n.translate(context, "update.title")),
+              content: Text(FlutterI18n.translate(context, "update.text")),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(FlutterI18n.translate(context, "buttons.cancel")),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+                TextButton(
+                  child:
+                      Text(FlutterI18n.translate(context, "buttons.download")),
+                  onPressed: () async {
+                    await Shell()
+                        .run('runas /user:Administrator "update/update.exe"');
+                    exit(0);
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     });
   }
@@ -148,9 +201,12 @@ class _HomeScreenState extends State<HomeScreen>
     final double screenHeight = MediaQuery.of(context).size.height;
 
     // Determine if the shortcut should be enabled
-    bool shouldEnableShortcut = screenWidth >= startingWidth - 165 &&
-        screenHeight >= startingHeight - 60;
-
+    bool shouldEnableShortcut = false;
+    compactModeEnabled
+        ? shouldEnableShortcut = screenWidth >= 940 && screenHeight > 990 ||
+            screenWidth >= 1510 && screenHeight > 605
+        : shouldEnableShortcut = screenWidth >= startingWidth - 165 &&
+            screenHeight >= startingHeight - 60;
     // Update the ValueNotifier
     _shortcutEnabled.value = shouldEnableShortcut;
   }
@@ -158,7 +214,15 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void didChangeMetrics() {
     // Screen dimensions changed, update the shortcut state
-    _updateShortcutEnabled();
+    Future.delayed(const Duration(milliseconds: 50), () {
+      _updateShortcutEnabled();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _keyboardListenerFocus.requestFocus();
   }
 
   /// Disposes of resources used by the `_HomeScreenState` class.
@@ -220,6 +284,8 @@ class _HomeScreenState extends State<HomeScreen>
         FlutterI18n.translate(context, "errors.parser_connection_error");
     String buggedRunWarningMessage =
         FlutterI18n.translate(context, "errors.bugged_run_warning");
+    String abortedRunWarningMessage =
+        FlutterI18n.translate(context, "errors.aborted_run_warning");
     String editTitle = FlutterI18n.translate(context, "alerts.name_title");
     String okButton = FlutterI18n.translate(context, "buttons.ok");
     String cancelButton = FlutterI18n.translate(context, "buttons.cancel");
@@ -237,12 +303,12 @@ class _HomeScreenState extends State<HomeScreen>
 
     /// Function to handle keyboard arrow key presses
     bool handleArrowKeys(RawKeyEvent event) {
-      if (event is RawKeyDownEvent) {
+      if (event is RawKeyDownEvent && !isDrawerOpen) {
         if (event.logicalKey == upActionKey) {
           onForwardButtonPressed();
           // Indicate the event is consumed
           return true;
-        } else if (event.logicalKey == downActionKey) {
+        } else if (event.logicalKey == downActionKey && !isDrawerOpen) {
           onBackButtonPressed();
           // Indicate the event is consumed
           return true;
@@ -253,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     // Build the overall widget tree
     return RawKeyboardListener(
-      focusNode: FocusNode(),
+      focusNode: _keyboardListenerFocus,
       onKey: handleArrowKeys,
       child: ValueListenableBuilder<bool>(
         valueListenable: _shortcutEnabled,
@@ -262,10 +328,10 @@ class _HomeScreenState extends State<HomeScreen>
             onPointerSignal: (PointerSignalEvent event) {
               if (event is PointerScrollEvent && shortcutEnabled) {
                 final delta = event.scrollDelta.dy;
-                if (delta < 0) {
+                if (delta < 0 && !isDrawerOpen) {
                   // Scrolling up, go forward
                   onForwardButtonPressed();
-                } else if (delta > 0) {
+                } else if (delta > 0 && !isDrawerOpen) {
                   // Scrolling down, go backward
                   onBackButtonPressed();
                 }
@@ -287,14 +353,6 @@ class _HomeScreenState extends State<HomeScreen>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_back),
-                                  onPressed: onBackButtonPressed,
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_forward),
-                                  onPressed: onForwardButtonPressed,
-                                ),
                                 ValueListenableBuilder<bool>(
                                   valueListenable: _connectionStatus,
                                   builder: (context, isConnected, _) {
@@ -316,6 +374,25 @@ class _HomeScreenState extends State<HomeScreen>
                                     } else {
                                       return Container();
                                     }
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  onPressed: onBackButtonPressed,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_forward),
+                                  onPressed: onForwardButtonPressed,
+                                ),
+                                IconButton(
+                                  icon: Icon(compactModeEnabled
+                                      ? Icons.table_rows_rounded
+                                      : Icons.view_agenda),
+                                  onPressed: () {
+                                    setState(() {
+                                      compactModeEnabled = !compactModeEnabled;
+                                      _updateShortcutEnabled();
+                                    });
                                   },
                                 ),
                                 IconButton(
@@ -345,35 +422,39 @@ class _HomeScreenState extends State<HomeScreen>
                       const SizedBox(height: 25),
                       Row(
                         children: [
-                          mostRecentRun == true
-                              ? titleText(
-                                  soloRun == true
-                                      ? FlutterI18n.translate(
-                                          context, "home.last_run")
-                                      : FlutterI18n.translate(
-                                              context, "home.last_run_with") +
-                                          (playersListStart.isNotEmpty
-                                              ? playersListStart +
-                                                  FlutterI18n.translate(
-                                                      context, "home.and")
-                                              : "") +
-                                          playersListEnd,
-                                  20,
-                                  FontWeight.w500)
-                              : titleText(
-                                  soloRun == true
-                                      ? FlutterI18n.translate(
-                                          context, "home.run")
-                                      : FlutterI18n.translate(
-                                              context, "home.last_run_with") +
-                                          (playersListStart.isNotEmpty
-                                              ? playersListStart +
-                                                  FlutterI18n.translate(
-                                                      context, "home.and")
-                                              : "") +
-                                          playersListEnd,
-                                  20,
-                                  FontWeight.w500),
+                          Flexible(
+                            child: mostRecentRun == true
+                                ? titleText(
+                                    soloRun == true
+                                        ? FlutterI18n.translate(
+                                            context, "home.last_run")
+                                        : FlutterI18n.translate(
+                                                context, "home.last_run_with") +
+                                            (playersListStart.isNotEmpty
+                                                ? playersListStart +
+                                                    FlutterI18n.translate(
+                                                        context, "home.and")
+                                                : "") +
+                                            playersListEnd,
+                                    20,
+                                    FontWeight.w500,
+                                    overflow: TextOverflow.ellipsis)
+                                : titleText(
+                                    soloRun == true
+                                        ? FlutterI18n.translate(
+                                            context, "home.run")
+                                        : FlutterI18n.translate(
+                                                context, "home.last_run_with") +
+                                            (playersListStart.isNotEmpty
+                                                ? playersListStart +
+                                                    FlutterI18n.translate(
+                                                        context, "home.and")
+                                                : "") +
+                                            playersListEnd,
+                                    20,
+                                    FontWeight.w500,
+                                    overflow: TextOverflow.ellipsis),
+                          ),
                           titleText(
                               " ${FlutterI18n.translate(context, "home.named")} ",
                               20,
@@ -387,7 +468,8 @@ class _HomeScreenState extends State<HomeScreen>
                           const SizedBox(width: 8),
                           IconButton(
                             icon: const Icon(Icons.edit, size: 18),
-                            onPressed: () {
+                            onPressed: () async {
+                              var fileNames = await getExistingFileNames();
                               displayTextInputDialog(
                                   context,
                                   _textFieldController,
@@ -398,11 +480,12 @@ class _HomeScreenState extends State<HomeScreen>
                                   editTitle,
                                   cancelButton,
                                   okButton,
+                                  fileNames,
                                   updateCallback);
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.share, size: 18),
+                            icon: const Icon(Icons.copy, size: 18),
                             onPressed: () {
                               var scaffoldMessenger =
                                   ScaffoldMessenger.of(context);
@@ -416,15 +499,23 @@ class _HomeScreenState extends State<HomeScreen>
                               });
                             },
                           ),
-                          isBuggedRun == true
+                          (isBuggedRun || isAbortedRun) == true
                               ? IconButton(
                                   icon: Icon(
                                     Icons.warning,
-                                    color: Theme.of(context).colorScheme.error,
+                                    color: isBuggedRun
+                                        ? Theme.of(context).colorScheme.error
+                                        : Colors.yellow,
                                   ),
                                   onPressed: () {
-                                    showBuggedRunWarningDialog(context,
-                                        errorTitle, buggedRunWarningMessage);
+                                    if (isBuggedRun) {
+                                      showBuggedRunWarningDialog(context,
+                                          errorTitle, buggedRunWarningMessage);
+                                    }
+                                    if (isAbortedRun) {
+                                      showBuggedRunWarningDialog(context,
+                                          errorTitle, abortedRunWarningMessage);
+                                    }
                                   },
                                 )
                               : Container(),
@@ -435,16 +526,31 @@ class _HomeScreenState extends State<HomeScreen>
                           controller: screenshotController,
                           child: Column(
                             children: [
-                              Wrap(spacing: 12.0, runSpacing: 12.0, children: [
-                                ...List.generate(
-                                    6,
-                                    (index) => buildOverviewCard(
-                                        index, context, screenWidth)),
-                                ...List.generate(
-                                    4,
-                                    (index) => buildPhaseCard(
-                                        index, context, screenWidth)),
-                              ]),
+                              Wrap(
+                                spacing: 12.0,
+                                runSpacing: 12.0,
+                                children: compactModeEnabled
+                                    ? [
+                                        ...List.generate(
+                                            6,
+                                            (index) => buildCompactOverviewCard(
+                                                index, context, screenWidth)),
+                                        ...List.generate(
+                                            4,
+                                            (index) => buildCompactPhaseCard(
+                                                index, context, screenWidth)),
+                                      ]
+                                    : [
+                                        ...List.generate(
+                                            6,
+                                            (index) => buildOverviewCard(
+                                                index, context, screenWidth)),
+                                        ...List.generate(
+                                            4,
+                                            (index) => buildPhaseCard(
+                                                index, context, screenWidth)),
+                                      ],
+                              ),
                             ],
                           )),
                       const SizedBox(height: 12), // Space between elements
