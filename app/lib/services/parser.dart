@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -589,5 +590,65 @@ Future<void> loadDataFile(String fileName) async {
     if (kDebugMode) {
       print('Error reading file: $e');
     }
+  }
+}
+
+/// Finds the lowest times from JSON files in a specified storage directory.
+///
+/// This function iterates through all JSON files in the specified storage directory,
+/// reads their contents, and updates the best times for various metrics if the run is not
+/// bugged or aborted. The metrics include total duration, flight duration, total shield,
+/// total leg, total body, and total pylon.
+///
+/// Throws an exception if the specified storage directory does not exist.
+///
+/// @throws Exception if the storage directory does not exist.
+Future<void> findLowestTimes() async {
+  var mainPath = Platform.resolvedExecutable;
+  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
+  var storagePath = "$mainPath\\storage";
+
+  final directory = Directory(storagePath);
+
+  if (await directory.exists()) {
+    final files = directory.listSync();
+
+    for (var file in files) {
+      if (file is File && file.path.endsWith('.json')) {
+        final contents = await file.readAsString();
+        final data = jsonDecode(contents);
+
+        if (data["bugged_run"] == false && data["aborted_run"] == false) {
+          // Update the best times
+          for (int i = 0; i < bestValues.length; i++) {
+            switch (i) {
+              case 0: // bestTotal
+                bestValues[i] = min(bestValues[i], data['total_duration']);
+                break;
+              case 1: // bestFlight
+                bestValues[i] = min(
+                    bestValues[i], (data['flight_duration'] as num).toDouble());
+                break;
+              case 2: // bestShield
+                bestValues[i] = min(bestValues[i], data['total_shield']);
+                break;
+              case 3: // bestLeg
+                bestValues[i] = min(bestValues[i], data['total_leg']);
+                break;
+              case 4: // bestBody
+                bestValues[i] = min(bestValues[i], data['total_body']);
+                break;
+              case 5: // bestPylon
+                bestValues[i] = min(bestValues[i], data['total_pylon']);
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      }
+    }
+  } else {
+    throw Exception('Directory does not exist');
   }
 }

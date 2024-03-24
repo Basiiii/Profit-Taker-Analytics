@@ -465,22 +465,29 @@ class Analyzer:
         return Globals.STARTINGTIME + timedelta(seconds=Globals.LASTRUNTIME)
 
     def get_next_run_string():
-        if Globals.RUNCOUNT is None:
-            # Determine the base directory based on whether we're running a .py or .exe file
-            if getattr(sys, 'frozen', False):
-                base_dir = os.path.dirname(sys.executable)
-            else:
-                base_dir = os.path.dirname(os.path.realpath(__file__))
+        # Determine the base directory based on whether we're running a .py or .exe file
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.realpath(__file__))
 
-            # Go back one directory and into "storage" folder
-            storage_folder = os.path.join(base_dir, '..', 'storage')
-            directory = storage_folder
+        # Define the path to the "run.txt" file
+        run_file_path = os.path.join(base_dir, 'run.txt')
 
-            count = len([f for f in os.listdir(directory) if f.endswith('.json')])
-            Globals.RUNCOUNT = count + 1
-            return f'Run #{Globals.RUNCOUNT}'
+        # Check if the "run.txt" file exists
+        if not os.path.exists(run_file_path):
+            # If it doesn't exist, create it and initialize with  1
+            with open(run_file_path, 'w') as run_file:
+                run_file.write('1')
+            Globals.RUNCOUNT =  1
+        else:
+            # If it exists, read the current value, increment it, and write it back
+            with open(run_file_path, 'r') as run_file:
+                current_value = int(run_file.read().strip())
+            with open(run_file_path, 'w') as run_file:
+                run_file.write(str(current_value +  1))
+            Globals.RUNCOUNT = current_value +  1
 
-        Globals.RUNCOUNT += 1
         return f"Run #{Globals.RUNCOUNT}"
     
     def setLastRun(self, data):
@@ -597,8 +604,14 @@ class Analyzer:
             with open(fileName, "w", encoding="UTF-8") as file:
                 dump(run, file)
         else:
-            # Lower the count by 1 because the run was ignored
-            Globals.RUNCOUNT -= 1
+            # Lower the count by  1 because the run was ignored
+            Globals.RUNCOUNT -=  1
+            # Update the "run.txt" file with the new count
+            base_dir = self.get_base_dir()
+            run_file_path = os.path.join(base_dir, 'run.txt')
+            with open(run_file_path, 'w') as run_file:
+                run_file.write(str(Globals.RUNCOUNT))
+
             
     def set_format_fields(self, kvpair: dict, format: dict):
         """Set specific fields in the run format to specific values.
