@@ -1,0 +1,114 @@
+{
+    "home": {
+        "hello": "Merhaba!",
+        "hello_name": "Merhaba {name}!",
+        "last_run": "Son deneme",
+        "last_run_with": "Your last run with ", //special translation
+        "run": "Your run", //special translation
+        "run_with": "Your run with ", //special translation
+        "and": " ve ",
+        "named": "called" //special translation
+    },
+    "overview_cards": {
+        "total_duration": "Toplam\nSüre",
+        "flight_time": "Uçuş\nSüresi",
+        "shield_break": "Kalkan\nKırma\nSüresi",
+        "leg_break": "Bacak\nKırma\nSüresi",
+        "body_kill": "Gövde\nKesme\nSüresi",
+        "pylon_destruction": "Sütun\nYıkımı"
+    },
+    "average_cards": {
+        "total_avg": "Toplam Süre\nOrtalaması",
+        "flight_avg": "Uçuş Süresi\nOrtalaması",
+        "shield_avg": "Kalkan Kırma\nOrtalaması",
+        "leg_avg": "Bacak Kırma\nOrtalaması",
+        "body_avg": "Gövde Kesme\nOrtalaması",
+        "pylon_avg": "Sütun\nOrtalaması"
+    },
+    "phase_cards": {
+        "phase_1": "İlk Safha",
+        "phase_2": "İkinci Safha",
+        "phase_3": "Üçüncü Safha",
+        "phase_4": "Dördüncü Safha",
+        "shields": "Kalkan",
+        "legs": "Bacaklar",
+        "body": "Gövde",
+        "pylons": "Sütunlar"
+    },
+    "errors": {
+        "error": "Hata!",
+        "parser_connection_error": "Uygulama ayrıştırıcı ile bağlantı kuramıyor.\nLütfen uygulamayı yeniden başlatın.\n\nSorunlarınız devam ederse lütfen Basi ile iletişime geçin.\nİletişim bilgileri uygulama ayarlarında mevcuttur.",
+        "bugged_run_warning": "Bu denemenin hatalı olabileceği tespit edildi. Bazı denemeler Warframe tarafından düzgünce kaydedilmiyor,\nve bütün bilgileri öğrenmemizi imkansız kılıyor.\n\nMaalesef ki, bu sorun bizim kontrolümüzde değil, yine de gösterebileceğimiz bilgileri göstericeğiz.",
+        "aborted_run_warning": "Bu deneme erkenden iptal edildi.",
+        "existing_name": "Bu isimle bir denemeniz zaten var. Lütfen farklı bir isim seçin."
+    },
+    "settings": {
+        "general": "Genel",
+        "links": "Linkler",
+        "report_bugs": "Hata Raporu",
+        "about": "Hakkında",
+        "theme": "Tema",
+        "language": "Dil",
+        "change_language": "Dili değiştir",
+        "pt_discord": "Profit Taker Discord'u",
+        "github_repo": "Github Deposu",
+        "pt_guide": "Profit Taker Rehberi",
+        "report_bug": "Github'da bir hata rapor et",
+        "contact_basi": "Basi ile iletişime geç",
+        "about_app": "Uygulama Hakkında",
+        "version": "Versiyon",
+        "about_app_description": "Basi tarafından sevgi ile yapıldı.\nEğer bunu okuyorsan, bana Discord'dan bir mango fotoğrafı at.",
+        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
+        "key_config": "Kısayol ayarları",
+        "config_up_key": "İleri tuşu",
+        "config_down_key": "Geri tuşu" 
+    },
+    "storage" : {
+        "title": "Depolama alanın",
+        "run_name": "Deneme İsmi",
+        "run_time": "Deneme Zamanı",
+        "date": "Tarih",
+        "edit": "Düzenle",
+        "delete": "Sil",
+        "actions": "Eylemler"
+    },
+    "analytics" : {
+        "title": "Analitiklerin"
+    },
+    "languages": {
+        "en": "English",
+        "pt": "Português",
+        "zh": "中文",
+        "ru": "Русский",
+        "fr": "Français"
+        "tr": "Türkçe"
+    },
+    "buttons": {
+        "ok": "Tamam",
+        "cancel": "İptal",
+        "delete": "Sil",
+        "download": "İndir"
+    },
+    "alerts": {
+        "name_title": "Dosya Adını Değiştir",
+        "delete_title": "Silmeyi Onayla",
+        "confirm_delete": "Seçilen denemeleri silmek istediğinizden eminmisiniz?"
+    },
+    "donate": {
+        "button": "Bağış Yap",
+        "title": "Bağışlar",
+        "main": "Desteğiniz bu projeyi ayakta tutuyor.\nBu uygulama için yüzlerce saat ve büyük emek harcandı.\nBağışlarınız masrafların karşılanmasına yardımcı olur ve daha fazla gelişmeyi motive eder.\n\nTeşekkürler! <3"
+    },
+    "update": {
+        "title": "Güncelleme Mevcut",
+        "text": "Uygulamanın daha yeni bir sürümü mevcuttur. Şimdi indirmek ister misiniz?"
+    },
+    "graph": {
+        "total": "Toplam",
+        "flight": "Uçuş",
+        "shields": "Kalkan",
+        "legs": "Bacaklar",
+        "body": "Gövde",
+        "pylons": "Sütunlar"
+    }
+}
