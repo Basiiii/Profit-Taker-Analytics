@@ -3,11 +3,11 @@
         "hello": "Merhaba!",
         "hello_name": "Merhaba {name}!",
         "last_run": "Son deneme",
-        "last_run_with": "Your last run with ", //special translation
-        "run": "Your run", //special translation
-        "run_with": "Your run with ", //special translation
+        "last_run_with": "Your last run with ",
+        "run": "Your run",
+        "run_with": "Your run with ",
         "and": " ve ",
-        "named": "called" //special translation
+        "named": "called"
     },
     "overview_cards": {
         "total_duration": "Toplam\nSüre",
