@@ -12,9 +12,9 @@
     "overview_cards": {
         "total_duration": "Toplam\nSüre",
         "flight_time": "Uçuş\nSüresi",
-        "shield_break": "Kalkan\nKırma\nSüresi",
-        "leg_break": "Bacak\nKırma\nSüresi",
-        "body_kill": "Gövde\nKesme\nSüresi",
+        "shield_break": "Kalkan Kırma\nSüresi",
+        "leg_break": "Bacak Kırma\nSüresi",
+        "body_kill": "Gövde Kesme\nSüresi", 
         "pylon_destruction": "Sütun\nYıkımı"
     },
     "average_cards": {
@@ -80,7 +80,7 @@
         "pt": "Português",
         "zh": "中文",
         "ru": "Русский",
-        "fr": "Français"
+        "fr": "Français",
         "tr": "Türkçe"
     },
     "buttons": {

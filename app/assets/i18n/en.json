@@ -80,7 +80,8 @@
         "pt": "Português",
         "zh": "中文",
         "ru": "Русский",
-        "fr": "Français"
+        "fr": "Français",
+        "tr": "Türkçe"
     },
     "buttons": {
         "ok": "Okay",
