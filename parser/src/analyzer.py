@@ -56,8 +56,6 @@ class MiscConstants:
     BACK_TO_TOWN = 'EidolonMP.lua: EIDOLONMP: TryTownTransition'
     ABORT_MISSION = 'GameRulesImpl - changing state from SS_STARTED to SS_ENDING'
 
-
-
 class RelRun:
 
     def __init__(self,
@@ -130,7 +128,7 @@ class RelRun:
         Returns:
             json: Full run object.
         """
-        print(self.legs[2])
+        #debug print(self.legs[2])
         fullRunFormat = copy.deepcopy(Globals.RUNFORMAT)
         fullRunFormat["total_duration"] = self.length
         fullRunFormat["total_shield"] = self.shield_sum
@@ -185,6 +183,7 @@ class RelRun:
         fullRunFormat["phase_4"]["total_shield"] = sum(i for _, i in self.shield_phases[4])
         fullRunFormat["phase_4"]["shield_change_times"] = [i for _,i in self.shield_phases[4]]
         fullRunFormat["phase_4"]["shield_change_types"] = [i.value for i,_ in self.shield_phases[4]]
+        #debug print(fullRunFormat)
 
         return fullRunFormat
         
@@ -266,15 +265,17 @@ class AbsRun:
             # Shield phases (phase 1, 3, 4) have at least 3 shields per phase.
             # The default is 5 shields, but because shots damage is capped to the shield element phase's max HP
             # instead of the remaining phase's max HP, a minimum of 3 elements per shield phase can be achieved
-            if phase in [1, 3, 4] and len(self.shield_phases[phase]) < 3:
-                failure_reasons.append(f'{len(self.shield_phases[phase])} shield elements were recorded in phase '
-                                       f'{phase} but at least 3 shield elements were expected.')
+            #if phase in [1, 3, 4] and len(self.shield_phases[phase]) < 3:
+            #    failure_reasons.append(f'{len(self.shield_phases[phase])} shield elements were recorded in phase '
+            #                           f'{phase} but at least 3 shield elements were expected.')
+            # this is not a bug (not an unexpected or parser-breaking one anyways) and shouldnt be treated as such
 
             # Every phase has an armor phase, and every armor phase needs at least 4 legs to be taken down
             # When less than 4 legs are recorded to be taken out, obviously there's a bug
-            if len(self.legs[phase]) < 4:
-                failure_reasons.append(f'{len(self.legs[phase])} legs were recorded in phase {phase} but at least 4 '
-                                       f'legs were expected.')
+            #if len(self.legs[phase]) < 4:
+            #    failure_reasons.append(f'{len(self.legs[phase])} legs were recorded in phase {phase} but at least 4 '
+            #                           f'legs were expected.')
+            # i have never even heard of this happening no less experienced it
 
             # It is intended for 4 legs to be taken out. Because of the leg regen bug, up to 8 legs can be taken out
             # If somehow more than 8 legs are taken out per phase, that signifies an even worse bug
@@ -537,9 +538,9 @@ class Analyzer:
             cur_line = []  # Store multiple parts of the same line to deal with the logger committing incomplete lines.
             while True:
                 if (new_size := os.stat(filename).st_size) < known_size:
-                    #print(f'{fg.white}Restart detected.')
+                    #debug print(f'{fg.white}Restart detected.')
                     file.seek(0)  # Go back to the start of the file
-                    #print('Successfully reconnected to ee.log. Now listening for new Profit-Taker runs.')
+                    #debug print('Successfully reconnected to ee.log. Now listening for new Profit-Taker runs.')
                 known_size = new_size
 
                 # Yield lines until the last line of file and follow the end on a delay
@@ -607,7 +608,10 @@ class Analyzer:
             # Lower the count by  1 because the run was ignored
             Globals.RUNCOUNT -=  1
             # Update the "run.txt" file with the new count
-            base_dir = self.get_base_dir()
+            if getattr(sys, 'frozen', False):
+                base_dir = os.path.dirname(sys.executable)
+            else:
+                base_dir = os.path.dirname(os.path.realpath(__file__))
             run_file_path = os.path.join(base_dir, 'run.txt')
             with open(run_file_path, 'w') as run_file:
                 run_file.write(str(Globals.RUNCOUNT))
@@ -678,11 +682,11 @@ class Analyzer:
 
                 # Make sure the run is available in the endpoint.
                 self.lastRun = broken_run
-                #print(abort)
+                #debug print(abort)
                 self.runs.append(abort)
                 require_heist_start = abort.require_heist_start
             except BuggedRun as buggedRun:
-                #print(buggedRun)  # Print reasons why the run failed
+                #debug print(buggedRun)  # Print reasons why the run failed
                 self.runs.append(buggedRun)
                 require_heist_start = True
 
