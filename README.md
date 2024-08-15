@@ -89,5 +89,5 @@ We extend our sincere gratitude to the original repository, [revoltage34/ptanaly
 ### Notable Contributors
 
 - Mebius - Contributed Chinese translations
-- Kalaay - Contributed Russian translations
+- [Kalaay](https://github.com/KalaayPT) - Contributed Russian translations
 - [Reava](https://github.com/Reava) - Contributed French translations
