@@ -241,6 +241,9 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
+    // Access the current locale
+    final currentLocale = FlutterI18n.currentLocale(context);
+
     /// Callback function for updating data.
     ///
     /// This function displays a loading overlay, updates the state, and then hides the loading overlay.
@@ -423,37 +426,40 @@ class _HomeScreenState extends State<HomeScreen>
                       Row(
                         children: [
                           Flexible(
-                            child: mostRecentRun == true
-                                ? titleText(
-                                    soloRun == true
-                                        ? FlutterI18n.translate(
-                                            context, "home.last_run")
-                                        : FlutterI18n.translate(
-                                                context, "home.last_run_with") +
-                                            (playersListStart.isNotEmpty
-                                                ? playersListStart +
-                                                    FlutterI18n.translate(
-                                                        context, "home.and")
-                                                : "") +
-                                            playersListEnd,
-                                    20,
-                                    FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis)
-                                : titleText(
-                                    soloRun == true
-                                        ? FlutterI18n.translate(
-                                            context, "home.run")
-                                        : FlutterI18n.translate(
-                                                context, "home.last_run_with") +
-                                            (playersListStart.isNotEmpty
-                                                ? playersListStart +
-                                                    FlutterI18n.translate(
-                                                        context, "home.and")
-                                                : "") +
-                                            playersListEnd,
-                                    20,
-                                    FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis),
+                            child: currentLocale!.languageCode == 'tr'
+                                ? Text(
+                                    'AA') // TODO: update this part to conditionally load TR language
+                                : mostRecentRun == true
+                                    ? titleText(
+                                        soloRun == true
+                                            ? FlutterI18n.translate(
+                                                context, "home.last_run")
+                                            : FlutterI18n.translate(context,
+                                                    "home.last_run_with") +
+                                                (playersListStart.isNotEmpty
+                                                    ? playersListStart +
+                                                        FlutterI18n.translate(
+                                                            context, "home.and")
+                                                    : "") +
+                                                playersListEnd,
+                                        20,
+                                        FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis)
+                                    : titleText(
+                                        soloRun == true
+                                            ? FlutterI18n.translate(
+                                                context, "home.run")
+                                            : FlutterI18n.translate(context,
+                                                    "home.last_run_with") +
+                                                (playersListStart.isNotEmpty
+                                                    ? playersListStart +
+                                                        FlutterI18n.translate(
+                                                            context, "home.and")
+                                                    : "") +
+                                                playersListEnd,
+                                        20,
+                                        FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis),
                           ),
                           titleText(
                               " ${FlutterI18n.translate(context, "home.named")} ",

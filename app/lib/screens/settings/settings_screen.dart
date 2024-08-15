@@ -72,6 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Locale('zh', 'CN'), // Chinese
     Locale('ru'), // Russian
     Locale('fr'), // French
+    Locale('tr'), // Turkish
   ];
 
   /// The currently selected locale.

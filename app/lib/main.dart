@@ -113,6 +113,7 @@ void main() async {
             Locale('zh', 'CN'), // Chinese
             Locale('ru'), // Russian
             Locale('fr'), // French
+            Locale('tr'), // Turkish
           ],
           home: FlutterSplashScreen.fadeIn(
               backgroundColor: const Color(0xFF121212),
@@ -351,6 +352,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
                               Locale('zh', 'CN'), // Chinese
                               Locale('ru'), // Russian
                               Locale('fr'), // French
+                              Locale('tr'), // Turkish
                             ],
                             home: Scaffold(
                               body: Row(

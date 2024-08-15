@@ -25,7 +25,7 @@ dependencies:
   # SVG rendering
   flutter_svg: ^2.0.9
   # Screenshot functionality
-  screenshot: ^2.1.0
+  screenshot: ^3.0.0
   # Path provider for file access
   path_provider: ^2.1.2
   # Super clipboard for copy/paste operations
@@ -47,7 +47,7 @@ dependencies:
   # Table for run storage screen
   data_table_2: ^2.5.10
   # Used for manipulating datetime objects
-  intl: ^0.18.1
+  intl: 0.19.0
   crypto: ^3.0.3
   encrypt: ^5.0.1
   # Analytics
@@ -72,6 +72,7 @@ flutter:
     - assets/i18n/zh.json
     - assets/i18n/ru.json
     - assets/i18n/fr.json
+    - assets/i18n/tr.json
   fonts:
     - family: Poppins
       fonts:
