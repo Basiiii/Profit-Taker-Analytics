@@ -3,9 +3,9 @@
         "hello": "Merhaba!",
         "hello_name": "Merhaba {name}!",
         "last_run": "Son denemenizin adı ",
-        "last_run_with": "Your last run with ",
+        "last_run_with": "Bu oyuncularla son denemeniz ",
         "run": "Denemenizin adı ",
-        "run_with": "Your run with ",
+        "run_with": "Bu oyuncularla denemeniz ",
         "and": " ve ",
         "named": "called"
     },
