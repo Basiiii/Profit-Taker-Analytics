@@ -655,30 +655,56 @@ Future<void> findLowestTimes() async {
         final data = jsonDecode(contents);
 
         if (data["bugged_run"] == false && data["aborted_run"] == false) {
+          // Temporarily store current best values to compare after update
+          List<double> oldBestValues = List.from(bestValues);
+
           // Update the best times
           for (int i = 0; i < bestValues.length; i++) {
+            double newValue;
             switch (i) {
               case 0: // bestTotal
-                bestValues[i] = min(bestValues[i], data['total_duration']);
+                newValue = double.parse(
+                    min<double>(bestValues[i], data['total_duration'] as double)
+                        .toStringAsFixed(3));
                 break;
               case 1: // bestFlight
-                bestValues[i] = min(
-                    bestValues[i], (data['flight_duration'] as num).toDouble());
+                newValue = double.parse(min<double>(bestValues[i],
+                        (data['flight_duration'] as num).toDouble())
+                    .toStringAsFixed(3));
                 break;
               case 2: // bestShield
-                bestValues[i] = min(bestValues[i], data['total_shield']);
+                newValue = double.parse(
+                    min<double>(bestValues[i], data['total_shield'] as double)
+                        .toStringAsFixed(3));
                 break;
               case 3: // bestLeg
-                bestValues[i] = min(bestValues[i], data['total_leg']);
+                newValue = double.parse(
+                    min<double>(bestValues[i], data['total_leg'] as double)
+                        .toStringAsFixed(3));
                 break;
               case 4: // bestBody
-                bestValues[i] = min(bestValues[i], data['total_body']);
+                newValue = double.parse(
+                    min<double>(bestValues[i], data['total_body'] as double)
+                        .toStringAsFixed(3));
                 break;
               case 5: // bestPylon
-                bestValues[i] = min(bestValues[i], data['total_pylon']);
+                newValue = double.parse(
+                    min<double>(bestValues[i], data['total_pylon'] as double)
+                        .toStringAsFixed(3));
                 break;
               default:
+                newValue = bestValues[i];
                 break;
+            }
+            // Update best values only if newValue is better
+            bestValues[i] = newValue;
+          }
+
+          // Update secondBestValues only if bestValues have been improved
+          for (int i = 0; i < bestValues.length; i++) {
+            if (bestValues[i] < oldBestValues[i]) {
+              // Update secondBestValues with the old best values
+              secondBestValues[i] = oldBestValues[i];
             }
           }
         }

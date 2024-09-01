@@ -245,6 +245,7 @@ class _StorageScreenState extends State<StorageScreen> {
             return Text('Error: ${snapshot.error}');
           }
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Padding(
                 padding: const EdgeInsets.only(left: 60, top: 30, right: 20),
                 child: Column(

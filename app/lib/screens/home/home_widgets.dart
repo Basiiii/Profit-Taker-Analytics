@@ -46,7 +46,7 @@ Widget buildRow(
               fontFamily: 'DMMono',
               color: isBugged
                   ? Theme.of(context).colorScheme.error
-                  : Theme.of(context).colorScheme.surfaceVariant),
+                  : Theme.of(context).colorScheme.surfaceContainerHighest),
           textAlign: TextAlign.right,
         ),
       ),
@@ -68,34 +68,28 @@ Widget buildRow(
 /// Returns:
 ///   A widget representing an overview card with dynamic styling.
 Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
-  // Extra 8 pixels for padding
-  // NOTE: I'm not sure why this needs padding and the other doesn't...
   double responsiveCardWidth = screenWidth / 6 - 8;
 
-  /// Determines the color for the total time value
   Color color = Theme.of(context).colorScheme.onSurface;
 
-  if (index == 0) {
-    double timeValue = double.parse(overviewCards[index].time);
+  double timeValue = double.parse(overviewCards[index].time);
+  double bestTime = bestValues[index];
+  double previousBestTime = secondBestValues[index];
 
-    if (timeValue < 52.000) {
-      color = const Color(0xFFb33dc6);
-    } else if (timeValue < 60.000) {
-      color = const Color(0xFF27aeef);
-    } else if (timeValue < 80.000) {
-      color = const Color(0xFFbdcf32);
-    } else if (timeValue < 120.000) {
-      color = const Color(0xFF35967D);
-    } else if (timeValue > 120.000) {
-      color = const Color(0xFFef9b20);
-    } else {
-      color = Theme.of(context).colorScheme.onSurface;
-    }
-  } else if (index == 2 || index == 4 || index == 5) {
-    isBuggedRun
-        ? color = Theme.of(context).colorScheme.error
-        : color = Theme.of(context).colorScheme.onSurface;
+  // Calculate time difference from best time
+  double timeDifference = timeValue - bestTime;
+
+  // Calculate time difference between best and second best
+  double bestToSecondBestDifference = bestTime - previousBestTime;
+
+  // If the timeDifference is exactly 0.000, it's a new PB, so show the difference with the previous best
+  if (timeDifference == 0.0) {
+    timeDifference = bestToSecondBestDifference;
   }
+
+  String timeDifferenceText = timeDifference.isNegative
+      ? timeDifference.toStringAsFixed(3)
+      : '+${timeDifference.toStringAsFixed(3)}';
 
   return Container(
     width: screenWidth < minimumResponsiveWidth
@@ -164,40 +158,46 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                   children: [
                     Expanded(
                       child: Text(
-                        (double.parse(overviewCards[index].time) -
-                                    bestValues[index])
-                                .isNegative
-                            ? (double.parse(overviewCards[index].time) -
-                                    bestValues[index])
-                                .toStringAsFixed(3)
-                            : '+${(double.parse(overviewCards[index].time) - bestValues[index]).toStringAsFixed(3)}',
+                        timeDifferenceText,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
-                          color: (double.parse(overviewCards[index].time) -
-                                      bestValues[index])
-                                  .isNegative
+                          color: timeDifference.isNegative
                               ? Colors.green
                               : Colors.red,
                           height: 0,
                         ),
                       ),
                     ),
-                    const Text(
-                      "BEST ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white, // Adjust the color as needed
-                      ),
+                    Text(
+                      timeDifference == bestToSecondBestDifference
+                          ? "PB " // Show PB if it's a new PB
+                          : "BEST ",
+                      style: timeDifference == bestToSecondBestDifference
+                          ? const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.green, // Adjust the color as needed
+                            )
+                          : const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red, // Adjust the color as needed
+                            ),
                     ),
                     Text(
-                      "${bestValues[index].toStringAsFixed(3)}s    ",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white, // Adjust the color as needed
-                      ),
+                      "${bestTime.toStringAsFixed(3)}s    ",
+                      style: timeDifference == bestToSecondBestDifference
+                          ? const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.green, // Adjust the color as needed
+                            )
+                          : const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red, // Adjust the color as needed
+                            ),
                     ),
                   ],
                 ),
@@ -397,13 +397,39 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      generateRichText(context, [
-                        generateTextSpan(
-                            phaseCards[index].time, 20, FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        generateTextSpan('s ', 20, FontWeight.w400,
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ]),
+                      index == 0
+                          ? generateRichText(context, [
+                              generateTextSpan(
+                                  phaseCards[index].time, 20, FontWeight.w600,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                              generateTextSpan('s ', 20, FontWeight.w400,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ])
+                          : generateRichText(context, [
+                              generateTextSpan(
+                                  (double.parse(phaseCards[index].time) -
+                                          double.parse(
+                                              phaseCards[index - 1].time))
+                                      .toStringAsFixed(3),
+                                  16,
+                                  FontWeight.w400,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest),
+                              generateTextSpan('s / ', 16, FontWeight.w400,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest),
+                              generateTextSpan(
+                                  phaseCards[index].time, 20, FontWeight.w600,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                              generateTextSpan('s ', 20, FontWeight.w400,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ]),
                     ],
                   ),
                 ),
@@ -464,14 +490,13 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                                           style: TextStyle(
                                               fontFamily: 'DMMono',
                                               fontSize: 12,
-                                              color:
-                                                  isFirstPairAndIndexThreeAndBuggedRun
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Theme.of(context)
-                                                          .colorScheme
-                                                          .surfaceVariant),
+                                              color: isFirstPairAndIndexThreeAndBuggedRun
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainerHighest),
                                         ),
                                       ],
                                     ),
@@ -501,7 +526,7 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                                         fontSize: 12,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .surfaceVariant),
+                                            .surfaceContainerHighest),
                                   ),
                                 ],
                               ),
@@ -681,14 +706,13 @@ Widget buildCompactPhaseCard(
                                           style: TextStyle(
                                               fontFamily: 'DMMono',
                                               fontSize: 12,
-                                              color:
-                                                  isFirstPairAndIndexThreeAndBuggedRun
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Theme.of(context)
-                                                          .colorScheme
-                                                          .surfaceVariant),
+                                              color: isFirstPairAndIndexThreeAndBuggedRun
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainerHighest),
                                         ),
                                       ],
                                     ),
@@ -718,7 +742,7 @@ Widget buildCompactPhaseCard(
                                         fontSize: 12,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .surfaceVariant),
+                                            .surfaceContainerHighest),
                                   ),
                                 ],
                               ),
