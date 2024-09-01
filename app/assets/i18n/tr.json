@@ -2,9 +2,9 @@
     "home": {
         "hello": "Merhaba!",
         "hello_name": "Merhaba {name}!",
-        "last_run": "Son çalıştırmanızın adı ",
+        "last_run": "Son denemenizin adı ",
         "last_run_with": "Your last run with ",
-        "run": "Çalışmanızın adı ",
+        "run": "Denemenizin adı ",
         "run_with": "Your run with ",
         "and": " ve ",
         "named": "called"
