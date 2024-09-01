@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Profit Taker Analytics"
-#define MyAppVersion "0.9.1"
+#define MyAppVersion "0.9.5"
 #define MyAppPublisher "Basi"
 #define MyAppURL "https://basi.is-a.dev/pta"
 #define MyAppExeName "profit_taker_analyzer.exe"
@@ -21,10 +21,10 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={commonpf}\..\Profit-Taker-Analytics
 DisableDirPage=no
 DisableProgramGroupPage=yes
-LicenseFile=C:\Github\portfolio\ptdocssource\docs\docs\eula.md
+LicenseFile=C:\Users\basi\Documents\GitHub\portfolio\ptdocssource\docs\docs\eula.md
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=pta_0.9.1
+OutputBaseFilename=pta_0.9.5
 SolidCompression=yes
 Compression=lzma2/ultra64
 LZMAUseSeparateProcess=yes
@@ -41,17 +41,17 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\update\*"; DestDir: "{app}\update"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\irondash_engine_context_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\screen_retriever_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\url_launcher_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\update\*"; DestDir: "{app}\update"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\irondash_engine_context_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\screen_retriever_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\url_launcher_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
