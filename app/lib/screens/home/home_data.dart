@@ -35,6 +35,16 @@ List<double> bestValues = [
   double.infinity, // bestPylon
 ];
 
+/// Second best times
+List<double> secondBestValues = [
+  double.infinity, // bestTotal
+  double.infinity, // bestFlight
+  double.infinity, // bestShield
+  double.infinity, // bestLeg
+  double.infinity, // bestBody
+  double.infinity, // bestPylon
+];
+
 /// Represents an overview card with a color, an icon, a title and a time.
 ///
 /// An overview card is a simple widget that displays a color, an icon, a title and a time.

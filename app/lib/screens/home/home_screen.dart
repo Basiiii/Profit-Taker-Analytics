@@ -162,35 +162,36 @@ class _HomeScreenState extends State<HomeScreen>
 
     // Schedule a callback for the end of this frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!isMostRecentVersion) {
-        // Show the dialog if the app is not the most recent version
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(FlutterI18n.translate(context, "update.title")),
-              content: Text(FlutterI18n.translate(context, "update.text")),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(FlutterI18n.translate(context, "buttons.cancel")),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-                TextButton(
-                  child:
-                      Text(FlutterI18n.translate(context, "buttons.download")),
-                  onPressed: () async {
-                    await Shell()
-                        .run('runas /user:Administrator "update/update.exe"');
-                    exit(0);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+      // Removed version popup for now
+      // if (!isMostRecentVersion) {
+      //   // Show the dialog if the app is not the most recent version
+      //   showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return AlertDialog(
+      //         title: Text(FlutterI18n.translate(context, "update.title")),
+      //         content: Text(FlutterI18n.translate(context, "update.text")),
+      //         actions: <Widget>[
+      //           TextButton(
+      //             child: Text(FlutterI18n.translate(context, "buttons.cancel")),
+      //             onPressed: () {
+      //               Navigator.of(context).pop(); // Close the dialog
+      //             },
+      //           ),
+      //           TextButton(
+      //             child:
+      //                 Text(FlutterI18n.translate(context, "buttons.download")),
+      //             onPressed: () async {
+      //               await Shell()
+      //                   .run('runas /user:Administrator "update/update.exe"');
+      //               exit(0);
+      //             },
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   );
+      // }
     });
   }
 
@@ -341,6 +342,7 @@ class _HomeScreenState extends State<HomeScreen>
               }
             },
             child: Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.background,
               key: _scaffoldKey,
               body: SingleChildScrollView(
                 child: Padding(
@@ -427,15 +429,20 @@ class _HomeScreenState extends State<HomeScreen>
                         children: [
                           Flexible(
                             child: currentLocale!.languageCode == 'tr'
-                                ? Text(
-                                    'AA') // TODO: update this part to conditionally load TR language
+                                ? mostRecentRun == true
+                                    ? titleText(
+                                        FlutterI18n.translate(context, "home.last_run"), 20, FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis)
+                                    // OTHER LANGUAGES
+                                    : titleText(FlutterI18n.translate(context, "home.run"),
+                                        20, FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis)
                                 : mostRecentRun == true
                                     ? titleText(
                                         soloRun == true
                                             ? FlutterI18n.translate(
                                                 context, "home.last_run")
-                                            : FlutterI18n.translate(context,
-                                                    "home.last_run_with") +
+                                            : FlutterI18n.translate(context, "home.last_run_with") +
                                                 (playersListStart.isNotEmpty
                                                     ? playersListStart +
                                                         FlutterI18n.translate(
@@ -447,24 +454,20 @@ class _HomeScreenState extends State<HomeScreen>
                                         overflow: TextOverflow.ellipsis)
                                     : titleText(
                                         soloRun == true
-                                            ? FlutterI18n.translate(
-                                                context, "home.run")
-                                            : FlutterI18n.translate(context,
-                                                    "home.last_run_with") +
-                                                (playersListStart.isNotEmpty
-                                                    ? playersListStart +
-                                                        FlutterI18n.translate(
-                                                            context, "home.and")
-                                                    : "") +
-                                                playersListEnd,
+                                            ? FlutterI18n.translate(context, "home.run")
+                                            : FlutterI18n.translate(context, "home.last_run_with") + (playersListStart.isNotEmpty ? playersListStart + FlutterI18n.translate(context, "home.and") : "") + playersListEnd,
                                         20,
                                         FontWeight.w500,
                                         overflow: TextOverflow.ellipsis),
                           ),
-                          titleText(
-                              " ${FlutterI18n.translate(context, "home.named")} ",
-                              20,
-                              FontWeight.w500),
+                          currentLocale.languageCode == 'tr'
+                              ? const SizedBox(
+                                  width: 0,
+                                )
+                              : titleText(
+                                  " ${FlutterI18n.translate(context, "home.named")} ",
+                                  20,
+                                  FontWeight.w500),
                           titleText(
                               customRunName.isEmpty
                                   ? "\"$runFileName\""

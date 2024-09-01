@@ -87,7 +87,9 @@
         "ok": "Ok",
         "cancel": "Cancelar",
         "delete": "Apagar",
-        "download": "Descarregar"
+        "download": "Descarregar",
+        "yes": "Sim",
+        "no": "Não"
     },
     "alerts": {
         "name_title": "Mudar Nome Ficheiro",
@@ -109,6 +111,8 @@
         "shields": "Escudos",
         "legs": "Pernas",
         "body": "Corpo",
-        "pylons": "Pilares"
+        "pylons": "Pilares",
+        "view_question": "Gostaria de ver a missão chamada \"",
+        "after_question": "\"?"
     }
 }
