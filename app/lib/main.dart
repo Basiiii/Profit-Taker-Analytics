@@ -57,12 +57,12 @@ void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // // Check integrity with hash
-  // var verify = await isAppIntegrityValid();
-  // await confirmVerification(verify);
+  // Check integrity with hash
+  var verify = await isAppIntegrityValid();
+  await confirmVerification(verify);
 
-  // // Check version
-  // isMostRecentVersion = await versionControl();
+  // Check version
+  isMostRecentVersion = await versionControl();
 
   // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
