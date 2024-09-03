@@ -115,5 +115,8 @@
         "pylons": "Sütunlar",
         "view_question": "",
         "after_question": "adlı görevi görüntülemek ister misiniz?"
+    },
+    "favorite": {
+        "title": "En sevdiğiniz görevler"
     }
 }

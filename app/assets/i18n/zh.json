@@ -115,5 +115,8 @@
         "pylons": "铁塔",
         "view_question": "您想查看名为 \"",
         "after_question": "\" 的任务吗？"
+    },
+    "favorite": {
+        "title": "您最喜爱的任务"
     }
 }

@@ -43,7 +43,6 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
   Future<void> loadData() async {
     await Future.delayed(const Duration(milliseconds: 280));
     allRuns = getStoredRuns();
-
     getNamesRuns(allRuns, allRuns.length, allRunsNames, allRunsFilenames);
 
     displayedRuns = allRunsNames.take(itemsPerLoad).toList();

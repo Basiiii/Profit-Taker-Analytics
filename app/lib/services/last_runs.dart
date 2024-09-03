@@ -146,6 +146,10 @@ void getRunFileNames(
   // Extract the filenames from these files
   for (var file in recentFiles) {
     String fileName = path.basename(file.path);
-    allRunsFilenames.add(fileName);
+
+    // Check if the filename already exists in the list
+    if (!allRunsFilenames.contains(fileName)) {
+      allRunsFilenames.add(fileName);
+    }
   }
 }

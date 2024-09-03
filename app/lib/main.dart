@@ -57,9 +57,9 @@ void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // // Check integrity with hash
-  // var verify = await isAppIntegrityValid();
-  // await confirmVerification(verify);
+  // Check integrity with hash
+  var verify = await isAppIntegrityValid();
+  await confirmVerification(verify);
 
   // Check version
   isMostRecentVersion = await checkVersion();

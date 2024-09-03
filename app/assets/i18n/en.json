@@ -115,5 +115,8 @@
         "pylons": "Pylons",
         "view_question": "Would you like to view the run called \"",
         "after_question": "\"?"
+    },
+    "favorite": {
+        "title": "Your favorite runs"
     }
 }

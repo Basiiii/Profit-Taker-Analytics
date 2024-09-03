@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Profit Taker Analytics"
-#define MyAppVersion "0.9.5"
+#define MyAppVersion "0.9.6"
 #define MyAppPublisher "Basi"
 #define MyAppURL "https://basi.is-a.dev/pta"
 #define MyAppExeName "profit_taker_analyzer.exe"
@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 LicenseFile=C:\Users\basi\Documents\GitHub\portfolio\ptdocssource\docs\docs\eula.md
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=pta_0.9.5
+OutputBaseFilename=pta_0.9.6
 SolidCompression=yes
 Compression=lzma2/ultra64
 LZMAUseSeparateProcess=yes

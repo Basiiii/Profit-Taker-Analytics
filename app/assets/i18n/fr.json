@@ -115,5 +115,8 @@
         "pylons": "Pylônes",
         "view_question": "Voulez-vous voir la mission appelée \"",
         "after_question": "\"?"
+    },
+    "favorite": {
+        "title": "Vos missions préférées"
     }
 }
