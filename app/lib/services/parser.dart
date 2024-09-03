@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:process_run/shell.dart';
 import 'package:profit_taker_analyzer/constants/constants.dart';
 
 import 'package:profit_taker_analyzer/utils/utils.dart';
@@ -104,6 +104,18 @@ Future<void> deletePortFileIfExists() async {
   }
 }
 
+/// Prepares the parser to be executed.
+///
+/// This function deletes the port file and kills old existing parser instances
+/// to ensure the parser can run without problems.
+Future<void> prepareParser() async {
+  // Delete port text file if it exists
+  await deletePortFileIfExists();
+
+  // Kill old existing parser instances
+  await killParserInstances();
+}
+
 /// Starts the parser process asynchronously.
 ///
 /// This method constructs the path to the parser executable based on the
@@ -114,28 +126,27 @@ Future<void> deletePortFileIfExists() async {
 ///
 /// Note: The parser process is assumed to be located in the 'bin' directory
 /// relative to the Dart executable.
-void startParser() async {
-  var mainPath = Platform.resolvedExecutable;
-  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
-  var binPath = "$mainPath\\bin\\";
-  var parserPath = "$binPath\\run_parser.exe";
+Future<bool> startParser() async {
+  var mainPath = path.dirname(Platform.resolvedExecutable);
+  var binPath = path.join(mainPath, 'bin');
+  var parserExecutable = Platform.isWindows ? 'parser.exe' : 'parser';
+  var parserPath = path.join(binPath, parserExecutable);
 
   try {
-    var processResults = await Shell().run('"$parserPath"');
+    // Start the process asynchronously and detach it from the parent process
+    await Process.start(parserPath, []);
 
-    if (processResults[0].exitCode == 0) {
-      if (kDebugMode) {
-        print('Process ran successfully');
-      }
-    } else {
-      if (kDebugMode) {
-        print('Process exited with code ${processResults[0].exitCode}');
-      }
-    }
-  } catch (e) {
+    // If no exceptions were thrown, assume the process started successfully
     if (kDebugMode) {
-      print('An error occurred: $e');
+      print('Parser started successfully.');
     }
+    return true;
+  } catch (e) {
+    // If an error occurs, log it and return false
+    if (kDebugMode) {
+      print('An error occurred while starting the parser: $e');
+    }
+    return false;
   }
 }
 
@@ -146,27 +157,46 @@ void startParser() async {
 /// a [Future<void>] to indicate completion.
 Future<void> killParserInstances() async {
   try {
-    await Shell().run('taskkill /F /IM parser.exe');
-  } catch (e) {
-    // Print the exception to the console
-    if (kDebugMode) {
-      print('An error occurred while trying to kill parser.exe processes: $e');
-    }
-  }
-}
+    String parserExecutable = Platform.isWindows ? 'parser.exe' : 'parser';
 
-/// Kills instances of the update process.
-///
-/// This method uses the shell to run a command that forcefully terminates
-/// all instances of the update.exe process. It is asynchronous and returns
-/// a [Future<void>] to indicate completion.
-Future<void> killUpdateInstances() async {
-  try {
-    await Shell().run('taskkill /F /IM update.exe');
+    // Initialize the result with a default value
+    ProcessResult? result;
+
+    // Get the list of running processes
+    if (Platform.isWindows) {
+      result = await Process.run('tasklist', []);
+    } else if (Platform.isLinux || Platform.isMacOS) {
+      result = await Process.run('ps', ['-e']);
+    } else {
+      if (kDebugMode) {
+        print('Platform not supported for killing parser instances.');
+      }
+      return;
+    }
+
+    if (result.exitCode == 0) {
+      // Split the result by lines and filter the lines that contain the parser executable
+      var lines = result.stdout.split('\n');
+      for (var line in lines) {
+        if (line.contains(parserExecutable)) {
+          // On Windows, the PID is the second item on the line
+          // On Linux, the PID is the first item on the line
+          var parts = line.trim().split(RegExp(r'\s+'));
+          var pid = int.parse(Platform.isWindows ? parts[1] : parts[0]);
+          Process.killPid(pid);
+          if (kDebugMode) {
+            print('Killed $parserExecutable with PID: $pid');
+          }
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print('Failed to retrieve the process list');
+      }
+    }
   } catch (e) {
-    // Print the exception to the console
     if (kDebugMode) {
-      print('An error occurred while trying to kill parser.exe processes: $e');
+      print('An error occurred while trying to kill parser processes: $e');
     }
   }
 }

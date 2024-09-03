@@ -180,10 +180,14 @@ class _StorageScreenState extends State<StorageScreen> {
 
   /// Loads data asynchronously.
   Future<void> loadData() async {
-    await Future.delayed(const Duration(milliseconds: 280));
+    // Clear the previous data
+    allRuns.clear(); // Clear the existing data in allRuns
+    runDataList.clear(); // Clear the existing data in runDataList
+
+    // Fetch new data
     allRuns = getStoredRuns();
 
-    // Call getRunDetails with the list of RunData objects
+    // Call getRunDetails with the fresh list of RunData objects
     getRunDetails(allRuns, allRuns.length, runDataList);
   }
 
@@ -431,6 +435,9 @@ class _StorageScreenState extends State<StorageScreen> {
                                               onPressed: () async {
                                                 var fileNames =
                                                     await getExistingFileNames();
+                                                if (!context.mounted) {
+                                                  return;
+                                                }
                                                 displayTextInputDialog(
                                                     context,
                                                     _textFieldController,
@@ -474,13 +481,14 @@ class _StorageScreenState extends State<StorageScreen> {
                                                       fileToDelete.deleteSync();
                                                     } catch (e) {
                                                       // Show an error message using a SnackBar
-                                                      if (mounted) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(SnackBar(
-                                                                content: Text(
-                                                                    'Failed to delete file: $e')));
+                                                      if (!context.mounted) {
+                                                        return;
                                                       }
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  'Failed to delete file: $e')));
                                                     }
                                                   }
                                                   setState(() {
@@ -497,13 +505,14 @@ class _StorageScreenState extends State<StorageScreen> {
                                                     fileToDelete.deleteSync();
                                                   } catch (e) {
                                                     // Show an error message using a SnackBar
-                                                    if (mounted) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(SnackBar(
-                                                              content: Text(
-                                                                  'Failed to delete file: $e')));
+                                                    if (!context.mounted) {
+                                                      return;
                                                     }
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                'Failed to delete file: $e')));
                                                   }
                                                   setState(() {
                                                     runDataList.remove(runData);

@@ -10,7 +10,6 @@
 /// a user-friendly Graphical User Interface (GUI). This project builds upon an
 /// existing simple command line application, transforming it into a sophisticated
 /// tool that bridges the gap between textual data and intuitive visual representation.
-///
 library;
 
 import 'dart:io';
@@ -57,16 +56,17 @@ void main() async {
   // Ensures that widget binding has been initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Check integrity with hash
-  var verify = await isAppIntegrityValid();
-  await confirmVerification(verify);
+  // // Check integrity with hash
+  // var verify = await isAppIntegrityValid();
+  // await confirmVerification(verify);
 
   // Check version
-  isMostRecentVersion = await versionControl();
+  isMostRecentVersion = await checkVersion();
 
   // Retrieves the user's preferred language from shared preferences.
   final prefs = await SharedPreferences.getInstance();
   String language = prefs.getString('language') ?? "en";
+  showUpdateAlert = prefs.getBool('showUpdate') ?? true;
 
   // Retrieves the user's preferred action keys for Home page from shared preferences.
   upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
@@ -128,20 +128,18 @@ void main() async {
               ),
               duration: const Duration(milliseconds: 3500),
               onInit: () async {
-                /// Delete port text file if it exists
-                await deletePortFileIfExists();
+                // Prepare parser to be started
+                await prepareParser();
 
-                /// Kill old existing parser instances
-                await killParserInstances();
-
-                /// Kill old existing updater instances
-                await killUpdateInstances();
-
-                /// Run the parser
+                // Run the parser and check if it started successfully
                 debugPrint("Starting parser");
-                startParser();
+                bool parserStarted = await startParser();
+                if (!parserStarted) {
+                  debugPrint("Failed to start parser, aborting operation");
+                  return;
+                }
 
-                /// Prepare app language
+                // Prepare app language
                 debugPrint("Preparing language");
                 // Get the user's preferred language from shared preferences
                 final prefs = await SharedPreferences.getInstance();
@@ -158,10 +156,10 @@ void main() async {
                   await prefs.setString('language', locale.toString());
                 }
 
-                /// Give parser time to initialize
-                await Future.delayed(const Duration(seconds: 4));
+                // Give parser time to initialize
+                await Future.delayed(const Duration(seconds: 2));
 
-                /// Set the port number
+                // Set the port number
                 debugPrint("Setting port number");
                 var result = await setPortNumber();
                 if (result == errorSettingPort) {
