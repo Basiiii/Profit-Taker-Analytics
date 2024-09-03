@@ -24,6 +24,7 @@ class RunData {
   String duration;
   bool isBugged;
   bool isAborted;
+  bool isFavorite;
 
   /// Constructs a [RunData] object.
   ///
@@ -43,6 +44,7 @@ class RunData {
     required this.duration,
     required this.isBugged,
     required this.isAborted,
+    required this.isFavorite,
   });
 }
 
@@ -100,16 +102,19 @@ void getRunDetails(
     // Get aborted run status
     bool isAborted = jsonContent['aborted_run'] ?? false;
 
+    // Get favorite run status
+    bool isFavorite = jsonContent['favorite'] ?? false;
+
     // Create a RunData object and add it to the list
     runDataList.add(RunData(
-      file: file,
-      name: customName.isEmpty ? fileName : customName,
-      filename: fileName,
-      date: dateTime,
-      duration: formattedTotalDuration,
-      isBugged: isBugged,
-      isAborted: isAborted,
-    ));
+        file: file,
+        name: customName.isEmpty ? fileName : customName,
+        filename: fileName,
+        date: dateTime,
+        duration: formattedTotalDuration,
+        isBugged: isBugged,
+        isAborted: isAborted,
+        isFavorite: isFavorite));
   }
 }
 
@@ -180,10 +185,14 @@ class _StorageScreenState extends State<StorageScreen> {
 
   /// Loads data asynchronously.
   Future<void> loadData() async {
-    await Future.delayed(const Duration(milliseconds: 280));
+    // Clear the previous data
+    allRuns.clear(); // Clear the existing data in allRuns
+    runDataList.clear(); // Clear the existing data in runDataList
+
+    // Fetch new data
     allRuns = getStoredRuns();
 
-    // Call getRunDetails with the list of RunData objects
+    // Call getRunDetails with the fresh list of RunData objects
     getRunDetails(allRuns, allRuns.length, runDataList);
   }
 
@@ -245,7 +254,7 @@ class _StorageScreenState extends State<StorageScreen> {
             return Text('Error: ${snapshot.error}');
           }
           return Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Padding(
                 padding: const EdgeInsets.only(left: 60, top: 30, right: 20),
                 child: Column(
@@ -288,30 +297,30 @@ class _StorageScreenState extends State<StorageScreen> {
                         child: DataTable2(
                             headingCheckboxTheme: CheckboxThemeData(
                               fillColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
+                                  WidgetStateProperty.resolveWith<Color?>(
+                                (Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.selected)) {
                                     return const Color(
                                         0xFF86BCFC); // Selected checkbox fill color
                                   }
                                   return null; // Unselected checkbox fill color
                                 },
                               ),
-                              checkColor: MaterialStateProperty.all(
+                              checkColor: WidgetStateProperty.all(
                                   Colors.white), // Check mark color
                             ),
                             datarowCheckboxTheme: CheckboxThemeData(
                               fillColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
+                                  WidgetStateProperty.resolveWith<Color?>(
+                                (Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.selected)) {
                                     return const Color(
                                         0xFF86BCFC); // Selected checkbox fill color
                                   }
                                   return null; // Unselected checkbox fill color
                                 },
                               ),
-                              checkColor: MaterialStateProperty.all(
+                              checkColor: WidgetStateProperty.all(
                                   Colors.white), // Check mark color
                             ),
                             showCheckboxColumn: true,
@@ -351,6 +360,7 @@ class _StorageScreenState extends State<StorageScreen> {
                                           : Icons.arrow_downward),
                                   ],
                                 ),
+                                size: ColumnSize.M,
                                 onSort: (_, __) => _sortRunTimes(),
                               ),
                               DataColumn2(
@@ -364,14 +374,15 @@ class _StorageScreenState extends State<StorageScreen> {
                                           : Icons.arrow_downward),
                                   ],
                                 ),
+                                size: ColumnSize.M,
                                 onSort: (_, __) => _sortDates(),
                               ),
                               DataColumn2(
-                                label: Text(
-                                  FlutterI18n.translate(
-                                      context, "storage.actions"),
-                                ),
-                              ),
+                                  label: Text(
+                                    FlutterI18n.translate(
+                                        context, "storage.actions"),
+                                  ),
+                                  size: ColumnSize.L)
                             ],
                             rows: runDataList
                                 .map(
@@ -431,6 +442,9 @@ class _StorageScreenState extends State<StorageScreen> {
                                               onPressed: () async {
                                                 var fileNames =
                                                     await getExistingFileNames();
+                                                if (!context.mounted) {
+                                                  return;
+                                                }
                                                 displayTextInputDialog(
                                                     context,
                                                     _textFieldController,
@@ -474,13 +488,14 @@ class _StorageScreenState extends State<StorageScreen> {
                                                       fileToDelete.deleteSync();
                                                     } catch (e) {
                                                       // Show an error message using a SnackBar
-                                                      if (mounted) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(SnackBar(
-                                                                content: Text(
-                                                                    'Failed to delete file: $e')));
+                                                      if (!context.mounted) {
+                                                        return;
                                                       }
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  'Failed to delete file: $e')));
                                                     }
                                                   }
                                                   setState(() {
@@ -497,13 +512,14 @@ class _StorageScreenState extends State<StorageScreen> {
                                                     fileToDelete.deleteSync();
                                                   } catch (e) {
                                                     // Show an error message using a SnackBar
-                                                    if (mounted) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(SnackBar(
-                                                              content: Text(
-                                                                  'Failed to delete file: $e')));
+                                                    if (!context.mounted) {
+                                                      return;
                                                     }
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                'Failed to delete file: $e')));
                                                   }
                                                   setState(() {
                                                     runDataList.remove(runData);
@@ -522,6 +538,62 @@ class _StorageScreenState extends State<StorageScreen> {
                                                 widget.onSelectHomeTab(
                                                     0, runIndex,
                                                     fileName: runData.filename);
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                runData.isFavorite
+                                                    ? Icons.star
+                                                    : Icons
+                                                        .star_border, // Display different icons
+                                                size: 18,
+                                              ),
+                                              onPressed: () async {
+                                                // Get the JSON file path
+                                                var mainPath =
+                                                    Platform.resolvedExecutable;
+                                                mainPath = mainPath.substring(0,
+                                                    mainPath.lastIndexOf("\\"));
+                                                var storagePath =
+                                                    "$mainPath\\storage\\${runData.filename}.json";
+                                                var file = File(storagePath);
+
+                                                try {
+                                                  // Read the JSON file
+                                                  String jsonString =
+                                                      await file.readAsString();
+                                                  Map<String, dynamic>
+                                                      jsonData =
+                                                      jsonDecode(jsonString);
+
+                                                  // Toggle the 'favorite' status
+                                                  bool isCurrentlyFavorited =
+                                                      jsonData['favorite'] ??
+                                                          false;
+                                                  jsonData['favorite'] =
+                                                      !isCurrentlyFavorited;
+
+                                                  // Save the JSON file with the updated data
+                                                  await file.writeAsString(
+                                                      jsonEncode(jsonData));
+
+                                                  // Update the UI
+                                                  setState(() {
+                                                    runData.isFavorite =
+                                                        !isCurrentlyFavorited;
+                                                  });
+                                                } catch (e) {
+                                                  if (!context.mounted) {
+                                                    return;
+                                                  }
+                                                  // Handle any errors (e.g., file not found, JSON parse errors)
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'Failed to update favorite status: $e')),
+                                                  );
+                                                }
                                               },
                                             ),
                                           ],

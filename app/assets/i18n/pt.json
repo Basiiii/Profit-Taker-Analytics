@@ -88,6 +88,7 @@
         "cancel": "Cancelar",
         "delete": "Apagar",
         "download": "Descarregar",
+        "dont_show_again": "Não voltar a mostrar",
         "yes": "Sim",
         "no": "Não"
     },
@@ -114,5 +115,8 @@
         "pylons": "Pilares",
         "view_question": "Gostaria de ver a missão chamada \"",
         "after_question": "\"?"
+    },
+    "favorite": {
+        "title": "As tuas missões favoritas"
     }
 }

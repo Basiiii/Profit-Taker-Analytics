@@ -33,7 +33,7 @@ class NavigationBar extends StatelessWidget {
       descendantsAreFocusable: false,
       child: Container(
         width: 80,
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surfaceBright,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -43,11 +43,14 @@ class NavigationBar extends StatelessWidget {
             _buildNavItem(context, 'assets/icons/STORAGE_GREY.svg',
                 'assets/icons/STORAGE_SELECTED.svg', 1),
             const SizedBox(height: 20),
+            _buildNavItem(context, 'assets/icons/FAVORITES_GREY.svg',
+                'assets/icons/FAVORITES_SELECTED.svg', 2),
+            const SizedBox(height: 20),
             _buildNavItem(context, 'assets/icons/ANALYTICS_GREY.svg',
-                'assets/icons/ANALYTICS_SELECTED.svg', 2),
+                'assets/icons/ANALYTICS_SELECTED.svg', 3),
             const SizedBox(height: 20),
             _buildNavItem(context, 'assets/icons/SETTINGS_GREY.svg',
-                'assets/icons/SETTINGS_SELECTED.svg', 3),
+                'assets/icons/SETTINGS_SELECTED.svg', 4),
           ],
         ),
       ),

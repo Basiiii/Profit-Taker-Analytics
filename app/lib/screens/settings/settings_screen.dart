@@ -44,17 +44,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ///
   /// Parameters:
   /// - [onKeySet]: A callback function that takes a [LogicalKeyboardKey] as input.
-  void startListeningForKeys(KeySetterCallback onKeySet) {
-    void keyEventListener(RawKeyEvent event) {
-      if (event is RawKeyDownEvent) {
+  void startListeningForKeys(void Function(LogicalKeyboardKey) onKeySet) {
+    bool keyEventListener(KeyEvent event) {
+      if (event is KeyDownEvent) {
         onKeySet(event.logicalKey);
-        RawKeyboard.instance
-            .removeListener(keyEventListener); // Remove the current listener
-        return; // Exit the function after handling the event
+        HardwareKeyboard.instance.removeHandler(keyEventListener);
+        return true;
+      } else {
+        return false;
       }
     }
 
-    RawKeyboard.instance.addListener(keyEventListener);
+    HardwareKeyboard.instance.addHandler(keyEventListener);
   }
 
   @override
@@ -159,8 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         body: Center(
           child: SettingsList(
             darkTheme: SettingsThemeData(
-                settingsListBackground:
-                    Theme.of(context).colorScheme.background),
+                settingsListBackground: Theme.of(context).colorScheme.surface),
             sections: [
               SettingsSection(
                 title: Text(FlutterI18n.translate(context, "settings.general")),

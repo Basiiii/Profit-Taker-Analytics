@@ -4,6 +4,7 @@ import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 
 /// Check if app is recent version
 bool isMostRecentVersion = false;
+bool showUpdateAlert = true;
 
 /// Compact mode for layout
 bool compactModeEnabled = false;

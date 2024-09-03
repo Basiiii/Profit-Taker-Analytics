@@ -88,6 +88,7 @@
         "cancel": "Annuler",
         "delete": "Supprimer",
         "download": "Télécharger",
+        "dont_show_again": "Ne plus montrer",
         "yes": "Oui",
         "no": "Non"
     },
@@ -114,5 +115,8 @@
         "pylons": "Pylônes",
         "view_question": "Voulez-vous voir la mission appelée \"",
         "after_question": "\"?"
+    },
+    "favorite": {
+        "title": "Vos missions préférées"
     }
 }

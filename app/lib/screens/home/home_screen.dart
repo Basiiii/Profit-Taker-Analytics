@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:profit_taker_analyzer/utils/action_keys.dart';
 import 'package:profit_taker_analyzer/services/last_runs.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:process_run/shell.dart';
 
 import 'package:profit_taker_analyzer/main.dart';
 
@@ -80,8 +80,11 @@ class _HomeScreenState extends State<HomeScreen>
     LoadingOverlay.of(context).show();
     loadDataFile('$fileName.json').then((_) {
       setState(() {});
-      LoadingOverlay.of(context).hide();
+
       currentIndex = index;
+
+      if (!mounted) return;
+      LoadingOverlay.of(context).hide();
     });
   }
 
@@ -112,9 +115,6 @@ class _HomeScreenState extends State<HomeScreen>
     allRuns = getStoredRuns();
     getRunFileNames(allRuns, allRuns.length, runFilenames);
 
-    // Reset timestamp
-    // lastUpdateTimestamp = DateTime.fromMillisecondsSinceEpoch(0);
-
     // Load specific run chosen from Storage Screen
     if (widget.fileName != '') {
       // Prevent updating to data from API
@@ -122,6 +122,8 @@ class _HomeScreenState extends State<HomeScreen>
       loadDataFile("${widget.fileName}.json").then((_) {
         currentIndex = widget.fileIndex;
         setState(() {});
+
+        if (!mounted) return;
         LoadingOverlay.of(context).hide();
       });
     }
@@ -148,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen>
 
           /// Refresh UI
           setState(() {});
+          if (!mounted) return;
           LoadingOverlay.of(context).hide();
         });
         return;
@@ -162,36 +165,51 @@ class _HomeScreenState extends State<HomeScreen>
 
     // Schedule a callback for the end of this frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Removed version popup for now
-      // if (!isMostRecentVersion) {
-      //   // Show the dialog if the app is not the most recent version
-      //   showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return AlertDialog(
-      //         title: Text(FlutterI18n.translate(context, "update.title")),
-      //         content: Text(FlutterI18n.translate(context, "update.text")),
-      //         actions: <Widget>[
-      //           TextButton(
-      //             child: Text(FlutterI18n.translate(context, "buttons.cancel")),
-      //             onPressed: () {
-      //               Navigator.of(context).pop(); // Close the dialog
-      //             },
-      //           ),
-      //           TextButton(
-      //             child:
-      //                 Text(FlutterI18n.translate(context, "buttons.download")),
-      //             onPressed: () async {
-      //               await Shell()
-      //                   .run('runas /user:Administrator "update/update.exe"');
-      //               exit(0);
-      //             },
-      //           ),
-      //         ],
-      //       );
-      //     },
-      //   );
-      // }
+      if (showUpdateAlert && !isMostRecentVersion) {
+        // Show the dialog if the app is not the most recent version
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(FlutterI18n.translate(context, "update.title")),
+              content: Text(FlutterI18n.translate(context, "update.text")),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(FlutterI18n.translate(context, "buttons.no")),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+                TextButton(
+                  child: Text(FlutterI18n.translate(
+                      context, "buttons.dont_show_again")),
+                  onPressed: () {
+                    showUpdateAlert = false; // Set the variable to false
+                    saveDontShowUpdate();
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+                TextButton(
+                  child:
+                      Text(FlutterI18n.translate(context, "buttons.download")),
+                  onPressed: () async {
+                    final uri = Uri.parse(
+                        'https://github.com/Basiiii/Profit-Taker-Analytics/releases');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri); // Open the URL in the browser
+                    } else {
+                      throw 'Could not launch $uri';
+                    }
+
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 
@@ -265,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen>
         currentIndex++;
         loadDataFile(runFilenames[currentIndex]).then((_) {
           setState(() {});
+          if (!context.mounted) return;
           LoadingOverlay.of(context).hide();
         });
       }
@@ -277,6 +296,7 @@ class _HomeScreenState extends State<HomeScreen>
         currentIndex--;
         loadDataFile(runFilenames[currentIndex]).then((_) {
           setState(() {});
+          if (!context.mounted) return;
           LoadingOverlay.of(context).hide();
         });
       }
@@ -306,8 +326,8 @@ class _HomeScreenState extends State<HomeScreen>
         13; // 13 pixels to make left side padding the same as the right side
 
     /// Function to handle keyboard arrow key presses
-    bool handleArrowKeys(RawKeyEvent event) {
-      if (event is RawKeyDownEvent && !isDrawerOpen) {
+    bool handleArrowKeys(KeyEvent event) {
+      if (event is KeyDownEvent && !isDrawerOpen) {
         if (event.logicalKey == upActionKey) {
           onForwardButtonPressed();
           // Indicate the event is consumed
@@ -322,9 +342,9 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     // Build the overall widget tree
-    return RawKeyboardListener(
+    return KeyboardListener(
       focusNode: _keyboardListenerFocus,
-      onKey: handleArrowKeys,
+      onKeyEvent: handleArrowKeys,
       child: ValueListenableBuilder<bool>(
         valueListenable: _shortcutEnabled,
         builder: (BuildContext context, bool shortcutEnabled, Widget? child) {
@@ -342,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen>
               }
             },
             child: Scaffold(
-              backgroundColor: Theme.of(context).colorScheme.background,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               key: _scaffoldKey,
               body: SingleChildScrollView(
                 child: Padding(
@@ -479,6 +499,8 @@ class _HomeScreenState extends State<HomeScreen>
                             icon: const Icon(Icons.edit, size: 18),
                             onPressed: () async {
                               var fileNames = await getExistingFileNames();
+
+                              if (!context.mounted) return;
                               displayTextInputDialog(
                                   context,
                                   _textFieldController,

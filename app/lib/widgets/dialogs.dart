@@ -252,6 +252,9 @@ Future<void> displayTextInputDialog(
               } else {
                 updateRunName(newName, fileName).then((_) {
                   updateCallback(newName, fileName);
+                  if (!context.mounted) {
+                    return;
+                  }
                   Navigator.pop(context);
                   controller.clear();
                 });

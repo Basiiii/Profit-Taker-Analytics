@@ -88,6 +88,7 @@
         "cancel": "İptal",
         "delete": "Sil",
         "download": "İndir",
+        "dont_show_again": "Bir daha gösterme",
         "yes": "Evet",
         "no": "Hayır"
     },
@@ -114,5 +115,8 @@
         "pylons": "Sütunlar",
         "view_question": "",
         "after_question": "adlı görevi görüntülemek ister misiniz?"
+    },
+    "favorite": {
+        "title": "En sevdiğiniz görevler"
     }
 }

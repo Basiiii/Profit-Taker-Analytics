@@ -116,3 +116,10 @@ Future<List<String>> getExistingFileNames() async {
   // Return the list of pretty names
   return prettyNames;
 }
+
+/// Sets a value to not show updates in shared preferences
+Future<void> saveDontShowUpdate() async {
+  final prefs = await SharedPreferences.getInstance();
+  // Save the keyId of the downActionKey.
+  await prefs.setBool('showUpdate', false);
+}
