@@ -160,8 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         body: Center(
           child: SettingsList(
             darkTheme: SettingsThemeData(
-                settingsListBackground:
-                    Theme.of(context).colorScheme.background),
+                settingsListBackground: Theme.of(context).colorScheme.surface),
             sections: [
               SettingsSection(
                 title: Text(FlutterI18n.translate(context, "settings.general")),

@@ -33,7 +33,7 @@ class NavigationBar extends StatelessWidget {
       descendantsAreFocusable: false,
       child: Container(
         width: 80,
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surfaceBright,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

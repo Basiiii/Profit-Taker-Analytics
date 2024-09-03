@@ -115,8 +115,9 @@ class _HomePageDrawerState extends State<HomePageDrawer> {
                     return Material(
                       type: MaterialType.transparency,
                       child: ListTile(
-                        hoverColor:
-                            Theme.of(context).colorScheme.surfaceVariant,
+                        hoverColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
                         title: Text(
                           displayedRuns[index],
                           style: const TextStyle(fontSize: 14),

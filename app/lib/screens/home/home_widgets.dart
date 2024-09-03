@@ -97,7 +97,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
         : responsiveCardWidth,
     height: 145,
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.surfaceBright,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Column(
@@ -119,7 +119,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth) {
                           borderRadius: BorderRadius.circular(10)),
                       child: Icon(overviewCards[index].icon,
                           size: 25,
-                          color: Theme.of(context).colorScheme.surface)),
+                          color: Theme.of(context).colorScheme.surfaceBright)),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +260,7 @@ Widget buildCompactOverviewCard(
         : responsiveCardWidth,
     height: 66,
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.surfaceBright,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Column(
@@ -282,7 +282,7 @@ Widget buildCompactOverviewCard(
                           borderRadius: BorderRadius.circular(10)),
                       child: Icon(overviewCards[index].icon,
                           size: 25,
-                          color: Theme.of(context).colorScheme.surface)),
+                          color: Theme.of(context).colorScheme.surfaceBright)),
                   const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +371,7 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
         : responsiveCardWidth,
     height: 160,
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.surfaceBright,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Column(
@@ -388,7 +388,9 @@ Widget buildPhaseCard(int index, BuildContext context, double screenWidth) {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.onSurface),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest),
                 ),
               ),
               Expanded(

@@ -249,7 +249,7 @@ class _StorageScreenState extends State<StorageScreen> {
             return Text('Error: ${snapshot.error}');
           }
           return Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: Padding(
                 padding: const EdgeInsets.only(left: 60, top: 30, right: 20),
                 child: Column(
@@ -292,30 +292,30 @@ class _StorageScreenState extends State<StorageScreen> {
                         child: DataTable2(
                             headingCheckboxTheme: CheckboxThemeData(
                               fillColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
+                                  WidgetStateProperty.resolveWith<Color?>(
+                                (Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.selected)) {
                                     return const Color(
                                         0xFF86BCFC); // Selected checkbox fill color
                                   }
                                   return null; // Unselected checkbox fill color
                                 },
                               ),
-                              checkColor: MaterialStateProperty.all(
+                              checkColor: WidgetStateProperty.all(
                                   Colors.white), // Check mark color
                             ),
                             datarowCheckboxTheme: CheckboxThemeData(
                               fillColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
+                                  WidgetStateProperty.resolveWith<Color?>(
+                                (Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.selected)) {
                                     return const Color(
                                         0xFF86BCFC); // Selected checkbox fill color
                                   }
                                   return null; // Unselected checkbox fill color
                                 },
                               ),
-                              checkColor: MaterialStateProperty.all(
+                              checkColor: WidgetStateProperty.all(
                                   Colors.white), // Check mark color
                             ),
                             showCheckboxColumn: true,

@@ -362,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen>
               }
             },
             child: Scaffold(
-              backgroundColor: Theme.of(context).colorScheme.background,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               key: _scaffoldKey,
               body: SingleChildScrollView(
                 child: Padding(
