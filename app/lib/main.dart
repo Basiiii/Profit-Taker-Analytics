@@ -21,6 +21,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_screen.dart';
+import 'package:profit_taker_analyzer/screens/favorite/favorite_screen.dart';
 import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 import 'package:profit_taker_analyzer/services/verify_hash.dart';
 import 'package:profit_taker_analyzer/services/version_control.dart';
@@ -273,10 +274,14 @@ class _MyAppState extends State<MyApp> with WindowListener {
           onSelectHomeTab: _selectTab,
         );
       case 2:
-        return AnalyticsScreen(
+        return FavoriteScreen(
           onSelectHomeTab: _selectTab,
         );
       case 3:
+        return AnalyticsScreen(
+          onSelectHomeTab: _selectTab,
+        );
+      case 4:
         return const SettingsScreen();
       default:
         return const HomeScreen(

@@ -24,6 +24,7 @@ class RunData {
   String duration;
   bool isBugged;
   bool isAborted;
+  bool isFavorite;
 
   /// Constructs a [RunData] object.
   ///
@@ -43,6 +44,7 @@ class RunData {
     required this.duration,
     required this.isBugged,
     required this.isAborted,
+    required this.isFavorite,
   });
 }
 
@@ -100,16 +102,19 @@ void getRunDetails(
     // Get aborted run status
     bool isAborted = jsonContent['aborted_run'] ?? false;
 
+    // Get favorite run status
+    bool isFavorite = jsonContent['favorite'] ?? false;
+
     // Create a RunData object and add it to the list
     runDataList.add(RunData(
-      file: file,
-      name: customName.isEmpty ? fileName : customName,
-      filename: fileName,
-      date: dateTime,
-      duration: formattedTotalDuration,
-      isBugged: isBugged,
-      isAborted: isAborted,
-    ));
+        file: file,
+        name: customName.isEmpty ? fileName : customName,
+        filename: fileName,
+        date: dateTime,
+        duration: formattedTotalDuration,
+        isBugged: isBugged,
+        isAborted: isAborted,
+        isFavorite: isFavorite));
   }
 }
 
@@ -355,6 +360,7 @@ class _StorageScreenState extends State<StorageScreen> {
                                           : Icons.arrow_downward),
                                   ],
                                 ),
+                                size: ColumnSize.M,
                                 onSort: (_, __) => _sortRunTimes(),
                               ),
                               DataColumn2(
@@ -368,14 +374,15 @@ class _StorageScreenState extends State<StorageScreen> {
                                           : Icons.arrow_downward),
                                   ],
                                 ),
+                                size: ColumnSize.M,
                                 onSort: (_, __) => _sortDates(),
                               ),
                               DataColumn2(
-                                label: Text(
-                                  FlutterI18n.translate(
-                                      context, "storage.actions"),
-                                ),
-                              ),
+                                  label: Text(
+                                    FlutterI18n.translate(
+                                        context, "storage.actions"),
+                                  ),
+                                  size: ColumnSize.L)
                             ],
                             rows: runDataList
                                 .map(
@@ -531,6 +538,62 @@ class _StorageScreenState extends State<StorageScreen> {
                                                 widget.onSelectHomeTab(
                                                     0, runIndex,
                                                     fileName: runData.filename);
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                runData.isFavorite
+                                                    ? Icons.star
+                                                    : Icons
+                                                        .star_border, // Display different icons
+                                                size: 18,
+                                              ),
+                                              onPressed: () async {
+                                                // Get the JSON file path
+                                                var mainPath =
+                                                    Platform.resolvedExecutable;
+                                                mainPath = mainPath.substring(0,
+                                                    mainPath.lastIndexOf("\\"));
+                                                var storagePath =
+                                                    "$mainPath\\storage\\${runData.filename}.json";
+                                                var file = File(storagePath);
+
+                                                try {
+                                                  // Read the JSON file
+                                                  String jsonString =
+                                                      await file.readAsString();
+                                                  Map<String, dynamic>
+                                                      jsonData =
+                                                      jsonDecode(jsonString);
+
+                                                  // Toggle the 'favorite' status
+                                                  bool isCurrentlyFavorited =
+                                                      jsonData['favorite'] ??
+                                                          false;
+                                                  jsonData['favorite'] =
+                                                      !isCurrentlyFavorited;
+
+                                                  // Save the JSON file with the updated data
+                                                  await file.writeAsString(
+                                                      jsonEncode(jsonData));
+
+                                                  // Update the UI
+                                                  setState(() {
+                                                    runData.isFavorite =
+                                                        !isCurrentlyFavorited;
+                                                  });
+                                                } catch (e) {
+                                                  if (!context.mounted) {
+                                                    return;
+                                                  }
+                                                  // Handle any errors (e.g., file not found, JSON parse errors)
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'Failed to update favorite status: $e')),
+                                                  );
+                                                }
                                               },
                                             ),
                                           ],
