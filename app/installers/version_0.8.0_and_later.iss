@@ -25,11 +25,7 @@ LicenseFile=C:\Users\basi\Documents\GitHub\portfolio\ptdocssource\docs\docs\eula
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=pta_0.9.6
-SolidCompression=yes
-Compression=lzma2/ultra64
-LZMAUseSeparateProcess=yes
-LZMADictionarySize=1048576
-LZMANumFastBytes=273
+Compression=lzma2/max
 WizardStyle=modern
 
 [Languages]
