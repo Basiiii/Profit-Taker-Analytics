@@ -51,7 +51,7 @@ dependencies:
   crypto: ^3.0.3
   encrypt: ^5.0.1
   # Analytics
-  syncfusion_flutter_charts: ^24.2.4+3
+  syncfusion_flutter_charts: ^28.1.41
 
 dev_dependencies:
   flutter_test:

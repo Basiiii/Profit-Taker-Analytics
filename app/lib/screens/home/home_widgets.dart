@@ -616,7 +616,7 @@ Widget buildCompactPhaseCard(
         : responsiveCardWidth,
     height: index == 1 && screenWidth < minimumResponsiveWidth ? 110 : 160,
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.surfaceBright,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Column(
