@@ -131,16 +131,16 @@ String getStoragePath() {
   return "$mainPath\\storage\\";
 }
 
-class StorageScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget {
   final void Function(int, int, {String? fileName}) onSelectHomeTab;
 
-  const StorageScreen({super.key, required this.onSelectHomeTab});
+  const FavoriteScreen({super.key, required this.onSelectHomeTab});
 
   @override
-  State<StorageScreen> createState() => _StorageScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _StorageScreenState extends State<StorageScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen> {
   late Future<void> _dataLoad;
 
   /// Controller for text field used for editing run names.
@@ -191,7 +191,7 @@ class _StorageScreenState extends State<StorageScreen> {
     runDataList.clear(); // Clear the existing data in runDataList
 
     // Fetch new data
-    allRuns = getStoredRuns();
+    allRuns = getFavoritedRuns();
 
     // Call getRunDetails with the fresh list of RunData objects
     getRunDetails(allRuns, allRuns.length, runDataList);
@@ -282,7 +282,7 @@ class _StorageScreenState extends State<StorageScreen> {
                         ),
                       ],
                     ),
-                    titleText(FlutterI18n.translate(context, "storage.title"),
+                    titleText(FlutterI18n.translate(context, "favorite.title"),
                         24, FontWeight.normal),
                     const SizedBox(height: 15),
                     Expanded(

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
+import 'package:profit_taker_analyzer/constants/app_constants.dart';
 
-import 'package:profit_taker_analyzer/constants/constants.dart';
 import 'package:profit_taker_analyzer/utils/action_keys.dart';
 
-import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
@@ -15,8 +14,8 @@ import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
+import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// A callback function type for setting a key.
 typedef KeySetterCallback = void Function(LogicalKeyboardKey key);
@@ -98,11 +97,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: Text(changeLanguage),
           children: supportedLanguages.map((Locale locale) {
             return SimpleDialogOption(
-              child: Text(FlutterI18n.translate(
-                  context, "languages.${locale.languageCode}")),
+              child: Text(
+                FlutterI18n.translate(
+                    context, "languages.${locale.languageCode}"),
+              ),
               onPressed: () {
                 Navigator.pop(context);
-                _changeLanguage(locale);
+                _changeLanguage(context, locale);
               },
             );
           }).toList(),
@@ -114,17 +115,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// Changes the app's language based on the selected locale.
   ///
   /// Parameters:
+  ///   - `context`: The build context to access providers.
   ///   - `locale`: The selected locale representing the new language.
-  void _changeLanguage(Locale locale) async {
-    await FlutterI18n.refresh(context, locale);
-    _currentLocale = locale;
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString('language', locale.languageCode);
-    });
-    if (mounted) {
-      Provider.of<LocaleModel>(context, listen: false).set(locale);
-    }
-    setState(() {});
+  void _changeLanguage(BuildContext context, Locale locale) {
+    Provider.of<LocaleModel>(context, listen: false).setLocale(locale);
   }
 
   /// Overrides the method called when a dependency of this [State] object changes.
@@ -169,17 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title:
                         Text(FlutterI18n.translate(context, "settings.theme")),
                     leading: const Icon(Icons.contrast),
-                    trailing: ValueListenableBuilder(
-                      valueListenable: MyApp.themeNotifier,
-                      builder: (context, ThemeMode mode, _) {
-                        return IconButton(
-                          icon: Icon(mode == ThemeMode.light
-                              ? Icons.nightlight
-                              : Icons.wb_sunny),
-                          onPressed: () => switchTheme(),
-                        );
-                      },
-                    ),
+                    trailing: const ThemeSwitcher(),
                   ),
                   SettingsTile(
                     title: Text(FlutterI18n.translate(
@@ -344,7 +328,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingsTile(
                     title: Text(
                         FlutterI18n.translate(context, "settings.version")),
-                    trailing: const Text(version),
+                    trailing: const Text(AppConstants.version),
                   ),
                 ],
               ),
