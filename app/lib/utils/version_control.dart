@@ -4,15 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:profit_taker_analyzer/constants/app_constants.dart';
 
-/// Checks the version compatibility.
+/// Checks if app is the latest version.
 ///
 /// This method fetches the version information from a remote server and
 /// compares it with the local version. Returns `true` if the versions match,
 /// indicating compatibility, otherwise returns `false`.
 ///
 /// Returns: A future that completes with a boolean value indicating
-/// whether the versions match.
-Future<bool> checkVersion() async {
+/// if it's the latest version.
+Future<bool> isLatestVersion() async {
   try {
     final response =
         await http.get(Uri.parse('https://basi.is-a.dev/secure/verify.json'));

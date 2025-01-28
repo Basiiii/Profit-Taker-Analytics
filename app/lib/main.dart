@@ -1,46 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:profit_taker_analyzer/app.dart';
-import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
-import 'package:profit_taker_analyzer/utils/app_initializer.dart';
+import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/utils/initialize_window_manager.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:window_manager/window_manager.dart';
 
+/// The entry point of the application.
+///
+/// This method ensures the app is properly initialized, sets up key resources (such as database,
+/// preferences, and window configuration), and then runs the app using `runApp`.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize window manager
-  await windowManager.ensureInitialized();
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(LayoutConstants.startingWidth, LayoutConstants.startingHeight),
-    minimumSize:
-        Size(LayoutConstants.minimumWidth, LayoutConstants.minimumHeight),
-    center: true,
-  );
-
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+  initializeWindowManager();
 
   // Initialize the database factory for ffi
   databaseFactory = databaseFactoryFfi;
 
-  // Initialize other app resources
-  await AppInitializer.initialize();
+  // Load key mappings for Home controls
+  upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+  downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
 
   // Initialize SharedPreferences
   final prefs = await SharedPreferences.getInstance();
-
-  // Initialize language settings
-  String language = prefs.getString('language') ?? "en";
 
   // Initialize the database
   final databaseService = DatabaseService();
@@ -65,7 +56,7 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (_) => ScreenshotService()),
       ],
-      child: const MyApp(),
+      child: const AppRoot(),
     ),
   );
 }

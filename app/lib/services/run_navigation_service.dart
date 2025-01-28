@@ -185,7 +185,6 @@ class RunNavigationService extends ChangeNotifier {
   void startPeriodicUpdate({Duration interval = const Duration(seconds: 1)}) {
     _updateTimer?.cancel(); // Cancel any existing timer
     _updateTimer = Timer.periodic(interval, (_) async {
-      print("periodic check");
       await checkAndUpdateToMostRecentRun();
     });
   }

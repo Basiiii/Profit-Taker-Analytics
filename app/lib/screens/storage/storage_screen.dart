@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:intl/intl.dart';
 import 'package:profit_taker_analyzer/main.dart';
-import 'package:profit_taker_analyzer/services/last_runs.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
@@ -191,7 +190,7 @@ class _StorageScreenState extends State<StorageScreen> {
     runDataList.clear(); // Clear the existing data in runDataList
 
     // Fetch new data
-    allRuns = getStoredRuns();
+    // allRuns = getStoredRuns();
 
     // Call getRunDetails with the fresh list of RunData objects
     getRunDetails(allRuns, allRuns.length, runDataList);

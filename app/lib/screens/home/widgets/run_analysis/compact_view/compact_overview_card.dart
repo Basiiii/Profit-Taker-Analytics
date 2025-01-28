@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/models/total_times.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/overview/overview_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 
 /// Builds and returns a compact card widget for displaying overview information.

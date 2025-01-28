@@ -1,12 +1,14 @@
 import 'dart:ui';
 
+import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:window_manager/window_manager.dart';
 
-Future<void> setupWindow() async {
+Future<void> initializeWindowManager() async {
   await windowManager.ensureInitialized();
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(1200, 800),
-    minimumSize: Size(800, 600),
+    size: Size(LayoutConstants.startingWidth, LayoutConstants.startingHeight),
+    minimumSize:
+        Size(LayoutConstants.minimumWidth, LayoutConstants.minimumHeight),
     center: true,
   );
 

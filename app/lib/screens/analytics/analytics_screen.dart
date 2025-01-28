@@ -9,7 +9,7 @@ import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_data.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_widgets.dart';
-import 'package:profit_taker_analyzer/services/last_runs.dart';
+// import 'package:profit_taker_analyzer/services/last_runs.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
@@ -262,8 +262,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     _focusNode.requestFocus();
 
     /// Populate lists with run history
-    allRuns = getStoredRuns();
-    getRunFileNames(allRuns, allRuns.length, runFilenames);
+    // allRuns = getStoredRuns();
+    // getRunFileNames(allRuns, allRuns.length, runFilenames);
 
     loadData();
   }

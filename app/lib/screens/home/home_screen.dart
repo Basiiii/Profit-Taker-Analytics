@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:profit_taker_analyzer/screens/home/no_runs_available.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/error_view.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/home_content.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/loading_indicator.dart';
+import 'package:profit_taker_analyzer/screens/home/ui/no_runs_available.dart';
+import 'package:profit_taker_analyzer/screens/home/ui/error_view.dart';
+import 'package:profit_taker_analyzer/screens/home/ui/home_content.dart';
+import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    _loadKeys();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _runService = Provider.of<RunNavigationService>(
         context,
@@ -38,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  // Load the saved keys from SharedPreferences
+  Future<void> _loadKeys() async {
+    upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+    downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
+    setState(() {}); // Trigger a rebuild to use the updated keys
+  }
+
   @override
   Widget build(BuildContext context) {
     final runService =
@@ -50,9 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
         focusNode: FocusNode(), // Needed to listen for keyboard events
         onKeyEvent: (KeyEvent event) {
           if (event is KeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            if (event.logicalKey == upActionKey) {
               runService.navigateToNextRun();
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            } else if (event.logicalKey == downActionKey) {
               runService.navigateToPreviousRun();
             }
           }

@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:profit_taker_analyzer/screens/analytics/analytics_screen.dart';
-import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
-import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
+import 'package:profit_taker_analyzer/app_layout.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/app_theme.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
-    as custom_nav;
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// The root widget of the application.
+///
+/// This widget is responsible for setting up the app's core properties such as:
+/// - Dynamic locale (language) handling using `LocaleModel`.
+/// - Theme handling using `ThemeProvider` to switch between light and dark themes.
+/// - Localization support through `flutter_localizations` and `FlutterI18n`.
+/// - Setting the initial screen to `AppLayout` (the main layout of the app).
+///
+/// It listens to the `ThemeProvider` and `LocaleModel` to update the theme and locale
+/// whenever changes occur and applies those settings to the app globally.
+class AppRoot extends StatelessWidget {
+  const AppRoot({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,63 +50,9 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ],
-          home: const _MyHomePage(), // Set the home screen
+          home: const AppLayout(),
         );
       },
-    );
-  }
-}
-
-class _MyHomePage extends StatefulWidget {
-  const _MyHomePage();
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<_MyHomePage> {
-  int _currentIndex = 0;
-  Widget? _activeScreen;
-
-  @override
-  void initState() {
-    super.initState();
-    _activeScreen = const HomeScreen(); // Default screen to show
-  }
-
-  void _selectTab(int navIndex) {
-    setState(() {
-      _currentIndex = navIndex;
-      _activeScreen = _getScreenByIndex(navIndex);
-    });
-  }
-
-  Widget _getScreenByIndex(int index) {
-    switch (index) {
-      case 0:
-        return const HomeScreen();
-      case 3:
-        return const AnalyticsScreen();
-      case 4:
-        return const SettingsScreen();
-      default:
-        return const HomeScreen();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: <Widget>[
-          custom_nav.NavigationBar(
-            currentIndex: _currentIndex,
-            onTabSelected:
-                _selectTab, // Pass the method for handling navigation
-          ),
-          Expanded(child: _activeScreen!), // Show the active screen
-        ],
-      ),
     );
   }
 }

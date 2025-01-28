@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/models/run_data.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/compact_run_analysis.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/compact_run_analysis.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/home_header.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_title.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/standard_run_analysis.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_run_analysis.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';

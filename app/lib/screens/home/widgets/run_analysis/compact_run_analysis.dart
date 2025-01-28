@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/models/run_data.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/overview/compact_overview_card.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/phases/compact_phase_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/compact_view/compact_overview_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/compact_view/compact_phase_card.dart';
 
 class CompactRunAnalysis extends StatelessWidget {
   final Run runData;

@@ -61,8 +61,10 @@ class RunTitle extends StatelessWidget {
   void _handleScreenshotCopy(BuildContext context, ScreenshotService service) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     captureScreenshot(service.controller).then((status) {
-      final message = FlutterI18n.translate(context, "screenshot.$status");
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+      if (context.mounted) {
+        final message = FlutterI18n.translate(context, "screenshot.$status");
+        scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+      }
     });
   }
 

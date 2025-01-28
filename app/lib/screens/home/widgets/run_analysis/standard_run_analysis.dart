@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/models/run_data.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/overview/overview_card.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/phases/phase_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/phase_card.dart';
 
 class StandardRunAnalysis extends StatelessWidget {
   final Run runData;
