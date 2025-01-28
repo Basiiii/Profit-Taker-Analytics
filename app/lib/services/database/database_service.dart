@@ -208,4 +208,13 @@ class DatabaseService {
       rethrow;
     }
   }
+
+  Future<bool> runExists(Database db, int runId) async {
+    final result = await db.query(
+      'runs',
+      where: 'id = ?',
+      whereArgs: [runId],
+    );
+    return result.isNotEmpty;
+  }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/app.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
+import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
+import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:profit_taker_analyzer/utils/app_initializer.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
@@ -40,18 +43,27 @@ void main() async {
   String language = prefs.getString('language') ?? "en";
 
   // Initialize the database
-  await DatabaseService().initialize();
+  final databaseService = DatabaseService();
+  await databaseService.initialize();
 
   // Run the app with ThemeProvider and LocaleModel
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LayoutPreferences()),
+        Provider<DatabaseService>(create: (_) => databaseService),
+        ChangeNotifierProvider(
+          create: (context) => RunNavigationService(
+            databaseService: context.read<DatabaseService>(),
+          ),
+        ),
         ChangeNotifierProvider<ThemeProvider>(
           create: (context) => ThemeProvider(prefs),
         ),
         ChangeNotifierProvider<LocaleModel>(
-          create: (context) => LocaleModel(prefs), // Provide LocaleModel
+          create: (context) => LocaleModel(prefs),
         ),
+        ChangeNotifierProvider(create: (_) => ScreenshotService()),
       ],
       child: const MyApp(),
     ),

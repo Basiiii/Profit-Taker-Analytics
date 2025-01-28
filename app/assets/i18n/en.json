@@ -40,7 +40,10 @@
         "parser_connection_error": "The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.\nContacts are available in the app settings.",
         "bugged_run_warning": "This run has been identified as potentially bugged. Some runs are not accurately recorded by Warframe,\nmaking it impossible for us to retrieve all the data.\n\nUnfortunately, this issue is beyond our control, but we will still show you all the information we can.",
         "aborted_run_warning": "This run was aborted early.",
-        "existing_name": "The name already exists. Please choose a different name."
+        "existing_name": "The name already exists. Please choose a different name.",
+        "load_failed": "Loading your run failed.",
+        "no_runs": "No runs are available or recorded yet",
+        "start_new_run": "Please start a new run to begin!"
     },
     "settings": {
         "general": "General",
@@ -90,7 +93,8 @@
         "download": "Download",
         "dont_show_again": "Don't show again",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "retry": "Try again"
     },
     "alerts": {
         "name_title": "Change File Name",
@@ -118,5 +122,10 @@
     },
     "favorite": {
         "title": "Your favorite runs"
+    },
+    "tooltips": {
+        "previous_run": "Previous run",
+        "next_run": "Next run",
+        "toggle_layout": "Toggle layout"
     }
 }

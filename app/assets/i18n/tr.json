@@ -40,7 +40,10 @@
         "parser_connection_error": "Uygulama ayrıştırıcı ile bağlantı kuramıyor.\nLütfen uygulamayı yeniden başlatın.\n\nSorunlarınız devam ederse lütfen Basi ile iletişime geçin.\nİletişim bilgileri uygulama ayarlarında mevcuttur.",
         "bugged_run_warning": "Bu denemenin hatalı olabileceği tespit edildi. Bazı denemeler Warframe tarafından düzgünce kaydedilmiyor,\nve bütün bilgileri öğrenmemizi imkansız kılıyor.\n\nMaalesef ki, bu sorun bizim kontrolümüzde değil, yine de gösterebileceğimiz bilgileri göstericeğiz.",
         "aborted_run_warning": "Bu deneme erkenden iptal edildi.",
-        "existing_name": "Bu isimle bir denemeniz zaten var. Lütfen farklı bir isim seçin."
+        "existing_name": "Bu isimle bir denemeniz zaten var. Lütfen farklı bir isim seçin.",
+        "load_failed": "Göreviniz yüklenemedi.",
+        "no_runs": "Henüz hiçbir görev mevcut değil veya kaydedilmedi",
+        "start_new_run": "Lütfen başlamak için yeni bir görev başlatın!"
     },
     "settings": {
         "general": "Genel",
@@ -90,7 +93,8 @@
         "download": "İndir",
         "dont_show_again": "Bir daha gösterme",
         "yes": "Evet",
-        "no": "Hayır"
+        "no": "Hayır",
+        "retry": "Tekrar deneyin"
     },
     "alerts": {
         "name_title": "Dosya Adını Değiştir",
@@ -118,5 +122,10 @@
     },
     "favorite": {
         "title": "En sevdiğiniz görevler"
+    },
+    "tooltips": {
+        "previous_run": "Önceki Görev",
+        "next_run": "Sonraki Görev",
+        "toggle_layout": "Düzeni Değiştir"
     }
 }

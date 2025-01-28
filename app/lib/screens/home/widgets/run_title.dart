@@ -1,105 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/translations.dart';
+import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
+import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:provider/provider.dart';
 
 class RunTitle extends StatelessWidget {
   final String runName;
   final bool mostRecentRun;
   final bool soloRun;
-  final bool isBuggedRun;
-  final bool isAbortedRun;
   final List<String> players;
-  final Locale? currentLocale;
-  final ScreenshotController screenshotController;
-  final String errorTitle;
-  final String buggedRunWarningMessage;
-  final String abortedRunWarningMessage;
-  final Function(BuildContext, bool, bool, String, String, String, Function)
-      showRunWarning;
 
   const RunTitle({
     super.key,
     required this.runName,
     required this.mostRecentRun,
     required this.soloRun,
-    required this.isBuggedRun,
-    required this.isAbortedRun,
     required this.players,
-    required this.currentLocale,
-    required this.screenshotController,
-    required this.errorTitle,
-    required this.buggedRunWarningMessage,
-    required this.abortedRunWarningMessage,
-    required this.showRunWarning,
   });
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final runService = context.watch<RunNavigationService>();
+    final screenshotService = context.read<ScreenshotService>();
+
     return Row(
       children: [
-        // "Your run"
         Flexible(
           child: titleText(
-            getRunTitle(
-              context,
-              mostRecentRun,
-              soloRun,
-              players,
-              currentLocale,
-            ),
+            getRunTitle(context, mostRecentRun, soloRun, players, locale),
             20,
             FontWeight.w500,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        // "called"
-        if (currentLocale?.languageCode != 'tr')
+        if (locale.languageCode != 'tr')
           titleText(
             " ${FlutterI18n.translate(context, "home.named")} ",
             20,
             FontWeight.w500,
           ),
-        // run name goes here
-        titleText(
-          "\"$runName\"",
-          20,
-          FontWeight.w500,
-        ),
-        // Icons
+        titleText("\"$runName\"", 20, FontWeight.w500),
         const SizedBox(width: 8),
         IconButton(
           icon: const Icon(Icons.copy, size: 18),
-          onPressed: () {
-            var scaffoldMessenger = ScaffoldMessenger.of(context);
-            captureScreenshot(screenshotController).then((status) {
-              String message = messages[status] ?? 'Unknown status';
-              scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
-            });
-          },
+          onPressed: () => _handleScreenshotCopy(context, screenshotService),
         ),
-        if (isBuggedRun || isAbortedRun)
-          IconButton(
-            icon: Icon(
-              Icons.warning,
-              color: isBuggedRun
-                  ? Theme.of(context).colorScheme.error
-                  : Colors.yellow,
-            ),
-            onPressed: () => showRunWarning(
-              context,
-              isBuggedRun,
-              isAbortedRun,
-              errorTitle,
-              buggedRunWarningMessage,
-              abortedRunWarningMessage,
-              showBuggedRunWarningDialog,
-            ),
-          ),
+        if (runService.currentRun?.isBuggedRun ?? false)
+          _buildWarningIcon(context, true),
+        if (runService.currentRun?.isAbortedRun ?? false)
+          _buildWarningIcon(context, false),
       ],
+    );
+  }
+
+  void _handleScreenshotCopy(BuildContext context, ScreenshotService service) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    captureScreenshot(service.controller).then((status) {
+      final message = FlutterI18n.translate(context, "screenshot.$status");
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+    });
+  }
+
+  Widget _buildWarningIcon(BuildContext context, bool isBugged) {
+    return IconButton(
+      icon: Icon(
+        Icons.warning,
+        color: isBugged ? Theme.of(context).colorScheme.error : Colors.yellow,
+      ),
+      onPressed: () => showBuggedRunWarningDialog(
+        context,
+        FlutterI18n.translate(context, "errors.error"),
+        FlutterI18n.translate(
+          context,
+          isBugged ? "errors.bugged_run_warning" : "errors.aborted_run_warning",
+        ),
+      ),
     );
   }
 }

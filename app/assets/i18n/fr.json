@@ -40,7 +40,10 @@
         "parser_connection_error": "L'application ne peut pas établir de connexion avec l'analyseur.\nVeuillez redémarrer le programme.\n\nSi vous continuez à rencontrer des problèmes, veuillez contacter Basi.\nLes contacts sont disponibles dans les paramètres de l'application.",
         "bugged_run_warning": "Cette mission a été identifiée comme potentiellement buggée. Certaines missions ne sont pas enregistrées avec précision par Warframe,\nce qui nous empêche de récupérer toutes les données.\n\nMalheureusement, ce problème est hors de notre contrôle, mais nous vous montrerons quand même toutes les informations possibles.",
         "aborted_run_warning": "Cette mission a été interrompue prématurément.",
-        "existing_name": "Le nom existe déjà. Veuillez choisir un autre nom."
+        "existing_name": "Le nom existe déjà. Veuillez choisir un autre nom.",
+        "load_failed": "Le chargement de votre mission a échoué.",
+        "no_runs": "Aucune mission n'est disponible ou enregistrée pour le moment",
+        "start_new_run": "Veuillez commencer une nouvelle mission pour débuter!"
     },
     "settings": {
         "general": "Général",
@@ -90,7 +93,8 @@
         "download": "Télécharger",
         "dont_show_again": "Ne plus montrer",
         "yes": "Oui",
-        "no": "Non"
+        "no": "Non",
+        "retry": "Réessayer"
     },
     "alerts": {
         "name_title": "Changer le nom du fichier",
@@ -118,5 +122,10 @@
     },
     "favorite": {
         "title": "Vos missions préférées"
+    },
+    "tooltips": {
+        "previous_run": "Mission précédente",
+        "next_run": "Mission suivante",
+        "toggle_layout": "Basculer la mise en page"
     }
 }

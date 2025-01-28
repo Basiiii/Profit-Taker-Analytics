@@ -40,7 +40,10 @@
         "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
         "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。",
         "aborted_run_warning": "比赛提前结束。",
-        "existing_name": "该名称已存在。请选择其他名称。"
+        "existing_name": "该名称已存在。请选择其他名称。",
+        "load_failed": "加载任务失败。",
+        "no_runs": "尚无任务可用或已记录",
+        "start_new_run": "请开始一项新任务！"
     },
     "settings": {
         "general": "通用",
@@ -90,7 +93,8 @@
         "download": "下载",
         "dont_show_again": "不要再出现",
         "yes": "是",
-        "no": "否"
+        "no": "否",
+        "retry": "再试一次"
     },
     "alerts": {
         "name_title": "更改文件名",
@@ -118,5 +122,10 @@
     },
     "favorite": {
         "title": "您最喜爱的任务"
+    },
+    "tooltips": {
+        "previous_run": "上一个使命",
+        "next_run": "下一个任务",
+        "toggle_layout": "切换布局"
     }
 }
