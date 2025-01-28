@@ -14,6 +14,16 @@ topics:
 dependencies:
   flutter:
     sdk: flutter
+    
+  rust_core:
+    # When depending on this package from a real application you should use:
+    #   rust_core: ^x.y.z
+    # See https://dart.dev/tools/pub/dependencies#version-constraints
+    # The example app is bundled with the plugin so we use a path dependency on
+    # the parent directory to use the current plugin's version.
+    path: ../rust_core
+
+
   # Splash screen
   another_flutter_splash_screen: ^1.2.0
   # Windows window control
