@@ -127,5 +127,14 @@
         "previous_run": "Missão anterior",
         "next_run": "Próxima missão",
         "toggle_layout": "Alternar layout"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Imagem copiada para a área de transferência",
+            "failure": "Ocorreu um erro desconhecido",
+            "unsupportedPlatform": "A API da área de transferência não é suportada nesta plataforma",
+            "directoryDoesNotExist": "O diretório temporário não existe",
+            "screenshotFailure": "Falha ao capturar a captura de tela"
+        }
     }
 }

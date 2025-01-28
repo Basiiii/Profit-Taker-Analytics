@@ -127,5 +127,14 @@
         "previous_run": "上一个使命",
         "next_run": "下一个任务",
         "toggle_layout": "切换布局"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "图片已复制到剪贴板",
+            "failure": "发生未知错误",
+            "unsupportedPlatform": "剪贴板 API 不支持此平台",
+            "directoryDoesNotExist": "临时目录不存在",
+            "screenshotFailure": "无法捕获截图"
+        }
     }
 }

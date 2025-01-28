@@ -127,5 +127,14 @@
         "previous_run": "Предыдущий заход",
         "next_run": "Следующий заход",
         "toggle_layout": "Переключить формат"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Изображение скопировано в буфер обмена",
+            "failure": "Произошла неизвестная ошибка",
+            "unsupportedPlatform": "API буфера обмена не поддерживается на этой платформе",
+            "directoryDoesNotExist": "Временная папка не существует",
+            "screenshotFailure": "Не удалось сделать снимок экрана"
+        }
     }
 }

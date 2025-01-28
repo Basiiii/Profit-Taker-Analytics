@@ -23,7 +23,7 @@ String getRunTitle(
     } else {
       return soloRun
           ? FlutterI18n.translate(context, "home.run")
-          : FlutterI18n.translate(context, "home.last_run_with") +
+          : FlutterI18n.translate(context, "home.run_with") +
               formattedPlayerList;
     }
   }

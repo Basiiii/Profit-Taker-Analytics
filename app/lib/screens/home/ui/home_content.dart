@@ -26,7 +26,7 @@ class HomeContent extends StatelessWidget {
             const SizedBox(height: 25),
             RunTitle(
               runName: runData.runName,
-              mostRecentRun: true, // Update this logic if needed
+              mostRecentRun: false, // TODO: Add "isMostRecent" check
               soloRun: runData.issoloRun,
               players: runData.squadMembers
                   .map((member) => member.playerName)

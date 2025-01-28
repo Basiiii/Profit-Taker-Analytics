@@ -127,5 +127,14 @@
         "previous_run": "Önceki Görev",
         "next_run": "Sonraki Görev",
         "toggle_layout": "Düzeni Değiştir"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Görüntü panoya kopyalandı",
+            "failure": "Bilinmeyen bir hata oluştu",
+            "unsupportedPlatform": "Pano API'si bu platformda desteklenmiyor",
+            "directoryDoesNotExist": "Geçici dizin mevcut değil",
+            "screenshotFailure": "Ekran görüntüsü alınamadı"
+        }
     }
 }

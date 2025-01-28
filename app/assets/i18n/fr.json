@@ -127,5 +127,14 @@
         "previous_run": "Mission précédente",
         "next_run": "Mission suivante",
         "toggle_layout": "Basculer la mise en page"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Image copiée dans le presse-papiers",
+            "failure": "Une erreur inconnue s'est produite",
+            "unsupportedPlatform": "L'API du presse-papiers n'est pas prise en charge sur cette plateforme",
+            "directoryDoesNotExist": "Le répertoire temporaire n'existe pas",
+            "screenshotFailure": "Échec de la capture d'écran"
+        }
     }
 }

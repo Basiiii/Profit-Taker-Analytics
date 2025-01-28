@@ -127,5 +127,14 @@
         "previous_run": "Previous run",
         "next_run": "Next run",
         "toggle_layout": "Toggle layout"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Image copied to clipboard",
+            "failure": "An unknown error occurred",
+            "unsupportedPlatform": "Clipboard API is not supported on this platform",
+            "directoryDoesNotExist": "Temporary directory does not exist",
+            "screenshotFailure": "Failed to capture screenshot"
+        }
     }
 }
