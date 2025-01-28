@@ -52,6 +52,9 @@ dependencies:
   encrypt: ^5.0.1
   # Analytics
   syncfusion_flutter_charts: ^28.1.41
+  # Database
+  sqflite: ^2.4.1
+  sqflite_common_ffi: ^2.3.4+4
 
 dev_dependencies:
   flutter_test:

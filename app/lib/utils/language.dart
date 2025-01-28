@@ -15,26 +15,37 @@ class LocaleModel extends ChangeNotifier {
   /// Parameters:
   ///   - `_prefs`: An instance of [SharedPreferences] for managing app preferences.
   LocaleModel(this._prefs) {
-    var selectedLocale = _prefs.getString("selectedLocale");
+    _initializeLocale();
+  }
+
+  /// Initializes the locale from SharedPreferences.
+  void _initializeLocale() {
+    final selectedLocale = _prefs.getString("selectedLocale");
     if (selectedLocale != null) {
-      _locale = Locale(selectedLocale);
+      final parts = selectedLocale.split('_');
+      if (parts.length == 1) {
+        // Only language code is saved
+        _locale = Locale(parts[0]);
+      } else if (parts.length == 2) {
+        // Both language and country code are saved
+        _locale = Locale(parts[0], parts[1]);
+      }
+    } else {
+      // Default locale (English)
+      _locale = const Locale('en');
     }
   }
 
   /// Gets the currently selected locale.
-  ///
-  /// Returns:
-  ///   The currently selected locale or `null` if not set.
   Locale? get locale => _locale;
 
   /// Sets the selected locale and notifies listeners.
   ///
   /// Parameters:
   ///   - `locale`: The locale to be set as the currently selected locale.
-  void set(Locale locale) {
+  void setLocale(Locale locale) {
     _locale = locale;
-    _prefs.setString('selectedLocale', locale.toString());
-
+    _prefs.setString('selectedLocale', _locale.toString());
     notifyListeners();
   }
 }

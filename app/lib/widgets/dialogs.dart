@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:profit_taker_analyzer/screens/home/home_data.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
 
 import 'package:window_manager/window_manager.dart';
@@ -349,5 +348,5 @@ Future<void> updateRunName(String newName, String fileName) async {
   await jsonFile.writeAsString(updatedJsonString);
 
   // Update the variable
-  customRunName = newName;
+  // customRunName = newName;
 }

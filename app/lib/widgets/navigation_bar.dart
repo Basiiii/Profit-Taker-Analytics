@@ -7,24 +7,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// customizable icons for different tabs. It includes a callback function
 /// to notify when a tab is selected.
 class NavigationBar extends StatelessWidget {
-  /// The current selected index of the navigation bar.
   final int currentIndex;
+  final Function(int) onTabSelected;
 
-  /// A callback function to be called when a tab is selected.
-  final Function(int, {String? fileName, int? runIndex}) onTabSelected;
-
-  final String? fileName;
-
-  /// Constructs a [NavigationBar] widget.
-  ///
-  /// Parameters:
-  ///   - `currentIndex`: The current selected index of the navigation bar.
-  ///   - `onTabSelected`: A callback function to be called when a tab is selected.
   const NavigationBar({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
-    this.fileName,
   });
 
   @override
@@ -70,12 +59,7 @@ class NavigationBar extends StatelessWidget {
               height: 22,
             ),
             onPressed: () {
-              // Determine the fileName and runIndex values here
-              String? fileNameValue = ''; // Replace with actual value
-              int? runIndexValue = 0; // Replace with actual value
-
-              onTabSelected(index,
-                  fileName: fileNameValue, runIndex: runIndexValue);
+              onTabSelected(index); // Pass the index to the parent widget
             },
           ),
         ),

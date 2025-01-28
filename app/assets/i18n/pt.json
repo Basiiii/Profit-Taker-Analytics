@@ -40,7 +40,10 @@
         "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
         "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos.",
         "aborted_run_warning": "Esta luta foi interrompida precocemente.",
-        "existing_name": "Este nome já existe. Por favor escolha outro nome."
+        "existing_name": "Este nome já existe. Por favor escolha outro nome.",
+        "load_failed": "O carregamento da tua missão falhou.",
+        "no_runs": "Ainda não há missões disponíveis ou registadas",
+        "start_new_run": "Por favor, inicie uma nova missão para começar!"
     },
     "settings": {
         "general": "Geral",
@@ -90,7 +93,8 @@
         "download": "Descarregar",
         "dont_show_again": "Não voltar a mostrar",
         "yes": "Sim",
-        "no": "Não"
+        "no": "Não",
+        "retry": "Tentar novamente"
     },
     "alerts": {
         "name_title": "Mudar Nome Ficheiro",
@@ -118,5 +122,19 @@
     },
     "favorite": {
         "title": "As tuas missões favoritas"
+    },
+    "tooltips": {
+        "previous_run": "Missão anterior",
+        "next_run": "Próxima missão",
+        "toggle_layout": "Alternar layout"
+    },
+    "screenshot": {
+        "ScreenshotStatus": {
+            "success": "Imagem copiada para a área de transferência",
+            "failure": "Ocorreu um erro desconhecido",
+            "unsupportedPlatform": "A API da área de transferência não é suportada nesta plataforma",
+            "directoryDoesNotExist": "O diretório temporário não existe",
+            "screenshotFailure": "Falha ao capturar a captura de tela"
+        }
     }
 }

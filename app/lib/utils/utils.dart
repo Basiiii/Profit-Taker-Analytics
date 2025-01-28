@@ -1,31 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:profit_taker_analyzer/main.dart';
-
-/// Switches the current theme.
-///
-/// Checks the current theme mode and switches it to the other mode.
-/// Then, it saves the new theme mode to the shared preferences.
-Future<void> switchTheme() async {
-  ThemeMode newMode = MyApp.themeNotifier.value == ThemeMode.light
-      ? ThemeMode.dark
-      : ThemeMode.light;
-
-  MyApp.themeNotifier.value = newMode;
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  Map<ThemeMode, String> themeModeMap = {
-    ThemeMode.light: 'light',
-    ThemeMode.dark: 'dark',
-  };
-  prefs.setString('themeMode', themeModeMap[newMode]!);
-}
 
 /// Launches a URL.
 ///
