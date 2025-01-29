@@ -1,2 +1,0 @@
-class LogEnd(Exception):
-    pass

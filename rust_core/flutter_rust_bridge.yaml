@@ -1,0 +1,3 @@
+rust_input: crate::api
+rust_root: lib_profit_taker/
+dart_output: lib/src/lib_profit_taker

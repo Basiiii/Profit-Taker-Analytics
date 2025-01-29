@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:rust_core/rust_core.dart';
 
 /// The entry point of the application.
 ///
@@ -19,6 +20,10 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 /// preferences, and window configuration), and then runs the app using `runApp`.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Rust Core
+  await RustLib.init();
+  print('Action: Call Rust `greet("Tom")`\nResult: `${greet(name: "Tom")}`');
 
   // Initialize window manager
   initializeWindowManager();

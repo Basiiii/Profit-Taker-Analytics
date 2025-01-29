@@ -1,0 +1,18 @@
+[package]
+name = "lib_profit_taker_database"
+version = "0.1.0"
+
+publish.workspace = true
+authors.workspace = true
+repository.workspace = true
+readme.workspace = true
+license.workspace = true
+edition.workspace = true
+
+[dependencies]
+diesel = { version = "2.2.6", features = [
+    "sqlite",
+    "returning_clauses_for_sqlite_3_35",
+] }
+libsqlite3-sys = { version = "0.30", features = ["bundled"] }
+dotenvy = "0.15"
