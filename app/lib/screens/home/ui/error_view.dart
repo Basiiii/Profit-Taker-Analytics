@@ -4,6 +4,14 @@ import 'package:profit_taker_analyzer/screens/home/widgets/home_header.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:provider/provider.dart';
 
+/// A StatelessWidget that displays an error view when the app encounters an issue.
+///
+/// The error view includes an error icon, a message indicating the failure, and a button
+/// allowing the user to retry the operation that failed. The retry button triggers a
+/// method from the [RunNavigationService] to attempt the operation again.
+///
+/// Returns:
+/// A [ErrorView] widget containing an error message and a retry button.
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key});
 

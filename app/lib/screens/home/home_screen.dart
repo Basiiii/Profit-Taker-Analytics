@@ -9,6 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:provider/provider.dart';
 
+/// A StatefulWidget that displays the home screen of the application.
+///
+/// The home screen shows the current run data, navigation controls, and manages
+/// the state for loading, errors, and the display of run content. It listens for keyboard events
+/// to allow navigation between runs using action keys and mouse scroll events.
+///
+/// Returns:
+/// A [HomeScreen] widget displaying the home content, error view, or no runs available message based on the app state.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,6 +24,19 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+/// The state for [HomeScreen], managing the initialization, loading of action keys, and periodic updates.
+///
+/// This class handles loading the saved action keys, initializing the run service, and managing the state for
+/// loading, error, or content display. It listens for key and pointer events to navigate between runs.
+///
+/// Instance variables:
+/// - [_scaffoldKey]: The global key for the scaffold used in the home screen.
+/// - [_runService]: An instance of [RunNavigationService] used to manage the app's run navigation.
+///
+/// Methods:
+/// - [initState]: Initializes the run service and starts periodic updates.
+/// - [dispose]: Stops the periodic updates when the screen is disposed.
+/// - [_loadKeys]: Loads the saved action keys from SharedPreferences and triggers a rebuild.
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late RunNavigationService _runService;
@@ -42,10 +63,21 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // Load the saved keys from SharedPreferences
+  /// Loads the saved action keys from SharedPreferences and updates the state accordingly.
+  ///
+  /// This method retrieves the saved action keys (up and down) and triggers a rebuild to apply the updated keys.
+  ///
+  /// Parameters:
+  /// None.
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the keys have been loaded and the state has been updated.
   Future<void> _loadKeys() async {
-    upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
-    downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
+    ActionKeyManager.upActionKey =
+        await ActionKeyManager.loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+    ActionKeyManager.downActionKey =
+        await ActionKeyManager.loadDownActionKey() ??
+            LogicalKeyboardKey.arrowDown;
     setState(() {}); // Trigger a rebuild to use the updated keys
   }
 
@@ -61,9 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
         focusNode: FocusNode(), // Needed to listen for keyboard events
         onKeyEvent: (KeyEvent event) {
           if (event is KeyDownEvent) {
-            if (event.logicalKey == upActionKey) {
+            if (event.logicalKey == ActionKeyManager.upActionKey) {
               runService.navigateToNextRun();
-            } else if (event.logicalKey == downActionKey) {
+            } else if (event.logicalKey == ActionKeyManager.downActionKey) {
               runService.navigateToPreviousRun();
             }
           }
