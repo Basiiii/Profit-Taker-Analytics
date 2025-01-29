@@ -1,10 +1,30 @@
 [package]
-name = "rust_core"
+name = "lib_profit_taker"
 version = "0.1.0"
-edition = "2021"
+
+authors.workspace = true
+repository.workspace = true
+license.workspace = true
+edition.workspace = true
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
 
+[workspace]
+package.authors = ["Basi", "Kalaay", "RemasteredArch"]
+package.publish = false
+package.repository = "https://github.com/Basiiii/Profit-Taker-Analytics"
+package.readme = true
+package.license = "GPL-3.0-or-later"
+package.edition = "2021"
+
+members = ["lib_profit_taker_database", "lib_profit_taker_parser"]
+
+[workspace.dependencies]
+lib_profit_taker_database = { version = "*", path = "./lib_profit_taker_database/" }
+lib_profit_taker_parser = { version = "*", path = "./lib_profit_taker_parser/" }
+
 [dependencies]
 flutter_rust_bridge = "=2.7.1"
+lib_profit_taker_database.workspace = true
+lib_profit_taker_parser.workspace = true

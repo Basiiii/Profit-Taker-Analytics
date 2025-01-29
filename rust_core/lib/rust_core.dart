@@ -1,4 +1,4 @@
 library;
 
-export 'src/rust/api/simple.dart';
-export 'src/rust/frb_generated.dart' show RustLib;
+export 'src/lib_profit_taker/api/simple.dart';
+export 'src/lib_profit_taker/frb_generated.dart' show RustLib;
