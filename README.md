@@ -85,7 +85,7 @@ We extend our sincere gratitude to the original repository, [revoltage34/ptanaly
 
 - [Basi](https://github.com/Basiiii) - Flutter App Developer
 - [scamcat](https://github.com/ScamCatt) - Python Parser Developer
-- [RemasteredArch](https://github.com/RemasteredArch) - Rust Core Developer
+- [RemasteredArch](https://remasteredarch.net/) - Rust Core Developer
 
 ### Notable Contributors
 
