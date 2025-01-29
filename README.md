@@ -85,9 +85,11 @@ We extend our sincere gratitude to the original repository, [revoltage34/ptanaly
 
 - [Basi](https://github.com/Basiiii) - Flutter App Developer
 - [scamcat](https://github.com/ScamCatt) - Python Parser Developer
+- [RemasteredArch](https://github.com/RemasteredArch) - Rust Core Developer
 
 ### Notable Contributors
 
 - Mebius - Contributed Chinese translations
 - [Kalaay](https://github.com/KalaayPT) - Contributed Russian translations
 - [Reava](https://github.com/Reava) - Contributed French translations
+- [Neppkun](https://github.com/Neppkun) - Contributed Turkish translations
