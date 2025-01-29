@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/home_header.dart';
 
+/// A StatelessWidget that displays a message when no runs are available.
+///
+/// This view shows an icon indicating that there are no runs, along with an error message
+/// and a suggestion to start a new run. The message is localized using [FlutterI18n].
+///
+/// Returns:
+/// A [NoRunsAvailable] widget displaying an icon, error message, and instructions to start a new run.
 class NoRunsAvailable extends StatelessWidget {
   const NoRunsAvailable({super.key});
 
