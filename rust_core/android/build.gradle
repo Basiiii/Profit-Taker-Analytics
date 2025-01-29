@@ -51,6 +51,6 @@ android {
 
 apply from: "../cargokit/gradle/plugin.gradle"
 cargokit {
-    manifestDir = "../rust"
-    libname = "rust_core"
+    manifestDir = "../lib_profit_taker"
+    libname = "lib_profit_taker"
 }
