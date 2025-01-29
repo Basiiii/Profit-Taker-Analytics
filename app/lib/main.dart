@@ -27,8 +27,10 @@ void main() async {
   databaseFactory = databaseFactoryFfi;
 
   // Load key mappings for Home controls
-  upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
-  downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
+  ActionKeyManager.upActionKey =
+      await ActionKeyManager.loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+  ActionKeyManager.downActionKey = await ActionKeyManager.loadDownActionKey() ??
+      LogicalKeyboardKey.arrowDown;
 
   // Initialize SharedPreferences
   final prefs = await SharedPreferences.getInstance();

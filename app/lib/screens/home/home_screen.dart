@@ -44,8 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Load the saved keys from SharedPreferences
   Future<void> _loadKeys() async {
-    upActionKey = await loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
-    downActionKey = await loadDownActionKey() ?? LogicalKeyboardKey.arrowDown;
+    ActionKeyManager.upActionKey =
+        await ActionKeyManager.loadUpActionKey() ?? LogicalKeyboardKey.arrowUp;
+    ActionKeyManager.downActionKey =
+        await ActionKeyManager.loadDownActionKey() ??
+            LogicalKeyboardKey.arrowDown;
     setState(() {}); // Trigger a rebuild to use the updated keys
   }
 
@@ -61,9 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
         focusNode: FocusNode(), // Needed to listen for keyboard events
         onKeyEvent: (KeyEvent event) {
           if (event is KeyDownEvent) {
-            if (event.logicalKey == upActionKey) {
+            if (event.logicalKey == ActionKeyManager.upActionKey) {
               runService.navigateToNextRun();
-            } else if (event.logicalKey == downActionKey) {
+            } else if (event.logicalKey == ActionKeyManager.downActionKey) {
               runService.navigateToPreviousRun();
             }
           }

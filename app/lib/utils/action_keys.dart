@@ -1,42 +1,50 @@
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Key for going forward on Home Page
-LogicalKeyboardKey upActionKey = LogicalKeyboardKey.arrowUp;
+/// A class to manage action keys for navigation.
+class ActionKeyManager {
+  static const String upActionKeyKey = 'upActionKey';
+  static const String downActionKeyKey = 'downActionKey';
 
-/// Key for going backwards on Home Page
-LogicalKeyboardKey downActionKey = LogicalKeyboardKey.arrowDown;
+  /// Key for going forward on Home Page
+  static LogicalKeyboardKey upActionKey = LogicalKeyboardKey.arrowUp;
 
-Future<void> saveUpActionKey() async {
-  final prefs = await SharedPreferences.getInstance();
-  // Save the keyId of the upActionKey.
-  await prefs.setInt('upActionKey', upActionKey.keyId);
-}
+  /// Key for going backwards on Home Page
+  static LogicalKeyboardKey downActionKey = LogicalKeyboardKey.arrowDown;
 
-Future<void> saveDownActionKey() async {
-  final prefs = await SharedPreferences.getInstance();
-  // Save the keyId of the downActionKey.
-  await prefs.setInt('downActionKey', downActionKey.keyId);
-}
-
-// Function to load the upActionKey
-Future<LogicalKeyboardKey?> loadUpActionKey() async {
-  final prefs = await SharedPreferences.getInstance();
-  int? upActionKeyId = prefs.getInt('upActionKey');
-  if (upActionKeyId != null) {
-    // Use the findKeyByKeyId method to locate the LogicalKeyboardKey by its keyId
-    return LogicalKeyboardKey.findKeyByKeyId(upActionKeyId);
+  /// Save a [LogicalKeyboardKey] by its keyId.
+  static Future<void> saveKey(String keyName, LogicalKeyboardKey key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(keyName, key.keyId);
   }
-  return null;
-}
 
-// Function to load the downActionKey
-Future<LogicalKeyboardKey?> loadDownActionKey() async {
-  final prefs = await SharedPreferences.getInstance();
-  int? downActionKeyId = prefs.getInt('downActionKey');
-  if (downActionKeyId != null) {
-    // Use the findKeyByKeyId method to locate the LogicalKeyboardKey by its keyId
-    return LogicalKeyboardKey.findKeyByKeyId(downActionKeyId);
+  /// Load a [LogicalKeyboardKey] from its keyId.
+  static Future<LogicalKeyboardKey?> loadKey(String keyName) async {
+    final prefs = await SharedPreferences.getInstance();
+    int? keyId = prefs.getInt(keyName);
+    if (keyId != null) {
+      return LogicalKeyboardKey.findKeyByKeyId(keyId);
+    }
+    return null;
   }
-  return null;
+
+  /// Save the up action key.
+  static Future<void> saveUpActionKey() async {
+    await saveKey(upActionKeyKey, upActionKey);
+  }
+
+  /// Save the down action key.
+  static Future<void> saveDownActionKey() async {
+    await saveKey(downActionKeyKey, downActionKey);
+  }
+
+  /// Load the up action key.
+  static Future<LogicalKeyboardKey?> loadUpActionKey() async {
+    return await loadKey(upActionKeyKey);
+  }
+
+  /// Load the down action key.
+  static Future<LogicalKeyboardKey?> loadDownActionKey() async {
+    return await loadKey(downActionKeyKey);
+  }
 }
