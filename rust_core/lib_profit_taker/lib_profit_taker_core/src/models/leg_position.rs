@@ -4,10 +4,10 @@
 /// Represents the position of a leg on a profit-taker.
 ///
 /// The `LegPosition` enum is used to categorize legs into four distinct positions:
-/// - FrontLeft
-/// - FrontRight
-/// - BackLeft
-/// - BackRight
+/// - `FrontLeft`
+/// - `FrontRight`
+/// - `BackLeft`
+/// - `BackRight`
 ///
 /// This is useful for tracking leg-specific events, such as leg breaks, in a structured way.
 #[derive(Debug)]
@@ -40,12 +40,12 @@ impl LegPosition {
     /// let position = LegPosition::FrontLeft;
     /// assert_eq!(position.to_string(), "FrontLeft");
     /// ```
-    pub fn to_string(&self) -> &str {
+    #[must_use] pub const fn to_string(&self) -> &str {
         match *self {
-            LegPosition::FrontLeft => "FrontLeft",
-            LegPosition::FrontRight => "FrontRight",
-            LegPosition::BackLeft => "BackLeft",
-            LegPosition::BackRight => "BackRight",
+            Self::FrontLeft => "FrontLeft",
+            Self::FrontRight => "FrontRight",
+            Self::BackLeft => "BackLeft",
+            Self::BackRight => "BackRight",
         }
     }
 }

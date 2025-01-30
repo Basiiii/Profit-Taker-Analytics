@@ -47,8 +47,8 @@ impl Phase {
     ///
     /// A new `Phase` instance with default values for `total_time`, `total_shield_time`, `total_leg_time`,
     /// `total_body_kill_time`, `total_pylon_time`, `shield_changes`, and `leg_breaks`.
-    pub fn new(phase_number: i32) -> Self {
-        Phase {
+    #[must_use] pub const fn new(phase_number: i32) -> Self {
+        Self {
             phase_number,
             total_time: 0.0,
             total_shield_time: 0.0,

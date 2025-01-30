@@ -30,8 +30,8 @@ impl SquadMember {
     /// let member = SquadMember::new("Alice");
     /// assert_eq!(member.member_name, "Alice");
     /// ```
-    pub fn new(name: &str) -> Self {
-        SquadMember {
+    #[must_use] pub fn new(name: &str) -> Self {
+        Self {
             member_name: name.to_string(),
         }
     }

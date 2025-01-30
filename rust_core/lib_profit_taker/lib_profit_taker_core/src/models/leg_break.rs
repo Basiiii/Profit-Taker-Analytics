@@ -27,8 +27,8 @@ impl LegBreak {
     /// # Returns
     ///
     /// A new `LegBreak` instance with the provided `leg_position` and `leg_order`.
-    pub fn new(leg_position: LegPosition, leg_order: i32) -> Self {
-        LegBreak {
+    #[must_use] pub const fn new(leg_position: LegPosition, leg_order: i32) -> Self {
+        Self {
             leg_position,
             leg_order,
         }

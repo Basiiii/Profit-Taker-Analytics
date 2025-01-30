@@ -62,21 +62,21 @@ impl StatusEffect {
     /// let effect = StatusEffect::Heat;
     /// assert_eq!(effect.to_string(), "Heat");
     /// ```
-    pub fn to_string(&self) -> &str {
+    #[must_use] pub const fn to_string(&self) -> &str {
         match *self {
-            StatusEffect::Impact => "Impact",
-            StatusEffect::Puncture => "Puncture",
-            StatusEffect::Slash => "Slash",
-            StatusEffect::Heat => "Heat",
-            StatusEffect::Cold => "Cold",
-            StatusEffect::Electric => "Electric",
-            StatusEffect::Toxin => "Toxin",
-            StatusEffect::Blast => "Blast",
-            StatusEffect::Radiation => "Radiation",
-            StatusEffect::Gas => "Gas",
-            StatusEffect::Magnetic => "Magnetic",
-            StatusEffect::Viral => "Viral",
-            StatusEffect::Corrosive => "Corrosive",
+            Self::Impact => "Impact",
+            Self::Puncture => "Puncture",
+            Self::Slash => "Slash",
+            Self::Heat => "Heat",
+            Self::Cold => "Cold",
+            Self::Electric => "Electric",
+            Self::Toxin => "Toxin",
+            Self::Blast => "Blast",
+            Self::Radiation => "Radiation",
+            Self::Gas => "Gas",
+            Self::Magnetic => "Magnetic",
+            Self::Viral => "Viral",
+            Self::Corrosive => "Corrosive",
         }
     }
 }
