@@ -225,7 +225,7 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number:i32) -> io::Result<()> {
                 run_number += 1; //TODO remove this when done because it's just for testing
                 let new_run = Run::new(run_number);
                 current_run = Some(new_run);
-                println!("Run #{} found, analysing...", run_number);
+                println!("Run #{} found, starting at {} analysing...", run_number, );
             }
 
             // Process line if inside a run
