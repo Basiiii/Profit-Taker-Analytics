@@ -18,7 +18,7 @@ package.readme = true
 package.license = "GPL-3.0-or-later"
 package.edition = "2021"
 
-members = ["lib_profit_taker_database", "lib_profit_taker_parser"]
+members = ["lib_profit_taker_database", "lib_profit_taker_parser", "lib_profit_taker_core"]
 
 [workspace.dependencies]
 lib_profit_taker_database = { version = "*", path = "./lib_profit_taker_database/" }
