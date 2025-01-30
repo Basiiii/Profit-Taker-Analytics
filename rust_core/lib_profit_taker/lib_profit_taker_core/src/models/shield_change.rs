@@ -27,8 +27,8 @@ impl ShieldChange {
     /// # Returns
     ///
     /// A new `ShieldChange` instance with the provided `shield_time` and `status_effect`.
-    pub fn new(shield_time: f64, status_effect: StatusEffect) -> Self {
-        ShieldChange {
+    #[must_use] pub const fn new(shield_time: f64, status_effect: StatusEffect) -> Self {
+        Self {
             shield_time,
             status_effect,
         }

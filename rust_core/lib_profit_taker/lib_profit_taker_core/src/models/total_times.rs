@@ -52,7 +52,7 @@ impl TotalTimes {
     /// assert_eq!(times.total_time, 120.5);
     /// assert_eq!(times.total_flight_time, 30.0);
     /// ```
-    pub fn new(
+    #[must_use] pub const fn new(
         total_time: f64,
         total_flight_time: f64,
         total_shield_time: f64,
@@ -60,7 +60,7 @@ impl TotalTimes {
         total_body_time: f64,
         total_pylon_time: f64,
     ) -> Self {
-        TotalTimes {
+        Self {
             total_time,
             total_flight_time,
             total_shield_time,

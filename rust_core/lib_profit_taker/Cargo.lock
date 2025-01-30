@@ -503,6 +503,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "lib_profit_taker_core"
+version = "0.1.0"
+
+[[package]]
 name = "lib_profit_taker_database"
 version = "0.1.0"
 dependencies = [

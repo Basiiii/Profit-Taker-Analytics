@@ -58,8 +58,8 @@ impl Run {
     ///
     /// A new `Run` instance with default values for `is_bugged_run`, `is_aborted_run`, `is_solo_run`,
     /// `total_times`, `phases`, and `squad_members`.
-    pub fn new(run_id: i32, time_stamp: i64, run_name: &str, player_name: &str) -> Self {
-        Run {
+    #[must_use] pub fn new(run_id: i32, time_stamp: i64, run_name: &str, player_name: &str) -> Self {
+        Self {
             run_id,
             time_stamp,
             run_name: run_name.to_string(),
