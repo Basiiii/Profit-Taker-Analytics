@@ -1,5 +1,5 @@
 [package]
-name = "lib_profit_taker_database"
+name = "lib_profit_taker_core"
 version = "0.1.0"
 
 publish.workspace = true
@@ -10,6 +10,3 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
-rusqlite = { version = "0.30", features = ["bundled"] }
-chrono = "0.4.34"
-thiserror = "1.0.56"

@@ -8,3 +8,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 String greet({required String name}) =>
     RustLib.instance.api.crateApiGreet(name: name);
+
+String createDb({required String path}) =>
+    RustLib.instance.api.crateApiCreateDb(path: path);
