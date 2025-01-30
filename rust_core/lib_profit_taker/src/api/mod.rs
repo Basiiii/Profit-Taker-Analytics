@@ -1,5 +1,4 @@
-use lib_profit_taker_database::create_database;
-use std::fs;
+use lib_profit_taker_database::connection::create_database;
 
 #[deprecated]
 #[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo

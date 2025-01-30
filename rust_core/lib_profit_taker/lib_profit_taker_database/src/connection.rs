@@ -8,7 +8,6 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use thiserror::Error;
-use std::path::Path;
 
 /// The embedded migrations, allowing us to run migrations automatically if needed.
 const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
@@ -45,12 +44,6 @@ pub enum DatabaseError {
 /// * `Result<(), DatabaseError>` - Returns `Ok(())` if the connection is successful, or 
 ///   an error if the connection or migration fails.
 pub fn create_database(path: &str) -> Result<(), DatabaseError> {
-    // Ensure the path is a valid file path
-    if !Path::new(path).exists() {
-        // If the path doesn't exist, SQLite will automatically create it
-        println!("Database file does not exist, will create at: {}", path);
-    }
-
     // Format the database URL for SQLite
     let database_url = format!("sqlite://{}", path);
 
@@ -66,4 +59,3 @@ pub fn create_database(path: &str) -> Result<(), DatabaseError> {
     // Return Ok if the connection is successfully established and migrations are applied
     Ok(())
 }
-
