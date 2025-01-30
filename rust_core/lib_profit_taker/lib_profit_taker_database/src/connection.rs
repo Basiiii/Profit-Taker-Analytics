@@ -1,61 +1,51 @@
-//! This module provides functions for establishing and managing database connections.
+//! This module provides functions for interacting with an SQLite database.
+//! It handles the creation of the database file and the initialization of the database schema.
 //! 
-//! It handles creating connections to an SQLite database and can be used by other parts
-//! of the application to interact with the database. The `create_database` function
-//! ensures that the database exists at the provided path and applies any necessary migrations.
+//! The `create_database` function ensures that the database file exists at the given path,
+//! creating the necessary directory structure if needed. It then opens a connection to the database
+//! and initializes the schema by executing the SQL statements stored in `SCHEMA_SQL`.
+//!
+//! The `initialize_schema` function is responsible for executing the SQL schema commands to set
+//! up the database tables and insert any default data required for the application to function correctly.
 
-use diesel::prelude::*;
-use diesel::sqlite::SqliteConnection;
-use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use thiserror::Error;
+use rusqlite::{Connection, Result};
+use std::fs;
+use std::path::Path;
+use crate::schema::SCHEMA_SQL;
 
-/// The embedded migrations, allowing us to run migrations automatically if needed.
-const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
-
-/// This enum is used for handling various errors that can occur in the database operations.
-/// It wraps common errors that might happen during the connection setup, migrations, or queries.
-#[derive(Debug, Error)]
-pub enum DatabaseError {
-    /// Error when connecting to the SQLite database.
-    #[error("Connection error: {0}")]
-    ConnectionError(#[from] diesel::ConnectionError),
-    
-    /// Error during the database migrations.
-    #[error("Migration error: {0}")]
-    MigrationError(#[from] Box<dyn std::error::Error + Send + Sync>),
-    
-    /// Error that occurs while executing a database query.
-    #[error("Query error: {0}")]
-    QueryError(#[from] diesel::result::Error),
-}
-
-/// Establishes a connection to the SQLite database at the provided path.
-/// 
-/// This function will create the SQLite database if it doesn't already exist. It will
-/// also run any pending migrations that need to be applied. If an error occurs, it is 
-/// returned wrapped in the `DatabaseError` enum.
+/// Creates an SQLite database file at the given path if it does not exist.
+/// Ensures the directory structure is created before attempting to create the database.
 /// 
 /// # Arguments
-/// 
-/// * `path` - The path to the SQLite database. This should be a valid file path.
+/// * `path` - The file path where the SQLite database should be created.
 /// 
 /// # Returns
+/// * `Result<()>` - Returns `Ok(())` if the database file is successfully created or already exists.
+/// If an error occurs during directory creation or database initialization, it is returned.
+pub fn create_database(path: &str) -> Result<()> {
+    // Ensure the directory exists
+    if let Some(parent) = Path::new(path).parent() {
+        fs::create_dir_all(parent).map_err(|e| rusqlite::Error::ToSqlConversionFailure(Box::new(e)))?;
+    }
+
+    // Create and initialize the database
+    let conn = Connection::open(path)?;
+    initialize_schema(&conn)?;
+    
+    Ok(())
+}
+
+/// Initializes the SQLite database schema by executing SQL statements from the constant.
+///
+/// This function runs the schema creation queries stored in `SCHEMA_SQL` to set up the required tables and default values.
 /// 
-/// * `Result<(), DatabaseError>` - Returns `Ok(())` if the connection is successful, or 
-///   an error if the connection or migration fails.
-pub fn create_database(path: &str) -> Result<(), DatabaseError> {
-    // Format the database URL for SQLite
-    let database_url = format!("sqlite://{}", path);
+/// # Arguments
+/// * `conn` - A reference to the active SQLite database connection.
+/// 
+/// # Returns
+/// * `Result<()>` - Returns `Ok(())` if the schema is successfully created, otherwise returns an error.
+pub fn initialize_schema(conn: &Connection) -> Result<()> {
+    conn.execute_batch(SCHEMA_SQL)?; // Execute the schema from the constant
 
-    // Attempt to establish a connection to the SQLite database
-    let mut connection = SqliteConnection::establish(&database_url)
-        .map_err(|e| DatabaseError::ConnectionError(e.into()))?;
-
-    // Run any pending migrations that need to be applied
-    connection
-        .run_pending_migrations(MIGRATIONS)
-        .map_err(|e| DatabaseError::MigrationError(e.into()))?;
-
-    // Return Ok if the connection is successfully established and migrations are applied
     Ok(())
 }

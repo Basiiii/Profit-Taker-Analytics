@@ -4,8 +4,7 @@
 
 #![warn(clippy::nursery, clippy::pedantic)]
 
-pub mod connection;  // Include the `connection.rs` module
-pub mod schema;      // Include the schema definitions
-pub mod models;      // Expose models (for use in the DB library)
+pub mod connection;
+pub mod schema;
 
 // TODO: include more modules here for additional functionality like inserts, fetches, etc
