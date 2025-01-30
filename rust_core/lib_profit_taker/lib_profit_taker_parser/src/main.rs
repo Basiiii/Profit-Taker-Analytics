@@ -338,15 +338,15 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, mut parser_state: &mut 
     if line.contains(PHASE_START) { //TODO check bugged runs
         match line {
             _ if line.contains(PHASE_ENDS_1) => {
-                prepare_and_submit_phase(line, run, &mut parser_state);
+                prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
             _ if line.contains(PHASE_ENDS_2) => {
-                prepare_and_submit_phase(line, run, &mut parser_state);
+                prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
             _ if line.contains(PHASE_ENDS_3) => {
-                prepare_and_submit_phase(line, run, &mut parser_state);
+                prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
             _ => {},
