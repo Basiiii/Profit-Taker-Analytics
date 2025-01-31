@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek, SeekFrom};
 use std::time::Duration;
 use std::{env, thread};
-use lib_profit_taker_core::models::{Run, Phase, SquadMember, TotalTimes, ShieldChange, LegBreak, StatusEffect, LegPosition};
+use lib_profit_taker_core::models::{Run, Phase, SquadMember, ShieldChange, LegBreak, StatusEffect, LegPosition};
 
 #[cfg(target_os = "windows")]
 const LOG_PATH: &str = "/Warframe/EE.log";
@@ -36,7 +36,6 @@ const ELEVATOR_EXIT :&str = "EidolonMP.lua: EIDOLONMP: Avatar left the zone";
 const BACK_TO_TOWN :&str = "EidolonMP.lua: EIDOLONMP: TryTownTransition";
 const ABORT_MISSION :&str = "GameRulesImpl - changing state from SS_STARTED to SS_ENDING";
 
-
 struct ParserState {
     phase_nr: i32,
     start_time: f64,
@@ -48,6 +47,8 @@ struct ParserState {
     kill_sequence: i32,
     previous_shield: StatusEffect,
     previous_time: f64,
+    shield_phase_ended: bool,
+    body_kill_time: f64,
 }
 
 fn parser_loop(path: &str, mut pos: u64, mut run_number:i32) -> io::Result<()> {
@@ -62,8 +63,10 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number:i32) -> io::Result<()> {
         pylon_launch_time: 0.0, // time of pylon launch, reset when a phase ends
         phase_end_timestamp: 0.0, // time of phase end, used to calculate phase 1-3 time, reset when a phase ends
         kill_sequence: 0, // 3x BODY_VULNERABLE in one phase means PT dies.
-        previous_shield: StatusEffect::Impact, // previous shield status, used to calculate shield change time, Impact is a placeholder
+        previous_shield: StatusEffect::NoShield, // previous shield status, used to calculate shield change time, Impact is a placeholder
         previous_time: 0.0, // timestamp used to calculate time deltas
+        shield_phase_ended: false, // used to check if a shield phase has ended
+        body_kill_time: 0.0,
     };
 
     /// Main loop, reads the log file line by line, and processes the lines
@@ -101,7 +104,6 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number:i32) -> io::Result<()> {
 /// Parses a line of the log file, and updates the current run with the information
 /// absolute times so far, TODO: implement relative times
 fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut ParserState, ) {
-//(mut run: &mut Run, run_number: i32, line: &str, phase_nr: i8, mut start_time: f64, mut leg_order: i8, mut bodies: i8, mut current_phase: &mut Phase, mut body_vuln_time: f64, mut pylon_launch_time: f64, mut phase_end_timestamp: f64) {
     if line.contains(NICKNAME) && run.player_name.is_empty() { 
         run.player_name = line.split_whitespace()
             .nth(4)
@@ -138,44 +140,61 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
     if line.contains(PHASE_1_START) {
         run.total_times.total_flight_time = time_from_line(line) - parser_state.start_time;
         parser_state.current_phase.phase_number = 1;
+        parser_state.phase_end_timestamp = time_from_line(line); // this is needed to calculate phase 1 time
         println!("Phase 1 started, flight time: {}", run.total_times.total_flight_time);
     }
 
     // register shields
     if line.contains(SHIELD_SWITCH) {
-        if run.total_times.total_flight_time >= 0.1 { // ignore shield changes before run start
+        if parser_state.previous_shield != StatusEffect::NoShield { // ignore shield changes before run start
             if run.phases.is_empty() && parser_state.current_phase.shield_changes.is_empty() {
                 parser_state.previous_time = run.total_times.total_flight_time + parser_state.start_time
             }
-            println!("previous time: {}", parser_state.previous_time);
             let shield = shield_change_from_line(line, parser_state);
             parser_state.current_phase.shield_changes.push(shield);
-            println!("current phase shield changes: {:#?}", parser_state.current_phase.shield_changes);
-            println!("Shield change registered: {:?}", parser_state.current_phase.shield_changes.last());
-        } else {
-            parser_state.previous_shield = status_from_line(line);
+            //println!("current phase shield changes: {:#?}", parser_state.current_phase.shield_changes);
+            println!("Shield change registered: {:?}: {:.3}", parser_state.current_phase.shield_changes.last().unwrap().status_effect, parser_state.current_phase.shield_changes.last().unwrap().shield_time);
+        } else { 
+            parser_state.previous_shield = status_from_line(line); //shield switches on run start, need this info for first shield break
+            println!("First shield element: {:?}", parser_state.previous_shield);
         }
     }
-    if line.contains(SHIELD_PHASE_ENDING) {
+    if line.contains(SHIELD_PHASE_ENDING) && !parser_state.current_phase.shield_changes.is_empty() && !parser_state.shield_phase_ended {
         let shield = shield_change_from_line(line, parser_state);
         parser_state.current_phase.shield_changes.push(shield);
+        println!("Shield change registered: {:?}: {:.3}", parser_state.current_phase.shield_changes.last().unwrap().status_effect, parser_state.current_phase.shield_changes.last().unwrap().shield_time);
         println!("current phase shield changes: {:#?}", parser_state.current_phase.shield_changes);
-        println!("Shield change registered: {:?}", parser_state.current_phase.shield_changes.last());
+        println!("shield phase ends at {}, leg phase starting", time_from_line(line));
+        println!();
+        parser_state.shield_phase_ended = true;
     }
 
 
     // register leg breaks
     if line.contains(LEG_KILL) {
-        parser_state.current_phase.leg_breaks.push(leg_break_from_line(line, parser_state.leg_order));
-        println!("Leg break registered: {:?}", parser_state.current_phase.leg_breaks);
+        let leg = leg_break_from_line(line, parser_state);
+        parser_state.current_phase.leg_breaks.push(leg);
+        println!("Leg break registered: {:?}: {:.3}", parser_state.current_phase.leg_breaks.last().unwrap().leg_position, parser_state.current_phase.leg_breaks.last().unwrap().leg_break_time);
     }
 
     // register body
     if line.contains(BODY_VULNERABLE) {
+        println!("Body vulnerable at {}", time_from_line(line));
         if parser_state.kill_sequence == 0 {
             parser_state.body_vuln_time = time_from_line(line);
         }
         parser_state.kill_sequence += 1; // 3x BODY_VULNERABLE in one phase means PT dies.
+    }
+    if line.contains(STATE_CHANGE) { //this is needed to calculate body times in phases 1-3
+        let state :i8 = line.split_whitespace()
+            .nth(8)
+            .expect("No state found")
+            .parse()
+            .expect("State couldn't be extracted from line");
+        println!("State change to {} at {}", state, time_from_line(line));
+        if state == 3 || state == 5 || state == 6 {
+            parser_state.body_kill_time = time_from_line(line);
+        }
     }
 
     // register pylon TODO: bugged pylons
@@ -192,10 +211,12 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
             _ if line.contains(PHASE_ENDS_2) => {
+                parser_state.shield_phase_ended = false;
                 prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
             _ if line.contains(PHASE_ENDS_3) => {
+                parser_state.shield_phase_ended = false;
                 prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
             },
@@ -222,14 +243,8 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
 }
 
 fn prepare_and_submit_phase (line: &str, run: &mut Run, parser_state: &mut ParserState) {
-    println!("Phase {} ended", parser_state.current_phase.phase_number);
-    parser_state.current_phase.total_time = 
-        if parser_state.phase_nr == 1 {
-            time_from_line(line) - parser_state.start_time
-        } else {
-            time_from_line(line) - parser_state.phase_end_timestamp
-        };
-    println!("Phase {} time: {}", parser_state.current_phase.phase_number, parser_state.current_phase.total_time);
+    println!("Phase {} ended at {}", parser_state.current_phase.phase_number, time_from_line(line));
+    parser_state.current_phase.total_time = time_from_line(line) - parser_state.phase_end_timestamp;
     parser_state.current_phase.total_shield_time =
         if parser_state.current_phase.shield_changes.is_empty() {
             0.0 // this was none before
@@ -240,11 +255,8 @@ fn prepare_and_submit_phase (line: &str, run: &mut Run, parser_state: &mut Parse
                 .map(|x| x.shield_time)
                 .sum()
         };
-    println!("Phase {} shield time: {}", parser_state.current_phase.phase_number, parser_state.current_phase.total_shield_time);
     parser_state.current_phase.total_leg_time = parser_state.current_phase.leg_breaks.iter().map(|x| x.leg_break_time).sum();
-    println!("Phase {} leg time: {}", parser_state.current_phase.phase_number, parser_state.current_phase.total_leg_time);
-    parser_state.current_phase.total_body_kill_time = parser_state.pylon_launch_time - parser_state.body_vuln_time; // if pylon launch, body kill time is the time from body vuln to pylon launch, this is different in phases without pylons
-    println!("Phase {} body time: {}", parser_state.current_phase.phase_number, parser_state.current_phase.total_body_kill_time);
+    parser_state.current_phase.total_body_kill_time = parser_state.body_kill_time - parser_state.body_vuln_time; 
     parser_state.current_phase.total_pylon_time =
         if parser_state.pylon_launch_time == 0.0 {
             0.0 // this was none before
@@ -252,9 +264,9 @@ fn prepare_and_submit_phase (line: &str, run: &mut Run, parser_state: &mut Parse
         else {
             time_from_line(line) - parser_state.pylon_launch_time
         };
-    println!("Phase {} pylon time: {}", parser_state.current_phase.phase_number, parser_state.current_phase.total_pylon_time);
     // phase number, shield_change and leg_breaks are already set at this point
     let phase_nr = parser_state.current_phase.phase_number;
+    println!("Phase {} submitted: {:#?}", parser_state.current_phase.phase_number, parser_state.current_phase);
     run.phases.push(parser_state.current_phase.clone());
     parser_state.current_phase = Phase::new(phase_nr + 1);
     println!("Phase {} started", parser_state.current_phase.phase_number);
@@ -269,11 +281,8 @@ fn time_from_line(line: &str) -> f64 {
 /// takes a line with a shield change, and returns a ShieldChange object, containing the time, status effect and current phase
 /// time is in relation to the previous time
 fn shield_change_from_line(line: &str, parser_state: &mut ParserState) -> ShieldChange {
-    
-    println!("previous time: {:?}", parser_state.previous_time);
-    println!("line time: {:?}", time_from_line(line));
     let time = time_from_line(line) - parser_state.previous_time;
-    println!("relative time: {:?}", time);
+    //println!("previous time: {:?}, line time: {:?}, relative: {:?}", parser_state.previous_time, time_from_line(line), time);
     let shield_change = ShieldChange::new(time, parser_state.previous_shield);
     parser_state.previous_time = time_from_line(line);
     if !line.contains(SHIELD_PHASE_ENDING) {
@@ -301,8 +310,8 @@ fn status_from_line(line: &str) -> StatusEffect {
     };
     status
 }
-fn leg_break_from_line (line :&str, mut leg_order: i32) -> LegBreak {
-    let time = time_from_line(line);
+fn leg_break_from_line (line :&str, parser_state: &mut ParserState) -> LegBreak {
+    let time = time_from_line(line) - parser_state.previous_time;
     let name :&str = line.split_whitespace().last().expect("couldnt read leg ");
     let leg = match name {
         "ARM_RIGHT" => LegPosition::FrontLeft,
@@ -311,8 +320,9 @@ fn leg_break_from_line (line :&str, mut leg_order: i32) -> LegBreak {
         "LEG_LEFT" => LegPosition::BackRight,
         _ => panic!("Unknown leg position: {}", name),
     };
-    leg_order += 1;
-    LegBreak::new(time, leg, leg_order)
+    parser_state.previous_time = time_from_line(line);
+    parser_state.leg_order += 1;
+    LegBreak::new(time, leg, parser_state.leg_order)
 }
 
 fn post_process() {

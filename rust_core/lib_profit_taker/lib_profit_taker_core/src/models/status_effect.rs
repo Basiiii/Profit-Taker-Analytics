@@ -45,6 +45,9 @@ pub enum StatusEffect {
 
     /// Corrosive damage type.
     Corrosive,
+    
+    /// No shield status effect, for when a shield is not present.
+    NoShield,
 }
 
 impl StatusEffect {
@@ -77,6 +80,7 @@ impl StatusEffect {
             Self::Magnetic => "Magnetic",
             Self::Viral => "Viral",
             Self::Corrosive => "Corrosive",
+            Self::NoShield => "No Shield",
         }
     }
 }
