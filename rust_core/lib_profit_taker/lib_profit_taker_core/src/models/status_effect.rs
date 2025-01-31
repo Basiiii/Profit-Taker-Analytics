@@ -5,7 +5,7 @@
 ///
 /// The `StatusEffect` enum is used to categorize different types of effects, such as damage types or environmental effects.
 /// Each variant represents a specific type of status effect.
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum StatusEffect {
     /// Impact damage type.
     Impact,
@@ -45,6 +45,9 @@ pub enum StatusEffect {
 
     /// Corrosive damage type.
     Corrosive,
+    
+    /// No shield status effect, for when a shield is not present.
+    NoShield,
 }
 
 impl StatusEffect {
@@ -77,6 +80,7 @@ impl StatusEffect {
             Self::Magnetic => "Magnetic",
             Self::Viral => "Viral",
             Self::Corrosive => "Corrosive",
+            Self::NoShield => "No Shield",
         }
     }
 }

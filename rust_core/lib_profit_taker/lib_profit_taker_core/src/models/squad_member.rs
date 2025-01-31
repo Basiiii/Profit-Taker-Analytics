@@ -5,7 +5,7 @@
 ///
 /// The `SquadMember` struct is used to store information about a squad member, specifically their name.
 /// This is useful for tracking squad members.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SquadMember {
     /// The name of the squad member.
     pub member_name: String,
@@ -30,9 +30,9 @@ impl SquadMember {
     /// let member = SquadMember::new("Alice");
     /// assert_eq!(member.member_name, "Alice");
     /// ```
-    #[must_use] pub fn new(name: &str) -> Self {
+    #[must_use] pub fn new(member_name: String) -> Self {
         Self {
-            member_name: name.to_string(),
+            member_name,
         }
     }
 }
