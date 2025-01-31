@@ -55,6 +55,7 @@ struct ParserState {
     previous_time: f64,
     shield_phase_ended: bool,
     body_kill_time: f64,
+    run_ended: bool,
 }
 
 fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> {
@@ -73,6 +74,7 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> 
         previous_time: 0.0,                      // timestamp used to calculate time deltas
         shield_phase_ended: false,               // used to check if a shield phase has ended
         body_kill_time: 0.0,
+        run_ended: false,
     };
 
     /// Main loop, reads the log file line by line, and processes the lines
@@ -94,6 +96,9 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> 
             // Process line if inside a run
             if let Some(ref mut run) = current_run {
                 parse_run(run, run_number, &line, &mut parser_state);
+                if parser_state.run_ended {
+                    current_run = None;
+                }
             }
 
             pos = reader.seek(SeekFrom::Current(0))?;
@@ -233,9 +238,9 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
 
     // register body
     if line.contains(BODY_VULNERABLE) {
-        println!("Body vulnerable at {}", time_from_line(line));
         if parser_state.kill_sequence == 0 {
             parser_state.body_vuln_time = time_from_line(line);
+            println!("Body vulnerable at {}", time_from_line(line));
         }
         parser_state.kill_sequence += 1; // 3x BODY_VULNERABLE in one phase means PT dies.
     }
@@ -247,9 +252,10 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
             .expect("No state found")
             .parse()
             .expect("State couldn't be extracted from line");
-        println!("State change to {} at {}", state, time_from_line(line));
+        //println!("State change to {} at {}", state, time_from_line(line));
         if state == 3 || state == 5 || state == 6 {
             parser_state.body_kill_time = time_from_line(line);
+            println!("Body killed at {}", parser_state.body_kill_time);
         }
     }
 
@@ -291,12 +297,14 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
         println!("Run {} aborted", run_number);
         run.time_stamp = chrono::Utc::now().timestamp(); // Update timestamp
         post_process();
+        parser_state.run_ended = true;
     } else if parser_state.kill_sequence == 3 {
         // 3x BODY_VULNERABLE in one phase means PT dies.
         // run.aborted_run = false; //already default value
         println!("Run {} completed", run_number);
         run.time_stamp = chrono::Utc::now().timestamp(); // Update timestamp to end of run
         post_process();
+        parser_state.run_ended = true;
     }
 }
 
@@ -342,6 +350,7 @@ fn prepare_and_submit_phase(line: &str, run: &mut Run, parser_state: &mut Parser
     println!("Phase {} started", parser_state.current_phase.phase_number);
     parser_state.body_vuln_time = 0.0;
     parser_state.pylon_launch_time = 0.0;
+    parser_state.kill_sequence = 0;
 }
 
 fn time_from_line(line: &str) -> f64 {
