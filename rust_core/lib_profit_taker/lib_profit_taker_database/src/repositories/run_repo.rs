@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{Run, TotalTimes};
 use crate::error::{Result, DataError};
-use rusqlite::{Connection, Row};
+use rusqlite::Connection;
 use super::{SquadMemberRepository, PhaseRepository};
 
 pub struct RunRepository<'a> {

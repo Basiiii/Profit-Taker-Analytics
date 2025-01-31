@@ -24,6 +24,7 @@ impl<'a> LegBreakRepository<'a> {
         )?;
 
         let breaks = stmt.query_map([run_id, phase_number], |row| {
+            let break_time: f64 = row.get(0)?;
             let position_str: String = row.get(2)?;
             let leg_position = match position_str.as_str() {
                 "FL" => LegPosition::FrontLeft,
@@ -40,6 +41,7 @@ impl<'a> LegBreakRepository<'a> {
             };
 
             Ok(LegBreak {
+                leg_break_time: break_time,
                 leg_position,
                 leg_order: row.get(1)?,
             })
