@@ -6,7 +6,7 @@
 /// The `TotalTimes` struct is used to track the total time spent on different aspects of a run,
 /// such as the overall time, flight time, shield time, leg time, body time, and pylon time.
 /// This is useful for analyzing and summarizing the performance of a run.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct TotalTimes {
     /// The total time spent on the run.
     pub total_time: f64,
@@ -52,21 +52,14 @@ impl TotalTimes {
     /// assert_eq!(times.total_time, 120.5);
     /// assert_eq!(times.total_flight_time, 30.0);
     /// ```
-    #[must_use] pub const fn new(
-        total_time: f64,
-        total_flight_time: f64,
-        total_shield_time: f64,
-        total_leg_time: f64,
-        total_body_time: f64,
-        total_pylon_time: f64,
-    ) -> Self {
+    #[must_use] pub const fn new() -> Self {
         Self {
-            total_time,
-            total_flight_time,
-            total_shield_time,
-            total_leg_time,
-            total_body_time,
-            total_pylon_time,
+            total_time: 0.0,
+            total_flight_time: 0.0,
+            total_shield_time: 0.0,
+            total_leg_time: 0.0,
+            total_body_time: 0.0,
+            total_pylon_time: 0.0,
         }
     }
 }

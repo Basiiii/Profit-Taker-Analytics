@@ -3,13 +3,12 @@
 //! as well as a list of shield changes and leg breaks that occurred during the phase.
 
 use crate::models::{ShieldChange, LegBreak};
-use std::vec::Vec;
 
 /// Represents a single phase within a run.
 ///
 /// A `Phase` contains information about the phase number, total times for various metrics (shield, leg, body, pylon),
 /// as well as a list of shield changes and leg breaks that occurred during the phase.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Phase {
     /// The number of the phase within the run.
     pub phase_number: i32,
@@ -18,7 +17,7 @@ pub struct Phase {
     pub total_time: f64,
 
     /// The total time spent on shield-related activities during the phase.
-    pub total_shield_time: f64,
+    pub total_shield_time: f64, //TODO option maybe?
 
     /// The total time spent on leg-related activities during the phase.
     pub total_leg_time: f64,
@@ -27,10 +26,10 @@ pub struct Phase {
     pub total_body_kill_time: f64,
 
     /// The total time spent on pylon-related activities during the phase.
-    pub total_pylon_time: f64,
+    pub total_pylon_time: f64, //TODO option maybe?
 
     /// A vector of shield changes that occurred during the phase.
-    pub shield_changes: Vec<ShieldChange>,
+    pub shield_changes: Vec<ShieldChange>, //TODO option maybe?
 
     /// A vector of leg breaks that occurred during the phase.
     pub leg_breaks: Vec<LegBreak>,

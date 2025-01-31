@@ -7,7 +7,7 @@ use crate::models::StatusEffect;
 ///
 /// A `ShieldChange` contains information about the time at which the shield change occurred and the
 /// associated status effect that caused or resulted from the change.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ShieldChange {
     /// The time at which the shield change occurred.
     pub shield_time: f64,

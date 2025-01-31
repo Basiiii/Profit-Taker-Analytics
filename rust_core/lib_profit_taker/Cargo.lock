@@ -677,6 +677,9 @@ dependencies = [
 [[package]]
 name = "lib_profit_taker_core"
 version = "0.1.0"
+dependencies = [
+ "chrono",
+]
 
 [[package]]
 name = "lib_profit_taker_database"
@@ -694,6 +697,7 @@ dependencies = [
  "chrono",
  "diesel",
  "flutter_rust_bridge",
+ "lib_profit_taker_core",
  "notify",
  "regex",
 ]

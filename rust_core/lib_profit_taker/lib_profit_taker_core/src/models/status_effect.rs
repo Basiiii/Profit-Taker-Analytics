@@ -5,7 +5,7 @@
 ///
 /// The `StatusEffect` enum is used to categorize different types of effects, such as damage types or environmental effects.
 /// Each variant represents a specific type of status effect.
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum StatusEffect {
     /// Impact damage type.
     Impact,

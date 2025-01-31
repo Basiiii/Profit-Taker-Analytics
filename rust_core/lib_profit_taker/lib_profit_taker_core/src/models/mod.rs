@@ -21,7 +21,7 @@
 /// Example usage:
 /// ```rust
 /// use lib_profit_taker_core::models::{Run, Phase, SquadMember};
-/// let run = Run::new(1, 1675271234, "Test Run", "Player1");
+/// let run = Run::new(1);
 /// let phase = Phase::new(1);
 /// ```
 pub mod run;

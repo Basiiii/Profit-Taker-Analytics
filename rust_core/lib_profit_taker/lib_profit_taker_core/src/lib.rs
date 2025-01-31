@@ -4,5 +4,5 @@
 
 #![warn(clippy::nursery, clippy::pedantic)]
 
-mod models;
+pub mod models;
 pub use models::{Run, Phase, SquadMember, TotalTimes, ShieldChange, LegBreak, StatusEffect, LegPosition};

@@ -10,7 +10,7 @@
 /// - `BackRight`
 ///
 /// This is useful for tracking leg-specific events, such as leg breaks, in a structured way.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum LegPosition {
     /// The front left leg of the profit-taker.
     FrontLeft,
