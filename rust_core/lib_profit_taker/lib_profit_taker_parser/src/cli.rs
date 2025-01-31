@@ -121,7 +121,7 @@ pub fn pretty_print_run(run: &Run) -> String {
     output.push_str(&format!(" Leg Break:      {}\n", format!("{:.3}s", sum_leg).bright_green()));
     output.push_str(&format!(" Body Killed:    {}\n", format!("{:.3}s", sum_body).bright_green()));
     output.push_str(&format!(" Pylons:         {}\n", format!("{:.3}s", sum_pylon).bright_green()));
-    output.push_str("------------------------------------------------------------------------\n\n");
+    output.push_str("------------------------------------------------------------------------\n");
 
     println!("{}", output);
     format!("{:?}", output)

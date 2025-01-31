@@ -64,7 +64,7 @@ struct ParserState {
 fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> {
     let mut current_run: Option<Run> = None; // current run is an option so that parse_run is only called when a run is found
 
-    // This struct holds all of the different temporary variables needed for calculating and sorting the run data
+    // This struct holds all the different temporary variables needed for calculating and sorting the run data
     let mut parser_state = ParserState {
         phase_nr: 0, // phase number, incremented on phase end, reset when a run is saved / new run found TODO: actually implement this
         start_time: 0.0,
@@ -89,7 +89,16 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> 
         let mut reader = BufReader::new(file);
         let mut line = String::new();
 
+
         while reader.read_line(&mut line)? > 0 {
+
+            // this is to handle the case when the line is incomplete
+            if !line.ends_with('\n') {
+                // Option 1: Simply wait a little and try again.
+                thread::sleep(Duration::from_millis(10));
+                continue;
+            }
+
             if line.contains(HEIST_START) && current_run.is_none() {
                 run_number += 1; //TODO remove this when done because it's just for testing
                 let new_run = Run::new(run_number);
@@ -158,7 +167,7 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
         parser_state.phase_end_timestamp = time_from_line(line); // this is needed to calculate phase 1 time
         println!(
             "Phase 1 started, flight time: {}",
-            run.total_times.total_flight_time
+            run.total_times.total_flight_time,
         );
     }
     // register shields
@@ -172,7 +181,7 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
             let shield = shield_change_from_line(line, parser_state);
             parser_state.current_phase.shield_changes.push(shield);
             println!(
-                "Shield change registered: {:?}: {:.3}",
+                "New shield change: {:?}: {:.3}",
                 parser_state
                     .current_phase
                     .shield_changes
@@ -204,7 +213,7 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
         let shield = shield_change_from_line(line, parser_state);
         parser_state.current_phase.shield_changes.push(shield);
         println!(
-            "Shield change registered: {:?}: {:.3}",
+            "New shield change: {:?}: {:.3}",
             parser_state
                 .current_phase
                 .shield_changes
@@ -231,7 +240,7 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
         let leg = leg_break_from_line(line, parser_state);
         parser_state.current_phase.leg_breaks.push(leg);
         println!(
-            "Leg break registered: {:?}: {:.3}",
+            "New leg break: {:?}: {:.3}",
             parser_state
                 .current_phase
                 .leg_breaks
@@ -280,19 +289,17 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
             _ if line.contains(PHASE_ENDS_1) => {
                 prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
-                parser_state.previous_time = time_from_line(line); //for first leg calculation
             }
             _ if line.contains(PHASE_ENDS_2) => {
                 parser_state.shield_phase_ended = false;
                 prepare_and_submit_phase(line, run, parser_state);
                 parser_state.phase_end_timestamp = time_from_line(line);
-                parser_state.previous_time = time_from_line(line); //for first shield in phase 3
             }
             _ if line.contains(PHASE_ENDS_3) => {
                 parser_state.shield_phase_ended = false;
                 prepare_and_submit_phase(line, run, parser_state);
+
                 parser_state.phase_end_timestamp = time_from_line(line);
-                parser_state.previous_time = time_from_line(line); //for first shield in phase 4
             }
             _ => {}
         }
@@ -302,21 +309,26 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
     // Check for abort&end conditions
     if line.contains(ABORT_MISSION) || line.contains(BACK_TO_TOWN) {
         // line.contains(HEIST_START) || TODO: check if this is even necessary, like does that ever happen?
+        // TODO check abort behaviour
         println!("{:#?}", run);
         run.is_aborted_run = true;
         println!("Run {} aborted", run_number);
-        run.time_stamp = chrono::Utc::now().timestamp(); // Update timestamp
-        post_process();
+        run.time_stamp = chrono::Local::now().timestamp(); // Update timestamp
+        post_process(run);
         parser_state.run_ended = true;
+        parser_state.shield_phase_ended = false;
     } else if parser_state.kill_sequence == 3 { // 3x BODY_VULNERABLE in one phase means PT dies.
         parser_state.body_kill_time = time_from_line(line);
         prepare_and_submit_phase(line, run, parser_state);
         println!("Run {} completed", run_number);
+        println!("{:#?}", run);
         run.time_stamp = chrono::Utc::now().timestamp(); // Update timestamp to end of run
         pretty_print_run(run);
-        post_process();
+        post_process(run);
         parser_state.run_ended = true;
+        parser_state.shield_phase_ended = false;
     }
+    //TODO: implement run post processing (actually filling out the run struct completely)
 }
 
 fn prepare_and_submit_phase(line: &str, run: &mut Run, parser_state: &mut ParserState) {
@@ -352,10 +364,7 @@ fn prepare_and_submit_phase(line: &str, run: &mut Run, parser_state: &mut Parser
     };
     // phase number, shield_change and leg_breaks are already set at this point
     let phase_nr = parser_state.current_phase.phase_number;
-    println!(
-        "Phase {} submitted: {:#?}",
-        parser_state.current_phase.phase_number, parser_state.current_phase
-    );
+    //println!("Phase {} submitted: {:#?}",parser_state.current_phase.phase_number, parser_state.current_phase);
     run.phases.push(parser_state.current_phase.clone());
     parser_state.current_phase = Phase::new(phase_nr + 1);
     if parser_state.current_phase.phase_number < 5 {
@@ -364,6 +373,7 @@ fn prepare_and_submit_phase(line: &str, run: &mut Run, parser_state: &mut Parser
     parser_state.body_vuln_time = 0.0;
     parser_state.pylon_launch_time = 0.0;
     parser_state.kill_sequence = 0;
+    parser_state.previous_time = time_from_line(line);
 }
 fn time_from_line(line: &str) -> f64 {
     line.split_whitespace()
@@ -422,10 +432,9 @@ fn leg_break_from_line(line: &str, parser_state: &mut ParserState) -> LegBreak {
     LegBreak::new(time, leg, parser_state.leg_order)
 }
 
-fn post_process() {
-    //TODO Process the completed/aborted run
-    //println!("Post-processed Run {}: Nickname: {:?}, Squad: {:?}",
-    //         run.id, run.player_name, run.squad_members);
+fn post_process(run: &mut Run) {
+    //TODO Process the completed/aborted run, calculate total times, etc.
+    run
 }
 
 
@@ -439,7 +448,7 @@ fn main() -> io::Result<()> {
         env::var("LOCALAPPDATA").expect("LOCALAPPDATA not set"),
         LOG_PATH
     );
-    let file = File::open(&path).expect("Log file not found");
+    let file = File::open(&path).expect("Log file not found"); //TODO: handle file reset
     let mut reader = BufReader::new(file);
     let pos = reader.seek(SeekFrom::Start(0))?; //TODO implement follow log and static log mode
 

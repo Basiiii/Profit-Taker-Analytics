@@ -4,7 +4,7 @@
 //! associated with the run.
 
 use crate::models::{SquadMember, Phase, TotalTimes};
-use chrono::Utc;
+use chrono::Local;
 
 /// Represents a single run in the application.
 ///
@@ -61,7 +61,7 @@ impl Run {
     #[must_use] pub fn new(run_id: i32) -> Self {
         Self {
             run_id,
-            time_stamp: Utc::now().timestamp(),
+            time_stamp: Local::now().timestamp(),
             run_name: String::new(),
             player_name: String::new(),
             is_bugged_run: false,
