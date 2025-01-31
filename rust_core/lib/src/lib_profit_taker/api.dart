@@ -11,3 +11,9 @@ String greet({required String name}) =>
 
 String createDb({required String path}) =>
     RustLib.instance.api.crateApiCreateDb(path: path);
+
+Run getRunFromDb({required int runId, required String dbPath}) =>
+    RustLib.instance.api.crateApiGetRunFromDb(runId: runId, dbPath: dbPath);
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Run>>
+abstract class Run implements RustOpaqueInterface {}
