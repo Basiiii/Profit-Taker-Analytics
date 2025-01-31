@@ -688,6 +688,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "lib_profit_taker_core",
+ "once_cell",
  "rusqlite",
  "thiserror",
 ]

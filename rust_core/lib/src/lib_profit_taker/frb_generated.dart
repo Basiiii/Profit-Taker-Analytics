@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => 628164716;
+  int get rustContentHash => -353871616;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -79,11 +79,23 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  String crateApiCreateDb({required String path});
+  bool crateApiCheckRunExists({required int runId});
 
-  String crateApiGetRunFromDb({required int runId, required String dbPath});
+  bool crateApiDeleteRunFromDb({required int runId});
+
+  String crateApiGetEarliestRunId();
+
+  String crateApiGetLatestRunId();
+
+  String crateApiGetNextRunId({required int currentRunId});
+
+  String crateApiGetPreviousRunId({required int currentRunId});
+
+  String crateApiGetRunFromDb({required int runId});
 
   Future<void> crateApiInitApp();
+
+  String crateApiInitializeDb({required String path});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -95,50 +107,162 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  String crateApiCreateDb({required String path}) {
+  bool crateApiCheckRunExists({required int runId}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(path, serializer);
+        sse_encode_i_32(runId, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiCheckRunExistsConstMeta,
+      argValues: [runId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiCheckRunExistsConstMeta => const TaskConstMeta(
+        debugName: "check_run_exists",
+        argNames: ["runId"],
+      );
+
+  @override
+  bool crateApiDeleteRunFromDb({required int runId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(runId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiDeleteRunFromDbConstMeta,
+      argValues: [runId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiDeleteRunFromDbConstMeta => const TaskConstMeta(
+        debugName: "delete_run_from_db",
+        argNames: ["runId"],
+      );
+
+  @override
+  String crateApiGetEarliestRunId() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiCreateDbConstMeta,
-      argValues: [path],
+      constMeta: kCrateApiGetEarliestRunIdConstMeta,
+      argValues: [],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiCreateDbConstMeta => const TaskConstMeta(
-        debugName: "create_db",
-        argNames: ["path"],
+  TaskConstMeta get kCrateApiGetEarliestRunIdConstMeta => const TaskConstMeta(
+        debugName: "get_earliest_run_id",
+        argNames: [],
       );
 
   @override
-  String crateApiGetRunFromDb({required int runId, required String dbPath}) {
+  String crateApiGetLatestRunId() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetLatestRunIdConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetLatestRunIdConstMeta => const TaskConstMeta(
+        debugName: "get_latest_run_id",
+        argNames: [],
+      );
+
+  @override
+  String crateApiGetNextRunId({required int currentRunId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(currentRunId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetNextRunIdConstMeta,
+      argValues: [currentRunId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetNextRunIdConstMeta => const TaskConstMeta(
+        debugName: "get_next_run_id",
+        argNames: ["currentRunId"],
+      );
+
+  @override
+  String crateApiGetPreviousRunId({required int currentRunId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(currentRunId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetPreviousRunIdConstMeta,
+      argValues: [currentRunId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetPreviousRunIdConstMeta => const TaskConstMeta(
+        debugName: "get_previous_run_id",
+        argNames: ["currentRunId"],
+      );
+
+  @override
+  String crateApiGetRunFromDb({required int runId}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        sse_encode_String(dbPath, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta: kCrateApiGetRunFromDbConstMeta,
-      argValues: [runId, dbPath],
+      argValues: [runId],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta get kCrateApiGetRunFromDbConstMeta => const TaskConstMeta(
         debugName: "get_run_from_db",
-        argNames: ["runId", "dbPath"],
+        argNames: ["runId"],
       );
 
   @override
@@ -147,7 +271,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 3, port: port_);
+            funcId: 8, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -164,10 +288,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         argNames: [],
       );
 
+  @override
+  String crateApiInitializeDb({required String path}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(path, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiInitializeDbConstMeta,
+      argValues: [path],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiInitializeDbConstMeta => const TaskConstMeta(
+        debugName: "initialize_db",
+        argNames: ["path"],
+      );
+
   @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
+  }
+
+  @protected
+  bool dco_decode_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
   }
 
   @protected
@@ -202,6 +355,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
@@ -226,15 +385,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
-  }
-
-  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
   }
 
   @protected
@@ -260,11 +419,5 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-  }
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
   }
 }

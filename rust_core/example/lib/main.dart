@@ -4,8 +4,22 @@ import 'package:rust_core/rust_core.dart';
 Future<void> main() async {
   await RustLib.init();
 
-  Run x = getRunFromDb(runId: 1, dbPath: 'C:/test.db');
-  print(x);
+  print(initializeDb(path: 'C:/test.db'));
+  print(getRunFromDb(runId: 1));
+
+  print("Latest run ID: ${getLatestRunId()}");
+  print("Earliest run ID: ${getEarliestRunId()}");
+
+  print("Previous run ID: ${getPreviousRunId(currentRunId: 5)}");
+  print("Next run ID: ${getNextRunId(currentRunId: 5)}");
+
+  print(checkRunExists(runId: 1));
+  print(checkRunExists(runId: 50));
+
+  // print(simulateInsertRun());
+  print(getRunFromDb(runId: 6));
+  print(deleteRunFromDb(runId: 6));
+  print(getRunFromDb(runId: 6));
 
   runApp(const MyApp());
 }

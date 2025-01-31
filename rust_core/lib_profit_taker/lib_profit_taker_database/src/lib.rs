@@ -9,5 +9,3 @@ pub mod schema;
 pub mod repositories;
 pub mod error;
 pub mod queries;
-
-// TODO: include more modules here for additional functionality like inserts, fetches, etc

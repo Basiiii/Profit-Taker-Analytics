@@ -6,8 +6,52 @@
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-String createDb({required String path}) =>
-    RustLib.instance.api.crateApiCreateDb(path: path);
+String initializeDb({required String path}) =>
+    RustLib.instance.api.crateApiInitializeDb(path: path);
 
-String getRunFromDb({required int runId, required String dbPath}) =>
-    RustLib.instance.api.crateApiGetRunFromDb(runId: runId, dbPath: dbPath);
+String getRunFromDb({required int runId}) =>
+    RustLib.instance.api.crateApiGetRunFromDb(runId: runId);
+
+///
+/// This function wraps the `fetch_latest_run_id` function to make it accessible to Flutter.
+/// Returns the latest run ID as a `String`.
+String getLatestRunId() => RustLib.instance.api.crateApiGetLatestRunId();
+
+/// Fetches the earliest run ID.
+///
+/// This function wraps the `fetch_earliest_run_id` function to make it accessible to Flutter.
+/// Returns the first run ID as a `String`.
+String getEarliestRunId() => RustLib.instance.api.crateApiGetEarliestRunId();
+
+/// Fetches the previous run ID relative to a given run ID.
+///
+/// This function wraps the `fetch_previous_run_id` function to make it accessible to Flutter.
+/// Returns the previous run ID as a `String`.
+String getPreviousRunId({required int currentRunId}) =>
+    RustLib.instance.api.crateApiGetPreviousRunId(currentRunId: currentRunId);
+
+/// Fetches the next run ID relative to a given run ID.
+///
+/// This function wraps the `fetch_next_run_id` function to make it accessible to Flutter.
+/// Returns the next run ID as a `String`.
+String getNextRunId({required int currentRunId}) =>
+    RustLib.instance.api.crateApiGetNextRunId(currentRunId: currentRunId);
+
+/// Checks whether a run exists with the given run ID.
+///
+/// This function wraps the `run_exists` function to make it accessible to Flutter.
+/// Returns `true` if the run exists, `false` otherwise.
+bool checkRunExists({required int runId}) =>
+    RustLib.instance.api.crateApiCheckRunExists(runId: runId);
+
+/// Deletes a run by its ID.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to delete.
+/// - `db_path`: The path to the SQLite database.
+///
+/// # Returns
+/// - `true` if the run was successfully deleted.
+/// - `false` if there was an error.
+bool deleteRunFromDb({required int runId}) =>
+    RustLib.instance.api.crateApiDeleteRunFromDb(runId: runId);
