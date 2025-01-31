@@ -1,7 +1,7 @@
 //! # Database Query Module  
 //!  
 //! This module provides various database query functions for interacting with run data  
-//! stored in an SQLite database. It includes functions for retrieving, inserting,  
+//! stored in an `SQLite` database. It includes functions for retrieving, inserting,  
 //! deleting, and checking the existence of run records.  
 //!  
 //! ## Features  

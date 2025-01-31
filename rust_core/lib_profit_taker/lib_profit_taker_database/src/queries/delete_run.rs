@@ -43,7 +43,7 @@ pub fn delete_run(run_id: i32) -> Result<()> {
     let conn = Connection::open(&db_path)?;
 
     // Prepare and execute the delete query
-    conn.execute("DELETE FROM runs WHERE id = ?", &[&run_id])?;
+    conn.execute("DELETE FROM runs WHERE id = ?", [&run_id])?;
 
     // Return success
     Ok(())

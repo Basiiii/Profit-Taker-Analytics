@@ -1,4 +1,4 @@
-//! # ShieldChange Repository  
+//! # `ShieldChange` Repository  
 //!  
 //! This repository is responsible for interacting with the `shield_changes` table in the database, providing functionality 
 //! to retrieve and insert shield change data. It also handles the mapping of `status_effect_id` to the corresponding 
@@ -43,7 +43,7 @@ impl<'a> ShieldChangeRepository<'a> {
     ///
     /// # Returns
     /// A new instance of `ShieldChangeRepository`.
-    pub fn new(conn: &'a Connection) -> Self {
+    pub const fn new(conn: &'a Connection) -> Self {
         Self { conn }
     }
 
@@ -62,12 +62,12 @@ impl<'a> ShieldChangeRepository<'a> {
     /// - `Err`: If there was an error fetching the data (e.g., invalid status effect ID).
     pub fn get_for_phase(&self, run_id: i32, phase_number: i32) -> Result<Vec<ShieldChange>> {
         let mut stmt = self.conn.prepare(
-            r#"SELECT 
+            r"SELECT 
                 shield_time,
                 status_effect_id
             FROM shield_changes
             WHERE run_id = ? AND phase_number = ?
-            ORDER BY shield_time"#,
+            ORDER BY shield_time",
         )?;
 
         let changes = stmt.query_map([run_id, phase_number], |row| {
@@ -90,7 +90,7 @@ impl<'a> ShieldChangeRepository<'a> {
                     1,
                     rusqlite::types::Type::Integer,
                     Box::new(DataError::InvalidData(format!(
-                        "Invalid status effect ID: {}", effect_id
+                        "Invalid status effect ID: {effect_id}"
                     ))),
                 )),
             };
@@ -103,7 +103,7 @@ impl<'a> ShieldChangeRepository<'a> {
 
         changes.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(|e| DataError::InvalidData(format!(
-                "Invalid shield change data: {}", e
+                "Invalid shield change data: {e}"
             )))
     }
     
@@ -123,8 +123,8 @@ impl<'a> ShieldChangeRepository<'a> {
     pub fn insert_for_phase(&self, run_id: i64, phase_number: i32, shield_change: &ShieldChange) -> Result<()> {
         // Insert shield change into the shield_changes table
         self.conn.execute(
-            r#"INSERT INTO shield_changes (run_id, phase_number, shield_time, status_effect_id)
-            VALUES (?1, ?2, ?3, ?4)"#,
+            r"INSERT INTO shield_changes (run_id, phase_number, shield_time, status_effect_id)
+            VALUES (?1, ?2, ?3, ?4)",
             params![
                 run_id,
                 phase_number,

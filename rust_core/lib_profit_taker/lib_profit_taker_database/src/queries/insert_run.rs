@@ -26,7 +26,7 @@ use crate::connection::get_db_path;
 
 /// Inserts a `Run` record and its related data into the database.
 /// 
-/// This function establishes a connection to the SQLite database and utilizes the
+/// This function establishes a connection to the `SQLite` database and utilizes the
 /// `RunRepository` to insert the provided `Run` and any associated data. It is designed 
 /// to be easy to use in external applications, such as a Flutter-based app.
 /// 

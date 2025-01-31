@@ -44,7 +44,7 @@ impl<'a> PhaseRepository<'a> {
     ///
     /// # Returns
     /// A new instance of `PhaseRepository`.
-    pub fn new(conn: &'a Connection) -> Self {
+    pub const fn new(conn: &'a Connection) -> Self {
         Self { conn }
     }
 
@@ -61,7 +61,7 @@ impl<'a> PhaseRepository<'a> {
     /// - `Err`: If there is an error fetching the phases or related data.
     pub fn get_for_run(&self, run_id: i32) -> Result<Vec<Phase>> {
         let mut stmt = self.conn.prepare(
-            r#"SELECT 
+            r"SELECT 
                 phase_number,
                 phase_time,
                 shield_time,
@@ -70,7 +70,7 @@ impl<'a> PhaseRepository<'a> {
                 pylon_time
             FROM phases 
             WHERE run_id = ? 
-            ORDER BY phase_number"#,
+            ORDER BY phase_number",
         )?;
 
         let phases = stmt
@@ -103,8 +103,8 @@ impl<'a> PhaseRepository<'a> {
     pub fn insert_for_run(&self, run_id: i64, phase: &Phase) -> Result<()> {
         // Insert phase into the phases table
         self.conn.execute(
-            r#"INSERT INTO phases (run_id, phase_number, phase_time, shield_time, leg_time, body_kill_time, pylon_time)
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)"#,
+            r"INSERT INTO phases (run_id, phase_number, phase_time, shield_time, leg_time, body_kill_time, pylon_time)
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
                 run_id,
                 phase.phase_number,

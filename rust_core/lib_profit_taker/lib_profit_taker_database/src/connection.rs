@@ -1,6 +1,6 @@
-//! # SQLite Database Management Module
+//! # `SQLite` Database Management Module
 //!
-//! This module provides functionality for managing an SQLite database,
+//! This module provides functionality for managing an `SQLite` database,
 //! including setting the database path, creating the database file, and initializing the schema.
 //!
 //! ## Features
@@ -25,7 +25,7 @@ use crate::schema::SCHEMA_SQL;
 
 /// A globally shared, thread-safe mutable database path.
 /// 
-/// This static variable stores the path to the SQLite database and ensures that it can be accessed 
+/// This static variable stores the path to the `SQLite` database and ensures that it can be accessed 
 /// and modified safely across multiple threads using a `Mutex`. The `Lazy` initialization 
 /// ensures that the mutex is only created when it is first accessed.
 ///
@@ -44,11 +44,14 @@ static DB_PATH: Lazy<Mutex<Option<String>>> = Lazy::new(|| Mutex::new(None));
 /// This function initializes the global database path, which will be used for all database-related operations.
 ///
 /// # Arguments
-/// - `path`: The file path to the SQLite database.
+/// - `path`: The file path to the `SQLite` database.
 ///
 /// # Returns
 /// - `Ok(())` if the path was successfully set.
 /// - An `Err` if the path is already set.
+/// 
+/// # Panics
+/// This function will panic if the lock on `DB_PATH` is poisoned, meaning another thread panicked while holding the lock.
 pub fn set_db_path(path: &str) -> Result<()> {
     let mut db_path = DB_PATH.lock().unwrap();
     if db_path.is_some() {
@@ -94,11 +97,11 @@ pub fn initialize_database(path: &str) -> Result<()> {
     Ok(())
 }
 
-/// Creates an SQLite database file at the given path if it does not exist.
+/// Creates an `SQLite` database file at the given path if it does not exist.
 /// Ensures the directory structure is created before attempting to create the database.
 /// 
 /// # Arguments
-/// * `path` - The file path where the SQLite database should be created.
+/// * `path` - The file path where the `SQLite` database should be created.
 /// 
 /// # Returns
 /// * `Result<()>` - Returns `Ok(())` if the database file is successfully created or already exists.
@@ -119,12 +122,12 @@ pub fn create_database(path: &str) -> Result<()> {
     Ok(())
 }
 
-/// Initializes the SQLite database schema by executing SQL statements from the constant.
+/// Initializes the `SQLite` database schema by executing SQL statements from the constant.
 ///
 /// This function runs the schema creation queries stored in `SCHEMA_SQL` to set up the required tables and default values.
 /// 
 /// # Arguments
-/// * `conn` - A reference to the active SQLite database connection.
+/// * `conn` - A reference to the active `SQLite` database connection.
 /// 
 /// # Returns
 /// * `Result<()>` - Returns `Ok(())` if the schema is successfully created, otherwise returns an error.

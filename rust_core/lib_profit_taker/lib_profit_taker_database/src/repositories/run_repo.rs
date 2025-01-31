@@ -44,7 +44,7 @@ impl<'a> RunRepository<'a> {
     ///
     /// # Returns
     /// A new instance of `RunRepository`.
-    pub fn new(conn: &'a Connection) -> Self {
+    pub const fn new(conn: &'a Connection) -> Self {
         Self { conn }
     }
 
@@ -99,7 +99,7 @@ impl<'a> RunRepository<'a> {
     /// - `Err`: If there was an error fetching the data.
     fn get_run_data(&self, conn: &Connection, run_id: i32) -> Result<Run> {
         let mut stmt = conn.prepare(
-            r#"SELECT 
+            r"SELECT 
                 id,
                 time_stamp,
                 run_name,
@@ -114,7 +114,7 @@ impl<'a> RunRepository<'a> {
                 total_body_time,
                 total_pylon_time
             FROM runs 
-            WHERE id = ?"#,
+            WHERE id = ?",
         )?;
 
         let mut rows = stmt.query([run_id])?;

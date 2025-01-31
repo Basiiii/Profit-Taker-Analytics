@@ -1,4 +1,4 @@
-//! # SquadMember Repository  
+//! # `SquadMember` Repository  
 //!  
 //! This repository is responsible for interacting with the `squad_members` table in the database. It provides functionality 
 //! to insert new squad members for a run and retrieve the squad members for a given run.  
@@ -41,7 +41,7 @@ impl<'a> SquadMemberRepository<'a> {
     ///
     /// # Returns
     /// A new instance of `SquadMemberRepository`.
-    pub fn new(conn: &'a Connection) -> Self {
+    pub const fn new(conn: &'a Connection) -> Self {
         Self { conn }
     }
 

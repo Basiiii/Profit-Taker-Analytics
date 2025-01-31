@@ -1,6 +1,6 @@
-//! # LegBreakRepository Module  
+//! # `LegBreakRepository` Module  
 //!  
-//! This module provides functionality for interacting with the `leg_breaks` table in the SQLite database.  
+//! This module provides functionality for interacting with the `leg_breaks` table in the `SQLite` database.  
 //! It contains methods for retrieving and inserting `LegBreak` records, associated with a specific `run_id` and `phase_number`.  
 //! The repository uses the `rusqlite` crate to handle SQL queries and transactions.
 //!  
@@ -50,11 +50,11 @@ impl<'a> LegBreakRepository<'a> {
     /// Constructs a new `LegBreakRepository` instance.
     ///
     /// # Arguments
-    /// * `conn` - A reference to the `Connection` to the SQLite database.
+    /// * `conn` - A reference to the `Connection` to the `SQLite` database.
     ///
     /// # Returns
     /// A new `LegBreakRepository` instance.
-    pub fn new(conn: &'a Connection) -> Self {
+    pub const fn new(conn: &'a Connection) -> Self {
         Self { conn }
     }
 
@@ -75,14 +75,14 @@ impl<'a> LegBreakRepository<'a> {
     /// Will return a `DataError::InvalidData` error if the leg position is invalid.
     pub fn get_for_phase(&self, run_id: i32, phase_number: i32) -> Result<Vec<LegBreak>> {
         let mut stmt = self.conn.prepare(
-            r#"SELECT 
+            r"SELECT 
                 break_time,
                 break_order,
                 lp.name AS leg_position
             FROM leg_breaks lb
             JOIN leg_position lp ON lb.leg_position_id = lp.id
             WHERE run_id = ? AND phase_number = ?
-            ORDER BY break_order"#,
+            ORDER BY break_order",
         )?;
 
         let breaks = stmt.query_map([run_id, phase_number], |row| {
@@ -97,7 +97,7 @@ impl<'a> LegBreakRepository<'a> {
                     2,
                     rusqlite::types::Type::Text,
                     Box::new(DataError::InvalidData(format!(
-                        "Invalid leg position: {}", position_str
+                        "Invalid leg position: {position_str}"
                     ))),
                 )),
             };
@@ -111,7 +111,7 @@ impl<'a> LegBreakRepository<'a> {
 
         breaks.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(|e| DataError::InvalidData(format!(
-                "Invalid leg break data: {}", e
+                "Invalid leg break data: {e}"
             )))
     }
 
@@ -131,8 +131,8 @@ impl<'a> LegBreakRepository<'a> {
     pub fn insert_for_phase(&self, run_id: i64, phase_number: i32, leg_break: &LegBreak) -> Result<()> {
         // Insert leg break into the leg_breaks table
         self.conn.execute(
-            r#"INSERT INTO leg_breaks (run_id, phase_number, break_order, break_time, leg_position_id)
-            VALUES (?1, ?2, ?3, ?4, (SELECT id FROM leg_position WHERE name = ?5))"#,
+            r"INSERT INTO leg_breaks (run_id, phase_number, break_order, break_time, leg_position_id)
+            VALUES (?1, ?2, ?3, ?4, (SELECT id FROM leg_position WHERE name = ?5))",
             params![
                 run_id,
                 phase_number,

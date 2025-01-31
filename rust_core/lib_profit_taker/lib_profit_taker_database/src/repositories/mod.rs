@@ -2,14 +2,14 @@
 //!  
 //! This module serves as a container for various repository classes that manage database interactions
 //! for different entities in the system. Each repository provides methods to query, insert, update, and
-//! delete data related to a specific entity (e.g., runs, phases, squad members, etc.) within the SQLite database.
+//! delete data related to a specific entity (e.g., runs, phases, squad members, etc.) within the `SQLite` database.
 //!
 //! ## Repositories Provided  
-//! - **RunRepository**: Handles CRUD operations related to `run` entities.  
-//! - **PhaseRepository**: Manages operations on `phase` entities, associated with specific runs.  
-//! - **SquadMemberRepository**: Manages `squad_member` entities, which represent individual members of a squad.  
-//! - **ShieldChangeRepository**: Handles operations on `shield_change` entities, tracking changes in shield states.  
-//! - **LegBreakRepository**: Provides methods to interact with `leg_break` entities, associated with phases in a run.
+//! - **`RunRepository`**: Handles CRUD operations related to `run` entities.  
+//! - **`PhaseRepository`**: Manages operations on `phase` entities, associated with specific runs.  
+//! - **`SquadMemberRepository`**: Manages `squad_member` entities, which represent individual members of a squad.  
+//! - **`ShieldChangeRepository`**: Handles operations on `shield_change` entities, tracking changes in shield states.  
+//! - **`LegBreakRepository`**: Provides methods to interact with `leg_break` entities, associated with phases in a run.
 //!
 //! ## Usage Example
 //! ```rust

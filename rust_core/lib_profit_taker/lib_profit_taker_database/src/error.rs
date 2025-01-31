@@ -19,10 +19,10 @@ use thiserror::Error;
 /// Represents possible errors in the database and data processing operations.
 #[derive(Error, Debug)]
 pub enum DataError {
-    /// Represents errors originating from SQLite database operations.
+    /// Represents errors originating from `SQLite` database operations.
     ///  
     /// This variant wraps `rusqlite::Error`, allowing seamless conversion  
-    /// from SQLite errors to `DataError` using `#[from]`.  
+    /// from `SQLite` errors to `DataError` using `#[from]`.  
     ///
     /// # Example
     /// ```

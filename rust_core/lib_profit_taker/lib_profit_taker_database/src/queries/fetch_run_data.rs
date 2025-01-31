@@ -26,7 +26,7 @@ use crate::connection::get_db_path;
 
 /// Retrieves a `Run` record from the database based on the provided run ID.
 /// 
-/// This function establishes a connection to the SQLite database and queries for the
+/// This function establishes a connection to the `SQLite` database and queries for the
 /// corresponding `Run` entry using the `RunRepository`. It abstracts the database access
 /// logic, making it convenient for external callers (e.g., from a Flutter application).
 /// 
