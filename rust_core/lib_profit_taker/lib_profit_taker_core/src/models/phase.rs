@@ -17,7 +17,7 @@ pub struct Phase {
     pub total_time: f64,
 
     /// The total time spent on shield-related activities during the phase.
-    pub total_shield_time: f64, 
+    pub total_shield_time: f64,
 
     /// The total time spent on leg-related activities during the phase.
     pub total_leg_time: f64,
@@ -26,10 +26,10 @@ pub struct Phase {
     pub total_body_kill_time: f64,
 
     /// The total time spent on pylon-related activities during the phase.
-    pub total_pylon_time: f64, 
+    pub total_pylon_time: f64,
 
     /// A vector of shield changes that occurred during the phase.
-    pub shield_changes: Vec<ShieldChange>, 
+    pub shield_changes: Vec<ShieldChange>,
 
     /// A vector of leg breaks that occurred during the phase.
     pub leg_breaks: Vec<LegBreak>,
