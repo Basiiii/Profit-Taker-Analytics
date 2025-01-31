@@ -4,14 +4,14 @@
 //! associated with the run.
 
 use crate::models::{SquadMember, Phase, TotalTimes};
-use std::vec::Vec;
+use chrono::Utc;
 
 /// Represents a single run in the application.
 ///
 /// A `Run` contains information about the run's ID, timestamp, name, player name, and various flags
 /// that indicate whether the run is bugged, aborted, or a solo run. It also includes data about the
 /// total times, phases, and squad members associated with the run.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Run {
     /// The unique identifier for the run. This is typically the primary key in a database.
     pub run_id: i32,
@@ -58,15 +58,15 @@ impl Run {
     ///
     /// A new `Run` instance with default values for `is_bugged_run`, `is_aborted_run`, `is_solo_run`,
     /// `total_times`, `phases`, and `squad_members`.
-    #[must_use] pub fn new(run_id: i32, time_stamp: i64, run_name: &str, player_name: &str) -> Self {
+    #[must_use] pub fn new(run_id: i32) -> Self {
         Self {
             run_id,
-            time_stamp,
-            run_name: run_name.to_string(),
-            player_name: player_name.to_string(),
+            time_stamp: Utc::now().timestamp(),
+            run_name: String::new(),
+            player_name: String::new(),
             is_bugged_run: false,
             is_aborted_run: false,
-            is_solo_run: false,
+            is_solo_run: true,
             total_times: TotalTimes::default(),
             phases: Vec::new(),
             squad_members: Vec::new(),
