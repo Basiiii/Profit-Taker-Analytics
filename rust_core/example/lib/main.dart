@@ -4,22 +4,75 @@ import 'package:rust_core/rust_core.dart';
 Future<void> main() async {
   await RustLib.init();
 
-  print(initializeDb(path: 'C:/test.db'));
-  print(getRunFromDb(runId: 1));
+  try {
+    initializeDb(path: 'C:/test.db');
+    print("Database initialized successfully!");
+  } catch (e) {
+    print("Failed to initialize database: $e");
+  }
 
-  print("Latest run ID: ${getLatestRunId()}");
-  print("Earliest run ID: ${getEarliestRunId()}");
+  RunModel run = getRunFromDb(runId: 1);
 
-  print("Previous run ID: ${getPreviousRunId(currentRunId: 5)}");
-  print("Next run ID: ${getNextRunId(currentRunId: 5)}");
+  try {
+    final runId = getLatestRunId();
+    if (runId != null) {
+      print("Latest run ID: $runId");
+    } else {
+      print("No runs found");
+    }
+  } catch (e) {
+    print("Failed to fetch latest run ID: $e");
+  }
+
+  try {
+    final runId = getEarliestRunId();
+    if (runId != null) {
+      print("Earliest run ID: $runId");
+    } else {
+      print("No runs found");
+    }
+  } catch (e) {
+    print("Failed to fetch latest run ID: $e");
+  }
+
+  try {
+    final runId = getPreviousRunId(currentRunId: 2);
+    if (runId != null) {
+      print("Next run ID: $runId");
+    } else {
+      print("No next run found");
+    }
+  } catch (e) {
+    print("Failed to fetch next run ID: $e");
+  }
+
+  try {
+    final runId = getNextRunId(currentRunId: 2);
+    if (runId != null) {
+      print("Next run ID: $runId");
+    } else {
+      print("No next run found");
+    }
+  } catch (e) {
+    print("Failed to fetch next run ID: $e");
+  }
 
   print(checkRunExists(runId: 1));
   print(checkRunExists(runId: 50));
 
-  // print(simulateInsertRun());
-  print(getRunFromDb(runId: 6));
-  print(deleteRunFromDb(runId: 6));
-  print(getRunFromDb(runId: 6));
+  var result = deleteRunFromDb(runId: 3);
+  if (result.success) {
+    print("Run deleted successfully");
+  } else {
+    print("Error: ${result.error ?? "Unknown error"}");
+  }
+
+  var test = deleteRunFromDb(runId: 50);
+  if (test.success) {
+    print("Run deleted successfully");
+  } else {
+    print("Error: ${result.error ?? "Unknown error"}");
+  }
 
   runApp(const MyApp());
 }
