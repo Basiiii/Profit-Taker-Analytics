@@ -1,4 +1,5 @@
-//! This module contains the SQL schema used to set up the SQLite database for the application.
+//! This module contains the SQL schema used to set up the `SQLite` database for the application.
+//!
 //! It includes SQL statements for creating and initializing the necessary database tables, 
 //! along with inserting default values for specific tables like `leg_position` and `status_effects`.
 //!

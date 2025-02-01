@@ -21,9 +21,8 @@ import 'package:rust_core/rust_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Rust Core
+  // Initialize Rust Core library
   await RustLib.init();
-  print('Action: Call Rust `greet("Tom")`\nResult: `${greet(name: "Tom")}`');
 
   // Initialize window manager
   initializeWindowManager();

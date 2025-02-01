@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek, SeekFrom};
 use std::time::Duration;
 use std::{env, thread};
-use lib_profit_taker_core::models::{Run, Phase, SquadMember, ShieldChange, LegBreak, StatusEffect, LegPosition};
+use lib_profit_taker_core::{Run, Phase, SquadMember, ShieldChange, LegBreak, StatusEffect, LegPosition};
 
 #[cfg(target_os = "windows")]
 const LOG_PATH: &str = "/Warframe/EE.log";
