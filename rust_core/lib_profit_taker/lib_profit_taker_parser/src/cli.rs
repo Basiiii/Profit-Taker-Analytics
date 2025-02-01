@@ -9,9 +9,9 @@ fn format_duration(total_seconds: f64) -> String {
     let milliseconds = ((remaining_seconds - seconds as f64) * 1000.0).round() as u64;
 
     if minutes > 0 {
-        format!("{}m {}s {:03}ms", minutes, seconds, milliseconds)
+        format!("{minutes}m {seconds}s {milliseconds:03}ms")
     } else {
-        format!("{}s {:03}ms", seconds, milliseconds)
+        format!("{seconds}s {milliseconds:03}ms")
     }
 }
 
@@ -19,13 +19,13 @@ fn format_phase_duration(seconds: f64) -> String {
     let total_seconds = seconds as u64;
     let minutes = total_seconds / 60;
     let remaining_seconds = total_seconds % 60;
-    format!("{}:{:02}", minutes, remaining_seconds)
+    format!("{minutes}:{remaining_seconds:02}")
 }
 
 pub fn pretty_print_run(run: &Run) -> String {
     let total_flight_time = run.total_times.total_flight_time;
-    let total_fight_duration: f64 = run.phases.iter().map(|p| p.total_time).sum();
-    let total_time = total_flight_time + total_fight_duration;
+    let total_time = run.total_times.total_time;
+    let total_fight_duration: f64 = run.total_times.total_time - total_flight_time;
 
     let formatted_total = format_duration(total_time);
     let formatted_flight = format!("{:.3}s", total_flight_time);
@@ -108,21 +108,21 @@ pub fn pretty_print_run(run: &Run) -> String {
     }
 
     // Sum of parts
-    let sum_shield: f64 = run.phases.iter().flat_map(|p| p.shield_changes.iter()).map(|s| s.shield_time).sum();
-    let sum_leg: f64 = run.phases.iter().flat_map(|p| p.leg_breaks.iter()).map(|l| l.leg_break_time).sum();
-    let sum_body: f64 = run.phases.iter().map(|p| p.total_body_kill_time).sum();
-    let sum_pylon: f64 = run.phases.iter().map(|p| p.total_pylon_time).sum();
+    let sum_shield: f64 = run.total_times.total_shield_time;
+    let sum_leg: f64 = run.total_times.total_leg_time;
+    let sum_body: f64 = run.total_times.total_body_time;
+    let sum_pylon: f64 = run.total_times.total_pylon_time;
     let sum_total = sum_shield + sum_leg + sum_body + sum_pylon;
     let formatted_sum_total = format_phase_duration(sum_total);
 
     output.push_str(&format!("{} {}\n",
                              "> Sum of parts".bright_green(), format!("[{formatted_sum_total}]").bright_cyan()));
-    output.push_str(&format!(" Shield change:  {}\n", format!("{:.3}s", sum_shield).bright_green()));
-    output.push_str(&format!(" Leg Break:      {}\n", format!("{:.3}s", sum_leg).bright_green()));
-    output.push_str(&format!(" Body Killed:    {}\n", format!("{:.3}s", sum_body).bright_green()));
-    output.push_str(&format!(" Pylons:         {}\n", format!("{:.3}s", sum_pylon).bright_green()));
+    output.push_str(&format!(" Shield change:  {}\n", format!("{sum_shield:.3}s").bright_green()));
+    output.push_str(&format!(" Leg Break:      {}\n", format!("{sum_leg:.3}s").bright_green()));
+    output.push_str(&format!(" Body Killed:    {}\n", format!("{sum_body:.3}s").bright_green()));
+    output.push_str(&format!(" Pylons:         {}\n", format!("{sum_pylon:.3}s").bright_green()));
     output.push_str("------------------------------------------------------------------------\n");
 
-    println!("{}", output);
-    format!("{:?}", output)
+    println!("{output}");
+    format!("{output:?}")
 }
