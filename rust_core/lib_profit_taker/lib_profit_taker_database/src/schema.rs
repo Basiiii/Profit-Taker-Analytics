@@ -19,7 +19,7 @@ pub const SCHEMA_SQL: &str = "
 -- Create runs table
 CREATE TABLE runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    time_stamp INTEGER NOT NULL,  -- Store as Unix timestamp
+    time_stamp INTEGER NOT NULL UNIQUE,  -- Store as Unix timestamp
     run_name TEXT NOT NULL,
     player_name TEXT NOT NULL,
     bugged_run BOOLEAN NOT NULL,
