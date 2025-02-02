@@ -33,3 +33,4 @@ pub mod fetch_next_run;
 pub mod run_exists;
 pub mod delete_run;
 pub mod insert_run;
+pub mod latest_run;

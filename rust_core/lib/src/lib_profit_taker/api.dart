@@ -125,6 +125,20 @@ bool checkRunExists({required int runId}) =>
 DeleteRunResult deleteRunFromDb({required int runId}) =>
     RustLib.instance.api.crateApiDeleteRunFromDb(runId: runId);
 
+/// Checks whether the given run is the latest in the database.
+///
+/// This function wraps the `is_latest_run` function to make it accessible to Flutter.
+/// It checks if the run with the given `run_id` is the latest run in the database.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the latest in the database.
+/// - `false` if the run is not the latest or an error occurs during the check.
+bool checkIfLatestRun({required int runId}) =>
+    RustLib.instance.api.crateApiCheckIfLatestRun(runId: runId);
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/models/total_times.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:rust_core/rust_core.dart';
 
 Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
-    TotalTimes totalTimes, List<double> bestValues) {
+    TotalTimesModel totalTimes, List<double> bestValues) {
   double responsiveCardWidth = screenWidth / 6 - 8;
 
   // Fetch card details dynamically
@@ -127,26 +127,29 @@ Widget buildContent(
 
 /// Fetch card details (color, icon, title, and time value) based on index.
 CardDetails getCardDetails(
-    int index, TotalTimes totalTimes, BuildContext context) {
+    int index, TotalTimesModel totalTimes, BuildContext context) {
   switch (index) {
     case 0:
       return CardDetails(const Color(0xFF68ADFF), Icons.access_time,
-          "total_duration", totalTimes.totalTime);
+          "total_duration", totalTimes.totalDuration);
     case 1:
       return CardDetails(const Color(0xFFFFB054), Icons.flight, "flight_time",
-          totalTimes.totalFlight);
+          totalTimes.totalFlightTime);
     case 2:
       return CardDetails(const Color(0xFF7C8AE7), Icons.shield, "shield_break",
-          totalTimes.totalShield);
+          totalTimes.totalShieldTime);
     case 3:
-      return CardDetails(const Color(0xFF59D5D9),
-          Icons.airline_seat_legroom_extra, "leg_break", totalTimes.totalLeg);
+      return CardDetails(
+          const Color(0xFF59D5D9),
+          Icons.airline_seat_legroom_extra,
+          "leg_break",
+          totalTimes.totalLegTime);
     case 4:
       return CardDetails(const Color(0xFFDB5858), Icons.my_location,
-          "body_kill", totalTimes.totalBody);
+          "body_kill", totalTimes.totalBodyTime);
     case 5:
       return CardDetails(const Color(0xFFE888DE), Icons.workspaces_outline,
-          "pylon_destruction", totalTimes.totalPylon);
+          "pylon_destruction", totalTimes.totalPylonTime);
     default:
       return CardDetails(
           Theme.of(context).colorScheme.onSurface, Icons.error, "unknown", 0.0);
