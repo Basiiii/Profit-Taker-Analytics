@@ -151,7 +151,7 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
             parser_state.current_phase.leg_breaks.last().unwrap().leg_position,
             parser_state.current_phase.leg_breaks.last().unwrap().leg_break_time
         );
-        if parser_state.current_phase.leg_breaks.len() == 4 {
+        if parser_state.current_phase.leg_breaks.len() > 4 {
             run.is_bugged_run = true;
         }
         parser_state.shield_count = 0;
@@ -374,7 +374,7 @@ fn post_process(run: &mut Run) {
     run.total_times.total_leg_time = run.phases.iter().map(|x| x.total_leg_time).sum();
     run.total_times.total_body_time = run.phases.iter().map(|x| x.total_body_kill_time).sum();
     run.total_times.total_pylon_time = run.phases.iter().map(|x| x.total_pylon_time).sum();
-    if run.is_bugged_run { 
+    if run.is_bugged_run && run.phases.len() >= 3 {
         run.phases[2].total_pylon_time = 0.0;
     }
 }
