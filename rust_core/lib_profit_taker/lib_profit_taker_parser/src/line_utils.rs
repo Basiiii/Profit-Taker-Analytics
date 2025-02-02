@@ -1,10 +1,11 @@
 //! Utility functions for extracting data from log lines.
 
-use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
 use crate::constants::{NICKNAME, SHIELD_PHASE_ENDING, SQUAD_MEMBER};
 use crate::ParserState;
+use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
 
 pub fn handle_names(line: &str, run: &mut Run) {
+    /// takes a line with a nickname or squad member, and updates the run object with the player name or squad members
     if line.contains(NICKNAME) && run.player_name.is_empty() {
         run.player_name = line
             .split_whitespace()
@@ -15,8 +16,7 @@ pub fn handle_names(line: &str, run: &mut Run) {
             .expect("No player name found.")
             .to_string();
         println!("Run host: {:?}", run.player_name);
-    }
-    else if line.contains(SQUAD_MEMBER) {
+    } else if line.contains(SQUAD_MEMBER) {
         let parts: Vec<&str> = line.split_whitespace().collect();
         if let Some(name_part) = parts.get(3) {
             let clean_name = name_part
@@ -34,6 +34,7 @@ pub fn handle_names(line: &str, run: &mut Run) {
     }
 }
 pub fn time_from_line(line: &str) -> f64 {
+    /// takes a line with a timestamp, and returns the time as a f64
     line.split_whitespace()
         .next()
         .unwrap_or_default()
@@ -53,6 +54,7 @@ pub fn shield_change_from_line(line: &str, parser_state: &mut ParserState) -> Sh
     shield_change
 }
 pub fn status_from_line(line: &str) -> StatusEffect {
+    /// takes a line with a shield change, and returns the status effect
     let name: &str = line
         .split_whitespace()
         .last()
@@ -76,6 +78,7 @@ pub fn status_from_line(line: &str) -> StatusEffect {
     status
 }
 pub fn leg_break_from_line(line: &str, parser_state: &mut ParserState) -> LegBreak {
+    /// takes a line with a leg break, and returns a LegBreak object, containing the time, leg position and current phase
     let time = time_from_line(line) - parser_state.previous_time;
     let name: &str = line.split_whitespace().last().expect("couldnt read leg ");
     let leg = match name {
@@ -83,7 +86,7 @@ pub fn leg_break_from_line(line: &str, parser_state: &mut ParserState) -> LegBre
         "ARM_LEFT" => LegPosition::FrontRight,
         "LEG_RIGHT" => LegPosition::BackLeft,
         "LEG_LEFT" => LegPosition::BackRight,
-        _ => panic!("Unknown leg position: {}", name),
+        _ => panic!("Unknown leg position: {name}"),
     };
     parser_state.previous_time = time_from_line(line);
     parser_state.leg_order += 1;

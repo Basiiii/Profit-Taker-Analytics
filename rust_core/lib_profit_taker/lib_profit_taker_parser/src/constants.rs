@@ -14,6 +14,11 @@ pub const SHIELD_PHASE_ENDING_3: &str =
     "/Lotus/Sounds/Dialog/FortunaOrbHeist/Business/DBntyFourInterPrTk0890TheBusiness";
 pub const SHIELD_PHASE_ENDING_4: &str =
     "/Lotus/Sounds/Dialog/FortunaOrbHeist/Business/DBntyFourSatelReal0930TheBusiness";
+pub const SHIELD_PHASE_ENDINGS: [&str; 3] = [
+    SHIELD_PHASE_ENDING_1,
+    SHIELD_PHASE_ENDING_3,
+    SHIELD_PHASE_ENDING_4,
+];
 pub const LEG_KILL: &str = "Leg freshly destroyed at part";
 
 pub const BODY_VULNERABLE: &str = "Camper->StartVulnerable() - The Camper can now be damaged!";

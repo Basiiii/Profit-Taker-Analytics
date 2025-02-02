@@ -53,10 +53,10 @@ pub fn pretty_print_run(run: &Run) -> String {
 
     // Phases
     for phase in &run.phases {
-        let phase_time = format_phase_duration(phase.total_time);
+        let phase_time = phase.total_time;
         output.push_str(&format!(
             "{} {}\n",
-            format!("> Phase {}", phase.phase_number).bright_green(), format!("[{phase_time}]").bright_cyan()
+            format!("> Phase {}", phase.phase_number).bright_green(), format!("[{phase_time:.3}]").bright_cyan()
         ));
 
         // Shield changes
@@ -66,10 +66,18 @@ pub fn pretty_print_run(run: &Run) -> String {
                 .iter()
                 .map(|s| format!("{:?} {:.3}s", s.status_effect, s.shield_time))
                 .collect();
-            output.push_str(&format!(
-                " Shield change:   {} - {}\n",
-                format!("{:.3}s", shield_sum).bright_green(), shield_parts.join(" | ").bright_yellow()
-            ));
+            if run.is_bugged_run && phase.phase_number == 4 {
+                output.push_str(&format!(
+                    " Shield change:   {} - {}\n",
+                    format!("{shield_sum:.3}s").bright_red(), shield_parts.join(" | ").bright_yellow()
+                ));
+            } else {
+                output.push_str(&format!(
+                    " Shield change:   {} - {}\n",
+                    format!("{shield_sum:.3}s").bright_green(), shield_parts.join(" | ").bright_yellow()
+                ));
+            }
+            ;
         }
 
         // Leg breaks
@@ -102,6 +110,12 @@ pub fn pretty_print_run(run: &Run) -> String {
                 format!("{:.3}s", phase.total_pylon_time).bright_green()
 
             ));
+        } else if run.is_bugged_run && phase.phase_number == 3 {
+            output.push_str(&format!(
+                " Pylons:          {}\n",
+                format!("{:.3}s", phase.total_pylon_time).bright_red()
+
+            ));
         }
 
         output.push('\n');
@@ -113,14 +127,26 @@ pub fn pretty_print_run(run: &Run) -> String {
     let sum_body: f64 = run.total_times.total_body_time;
     let sum_pylon: f64 = run.total_times.total_pylon_time;
     let sum_total = sum_shield + sum_leg + sum_body + sum_pylon;
-    let formatted_sum_total = format_phase_duration(sum_total);
+    let formatted_sum_total = sum_total;
 
-    output.push_str(&format!("{} {}\n",
-                             "> Sum of parts".bright_green(), format!("[{formatted_sum_total}]").bright_cyan()));
-    output.push_str(&format!(" Shield change:  {}\n", format!("{sum_shield:.3}s").bright_green()));
-    output.push_str(&format!(" Leg Break:      {}\n", format!("{sum_leg:.3}s").bright_green()));
-    output.push_str(&format!(" Body Killed:    {}\n", format!("{sum_body:.3}s").bright_green()));
-    output.push_str(&format!(" Pylons:         {}\n", format!("{sum_pylon:.3}s").bright_green()));
+
+    if run.is_bugged_run {
+        output.push_str(&format!("{} {}\n",
+                                 "> Sum of parts".bright_green(), format!("[{formatted_sum_total:.3}]").bright_red()));
+        output.push_str(&format!(" Shield change:  {}\n", format!("{sum_shield:.3}s").bright_red()));
+        output.push_str(&format!(" Leg Break:      {}\n", format!("{sum_leg:.3}s").bright_green()));
+        output.push_str(&format!(" Body Killed:    {}\n", format!("{sum_body:.3}s").bright_green()));
+        output.push_str(&format!(" Pylons:         {}\n", format!("{sum_pylon:.3}s").bright_red()));
+    } else {
+        output.push_str(&format!("{} {}\n",
+                                 "> Sum of parts".bright_green(), format!("[{formatted_sum_total:.3}]").bright_cyan()));
+        output.push_str(&format!(" Shield change:  {}\n", format!("{sum_shield:.3}s").bright_green()));
+        output.push_str(&format!(" Leg Break:      {}\n", format!("{sum_leg:.3}s").bright_green()));
+        output.push_str(&format!(" Body Killed:    {}\n", format!("{sum_body:.3}s").bright_green()));
+        output.push_str(&format!(" Pylons:         {}\n", format!("{sum_pylon:.3}s").bright_green()));
+    }
+
+
     output.push_str("------------------------------------------------------------------------\n");
 
     println!("{output}");
