@@ -12,7 +12,7 @@ use cli::pretty_print_run;
 use constants::{ABORT_MISSION, BACK_TO_TOWN, BODY_VULNERABLE, ELEVATOR_EXIT, ENV_PATH, HEIST_START, LEG_KILL, LOG_PATH, NICKNAME, PHASE_1_START, PHASE_ENDS_1, PHASE_ENDS_2, PHASE_ENDS_3, PHASE_START, PYLONS_LAUNCHED, SHIELD_PHASE_ENDING, SHIELD_SWITCH, SQUAD_MEMBER, STATE_CHANGE};
 use lib_profit_taker_core::{Phase, Run, StatusEffect};
 use line_utils::{handle_names, leg_break_from_line, shield_change_from_line, status_from_line, time_from_line};
-use crate::constants::{SHIELD_PHASE_ENDINGS, SHIELD_PHASE_ENDING_1, SHIELD_PHASE_ENDING_3, SHIELD_PHASE_ENDING_4};
+use crate::constants::{SHIELD_PHASE_ENDINGS};
 
 // This struct holds all the different temporary variables needed for calculating and sorting the run data
 struct ParserState {
