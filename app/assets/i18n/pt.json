@@ -9,6 +9,13 @@
         "and": " e ",
         "named": "chamada"
     },
+    "onboarding": {
+        "welcome": "Bem-vindo ao Profit Taker Analytics!\nVamos dar uma olhada em alguns recursos principais.",
+        "navigation": "Use as setas, os botões no canto superior direito ou a roda do mouse para navegar entre as execuções.",
+        "screenshot": "Clique no botão de copiar para capturar automaticamente sua execução! Sem necessidade de capturas de tela manuais.",
+        "main_nav": "Use a barra de navegação à esquerda para explorar diferentes seções do aplicativo clicando nos botões.",
+        "final": "É isso! Espero que aproveite o PTA."
+    },
     "overview_cards": {
         "total_duration": "Tempo\nTotal",
         "flight_time": "Tempo de\nVoo",
