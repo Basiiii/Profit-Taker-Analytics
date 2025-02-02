@@ -32,15 +32,15 @@ class HomeHeader extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_upward),
-                    onPressed: runService.navigateToPreviousRun,
-                    tooltip:
-                        FlutterI18n.translate(context, "tooltips.previous_run"),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_downward),
                     onPressed: runService.navigateToNextRun,
                     tooltip:
                         FlutterI18n.translate(context, "tooltips.next_run"),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_downward),
+                    onPressed: runService.navigateToPreviousRun,
+                    tooltip:
+                        FlutterI18n.translate(context, "tooltips.previous_run"),
                   ),
                   IconButton(
                     icon: Icon(layoutPrefs.compactMode

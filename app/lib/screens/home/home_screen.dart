@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/no_runs_available.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/error_view.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/home_content.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/onboarding_popup.dart';
 import 'package:profit_taker_analyzer/utils/action_keys.dart';
 import 'package:profit_taker_analyzer/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A StatefulWidget that displays the home screen of the application.
 ///
@@ -47,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _loadKeys();
 
+    _checkOnboarding();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _runService = Provider.of<RunNavigationService>(
         context,
@@ -61,6 +65,30 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _runService.stopPeriodicUpdate();
     super.dispose();
+  }
+
+  /// Checks if onboarding has been seen and shows it if necessary.
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+
+    if (!hasSeenOnboarding) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showOnboarding();
+      });
+    }
+  }
+
+  void _showOnboarding() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must complete onboarding
+      builder: (context) => OnboardingPopup(
+        onFinish: () {
+          Navigator.of(context).pop(); // Close overlay when finished
+        },
+      ),
+    );
   }
 
   /// Loads the saved action keys from SharedPreferences and updates the state accordingly.
