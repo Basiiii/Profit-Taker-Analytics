@@ -23,8 +23,10 @@ members = ["lib_profit_taker_database", "lib_profit_taker_parser", "lib_profit_t
 [workspace.dependencies]
 lib_profit_taker_database = { version = "*", path = "./lib_profit_taker_database/" }
 lib_profit_taker_parser = { version = "*", path = "./lib_profit_taker_parser/" }
+lib_profit_taker_core = {version = "*", path = "./lib_profit_taker_core" }
 
 [dependencies]
 flutter_rust_bridge = "=2.7.1"
 lib_profit_taker_database.workspace = true
 lib_profit_taker_parser.workspace = true
+lib_profit_taker_core.workspace = true
