@@ -373,7 +373,11 @@ fn post_process(run: &mut Run) {
     run.total_times.total_shield_time = run.phases.iter().map(|x| x.total_shield_time).sum();
     run.total_times.total_leg_time = run.phases.iter().map(|x| x.total_leg_time).sum();
     run.total_times.total_body_time = run.phases.iter().map(|x| x.total_body_kill_time).sum();
-    run.total_times.total_pylon_time = run.phases.iter().map(|x| x.total_pylon_time).sum();
+    run.total_times.total_pylon_time = if run.is_bugged_run { 
+        0.0
+    } else {
+        run.phases.iter().map(|x| x.total_pylon_time).sum()
+        };
     if run.is_bugged_run && run.phases.len() >= 3 {
         run.phases[2].total_pylon_time = 0.0;
     }
