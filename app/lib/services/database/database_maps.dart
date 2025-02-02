@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/models/leg_break.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
+import 'package:rust_core/rust_core.dart';
 
 /// A mapping of status effect IDs to their corresponding icons.
 ///
@@ -27,15 +28,35 @@ const Map<int, IconData> statusEffectIcons = {
   6: CustomIcons.electric,
   7: CustomIcons.toxin,
   8: CustomIcons.blast,
-  9: CustomIcons.corrosive,
+  9: CustomIcons.radiation,
   10: CustomIcons.gas,
   11: CustomIcons.magnetic,
-  12: CustomIcons.radiation,
-  13: CustomIcons.viral,
-  14: Icons.question_mark, // TODO: Replace with actual Void icon
-  15: Icons.question_mark, // TODO: Replace with actual Tau icon
-  16: Icons.question_mark, // TODO: Replace with actual True icon
+  12: CustomIcons.viral,
+  13: CustomIcons.corrosive,
+  14: Icons.question_mark,
 };
+
+IconData getStatusEffectIcon(StatusEffectEnum statusEffect) {
+  const Map<StatusEffectEnum, IconData> statusEffectIcons = {
+    StatusEffectEnum.impact: CustomIcons.impact,
+    StatusEffectEnum.puncture: CustomIcons.puncture,
+    StatusEffectEnum.slash: CustomIcons.slash,
+    StatusEffectEnum.heat: CustomIcons.heat,
+    StatusEffectEnum.cold: CustomIcons.cold,
+    StatusEffectEnum.electric: CustomIcons.electric,
+    StatusEffectEnum.toxin: CustomIcons.toxin,
+    StatusEffectEnum.blast: CustomIcons.blast,
+    StatusEffectEnum.radiation: CustomIcons.radiation,
+    StatusEffectEnum.gas: CustomIcons.gas,
+    StatusEffectEnum.magnetic: CustomIcons.magnetic,
+    StatusEffectEnum.viral: CustomIcons.viral,
+    StatusEffectEnum.corrosive: CustomIcons.corrosive,
+    StatusEffectEnum.noShield:
+        Icons.question_mark, // Fallback for unknown cases
+  };
+
+  return statusEffectIcons[statusEffect] ?? Icons.help_outline;
+}
 
 /// A mapping of leg positions to their corresponding icons.
 ///
@@ -60,3 +81,14 @@ const Map<LegPosition, IconData> legPositionIcons = {
   LegPosition.backRight: CustomIcons.br,
   LegPosition.backLeft: CustomIcons.bl,
 };
+
+IconData getLegPositionIcon(LegPositionEnum legPosition) {
+  const Map<LegPositionEnum, IconData> legPositionIcons = {
+    LegPositionEnum.frontLeft: CustomIcons.fl,
+    LegPositionEnum.frontRight: CustomIcons.fr,
+    LegPositionEnum.backRight: CustomIcons.br,
+    LegPositionEnum.backLeft: CustomIcons.bl,
+  };
+
+  return legPositionIcons[legPosition] ?? Icons.help_outline;
+}

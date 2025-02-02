@@ -2,13 +2,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:profit_taker_analyzer/models/run_data.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
+import 'package:rust_core/rust_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RunNavigationService extends ChangeNotifier {
   final DatabaseService _databaseService;
-  Run? _currentRun;
+  RunModel? _currentRun;
   int? _currentRunId;
   bool _isLoading = false;
   bool _hasError = false;
@@ -17,7 +17,7 @@ class RunNavigationService extends ChangeNotifier {
   RunNavigationService({required DatabaseService databaseService})
       : _databaseService = databaseService;
 
-  Run? get currentRun => _currentRun;
+  RunModel? get currentRun => _currentRun;
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
   int? get currentRunId => _currentRunId;
@@ -34,14 +34,13 @@ class RunNavigationService extends ChangeNotifier {
 
       // Check if the run ID exists in the database
       if (_currentRunId != null) {
-        final db = await _databaseService.getDatabase();
-        final runExists = await _databaseService.runExists(db, _currentRunId!);
+        final runExists = await _databaseService.runExists(_currentRunId!);
         if (runExists) {
           // If the run exists, use it
           await _loadRunData(_currentRunId!);
         } else {
           // If the run does not exist, fall back to the latest run ID
-          _currentRunId = await _databaseService.getLatestRunId();
+          _currentRunId = await _databaseService.fetchLatestRunId();
           if (_currentRunId != null) {
             // If the run is not null, load it
             await _loadRunData(_currentRunId!);
@@ -49,7 +48,7 @@ class RunNavigationService extends ChangeNotifier {
         }
       } else {
         // If no ID is stored, use the latest run ID
-        _currentRunId = await _databaseService.getLatestRunId();
+        _currentRunId = await _databaseService.fetchLatestRunId();
         if (_currentRunId != null) {
           // If the run is not null, load it
           await _loadRunData(_currentRunId!);
@@ -70,7 +69,7 @@ class RunNavigationService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final nextRunId = await _databaseService.getNextRunId(_currentRunId!);
+      final nextRunId = await _databaseService.fetchNextRunId(_currentRunId!);
       if (nextRunId != null) {
         _currentRunId = nextRunId;
         await _loadRunData(_currentRunId!);
@@ -91,7 +90,7 @@ class RunNavigationService extends ChangeNotifier {
 
     try {
       final previousRunId =
-          await _databaseService.getPreviousRunId(_currentRunId!);
+          await _databaseService.fetchPreviousRunId(_currentRunId!);
       if (previousRunId != null) {
         _currentRunId = previousRunId;
         await _loadRunData(_currentRunId!);
@@ -116,10 +115,9 @@ class RunNavigationService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final db = await _databaseService.getDatabase();
       final prefs = await SharedPreferences.getInstance();
 
-      _currentRun = await _databaseService.fetchRun(db, runId);
+      _currentRun = await _databaseService.fetchRun(runId);
       await prefs.setInt('currentRunId', runId);
     } catch (e) {
       _handleError(e);
@@ -132,7 +130,7 @@ class RunNavigationService extends ChangeNotifier {
     _hasError = true;
 
     final prefs = await SharedPreferences.getInstance();
-    int? latestId = await _databaseService.getLatestRunId();
+    int? latestId = await _databaseService.fetchLatestRunId();
     if (latestId != null) {
       prefs.setInt('currentRunId', latestId);
     } else {
@@ -147,13 +145,13 @@ class RunNavigationService extends ChangeNotifier {
 
   Future<bool> isAtStartOfList() async {
     if (_currentRunId == null) return true;
-    final firstRunId = await _databaseService.getFirstRunId();
+    final firstRunId = await _databaseService.fetchFirstRunId();
     return _currentRunId == firstRunId;
   }
 
   Future<bool> isAtEndOfList() async {
     if (_currentRunId == null) return true;
-    final latestRunId = await _databaseService.getLatestRunId();
+    final latestRunId = await _databaseService.fetchLatestRunId();
     return _currentRunId == latestRunId;
   }
 
@@ -166,7 +164,7 @@ class RunNavigationService extends ChangeNotifier {
       final latestStoredRunId =
           prefs.getInt('latestRunId'); // Get the stored latest run ID
       final latestRunId = await _databaseService
-          .getLatestRunId(); // Get the latest run ID from the database
+          .fetchLatestRunId(); // Get the latest run ID from the database
 
       // If the latest run ID is different from the stored one, update
       if (latestRunId != null && latestRunId != latestStoredRunId) {

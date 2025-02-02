@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/models/run_data.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/compact_run_analysis.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/home_header.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
@@ -7,6 +6,7 @@ import 'package:profit_taker_analyzer/screens/home/widgets/run_title.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_run_analysis.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:provider/provider.dart';
+import 'package:rust_core/rust_core.dart';
 import 'package:screenshot/screenshot.dart';
 
 /// A StatelessWidget that displays the main content of the home screen.
@@ -21,7 +21,7 @@ import 'package:screenshot/screenshot.dart';
 /// Returns:
 /// A [HomeContent] widget displaying the header, run title, and the appropriate run analysis based on layout preferences.
 class HomeContent extends StatelessWidget {
-  final Run runData;
+  final RunModel runData;
 
   const HomeContent({super.key, required this.runData});
 
@@ -37,10 +37,10 @@ class HomeContent extends StatelessWidget {
             const SizedBox(height: 25),
             RunTitle(
               runName: runData.runName,
-              mostRecentRun: false, // TODO: Add "isMostRecent" check
-              soloRun: runData.issoloRun,
+              mostRecentRun: checkIfLatestRun(runId: runData.runId),
+              soloRun: runData.isSoloRun,
               players: runData.squadMembers
-                  .map((member) => member.playerName)
+                  .map((member) => member.memberName)
                   .toList(),
             ),
             const SizedBox(height: 15),

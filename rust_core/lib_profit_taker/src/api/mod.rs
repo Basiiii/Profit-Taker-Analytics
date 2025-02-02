@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegPosition, StatusEffect};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    delete_run::delete_run, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, run_exists::run_exists
+    delete_run::delete_run, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, latest_run::is_latest_run, run_exists::run_exists
 }};
 
 #[flutter_rust_bridge::frb]
@@ -339,5 +339,24 @@ pub fn delete_run_from_db(run_id: i32) -> DeleteRunResult {
             success: false,
             error: Some(format!("Failed to delete run: {}", e)),
         },
+    }
+}
+
+/// Checks whether the given run is the latest in the database.
+///
+/// This function wraps the `is_latest_run` function to make it accessible to Flutter.
+/// It checks if the run with the given `run_id` is the latest run in the database.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the latest in the database.
+/// - `false` if the run is not the latest or an error occurs during the check.
+#[flutter_rust_bridge::frb(sync)]
+pub fn check_if_latest_run(run_id: i32) -> bool {
+    match is_latest_run(run_id) {
+        Ok(is_latest) => is_latest,
+        Err(_) => false, // On error, default to `false`
     }
 }

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/models/phase.dart';
-import 'package:profit_taker_analyzer/models/phases.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/build_row.dart';
+import 'package:profit_taker_analyzer/services/database/database_maps.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:rust_core/rust_core.dart';
 
 Widget buildPhaseCard(
   int index,
   BuildContext context,
   double screenWidth,
-  Phases phases,
+  List<PhaseModel> phases,
   bool isBuggedRun,
 ) {
-  final Phase phase = phases.getPhase(index)!;
+  final PhaseModel phase = phases[index];
   final double responsiveCardWidth = screenWidth / 2;
 
   List<String> labels = [
@@ -24,10 +24,10 @@ Widget buildPhaseCard(
   ];
 
   List<String> overviewList = [
-    phase.totalShield.toString(),
-    phase.totalLeg.toString(),
-    phase.totalBodyKill.toString(),
-    phase.totalPylon.toString(),
+    phase.totalShieldTime.toString(),
+    phase.totalLegTime.toString(),
+    phase.totalBodyKillTime.toString(),
+    phase.totalPylonTime.toString(),
   ];
 
   List<Widget> rows =
@@ -84,14 +84,14 @@ List<Widget> generatePhaseRows(
 }
 
 // Helper: Build Card Header
-Widget buildCardHeader(
-    Phase phase, BuildContext context, int index, Phases phases) {
+Widget buildCardHeader(PhaseModel phase, BuildContext context, int index,
+    List<PhaseModel> phases) {
   // Calculate total time up until this phase
   double totalTimeUpUntilNow = 0;
 
   // Loop through all previous phases and add their times
   for (int i = 0; i <= index; i++) {
-    totalTimeUpUntilNow += phases.getPhase(i)!.totalTime;
+    totalTimeUpUntilNow += phases[i].totalTime;
   }
 
   return Padding(
@@ -155,7 +155,7 @@ Widget buildCardHeader(
 }
 
 // Helper: Build Card Body
-Widget buildCardBody(List<Widget> rows, Phase phase, int index,
+Widget buildCardBody(List<Widget> rows, PhaseModel phase, int index,
     BuildContext context, bool isBuggedRun) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, left: 20),
@@ -200,7 +200,7 @@ Widget buildCardBody(List<Widget> rows, Phase phase, int index,
 
 // Helper: Build Shields Info
 Widget buildShieldsInfo(
-    int index, Phase phase, BuildContext context, bool isBuggedRun) {
+    int index, PhaseModel phase, BuildContext context, bool isBuggedRun) {
   if (index == 1) return const SizedBox.shrink();
 
   return Wrap(
@@ -215,7 +215,7 @@ Widget buildShieldsInfo(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(pair.icon, size: 13),
+            Icon(getStatusEffectIcon(pair.statusEffect), size: 13),
             Text(
               pair.shieldTime.toStringAsFixed(3),
               style: TextStyle(
@@ -234,7 +234,7 @@ Widget buildShieldsInfo(
 }
 
 // Helper: Build Legs Info
-Widget buildLegsInfo(Phase phase, BuildContext context) {
+Widget buildLegsInfo(PhaseModel phase, BuildContext context) {
   return Wrap(
     spacing: 20.0,
     runSpacing: 8.0,
@@ -245,9 +245,9 @@ Widget buildLegsInfo(Phase phase, BuildContext context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(pair.icon, size: 8),
+            Icon(getLegPositionIcon(pair.legPosition), size: 8),
             Text(
-              pair.breakTime.toStringAsFixed(3),
+              pair.legBreakTime.toStringAsFixed(3),
               style: TextStyle(
                 fontFamily: 'DMMono',
                 fontSize: 12,

@@ -4,6 +4,7 @@ class AppConstants {
   static const String version = '0.9.8';
   static const String appName = "Profit Taker Analytics";
   static const String assets = 'assets/icons';
+  static const String databaseName = 'pta_database.db';
 
   // Icon asset paths
   static const String homeGreyIcon = '$assets/HOME_GREY.svg';
