@@ -6,6 +6,7 @@ pub const ENV_PATH: &str = "LOCALAPPDATA";
 #[cfg(target_os = "linux")]
 pub const ENV_PATH: &str = "/Warframe/EE.log"; // to be updated with whatever the path is on linux
 
+pub const LOG_START_TIME: &str = "Sys [Diag]: Current time:";
 pub const SHIELD_SWITCH: &str = "SwitchShieldVulnerability";
 pub const SHIELD_PHASE_ENDING: &str = "GiveItem Queuing resource load for Transmission: ";
 pub const SHIELD_PHASE_ENDING_1: &str =

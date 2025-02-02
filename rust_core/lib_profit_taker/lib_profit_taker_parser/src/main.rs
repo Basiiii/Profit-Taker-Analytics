@@ -7,12 +7,14 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek, SeekFrom};
 use std::time::Duration;
 use std::{env, fs, thread};
+use chrono::{TimeZone};
 
 use cli::pretty_print_run;
 use constants::{ABORT_MISSION, BACK_TO_TOWN, BODY_VULNERABLE, ELEVATOR_EXIT, ENV_PATH, HEIST_START, LEG_KILL, LOG_PATH, NICKNAME, PHASE_1_START, PHASE_ENDS_1, PHASE_ENDS_2, PHASE_ENDS_3, PHASE_START, PYLONS_LAUNCHED, SHIELD_PHASE_ENDING, SHIELD_SWITCH, SQUAD_MEMBER, STATE_CHANGE};
 use lib_profit_taker_core::{Phase, Run, StatusEffect};
 use line_utils::{handle_names, leg_break_from_line, shield_change_from_line, status_from_line, time_from_line};
-use crate::constants::{SHIELD_PHASE_ENDINGS};
+use crate::constants::{LOG_START_TIME, SHIELD_PHASE_ENDINGS};
+use crate::line_utils::get_log_time;
 
 // This struct holds all the different temporary variables needed for calculating and sorting the run data
 struct ParserState {
@@ -31,6 +33,7 @@ struct ParserState {
     run_ended: bool,
     pylon_check: bool, // needed to parse phase 4 in bugged runs
     shield_count: i8, // needed to parse phase 4 in bugged runs
+    log_start_time: i64,
 }
 impl ParserState {
     const fn new() -> Self {
@@ -50,6 +53,7 @@ impl ParserState {
             run_ended: false,
             pylon_check: false,
             shield_count: 0,
+            log_start_time: 0,
         }
     }
 }
@@ -86,12 +90,17 @@ fn parser_loop(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> 
                 continue;
             }
 
+            if line.contains(LOG_START_TIME) {
+                parser_state.log_start_time = get_log_time(&line);
+            }
+
             if line.contains(HEIST_START) && current_run.is_none() {
                 run_number += 1; //TODO remove this when done because it's just for testing
                 let new_run = Run::new(run_number);
                 current_run = Some(new_run);
                 println!("Run #{run_number} found, analysing...");
                 parser_state.run_ended = false;
+
             }
 
             // Process line if inside a run
@@ -122,8 +131,12 @@ fn parse_run(run: &mut Run, run_number: i32, line: &str, parser_state: &mut Pars
     }
     // run starts
     else if line.contains(ELEVATOR_EXIT) {
-        parser_state.start_time = time_from_line(line);
-        println!("Run started at {}", parser_state.start_time);
+        let line_time = time_from_line(line);
+        parser_state.start_time = line_time;
+        //println!("Run started at {}", parser_state.start_time);
+
+        // Set timestamp for when run was started
+        run.time_stamp = parser_state.log_start_time + line_time as i64;
     }
     // register shield changes
     else if line.contains(SHIELD_SWITCH) || SHIELD_PHASE_ENDINGS.iter().any(|&ending| line.contains(ending))  {

@@ -1,8 +1,31 @@
 //! Utility functions for extracting data from log lines.
 
+use chrono::{NaiveDateTime, TimeZone};
+use chrono::prelude::{DateTime, Local};
+use regex::Regex;
 use crate::constants::{NICKNAME, SHIELD_PHASE_ENDING, SQUAD_MEMBER};
 use crate::ParserState;
 use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
+
+pub fn get_log_time(line: &str) -> i64 {
+    // Regex to capture the timestamp in the log line
+    let re = Regex::new(r"(\w{3}) (\w{3})\s+(\d+) (\d{2}:\d{2}:\d{2}) (\d{4})").unwrap();
+    let caps = re.captures(line).expect("Failed to match regex");
+
+    // Build a datetime string in the format "YYYY MMM DD HH:MM:SS"
+    let datetime_str = format!("{} {} {} {}", &caps[5], &caps[2], &caps[3], &caps[4]);
+
+    // Parse the datetime string into NaiveDateTime (no time zone)
+    let naive_dt = NaiveDateTime::parse_from_str(&datetime_str, "%Y %b %d %H:%M:%S")
+        .expect("Failed to parse datetime");
+
+    // Convert to DateTime<Local> (local timezone)
+    let local_time: DateTime<Local> = Local.from_local_datetime(&naive_dt)
+        .unwrap();
+
+    // Return the Unix timestamp for the local time
+    local_time.timestamp()
+}
 
 pub fn handle_names(line: &str, run: &mut Run) {
     /// takes a line with a nickname or squad member, and updates the run object with the player name or squad members
