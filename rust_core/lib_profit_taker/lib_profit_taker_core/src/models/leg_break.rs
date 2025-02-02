@@ -7,8 +7,11 @@ use crate::models::LegPosition;
 ///
 /// A `LegBreak` contains information about the position of the leg that was broken and the order
 /// in which it was broken relative to other leg breaks in the same phase.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LegBreak {
+    /// The time it took to break the leg
+    pub leg_break_time: f64,
+    
     /// The position of the leg that was broken.
     pub leg_position: LegPosition,
 
@@ -27,8 +30,9 @@ impl LegBreak {
     /// # Returns
     ///
     /// A new `LegBreak` instance with the provided `leg_position` and `leg_order`.
-    #[must_use] pub const fn new(leg_position: LegPosition, leg_order: i32) -> Self {
+    #[must_use] pub const fn new(leg_break_time : f64, leg_position: LegPosition, leg_order: i32) -> Self {
         Self {
+            leg_break_time,
             leg_position,
             leg_order,
         }

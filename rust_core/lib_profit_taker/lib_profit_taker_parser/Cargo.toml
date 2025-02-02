@@ -14,4 +14,6 @@ diesel = "2.2.6"
 flutter_rust_bridge = "2.7.1"
 notify = "8.0.0"
 regex = "1.11.1"
+lib_profit_taker_core = { path = "../lib_profit_taker_core" }
+owo-colors = "4.1.0"
 
