@@ -385,6 +385,7 @@ fn submit_run(run: &mut Run) {
 }
 
 fn main() -> io::Result<()> {
+    
     println!("Initializing Profit-Taker parser...");
     let run_number = 0;
 
