@@ -1,40 +1,28 @@
-//! This library takes responsibility for actually parsing provided logs into usable data.
+//! This library is responsible for parsing and processing log files into structured, usable data.
+//! It serves as the core component for handling Warframe log files, which are used to extract relevant information 
+//! and make it accessible for further analysis or processing.
+//!
+//! The primary focus of this library is the parsing of log entries, transforming raw log data into meaningful data structures.
+//! It includes various modules for different aspects of the log parsing process:
+//!
+//! - **parser_state**: Manages and tracks the state of the log parser during execution.
+//! - **cli**: Provides command-line interface functionality for interacting with the parser, such as configuration or execution.
+//! - **constants**: Contains environment-specific constants, such as paths to the log file and environment variables.
+//! - **line_utils**: Utility functions for working with individual log lines or entries, including filtering and formatting.
+//! - **parser**: Contains the main logic for parsing log entries and performing the core analysis on the log data.
+//! - **parser_initializer**: Provides the functionality to initialize and spawn the log parser in a separate thread asynchronously.
+//!
+//! This library is designed to be flexible, efficient, and modular, allowing easy extension or modification as needed.
+//! The different modules work together to provide a full solution for managing, parsing, and handling log files, 
+//! with an emphasis on error handling, scalability, and maintainability.
 
 #![warn(clippy::nursery, clippy::pedantic)]
 
-use std::thread;
-use std::{env};
-use std::fs::File;
-use std::io::{BufReader, Seek, SeekFrom};
-use crate::constants::{ENV_PATH, LOG_PATH};
-use crate::parser::r#loop::log_reading;
+mod parser_state;       // Module for managing the parser's state.
+pub mod cli;            // Command-line interface functionalities.
+pub mod constants;      // Constant values for paths and environment variables.
+pub mod line_utils;     // Utilities for working with log lines.
+pub mod parser;         // Main parser logic for log entries.
+pub mod parser_initializer; // Module to initialize and spawn the log parser asynchronously.
 
-mod parser_state;
-pub mod cli;
-pub mod constants;
-pub mod line_utils;
-pub mod parser;
-
-/// Main function that initializes the parser and starts the loop in a separate thread
-pub fn initialize_parser() {
-
-    //println!("Initializing Profit-Taker parser...");
-    
-    // Get the path to the log file, depending on the OS
-    // supported so far (in theory): Windows, Linux //TODO: check linux implementation, maybe add MacOS
-    let path = format!(
-        "{}{}",
-        env::var(ENV_PATH).expect("cant find path to log in your OS"),
-        LOG_PATH
-    );
-    let file = File::open(&path).expect("Log file not found");
-    let mut reader = BufReader::new(file);
-    let pos = reader.seek(SeekFrom::Start(0)).expect("Error seeking to start of file");
-    //println!("Log file found at: {path}");
-    //println!("Now listening for Profit-Taker runs...");
-
-    // Start the main loop in a separate thread
-    thread::spawn(move || {
-        log_reading(&path, pos).expect("Error running the parser");
-    });
-}
+pub use parser_initializer::initialize_parser; // Re-exporting `initialize_parser` for easy access.

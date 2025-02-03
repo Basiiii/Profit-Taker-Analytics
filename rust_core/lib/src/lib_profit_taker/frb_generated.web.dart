@@ -42,6 +42,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
+  InitializeParserOutcome dco_decode_initialize_parser_outcome(dynamic raw);
+
+  @protected
   LegBreakModel dco_decode_leg_break_model(dynamic raw);
 
   @protected
@@ -112,6 +115,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
+  InitializeParserOutcome sse_decode_initialize_parser_outcome(
+      SseDeserializer deserializer);
 
   @protected
   LegBreakModel sse_decode_leg_break_model(SseDeserializer deserializer);
@@ -189,6 +196,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_initialize_parser_outcome(
+      InitializeParserOutcome self, SseSerializer serializer);
 
   @protected
   void sse_encode_leg_break_model(LegBreakModel self, SseSerializer serializer);
