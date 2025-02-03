@@ -2,7 +2,8 @@
 
 #![warn(clippy::nursery, clippy::pedantic)]
 
-use std::{env, io};
+use std::thread;
+use std::{env};
 use std::fs::File;
 use std::io::{BufReader, Seek, SeekFrom};
 use crate::constants::{ENV_PATH, LOG_PATH};
@@ -14,11 +15,10 @@ pub mod constants;
 pub mod line_utils;
 pub mod parser;
 
-/// Main function that initializes the parser and starts the loop
-fn main() -> io::Result<()> {
+/// Main function that initializes the parser and starts the loop in a separate thread
+pub fn initialize_parser() {
 
-    println!("Initializing Profit-Taker parser...");
-    let run_number = 0; //TODO: fetch run number from database
+    //println!("Initializing Profit-Taker parser...");
     
     // Get the path to the log file, depending on the OS
     // supported so far (in theory): Windows, Linux //TODO: check linux implementation, maybe add MacOS
@@ -29,10 +29,12 @@ fn main() -> io::Result<()> {
     );
     let file = File::open(&path).expect("Log file not found");
     let mut reader = BufReader::new(file);
-    let pos = reader.seek(SeekFrom::Start(0))?;
-    println!("Log file found at: {path}");
-    println!("Now listening for Profit-Taker runs...");
+    let pos = reader.seek(SeekFrom::Start(0)).expect("Error seeking to start of file");
+    //println!("Log file found at: {path}");
+    //println!("Now listening for Profit-Taker runs...");
 
-    // Start the main loop
-    log_reading(&path, pos, run_number)
+    // Start the main loop in a separate thread
+    thread::spawn(move || {
+        log_reading(&path, pos).expect("Error running the parser");
+    });
 }

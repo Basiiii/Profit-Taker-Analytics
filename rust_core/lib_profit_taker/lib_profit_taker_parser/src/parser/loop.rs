@@ -8,7 +8,7 @@ use std::io::{self, BufRead, BufReader, Seek, SeekFrom};
 use std::time::Duration;
 use std::{fs, thread};
 
-use crate::cli::pretty_print_run;
+//use crate::cli::pretty_print_run;
 use crate::constants::{HEIST_START, LOG_START_TIME};
 use crate::line_utils::get_log_time;
 use crate::parser::events::parse_run;
@@ -22,7 +22,7 @@ use lib_profit_taker_database::queries::insert_run::insert_run;
 /// # Errors
 ///
 /// Returns an error if the file cannot be opened or read
-pub fn log_reading(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<()> {
+pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
     // current run is an option so that parse_run is only called when a run is found
     let mut current_run: Option<Run> = None;
 
@@ -43,11 +43,11 @@ pub fn log_reading(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<
         // Check if the file has been reset, set seeking position to start of file if so
         let new_size = fs::metadata(path)?.len();
         if new_size < known_size {
-            println!("Restart detected.");
+            //println!("Restart detected.");
             pos = 0;
-            println!(
-                "Successfully reconnected to EE.log. Now listening for new Profit-Taker runs."
-            );
+            //println!(
+            //    "Successfully reconnected to EE.log. Now listening for new Profit-Taker runs."
+            //);
         }
         known_size = new_size;
 
@@ -66,10 +66,9 @@ pub fn log_reading(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<
 
             // Check if a new run has started, initialize a new run if so
             if line.contains(HEIST_START) && current_run.is_none() {
-                run_number += 1; //TODO remove this when done because it's just for testing
-                let new_run = Run::new(run_number);
+                let new_run = Run::new();
                 current_run = Some(new_run);
-                println!("Run #{run_number} found, analysing...");
+                //println!("Run found, analysing...");
                 parser_state.run_ended = false;
             }
 
@@ -79,7 +78,7 @@ pub fn log_reading(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<
 
                 // Check if the run has ended, save the run to the database and reset the current run
                 if parser_state.run_ended {
-                    println!("{}", pretty_print_run(run)); // for debugging purposes
+                    //println!("{}", pretty_print_run(run)); // for debugging purposes
 
                     // Insert the run into the database
                     if let Err(e) = insert_run(run) {
@@ -91,7 +90,7 @@ pub fn log_reading(path: &str, mut pos: u64, mut run_number: i32) -> io::Result<
 
                     // Reset temporary run variables for the next run
                     parser_state = ParserState::new();
-                    println!("Done analysing run #{run_number}");
+                    //println!("Done analysing run");
                 }
             }
 

@@ -124,7 +124,7 @@ fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut
             let shield = shield_change_from_line(line, parser_state);
             parser_state.current_phase.shield_changes.push(shield);
 
-            //debug prints
+            // debug prints
             //println!(
             //    "New shield change: {:?}: {:.3}",
             //    parser_state
