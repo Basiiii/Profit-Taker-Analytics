@@ -1,10 +1,21 @@
 
-// Constants
-pub const LOG_PATH: &str = "/Warframe/EE.log";
+/// Constants used in the parser, consisting of path configs and log line fragments to search for
+
+/// The OS-dependent environment variable that holds the path to the warframe log folder
 #[cfg(target_os = "windows")]
 pub const ENV_PATH: &str = "LOCALAPPDATA";
+
+/// The OS-dependent path to where the warframe log folder is stored
+#[cfg(target_os = "windows")]
+pub const LOG_PATH: &str = "/Warframe/EE.log";
+
+/// The OS-dependent environment variable that holds the path to the warframe log folder
 #[cfg(target_os = "linux")]
-pub const ENV_PATH: &str = "/Warframe/EE.log"; // to be updated with whatever the path is on linux
+pub const ENV_PATH: &str = "HOME";
+
+/// The OS-dependent path to where the warframe log folder is stored
+#[cfg(target_os = "linux")]
+pub const LOG_PATH: &str = "/.local/share/Warframe/EE.log"; //TODO to be updated with whatever the path is on linux
 
 pub const LOG_START_TIME: &str = "Sys [Diag]: Current time:";
 pub const SHIELD_SWITCH: &str = "SwitchShieldVulnerability";

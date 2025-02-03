@@ -104,6 +104,5 @@ pub fn pretty_print_run(run: &Run) -> String {
 
     output.push_str("------------------------------------------------------------------------\n");
 
-    println!("{output}");
-    format!("{output:?}")
+    output
 }
