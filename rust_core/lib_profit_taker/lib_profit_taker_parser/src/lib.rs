@@ -16,7 +16,7 @@ pub mod line_utils;
 pub mod parser;
 
 /// Main function that initializes the parser and starts the loop in a separate thread
-pub fn initialize_parser() -> thread::Result<()> {
+pub fn initialize_parser() {
 
     //println!("Initializing Profit-Taker parser...");
     
@@ -32,13 +32,9 @@ pub fn initialize_parser() -> thread::Result<()> {
     let pos = reader.seek(SeekFrom::Start(0)).expect("Error seeking to start of file");
     //println!("Log file found at: {path}");
     //println!("Now listening for Profit-Taker runs...");
-    
-    let builder = thread::Builder::new();
 
     // Start the main loop in a separate thread
-    let handler = builder.spawn(move || {
+    thread::spawn(move || {
         log_reading(&path, pos).expect("Error running the parser");
-    }).unwrap();
-    
-    handler.join()
+    });
 }
