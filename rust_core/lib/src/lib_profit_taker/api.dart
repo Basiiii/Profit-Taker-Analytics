@@ -125,6 +125,16 @@ bool checkRunExists({required int runId}) =>
 DeleteRunResult deleteRunFromDb({required int runId}) =>
     RustLib.instance.api.crateApiDeleteRunFromDb(runId: runId);
 
+/// Wrapper function for calling `initialize_parser` and returning a result to Dart.
+/// This function handles errors from `initialize_parser` and maps them to a specific error type.
+/// It returns `InitializeParserOutcome`, which includes both success and error outcomes.
+///
+/// # Returns:
+/// - `Success`: Indicates that the parser was initialized successfully.
+/// - `Error`: Represents different types of errors during initialization, without error messages.
+InitializeParserOutcome initializeParserWrapper() =>
+    RustLib.instance.api.crateApiInitializeParserWrapper();
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;
@@ -145,6 +155,29 @@ class DeleteRunResult {
           runtimeType == other.runtimeType &&
           success == other.success &&
           error == other.error;
+}
+
+/// Enum representing the possible outcomes of parser initialization.
+/// This enum includes a success case and specific error cases, without error messages.
+enum InitializeParserOutcome {
+  /// Success variant, indicating successful parser initialization.
+  success,
+
+  /// Error variant for issues with the environment variable.
+  environmentVariableError,
+
+  /// Error variant for issues with opening the log file.
+  fileOpenError,
+
+  /// Error variant for issues with seeking the file.
+  fileSeekError,
+
+  /// Error variant for issues with spawning the thread.
+  threadSpawnError,
+
+  /// Generic error variant for unknown issues.
+  unknownError,
+  ;
 }
 
 class LegBreakModel {
