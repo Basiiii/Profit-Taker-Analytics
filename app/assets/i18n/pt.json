@@ -143,5 +143,9 @@
             "directoryDoesNotExist": "O diretório temporário não existe",
             "screenshotFailure": "Falha ao capturar a captura de tela"
         }
+    },
+    "copy_run_text": {
+        "success": "Texto copiado para a área de transferência com sucesso",
+        "error": "Falha ao copiar o texto para a área de transferência"
     }
 }

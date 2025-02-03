@@ -143,5 +143,9 @@
             "directoryDoesNotExist": "临时目录不存在",
             "screenshotFailure": "无法捕获截图"
         }
+    },
+    "copy_run_text": {
+        "success": "文本已成功复制到剪贴板",
+        "error": "无法将文本复制到剪贴板"
     }
 }

@@ -143,5 +143,9 @@
             "directoryDoesNotExist": "Geçici dizin mevcut değil",
             "screenshotFailure": "Ekran görüntüsü alınamadı"
         }
+    },
+    "copy_run_text": {
+        "success": "Metin panoya başarıyla kopyalandı",
+        "error": "Metin panoya kopyalanırken hata oluştu"
     }
 }

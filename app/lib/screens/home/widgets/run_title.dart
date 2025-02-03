@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/translations.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/edit_run_name.dart';
@@ -11,19 +12,13 @@ import 'package:provider/provider.dart';
 import 'package:rust_core/rust_core.dart';
 
 class RunTitle extends StatelessWidget {
-  final String runName;
+  final RunModel run;
   final bool mostRecentRun;
-  final bool soloRun;
-  final List<String> players;
-  final int runId;
 
   const RunTitle({
     super.key,
-    required this.runName,
+    required this.run,
     required this.mostRecentRun,
-    required this.soloRun,
-    required this.players,
-    required this.runId,
   });
 
   @override
@@ -31,12 +26,18 @@ class RunTitle extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     final runService = context.watch<RunNavigationService>();
     final screenshotService = context.read<ScreenshotService>();
+    final String runName = run.runName;
 
     return Row(
       children: [
         Flexible(
           child: titleText(
-            getRunTitle(context, mostRecentRun, soloRun, players, locale),
+            getRunTitle(
+                context,
+                mostRecentRun,
+                run.isSoloRun,
+                run.squadMembers.map((member) => member.memberName).toList(),
+                locale),
             20,
             FontWeight.w500,
             overflow: TextOverflow.ellipsis,
@@ -51,12 +52,16 @@ class RunTitle extends StatelessWidget {
         titleText("\"$runName\"", 20, FontWeight.w500),
         const SizedBox(width: 8),
         IconButton(
-          icon: const Icon(Icons.copy, size: 18),
+          icon: const Icon(Icons.edit, size: 20),
+          onPressed: () => _handleEditName(context),
+        ),
+        IconButton(
+          icon: const Icon(Icons.copy, size: 20),
           onPressed: () => _handleScreenshotCopy(context, screenshotService),
         ),
         IconButton(
-          icon: const Icon(Icons.edit, size: 18),
-          onPressed: () => _handleEditName(context),
+          icon: const Icon(Icons.sticky_note_2_outlined, size: 20),
+          onPressed: () => _handleCopyRunAsText(context),
         ),
         if (runService.currentRun?.isBuggedRun ?? false)
           _buildWarningIcon(context, true),
@@ -67,7 +72,7 @@ class RunTitle extends StatelessWidget {
   }
 
   void _handleEditName(BuildContext context) {
-    TextEditingController controller = TextEditingController(text: runName);
+    TextEditingController controller = TextEditingController(text: run.runName);
 
     editRunNameDialog(
       context,
@@ -78,7 +83,7 @@ class RunTitle extends StatelessWidget {
       FlutterI18n.translate(context, "buttons.ok"),
       (newName) {
         // Update the run name in DB
-        updateRunName(runId: runId, newName: newName);
+        updateRunName(runId: run.runId, newName: newName);
 
         // Get the RunNavigationService from the context
         final runService =
@@ -98,6 +103,29 @@ class RunTitle extends StatelessWidget {
         scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
       }
     });
+  }
+
+  void _handleCopyRunAsText(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      final textToCopy = getPrettyPrintedRun(runModel: run);
+      Clipboard.setData(ClipboardData(text: textToCopy));
+
+      if (context.mounted) {
+        final message = FlutterI18n.translate(context, "copy_run_text.success");
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        final message = FlutterI18n.translate(context, "copy_run_text.error");
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    }
   }
 
   Widget _buildWarningIcon(BuildContext context, bool isBugged) {

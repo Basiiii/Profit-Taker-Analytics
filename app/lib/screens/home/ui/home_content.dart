@@ -36,13 +36,8 @@ class HomeContent extends StatelessWidget {
             HomeHeader(scaffoldKey: GlobalKey<ScaffoldState>()),
             const SizedBox(height: 25),
             RunTitle(
-              runName: runData.runName,
+              run: runData,
               mostRecentRun: checkIfLatestRun(runId: runData.runId),
-              soloRun: runData.isSoloRun,
-              players: runData.squadMembers
-                  .map((member) => member.memberName)
-                  .toList(),
-              runId: runData.runId,
             ),
             const SizedBox(height: 15),
             _buildAnalysisSection(context),
