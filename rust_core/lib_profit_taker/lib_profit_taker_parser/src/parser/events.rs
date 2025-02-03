@@ -1,3 +1,14 @@
+//! This module is responsible for parsing the run logs and updating the run state accordingly.
+//!
+//! It contains utilities for:
+//! - Handling run start/end conditions
+//! - Detecting phase changes and shield transitions
+//! - Managing pylon launches and leg breaks
+//! - Processing state changes and body vulnerability events
+//!
+//! The main function, `parse_run`, parses each line of the log and updates the run state.
+//! Helper functions within the module manage specific aspects of parsing, such as registering
+//! start times, shield changes, and other events.
 use crate::constants::{
     ABORT_MISSION, BACK_TO_TOWN, BODY_VULNERABLE, ELEVATOR_EXIT, LEG_KILL, NICKNAME, PHASE_1_START,
     PHASE_ENDS_1, PHASE_ENDS_2, PHASE_ENDS_3, PHASE_START, PYLONS_LAUNCHED, SHIELD_PHASE_ENDING,
@@ -10,7 +21,39 @@ use crate::parser::phase::{prepare_and_submit_phase, run_ended};
 use crate::parser_state::ParserState;
 use lib_profit_taker_core::{Run, StatusEffect};
 
-/// Parses a line of the log file, and updates the current run with the information
+
+/// Parses a run log line and updates the current run state accordingly.
+///
+/// This function takes a single line from a run log, along with the current run and parser state,
+/// and updates the state of the run based on the content of the log.
+///
+/// It handles various types of events in the log, including:
+/// - **Run start events** - Detects and registers the start of a new run.
+/// - **Shield changes** - Captures and processes shield transition events.
+/// - **Leg breaks** - Tracks leg breaks.
+/// - **Phase changes** - Detects and prepares for transitions between fight phases.
+/// - **Pylon launches** - Records pylon launches.
+/// - **Body vulnerability** - Detects and tracks when the body becomes vulnerable.
+/// - **Abort/run end conditions** - Identifies when the run is aborted or completed.
+///
+/// The function uses helper methods for specific event types and maintains consistency
+/// across the `Run` and `ParserState` structures.
+///
+/// # Arguments
+///
+/// - `run`: Mutable reference to the current `Run`. Contains the state of the ongoing run.
+/// - `line`: The log line to parse, provided as a `&str`.
+/// - `parser_state`: Mutable reference to the state of the parser. Manages flags and
+///   intermediate states during log parsing.
+///
+/// # Behavior
+///
+/// - **Aborted runs**: A run is considered aborted if the log contains the `ABORT_MISSION`
+///   or `BACK_TO_TOWN` event strings.
+/// - **Run completions**: A run is considered completed if three `BODY_VULNERABLE` events occur
+///   during a single phase.
+/// - **Handling bugs**: Handles specific cases where logs may be bugged, such as missing events
+///   or corrupted phases.
 pub(crate) fn parse_run(
     run: &mut Run,
     line: &str,
@@ -74,7 +117,19 @@ pub(crate) fn parse_run(
     }
 }
 
-/// Registers the start time of the run for consistent timestamps
+/// Registers the start time of the run for consistent timestamps.
+///
+/// # Arguments
+///
+/// - `line`: A reference to the log line containing the timestamp information.
+/// - `parser_state`: A mutable reference to the current `ParserState`, which tracks the state of the parser.
+/// - `run`: A mutable reference to the current `Run`, which contains the state of the ongoing run.
+///
+/// # Behavior
+///
+/// - Extracts the timestamp from the log line using the `time_from_line` function.
+/// - Updates the parser state with the start time of the run.
+/// - Computes the run's `time_stamp` by adding the parsed log start time to the timestamp.
 fn register_start_time(line: &str, parser_state: &mut ParserState, run: &mut Run) {
     let line_time = time_from_line(line);
     parser_state.start_time = line_time;
@@ -84,7 +139,23 @@ fn register_start_time(line: &str, parser_state: &mut ParserState, run: &mut Run
     run.time_stamp = parser_state.log_start_time + line_time as i64;
 }
 
-/// Registers shield changes (and phase change 3->4 if run is bugged) to the current phase
+/// Handles shield changes and also detects if a run is considered "bugged" during phase 4.
+///
+/// # Arguments
+///
+/// - `line`: A reference to the log line containing information about a shield change.
+/// - `parser_state`: A mutable reference to the current `ParserState`, which tracks the state of the parser
+///   and helps determine the flow of the run.
+/// - `run`: A mutable reference to the current `Run`, which contains all relevant information about the ongoing run.
+///
+/// # Behavior
+///
+/// - Detects if the run is "bugged" by checking conditions in phase 3 involving shield changes
+///   and performs appropriate adjustments.
+/// - Registers new shield changes within the current phase and updates the parser state.
+/// - Determines the initial shield state at the start of a run or phase.
+/// - Handles edge cases for shields switched during pylons.
+/// - Identifies the end of a shield phase by marking the appropriate flags and storing data.
 fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut Run) {
     // handling bugged log
     // if the run is bugged, the shield count is used to determine if phase 4 has started
@@ -184,8 +255,19 @@ fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut
     }
 }
 
-/// Registers leg breaks to the current phase, resets shield count to ensure correct phase detection,
-/// and sets the run as bugged if there are more than 4 leg breaks in a phase
+
+/// Registers leg breaks to the current phase.
+///
+/// This function tracks leg breaks that occur during a run and performs the following:
+/// 1. Adds the detected leg break to the current phase's list of leg breaks.
+/// 2. Checks if the number of leg breaks in the current phase exceeds 4.
+///    - If this happens, it flags the run as bugged (indicating a possible phase reset).
+/// 3. Resets the `shield_count` to ensure proper phase detection later on.
+///
+/// # Parameters
+/// - `line`: A string slice representing the current line being processed.
+/// - `parser_state`: A mutable reference to the `ParserState`, where the current state of parsing is stored.
+/// - `run`: A mutable reference to the `Run`, representing the overall run being analyzed.
 fn register_leg_breaks(line: &str, parser_state: &mut ParserState, run: &mut Run) {
     let leg = leg_break_from_line(line, parser_state);
     parser_state.current_phase.leg_breaks.push(leg);
@@ -216,7 +298,21 @@ fn register_leg_breaks(line: &str, parser_state: &mut ParserState, run: &mut Run
     //);
 }
 
-/// Registers the time of the body kill in phases 1-3 by reading the state change line
+/// Registers the time of the body kill in phases 1-3 by parsing the relevant state change from the log line.
+///
+/// This function keeps track of specific state changes during the Profit-Taker fight.
+/// 
+/// # Parameters
+///
+/// - `line`: A string slice representing the current log line being processed.
+/// - `parser_state`: A mutable reference to the `ParserState` struct, which tracks the progress and
+///   parsed data of the run.
+///
+/// # Panics
+///
+/// This function expects the log line to contain at least 9 whitespace-separated fields,
+/// where the state change value is at the 8th index (zero-based). If this is not the case,
+/// or if the state value cannot be parsed to an `i8`, the function will panic.
 fn register_state_change(line: &str, parser_state: &mut ParserState) {
     let state: i8 = line
         .split_whitespace()
@@ -231,7 +327,17 @@ fn register_state_change(line: &str, parser_state: &mut ParserState) {
     }
 }
 
-/// Registers the time of the pylon launch, and sets the pylon check to true to handle bugged runs
+
+/// Registers the time of the pylon launch in the Profit-Taker fight and sets the pylon check flag to handle specific scenarios in bugged runs.
+///
+/// This function is responsible for handling pylon-related events that occur during the fight.
+/// When pylons are launched:
+/// 1. It logs the time of the launch by parsing the provided `line`.
+/// 2. If the current phase is phase 3, it sets the `pylon_check` flag in `parser_state` to handle cases where phase 4 is not properly detected.
+///
+/// # Parameters
+/// - `line`: A string slice containing the log line to process. This log line is expected to represent the pylon launch.
+/// - `parser_state`: A mutable reference to the `ParserState`, which tracks the state and progress of the parsing process.
 fn register_pylon_launch(line: &str, parser_state: &mut ParserState) {
     parser_state.pylon_launch_time = time_from_line(line);
     //println!("Pylons launched at {}", parser_state.pylon_launch_time);
@@ -244,7 +350,28 @@ fn register_pylon_launch(line: &str, parser_state: &mut ParserState) {
     }
 }
 
-/// Handles phase changes, and submits the current phase to the run if a phase ends
+/// Handles the transition between different phases of the Profit-Taker fight by monitoring log lines.
+///
+/// This function serves the following purposes:
+/// 1. Detects Phase 1 start and calculates total flight time.
+/// 2. Detects the end of any phase and processes the current phase, submitting its information to the run.
+/// 3. Resets specific flags and counters relevant to tracking states between phases.
+///
+/// # Parameters
+/// - `line`: A string slice containing the current log line to be analyzed.
+/// - `run`: A mutable reference to the `Run` struct, which stores all parsed data for the current run.
+/// - `parser_state`: A mutable reference to the `ParserState` struct, which tracks the progress and state of the fight parsing.
+///
+/// # Behavior
+/// Depending on the content of the `line`, the following actions occur:
+/// - When the line indicates Phase 1 has started:
+///   - Sets the current phase to Phase 1.
+///   - Calculates and stores the total flight time by subtracting the start time from the current timestamp.
+///   - Updates the phase end timestamp for Phase 1 time calculation.
+/// - When the line indicates the end of a phase (e.g., 1, 2, or 3):
+///   - Prepares and submits the current phase data through `prepare_and_submit_phase`.
+///   - Resets the `shield_phase_ended` or `pylon_check` flags depending on the phase.
+/// - Clears the `leg_order` counter at the end to ensure a fresh start for subsequent phases.
 fn handle_phase_changes(line: &str, run: &mut Run, parser_state: &mut ParserState) {
     match line {
         _ if line.contains(PHASE_1_START) => {

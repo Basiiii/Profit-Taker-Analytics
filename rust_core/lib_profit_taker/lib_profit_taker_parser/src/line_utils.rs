@@ -1,4 +1,18 @@
-//! Utility functions for extracting data from log lines.
+//! This module provides utility functions for parsing log lines in a structured way.
+//!
+//! The primary goal of the functions in this module is to extract meaningful
+//! gameplay-related data from textual log lines and format them into structured,
+//! reusable data types for further processing.
+//!
+//! Main functionalities include:
+//! - Extracting and converting timestamps from log lines into a consistent format (`get_log_time`).
+//! - Identifying and updating player-related information, such as the player's nickname
+//!   and squad members (`handle_names`).
+//! - Parsing and processing shield change events to track time and status effects (`shield_change_from_line`).
+//! - Identifying and handling specific events like leg breaks and converting them to structured types (`leg_break_from_line`).
+//!
+//! This is used in conjunction with the `ParserState` that keeps track of prior state changes
+//! and supports generating structured events like `Run`, `ShieldChange`, and `LegBreak`.
 
 use crate::constants::{NICKNAME, SHIELD_PHASE_ENDING, SQUAD_MEMBER};
 use crate::parser_state::ParserState;
@@ -7,12 +21,25 @@ use chrono::{NaiveDateTime, TimeZone};
 use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
 use regex::Regex;
 
-/// Takes the log's start time line, like
+
+/// Parses a timestamp from a log line and converts it to a Unix timestamp in seconds.
 ///
-/// `0.087 Sys [Diag]: Current time: Wed Jan 29 15:28:56 2025 [UTC: Wed Jan 29 14:28:56 2025]`
+/// # Arguments
 ///
-/// and returns a consistent Unix timestamp to base run timestamps in that session on, 
-/// so that runs are unique even if rerunning the parser on the same log, avoiding duplicates
+/// - `line`: A string slice that represents the log line containing a timestamp.
+///   Expected format is: `Mon Jan  2 15:04:05 2006`, such as `Mon Jan  1 12:34:56 2021`.
+///
+/// # Returns
+///
+/// A 64-bit integer representing the Unix timestamp (number of seconds since 
+/// January 1, 1970, UTC).
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The given log line does not match the expected regex format.
+/// - The date-time string extracted from the log line cannot be parsed successfully.
+/// - Time conversion to the local time zone fails.
 pub(crate) fn get_log_time(line: &str) -> i64 {
     // Regex to capture the timestamp in the log line
     let re = Regex::new(r"(\w{3}) (\w{3})\s+(\d+) (\d{2}:\d{2}:\d{2}) (\d{4})").unwrap();
@@ -32,15 +59,28 @@ pub(crate) fn get_log_time(line: &str) -> i64 {
     local_time.timestamp()
 }
 
-/// Takes a line containing a nickname or squad member, like
+/// Handles the extraction and processing of player and squad member names
+/// from a log line, updating the given `Run` object accordingly.
 ///
-/// `43.851 Net [Info]: name: [PlayerName], id=0`
-/// 
-/// or
-/// 
-/// `198.913 Game [Info]: [PlayerName] loadout loader finished.`
+/// # Arguments
 ///
-/// and updates the run object with the player name or squad members
+/// - `line`: A string slice representing a single log line to be parsed.
+/// - `run`: A mutable reference to the `Run` object that holds the 
+///          gameplay-related player and squad information.
+///
+/// # Behavior
+///
+/// This function performs the following actions:
+/// 1. Extracts the player's nickname from the log line if the line contains
+///    the `NICKNAME` identifier and the `Run` does not already have a player name.
+/// 2. Extracts squad member names if the log line contains the `SQUAD_MEMBER`
+///    identifier, ensuring that names are cleaned and added only if the max squad
+///    size (3 members) has not been reached and the name is not the player's nickname.
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The expected player or squad member name cannot be extracted from the log line.
 pub(crate) fn handle_names(line: &str, run: &mut Run) {
     if line.contains(NICKNAME) && run.player_name.is_empty() {
         run.player_name = line
@@ -70,11 +110,32 @@ pub(crate) fn handle_names(line: &str, run: &mut Run) {
     }
 }
 
-/// takes a line with a timestamp, like 
-/// 
-/// `123.456 Sys [Diag]: Current time: ...`
-/// 
-/// and returns the timestamp as an f64 in seconds: `123.456`
+/// Extracts the timestamp as a floating-point value in seconds from a log line.
+///
+/// # Arguments
+///
+/// - `line`: A string slice representing a log line that starts with a timestamp.
+///
+/// # Returns
+///
+/// A `f64` value representing the extracted time in seconds as a floating-point number.
+///
+/// # Example
+///
+/// Given a log line in the following format:
+///
+/// ```text
+/// 123.456 Sys [Diag]: Current time: ...
+/// ```
+///
+/// The function will extract and return the time as `123.456`.
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The log line is empty or improperly formatted such that the timestamp cannot be 
+///   extracted.
+/// - The extracted timestamp cannot be parsed as a `f64`.
 pub(crate) fn time_from_line(line: &str) -> f64 {
     line.split_whitespace()
         .next()
@@ -83,13 +144,30 @@ pub(crate) fn time_from_line(line: &str) -> f64 {
         .expect("Time couldn't be extracted from line")
 }
 
-/// takes a line with a shield change, like
+/// Parses a log line indicating a shield change event and computes the related information.
 ///
-///`87.707 AI [Info]: Camper->SwitchShieldVulnerability() - Switching shield damage vulnerability type to DT_VIRAL`
+/// # Arguments
 ///
-/// and the `ParserState` object containing
-/// the last shield element and reference timestamp, and returns a ``ShieldChange`` object,
-/// containing the time, status effect and current phase time in relation to the previous time
+/// - `line`: A string slice representing a log line containing information about a shield change.
+/// - `parser_state`: A mutable reference to the `ParserState` struct which tracks the state of the parser,
+///   including the reference timestamp and the previous shield element.
+///
+/// # Returns
+///
+/// A `ShieldChange` object that contains:
+/// - The time since the last shield change event, calculated as the difference between the current log
+///   timestamp and the `previous_time` stored in `parser_state`.
+/// - The status effect of the previous shield.
+/// - The current phase time.
+///
+/// # Behavior
+///
+/// This function extracts the time of the shield change, calculates the time delta relative to the previous
+/// event, and determines the shield type from the log line unless the line indicates the end of a shield phase.
+///
+/// - The `previous_time` in `parser_state` is updated with the current log timestamp.
+/// - If the line does not indicate the end of a shield phase (via the `SHIELD_PHASE_ENDING` string),
+///   the `previous_shield` in `parser_state` is updated with the shield type extracted from the log line.
 pub(crate) fn shield_change_from_line(line: &str, parser_state: &mut ParserState) -> ShieldChange {
     
     // calculate the time since the last shield change / other event if start of shield phase
@@ -102,13 +180,38 @@ pub(crate) fn shield_change_from_line(line: &str, parser_state: &mut ParserState
     shield_change
 }
 
-/// takes a line with a shield change, like
+
+/// Extracts the appropriate `StatusEffect` from the given log line.
 ///
-/// `87.707 AI [Info]: Camper->SwitchShieldVulnerability() - Switching shield damage vulnerability type to DT_VIRAL`
+/// # Arguments
 ///
-/// and returns the corresponding ``StatusEffect`` object:
-/// 
-/// `DT_VIRAL` -> `StatusEffect::Viral`
+/// - `line`: A string slice containing the log line with a shield change event.
+///
+/// # Returns
+///
+/// A `StatusEffect` object parsed from the log line.
+///
+/// # Behavior
+///
+/// This function examines the last segment of the log line, extracts the shield damage 
+/// vulnerability type, and maps it to the corresponding `StatusEffect` variant.
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The input line does not contain a valid format to extract a shield damage type.
+/// - The extracted type is not recognized as a valid `StatusEffect`.
+///
+/// # Example
+///
+/// Given a log line like the following:
+///
+/// ```text
+/// 87.707 AI [Info]: Camper->SwitchShieldVulnerability() - Switching shield damage vulnerability 
+/// to DT_VIRAL
+/// ```
+///
+/// This function will return `StatusEffect::Viral`.
 pub(crate) fn status_from_line(line: &str) -> StatusEffect {
     let name: &str = line
         .split_whitespace()
@@ -133,16 +236,36 @@ pub(crate) fn status_from_line(line: &str) -> StatusEffect {
     status
 }
 
-/// takes a line with a leg break, like
+/// Parses a log line indicating a leg break event and creates a `LegBreak` object.
 ///
-/// `102.241 AI [Info]: Camper->DestroyLeg() - Leg freshly destroyed at part: LEG_LEFT`
+/// # Arguments
 ///
-/// and the parser state object containing a reference timestamp,
-/// and returns a LegBreak object, containing the leg order number, leg position and time in relation to the previous time.
-/// 
-/// Leg break directions are reversed to assume player perspective.
-/// 
-/// `LEG_LEFT` -> `LegPosition::BackRight`
+/// - `line`: A string slice representing a log line containing information about a leg break
+///   event.
+/// - `parser_state`: A mutable reference to the `ParserState` object which stores the reference
+///   timestamp and keeps track of the parsing state.
+///
+/// # Returns
+///
+/// A `LegBreak` object that includes the time since the previous event, the leg position relative
+/// to the player's perspective, and an incrementing leg order number.
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The input `line` is not formatted properly to extract the leg position.
+/// - The extracted leg position is not recognized as a valid variant of `LegPosition`.
+///
+/// # Example
+///
+/// Given the following log line:
+///
+/// ```text
+/// 102.241 AI [Info]: Camper->DestroyLeg() - Leg freshly destroyed at part: LEG_LEFT
+/// ```
+/// The function will return a `LegBreak` object with the time since the last event, the leg
+/// position as `LegPosition::BackRight` (from the player's perspective), and the leg order number
+/// incremented.
 pub(crate) fn leg_break_from_line(line: &str, parser_state: &mut ParserState) -> LegBreak {
     let time = time_from_line(line) - parser_state.previous_time;
     let name: &str = line

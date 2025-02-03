@@ -1,5 +1,28 @@
 //! Main loop that reads the log file line by line, and processes the lines,
 //! passing them to `parse_run()` if it finds a run
+//! # Log File Reader
+//!
+//! This module provides the main loop for reading and processing a log file line by line.
+//! It detects specific events in the log, processes them, and inserts corresponding data
+//! into a database. The module also handles scenarios like log file resets and ensures proper
+//! handling of incomplete log lines.
+//!
+//! ## Features
+//! - Monitors a log file continuously.
+//! - Detects the start and end of runs (e.g., heists).
+//! - Processes log lines for extracting information.
+//! - Inserts parsed data into a database.
+//!
+//! ## Key Concepts
+//! - **Current Run**: Represents an instance of a "run" found in the log file. Operations are performed
+//!   on this run while it is active.
+//! - **Parser State**: Used to manage temporary variables required while parsing a run, including
+//!   detecting when a run starts or ends.
+//! - **Log File Resets**: Detects log file resets and adjusts the reading position to prevent errors.
+//!
+//! ## Warning
+//! The function is designed for streams of log files where incomplete lines may appear. It includes
+//! handling for such cases by introducing short delays to ensure the lines are fully committed before parsing.
 
 #![warn(clippy::nursery, clippy::pedantic)]
 
@@ -16,12 +39,28 @@ use crate::parser_state::ParserState;
 use lib_profit_taker_core::Run;
 use lib_profit_taker_database::queries::insert_run::insert_run;
 
-/// Main loop that reads the log file line by line, and processes the lines,
-/// checking for runs and passing them to `parse_run()` if it finds one
+
+/// Main loop that reads the log file line by line, and processes them, with checks for events like log resets.
+///
+/// # Arguments
+/// * `path` - A string slice that holds the file path to the log file.
+/// * `pos` - A mutable starting position in the file used for resuming reading.
+///
+/// # Returns
+/// Returns an `io::Result<()>`, which can be an error if the file cannot be opened, read, or processed.
+///
+/// # Details
+/// This function:
+/// - Continuously monitors the log file to check for specific patterns or events.
+/// - Detects file resets, sets the parsing position to the beginning, and continues reading.
+/// - Handles partially committed lines in the log by introducing retries with short delays.
+/// - Identifies runs in the log file and processes the data using the `parse_run()` function.
+/// - Inserts finished runs into a database using `insert_run()`.
+/// - Ensures proper allocation of resources and resets temporary variables when a run ends or a reset occurs.
 ///
 /// # Errors
-///
-/// Returns an error if the file cannot be opened or read
+/// This function propagates any I/O-related errors that occur during file operations.
+/// Potential errors include issues in opening the log file, reading the file, or seeking a specific position.
 pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
     // current run is an option so that parse_run is only called when a run is found
     let mut current_run: Option<Run> = None;

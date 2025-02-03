@@ -1,6 +1,11 @@
 use lib_profit_taker_core::{Phase, StatusEffect};
 
 /// Holds all the different temporary variables needed for calculating and sorting the run data
+///
+/// The `ParserState` struct is used during log parsing to store intermediate parsing results,
+/// track the current phase, and manage event timing and order. These values are reset or updated
+/// as the parsing progresses and are used to build the final run data.
+
 pub(crate) struct ParserState {
     /// The time the run started, for reference
     pub(crate) start_time: f64,

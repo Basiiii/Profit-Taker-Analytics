@@ -1,5 +1,39 @@
+//! This module provides functionality to format and pretty-print details
+//! of a Profit-Taker run, including total durations, phase-wise details, 
+//! and summaries of the times taken for specific parts of a run like shield changes, 
+//! leg breaks, and pylons.
+//!
+//! # Functions
+//!
+//! - [`format_duration`]: Formats a given duration in seconds into a human-readable string.
+//! - [`pretty_print_run`]: Generates a detailed, human-readable string representation of a Profit-Taker run.
+//!
+//! The output will display the total time, flight duration, and detailed phase information.
 use lib_profit_taker_core::Run;
 
+
+/// Formats a given duration in seconds into a human-readable string.
+///
+/// This function takes a `total_seconds` value and converts it into a formatted string
+/// with the format `Xm Ys ZZZms` if the duration includes minutes, or `Ys ZZZms` if
+/// there are no minutes. It handles both positive and negative durations.
+///
+/// # Arguments
+///
+/// * `total_seconds` - A floating-point value representing the total duration in seconds.
+///
+/// # Returns
+///
+/// A `String` containing the formatted duration.
+///
+/// # Usage
+///
+/// ```
+/// use your_crate::format_duration;
+///
+/// let formatted_time = format_duration(45.123);
+/// assert_eq!(formatted_time, "45s 123ms");
+/// ```
 fn format_duration(total_seconds: f64) -> String {
     let total_seconds_abs = total_seconds.abs();
     let minutes = (total_seconds_abs / 60.0).floor() as u64;
@@ -14,6 +48,21 @@ fn format_duration(total_seconds: f64) -> String {
     }
 }
 
+
+/// Pretty-prints the details of a Profit-Taker run in a human-readable format.
+///
+/// This function generates a detailed summary of the Profit-Taker run, including:
+/// - Total duration and flight time.
+/// - Phase-wise details such as shield changes, leg breaks, body killed time, and pylon phases.
+/// - A summary of total times for shield changes, leg breaks, body killed, and pylons.
+///
+/// # Arguments
+///
+/// * `run` - A reference to the `Run` instance, which contains all the data for the Profit-Taker run.
+///
+/// # Returns
+///
+/// A formatted string containing the pretty-printed details of the Profit-Taker run.
 pub fn pretty_print_run(run: &Run) -> String {
     let total_flight_time = run.total_times.total_flight_time;
     let total_time = run.total_times.total_time;
