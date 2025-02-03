@@ -32,6 +32,7 @@ pub fn pretty_print_run(run: &Run) -> String {
         "Profit-Taker Run #{} by {} cleared in {}\n\n",
         run.run_id, run.player_name, formatted_total
     ));
+    //TODO: fetch run id from db
     output.push_str(&format!("From elevator to Profit-Taker took {formatted_flight}. Fight duration: {formatted_fight}.\n\n"));
 
     // Phases
