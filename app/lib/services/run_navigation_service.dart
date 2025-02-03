@@ -171,6 +171,9 @@ class RunNavigationService extends ChangeNotifier {
         // Update the stored latest run ID
         await prefs.setInt('latestRunId', latestRunId);
 
+        // Update local variable to latest run ID
+        _currentRunId = latestRunId;
+
         // Load the new most recent run
         await _loadRunData(latestRunId);
       }
