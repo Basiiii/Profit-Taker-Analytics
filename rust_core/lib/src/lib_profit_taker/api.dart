@@ -139,6 +139,34 @@ DeleteRunResult deleteRunFromDb({required int runId}) =>
 bool checkIfLatestRun({required int runId}) =>
     RustLib.instance.api.crateApiCheckIfLatestRun(runId: runId);
 
+/// Marks the given run as a favorite in the database.
+///
+/// This function wraps the `mark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to mark the run with the given `run_id` as a favorite.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be marked as favorite.
+///
+/// # Returns
+/// - `true` if the run was successfully marked as a favorite.
+/// - `false` if an error occurs during the insertion.
+bool markRunAsFavorite({required int runId}) =>
+    RustLib.instance.api.crateApiMarkRunAsFavorite(runId: runId);
+
+/// Removes the given run from the favorites list in the database.
+///
+/// This function wraps the `unmark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to remove the run with the given `run_id` from the favorites list.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be removed from favorites.
+///
+/// # Returns
+/// - `true` if the run was successfully removed from favorites.
+/// - `false` if an error occurs during the removal.
+bool removeRunFromFavorites({required int runId}) =>
+    RustLib.instance.api.crateApiRemoveRunFromFavorites(runId: runId);
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;
