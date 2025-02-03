@@ -9,6 +9,13 @@
         "and": " 和 ",
         "named": ""
     },
+    "onboarding": {
+        "welcome": "欢迎使用 Profit Taker Analytics！\n让我们了解一些关键功能。",
+        "navigation": "使用箭头键、右上角的按钮或鼠标滚轮在各个运行间进行导航。",
+        "screenshot": "点击复制按钮自动截图您的运行！不再需要手动截图。",
+        "main_nav": "使用左侧的导航栏点击按钮探索应用程序的不同部分。",
+        "final": "就这些！希望你喜欢 PTA。"
+    },
     "overview_cards": {
         "total_duration": "总时长",
         "flight_time": "飞行耗时",
@@ -97,7 +104,7 @@
         "retry": "再试一次"
     },
     "alerts": {
-        "name_title": "更改文件名",
+        "name_title": "更改任务名称",
         "delete_title": "确认删除",
         "confirm_delete": "您确定要删除所选运行吗？"
     },

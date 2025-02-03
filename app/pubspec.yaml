@@ -80,6 +80,8 @@ flutter:
     - assets/i18n/ru.json
     - assets/i18n/fr.json
     - assets/i18n/tr.json
+    # Images
+    - assets/images/
   fonts:
     - family: Poppins
       fonts:

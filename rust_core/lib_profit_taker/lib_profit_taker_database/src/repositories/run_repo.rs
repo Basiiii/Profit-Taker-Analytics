@@ -192,5 +192,22 @@ impl<'a> RunRepository<'a> {
         }
     
         Ok(())
-    }    
+    }
+
+    /// Updates the `run_name` for a specific run in the database.
+    ///
+    /// # Arguments
+    /// - `run_id`: The ID of the run to update.
+    /// - `new_run_name`: The new name to set for the run.
+    ///
+    /// # Returns
+    /// - `Ok(())`: If the update was successful.
+    /// - `Err`: If there was an error during the update process.
+    pub fn update_run_name(&self, run_id: i32, new_run_name: &str) -> Result<()> {
+        self.conn.execute(
+            "UPDATE runs SET run_name = ?1 WHERE id = ?2",
+            params![new_run_name, run_id],
+        )?;
+        Ok(())
+    }
 }

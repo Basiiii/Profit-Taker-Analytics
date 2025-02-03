@@ -9,6 +9,13 @@
         "and": " et ",
         "named": "appelée"
     },
+    "onboarding": {
+        "welcome": "Bienvenue sur Profit Taker Analytics !\nPassons en revue quelques fonctionnalités clés.",
+        "navigation": "Utilisez les touches fléchées, les boutons en haut à droite ou la molette de votre souris pour naviguer entre les courses.",
+        "screenshot": "Cliquez sur le bouton de copie pour capturer automatiquement votre course ! Plus besoin de captures d'écran manuelles.",
+        "main_nav": "Utilisez la barre de navigation sur la gauche pour explorer différentes sections de l'application en cliquant sur les boutons.",
+        "final": "C'est tout ! J'espère que vous apprécierez PTA."
+    },
     "overview_cards": {
         "total_duration": "Durée\nTotale",
         "flight_time": "Temps de\nVol",
@@ -97,7 +104,7 @@
         "retry": "Réessayer"
     },
     "alerts": {
-        "name_title": "Changer le nom du fichier",
+        "name_title": "Changer le nom de la mission",
         "delete_title": "Confirmer la suppresion",
         "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce run(s)?"
     },
