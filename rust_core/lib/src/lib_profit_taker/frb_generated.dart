@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => -1129245755;
+  int get rustContentHash => -137613692;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -98,6 +98,10 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateApiInitApp();
 
   void crateApiInitializeDb({required String path});
+
+  bool crateApiMarkRunAsFavorite({required int runId});
+
+  bool crateApiRemoveRunFromFavorites({required int runId});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -334,6 +338,53 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiInitializeDbConstMeta => const TaskConstMeta(
         debugName: "initialize_db",
         argNames: ["path"],
+      );
+
+  @override
+  bool crateApiMarkRunAsFavorite({required int runId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(runId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiMarkRunAsFavoriteConstMeta,
+      argValues: [runId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiMarkRunAsFavoriteConstMeta => const TaskConstMeta(
+        debugName: "mark_run_as_favorite",
+        argNames: ["runId"],
+      );
+
+  @override
+  bool crateApiRemoveRunFromFavorites({required int runId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(runId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiRemoveRunFromFavoritesConstMeta,
+      argValues: [runId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiRemoveRunFromFavoritesConstMeta =>
+      const TaskConstMeta(
+        debugName: "remove_run_from_favorites",
+        argNames: ["runId"],
       );
 
   @protected

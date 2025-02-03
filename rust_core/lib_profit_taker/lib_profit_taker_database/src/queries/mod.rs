@@ -23,6 +23,9 @@
 //! - `run_exists`: Check if a specific run exists.  
 //! - `delete_run`: Remove a run from the database.  
 //! - `insert_run`: Insert a new run into the database.  
+//! - `latest_run`: Check if a given run is the latest run.
+//! - `insert_favorite`: Insert a record into favorites table.
+//! - `delete_favorite`: Removes a record from favorites table.
 
 pub mod fetch_run_data;
 pub use fetch_run_data::fetch_run_from_db;
@@ -34,3 +37,5 @@ pub mod run_exists;
 pub mod delete_run;
 pub mod insert_run;
 pub mod latest_run;
+pub mod insert_favorite;
+pub mod delete_favorite;
