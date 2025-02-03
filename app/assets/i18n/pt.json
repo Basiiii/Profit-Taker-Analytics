@@ -104,7 +104,7 @@
         "retry": "Tentar novamente"
     },
     "alerts": {
-        "name_title": "Mudar Nome Ficheiro",
+        "name_title": "Alterar o nome da missão",
         "delete_title": "Confirmar Apagar",
         "confirm_delete": "Tem a certeza que deseja apagar a(s) missão(ões) escolhida(s)?"
     },

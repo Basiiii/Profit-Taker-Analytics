@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => -137613692;
+  int get rustContentHash => 1683283784;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -102,6 +102,8 @@ abstract class RustLibApi extends BaseApi {
   bool crateApiMarkRunAsFavorite({required int runId});
 
   bool crateApiRemoveRunFromFavorites({required int runId});
+
+  bool crateApiUpdateRunName({required int runId, required String newName});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -385,6 +387,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(
         debugName: "remove_run_from_favorites",
         argNames: ["runId"],
+      );
+
+  @override
+  bool crateApiUpdateRunName({required int runId, required String newName}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(runId, serializer);
+        sse_encode_String(newName, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiUpdateRunNameConstMeta,
+      argValues: [runId, newName],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiUpdateRunNameConstMeta => const TaskConstMeta(
+        debugName: "update_run_name",
+        argNames: ["runId", "newName"],
       );
 
   @protected

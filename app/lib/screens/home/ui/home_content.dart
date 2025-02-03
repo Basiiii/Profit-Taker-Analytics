@@ -42,6 +42,7 @@ class HomeContent extends StatelessWidget {
               players: runData.squadMembers
                   .map((member) => member.memberName)
                   .toList(),
+              runId: runData.runId,
             ),
             const SizedBox(height: 15),
             _buildAnalysisSection(context),

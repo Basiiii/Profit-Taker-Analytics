@@ -104,7 +104,7 @@
         "retry": "Tekrar deneyin"
     },
     "alerts": {
-        "name_title": "Dosya Adını Değiştir",
+        "name_title": "Görevin adını değiştir",
         "delete_title": "Silmeyi Onayla",
         "confirm_delete": "Seçilen denemeleri silmek istediğinizden eminmisiniz?"
     },

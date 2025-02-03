@@ -179,6 +179,28 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  // Updates the current run name
+  void updateCurrentRunName(String newName) {
+    if (_currentRun != null) {
+      // Create a new RunModel instance with the updated runName
+      _currentRun = RunModel(
+        runId: _currentRun!.runId, // Keep existing runId
+        timeStamp: _currentRun!.timeStamp, // Keep existing timeStamp
+        runName: newName, // Use the new runName
+        playerName: _currentRun!.playerName, // Keep existing playerName
+        isBuggedRun: _currentRun!.isBuggedRun, // Keep existing isBuggedRun
+        isAbortedRun: _currentRun!.isAbortedRun, // Keep existing isAbortedRun
+        isSoloRun: _currentRun!.isSoloRun, // Keep existing isSoloRun
+        totalTimes: _currentRun!.totalTimes, // Keep existing totalTimes
+        phases: _currentRun!.phases, // Keep existing phases
+        squadMembers: _currentRun!.squadMembers, // Keep existing squadMembers
+      );
+
+      // Notify listeners to refresh UI
+      notifyListeners();
+    }
+  }
+
   /// Start periodic updates
   void startPeriodicUpdate({Duration interval = const Duration(seconds: 1)}) {
     _updateTimer?.cancel(); // Cancel any existing timer
