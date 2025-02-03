@@ -9,6 +9,13 @@
         "and": " and ",
         "named": "called"
     },
+    "onboarding": {
+        "welcome": "Welcome to Profit Taker Analytics!\nLet's go over some key features.",
+        "navigation": "Use your arrow keys, the buttons on the top right or your mouse scroll wheel to navigate between runs.",
+        "screenshot": "Click the copy button to automatically screenshot your run! No need for manual screenshots.",
+        "main_nav": "Use the navigation bar on the left to explore different sections of the app by clicking on the buttons.",
+        "final": "That's it! I hope you enjoy PTA."
+    },
     "overview_cards": {
         "total_duration": "Total\nDuration",
         "flight_time": "Flight\nTime",
@@ -63,8 +70,8 @@
         "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
         "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
         "key_config": "Shortcut Configuration",
-        "config_up_key": "Configure Forward Key",
-        "config_down_key": "Configure Back key" 
+        "config_up_key": "Configure Next Key",
+        "config_down_key": "Configure Previous key" 
     },
     "storage" : {
         "title": "Your storage area",
@@ -97,7 +104,7 @@
         "retry": "Try again"
     },
     "alerts": {
-        "name_title": "Change File Name",
+        "name_title": "Change run name",
         "delete_title": "Confirm Deletion",
         "confirm_delete": "Are you sure you want to delete the selected run(s)?"
     },

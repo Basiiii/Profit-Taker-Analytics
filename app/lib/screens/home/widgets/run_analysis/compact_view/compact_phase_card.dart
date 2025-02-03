@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/models/phase.dart';
-import 'package:profit_taker_analyzer/models/phases.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/build_row.dart';
+import 'package:profit_taker_analyzer/services/database/database_maps.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:rust_core/rust_core.dart';
 
 Widget buildCompactPhaseCard(
   int index,
   BuildContext context,
   double screenWidth,
-  Phases phases,
+  List<PhaseModel> phases,
   bool isBuggedRun,
 ) {
-  final Phase phase = phases.getPhase(index)!;
+  final PhaseModel phase = phases[index];
   final double responsiveCardWidth = screenWidth / 2;
 
   List<String> labels = [
@@ -24,10 +24,10 @@ Widget buildCompactPhaseCard(
   ];
 
   List<String> overviewList = [
-    phase.totalShield.toString(),
-    phase.totalLeg.toString(),
-    phase.totalBodyKill.toString(),
-    phase.totalPylon.toString(),
+    phase.totalShieldTime.toString(),
+    phase.totalLegTime.toString(),
+    phase.totalBodyKillTime.toString(),
+    phase.totalPylonTime.toString(),
   ];
 
   List<Widget> rows =
@@ -86,8 +86,8 @@ List<Widget> generatePhaseRows(
 }
 
 // Helper: Build Compact Card Header
-Widget buildCompactCardHeader(
-    Phase phase, BuildContext context, int index, Phases phases) {
+Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
+    List<PhaseModel> phases) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, left: 20, right: 10),
     child: Row(
@@ -114,8 +114,7 @@ Widget buildCompactCardHeader(
                     generateTextSpan(
                       (index == 0
                               ? phase.totalTime
-                              : (phase.totalTime -
-                                  phases.getPhase(index - 1)!.totalTime))
+                              : (phase.totalTime - phases[index - 1].totalTime))
                           .toStringAsFixed(3),
                       16,
                       FontWeight.w400,
@@ -143,7 +142,7 @@ Widget buildCompactCardHeader(
 }
 
 // Helper: Build Compact Card Body
-Widget buildCompactCardBody(List<Widget> rows, Phase phase, int index,
+Widget buildCompactCardBody(List<Widget> rows, PhaseModel phase, int index,
     BuildContext context, bool isBuggedRun) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, left: 20),
@@ -188,7 +187,7 @@ Widget buildCompactCardBody(List<Widget> rows, Phase phase, int index,
 
 // Helper: Build Compact Shields Info
 Widget buildShieldsInfo(
-    int index, Phase phase, BuildContext context, bool isBuggedRun) {
+    int index, PhaseModel phase, BuildContext context, bool isBuggedRun) {
   if (index == 1) return const SizedBox.shrink();
 
   return Wrap(
@@ -203,7 +202,7 @@ Widget buildShieldsInfo(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(pair.icon, size: 13),
+            Icon(getStatusEffectIcon(pair.statusEffect), size: 13),
             Text(
               pair.shieldTime.toStringAsFixed(3),
               style: TextStyle(
@@ -222,7 +221,7 @@ Widget buildShieldsInfo(
 }
 
 // Helper: Build Compact Legs Info
-Widget buildLegsInfo(Phase phase, BuildContext context) {
+Widget buildLegsInfo(PhaseModel phase, BuildContext context) {
   return Wrap(
     spacing: 20.0,
     runSpacing: 8.0,
@@ -233,9 +232,9 @@ Widget buildLegsInfo(Phase phase, BuildContext context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(pair.icon, size: 8),
+            Icon(getLegPositionIcon(pair.legPosition), size: 8),
             Text(
-              pair.breakTime.toStringAsFixed(3),
+              pair.legBreakTime.toStringAsFixed(3),
               style: TextStyle(
                 fontFamily: 'DMMono',
                 fontSize: 12,

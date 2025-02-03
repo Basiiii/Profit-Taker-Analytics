@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/models/total_times.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:rust_core/rust_core.dart';
 
 /// Builds and returns a compact card widget for displaying overview information.
 Widget buildCompactOverviewCard(int index, BuildContext context,
-    double screenWidth, TotalTimes totalTimes) {
+    double screenWidth, TotalTimesModel totalTimes) {
   // Keep width calculation consistent
   double responsiveCardWidth =
       screenWidth / 6 - 8; // This remains the same as the old code
@@ -94,49 +94,49 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
 
 /// Fetch card details (color, icon, title, and time value) based on index.
 CardDetails getCompactCardDetails(
-    int index, TotalTimes totalTimes, BuildContext context) {
+    int index, TotalTimesModel totalTimes, BuildContext context) {
   switch (index) {
     case 0:
       return CardDetails(
         const Color(0xFF68ADFF),
         Icons.access_time,
         FlutterI18n.translate(context, "compact_overview.total_duration"),
-        totalTimes.totalTime,
+        totalTimes.totalDuration,
       );
     case 1:
       return CardDetails(
         const Color(0xFFFFB054),
         Icons.flight,
         FlutterI18n.translate(context, "compact_overview.flight_time"),
-        totalTimes.totalFlight,
+        totalTimes.totalFlightTime,
       );
     case 2:
       return CardDetails(
         const Color(0xFF7C8AE7),
         Icons.shield,
         FlutterI18n.translate(context, "compact_overview.shield_break"),
-        totalTimes.totalShield,
+        totalTimes.totalShieldTime,
       );
     case 3:
       return CardDetails(
         const Color(0xFF59D5D9),
         Icons.airline_seat_legroom_extra,
         FlutterI18n.translate(context, "compact_overview.leg_break"),
-        totalTimes.totalLeg,
+        totalTimes.totalLegTime,
       );
     case 4:
       return CardDetails(
         const Color(0xFFDB5858),
         Icons.my_location,
         FlutterI18n.translate(context, "compact_overview.body_kill"),
-        totalTimes.totalBody,
+        totalTimes.totalBodyTime,
       );
     case 5:
       return CardDetails(
         const Color(0xFFE888DE),
         Icons.workspaces_outline,
         FlutterI18n.translate(context, "compact_overview.pylon_destruction"),
-        totalTimes.totalPylon,
+        totalTimes.totalPylonTime,
       );
     default:
       return CardDetails(
