@@ -27,6 +27,7 @@ class RunTitle extends StatelessWidget {
     final runService = context.watch<RunNavigationService>();
     final screenshotService = context.read<ScreenshotService>();
     final String runName = run.runName;
+    final isFavorited = checkRunFavorite(runId: run.runId);
 
     return Row(
       children: [
@@ -52,16 +53,23 @@ class RunTitle extends StatelessWidget {
         titleText("\"$runName\"", 20, FontWeight.w500),
         const SizedBox(width: 8),
         IconButton(
-          icon: const Icon(Icons.edit, size: 20),
+          icon: const Icon(Icons.edit, size: 22),
           onPressed: () => _handleEditName(context),
         ),
         IconButton(
-          icon: const Icon(Icons.copy, size: 20),
+          icon: const Icon(Icons.copy, size: 22),
           onPressed: () => _handleScreenshotCopy(context, screenshotService),
         ),
         IconButton(
-          icon: const Icon(Icons.sticky_note_2_outlined, size: 20),
+          icon: const Icon(Icons.description_outlined, size: 24),
           onPressed: () => _handleCopyRunAsText(context),
+        ),
+        IconButton(
+          icon: isFavorited
+              ? const Icon(Icons.star_rounded, size: 26)
+              : const Icon(Icons.star_outline_rounded, size: 26),
+          onPressed: () =>
+              _handleToggleFavorite(context, isFavorited, run.runId),
         ),
         if (runService.currentRun?.isBuggedRun ?? false)
           _buildWarningIcon(context, true),
@@ -126,6 +134,30 @@ class RunTitle extends StatelessWidget {
         );
       }
     }
+  }
+
+  void _handleToggleFavorite(
+      BuildContext context, bool isFavorited, int runId) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final isSuccess = isFavorited == false
+        ? markRunAsFavorite(runId: runId)
+        : removeRunFromFavorites(runId: runId);
+
+    if (!context.mounted) return;
+
+    final messageKey = isSuccess
+        ? (isFavorited ? "remove_favorite.success" : "mark_favorite.success")
+        : (isFavorited ? "remove_favorite.error" : "mark_favorite.error");
+
+    final message = FlutterI18n.translate(context, messageKey);
+    scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+
+    // Get the RunNavigationService from the context
+    final runService =
+        Provider.of<RunNavigationService>(context, listen: false);
+
+    // Call the forceUIRefresh function from the RunNavigationService
+    runService.forceUIRefresh();
   }
 
   Widget _buildWarningIcon(BuildContext context, bool isBugged) {
