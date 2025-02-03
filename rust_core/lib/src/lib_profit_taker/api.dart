@@ -125,6 +125,63 @@ bool checkRunExists({required int runId}) =>
 DeleteRunResult deleteRunFromDb({required int runId}) =>
     RustLib.instance.api.crateApiDeleteRunFromDb(runId: runId);
 
+/// Checks whether the given run is the latest in the database.
+///
+/// This function wraps the `is_latest_run` function to make it accessible to Flutter.
+/// It checks if the run with the given `run_id` is the latest run in the database.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the latest in the database.
+/// - `false` if the run is not the latest or an error occurs during the check.
+bool checkIfLatestRun({required int runId}) =>
+    RustLib.instance.api.crateApiCheckIfLatestRun(runId: runId);
+
+/// Marks the given run as a favorite in the database.
+///
+/// This function wraps the `mark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to mark the run with the given `run_id` as a favorite.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be marked as favorite.
+///
+/// # Returns
+/// - `true` if the run was successfully marked as a favorite.
+/// - `false` if an error occurs during the insertion.
+bool markRunAsFavorite({required int runId}) =>
+    RustLib.instance.api.crateApiMarkRunAsFavorite(runId: runId);
+
+/// Removes the given run from the favorites list in the database.
+///
+/// This function wraps the `unmark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to remove the run with the given `run_id` from the favorites list.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be removed from favorites.
+///
+/// # Returns
+/// - `true` if the run was successfully removed from favorites.
+/// - `false` if an error occurs during the removal.
+bool removeRunFromFavorites({required int runId}) =>
+    RustLib.instance.api.crateApiRemoveRunFromFavorites(runId: runId);
+
+/// Updates the name of the given run in the database.
+///
+/// This function wraps the `edit_run_name` function to make it accessible to Flutter.
+/// It attempts to update the `run_name` for the run with the given `run_id`.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to update.
+/// - `new_name`: The new name to set for the run.
+///
+/// # Returns
+/// - `true` if the run name was successfully updated.
+/// - `false` if an error occurs during the update.
+bool updateRunName({required int runId, required String newName}) =>
+    RustLib.instance.api.crateApiUpdateRunName(runId: runId, newName: newName);
+
 /// Wrapper function for calling `initialize_parser` and returning a result to Dart.
 /// This function handles errors from `initialize_parser` and maps them to a specific error type.
 /// It returns `InitializeParserOutcome`, which includes both success and error outcomes.

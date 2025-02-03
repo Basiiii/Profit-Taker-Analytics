@@ -515,6 +515,7 @@ dependencies = [
 name = "lib_profit_taker_database"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "lib_profit_taker_core",
  "once_cell",
  "rusqlite",

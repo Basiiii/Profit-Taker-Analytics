@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegPosition, StatusEffect};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    delete_run::delete_run, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, run_exists::run_exists
+    delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::initialize_parser;
 
@@ -342,6 +342,84 @@ pub fn delete_run_from_db(run_id: i32) -> DeleteRunResult {
         },
     }
 }
+
+/// Checks whether the given run is the latest in the database.
+///
+/// This function wraps the `is_latest_run` function to make it accessible to Flutter.
+/// It checks if the run with the given `run_id` is the latest run in the database.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the latest in the database.
+/// - `false` if the run is not the latest or an error occurs during the check.
+#[flutter_rust_bridge::frb(sync)]
+pub fn check_if_latest_run(run_id: i32) -> bool {
+    match is_latest_run(run_id) {
+        Ok(is_latest) => is_latest,
+        Err(_) => false, // On error, default to `false`
+    }
+}
+
+/// Marks the given run as a favorite in the database.
+///
+/// This function wraps the `mark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to mark the run with the given `run_id` as a favorite. 
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be marked as favorite.
+///
+/// # Returns
+/// - `true` if the run was successfully marked as a favorite.
+/// - `false` if an error occurs during the insertion.
+#[flutter_rust_bridge::frb(sync)]
+pub fn mark_run_as_favorite(run_id: i32) -> bool {
+    match mark_as_favorite(run_id) {
+        Ok(_) => true,
+        Err(_) => false, // On error, default to `false`
+    }
+}
+
+/// Removes the given run from the favorites list in the database.
+///
+/// This function wraps the `unmark_as_favorite` function to make it accessible to Flutter.
+/// It attempts to remove the run with the given `run_id` from the favorites list.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to be removed from favorites.
+///
+/// # Returns
+/// - `true` if the run was successfully removed from favorites.
+/// - `false` if an error occurs during the removal.
+#[flutter_rust_bridge::frb(sync)]
+pub fn remove_run_from_favorites(run_id: i32) -> bool {
+    match unmark_as_favorite(run_id) {
+        Ok(_) => true,
+        Err(_) => false, // On error, default to `false`
+    }
+}
+
+/// Updates the name of the given run in the database.
+///
+/// This function wraps the `edit_run_name` function to make it accessible to Flutter.
+/// It attempts to update the `run_name` for the run with the given `run_id`.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to update.
+/// - `new_name`: The new name to set for the run.
+///
+/// # Returns
+/// - `true` if the run name was successfully updated.
+/// - `false` if an error occurs during the update.
+#[flutter_rust_bridge::frb(sync)]
+pub fn update_run_name(run_id: i32, new_name: String) -> bool {
+    match edit_run_name(run_id, &new_name) {
+        Ok(_) => true,
+        Err(_) => false, // On error, default to `false`
+    }
+}
+
 
 /// Enum representing the possible outcomes of parser initialization.
 /// This enum includes a success case and specific error cases, without error messages.

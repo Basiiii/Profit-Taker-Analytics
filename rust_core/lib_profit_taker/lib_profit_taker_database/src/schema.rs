@@ -111,4 +111,11 @@ CREATE TABLE shield_changes (
     FOREIGN KEY (status_effect_id) REFERENCES status_effects (id) ON DELETE CASCADE,
     FOREIGN KEY (run_id, phase_number) REFERENCES phases (run_id, phase_number) ON DELETE CASCADE
 );
+
+-- Create favorites table
+CREATE TABLE favorites (
+    run_id INTEGER PRIMARY KEY,
+    favorited_at INTEGER NOT NULL,  -- Store as Unix timestamp
+    FOREIGN KEY (run_id) REFERENCES runs (id) ON DELETE CASCADE
+);
 ";
