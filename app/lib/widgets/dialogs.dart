@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/utils/utils.dart';
+import 'package:rust_core/rust_core.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -195,20 +196,19 @@ void showDonationDialog(BuildContext context, String title, String main,
 ///
 /// Returns: A future that completes when the dialog is closed.
 Future<void> displayTextInputDialog(
-    BuildContext context,
-    TextEditingController controller,
-    String fileName,
-    String hintText,
-    String changeFileNameText,
-    String cancelText,
-    String okText,
-    List<String> existingNames,
-    Function updateCallback) async {
+  BuildContext context,
+  TextEditingController controller,
+  String hintText,
+  String changeRunNameText,
+  String cancelText,
+  String okText,
+  Function(String) updateCallback,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text(changeFileNameText),
+        title: Text(changeRunNameText),
         content: TextField(
           controller: controller,
           maxLength: 14,
@@ -219,45 +219,16 @@ Future<void> displayTextInputDialog(
         actions: <Widget>[
           TextButton(
             child: Text(cancelText),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
           ),
           TextButton(
             child: Text(okText),
             onPressed: () {
-              var newName = controller.text;
-              if (existingNames.contains(newName)) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title:
-                          Text(FlutterI18n.translate(context, 'errors.error')),
-                      content: Text(FlutterI18n.translate(
-                          context, 'errors.existing_name')),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text(
-                              FlutterI18n.translate(context, 'buttons.ok')),
-                          onPressed: () {
-                            Navigator.pop(context); // Close the error dialog
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                updateRunName(newName, fileName).then((_) {
-                  updateCallback(newName, fileName);
-                  if (!context.mounted) {
-                    return;
-                  }
-                  Navigator.pop(context);
-                  controller.clear();
-                });
-              }
+              String newName = controller.text;
+              updateCallback(newName);
+              if (!context.mounted) return;
+              Navigator.pop(context);
+              controller.clear();
             },
           ),
         ],
@@ -314,39 +285,4 @@ Future<bool> showConfirmationDialog(BuildContext context, String title,
         },
       ) ??
       false;
-}
-
-/// Updates the name of a run in the corresponding JSON file.
-///
-/// This method updates the name of a run in the JSON file associated with the given [fileName].
-///
-/// Parameters:
-///   - newName: The new name to be set.
-///   - fileName: The name of the JSON file to be updated.
-///
-/// Returns: A future that completes when the update is done.
-Future<void> updateRunName(String newName, String fileName) async {
-  // Define the path to the JSON file
-  var mainPath = Platform.resolvedExecutable;
-  mainPath = mainPath.substring(0, mainPath.lastIndexOf("\\"));
-  var storagePath = "$mainPath\\storage\\$fileName.json";
-
-  // Load the JSON file
-  final File jsonFile = File(storagePath);
-  final String jsonString = await jsonFile.readAsString();
-
-  // Parse the JSON string into a Dart Map
-  final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-
-  // Update the value of the "pretty_name" key
-  jsonData['pretty_name'] = newName;
-
-  // Convert the updated Map back into a JSON string
-  final String updatedJsonString = jsonEncode(jsonData);
-
-  // Write the updated JSON string back to the file
-  await jsonFile.writeAsString(updatedJsonString);
-
-  // Update the variable
-  // customRunName = newName;
 }

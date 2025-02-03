@@ -104,7 +104,7 @@
         "retry": "再试一次"
     },
     "alerts": {
-        "name_title": "更改文件名",
+        "name_title": "更改任务名称",
         "delete_title": "确认删除",
         "confirm_delete": "您确定要删除所选运行吗？"
     },

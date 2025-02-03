@@ -167,6 +167,21 @@ bool markRunAsFavorite({required int runId}) =>
 bool removeRunFromFavorites({required int runId}) =>
     RustLib.instance.api.crateApiRemoveRunFromFavorites(runId: runId);
 
+/// Updates the name of the given run in the database.
+///
+/// This function wraps the `edit_run_name` function to make it accessible to Flutter.
+/// It attempts to update the `run_name` for the run with the given `run_id`.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to update.
+/// - `new_name`: The new name to set for the run.
+///
+/// # Returns
+/// - `true` if the run name was successfully updated.
+/// - `false` if an error occurs during the update.
+bool updateRunName({required int runId, required String newName}) =>
+    RustLib.instance.api.crateApiUpdateRunName(runId: runId, newName: newName);
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;

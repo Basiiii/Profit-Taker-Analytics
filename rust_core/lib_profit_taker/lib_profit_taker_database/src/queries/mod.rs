@@ -26,6 +26,7 @@
 //! - `latest_run`: Check if a given run is the latest run.
 //! - `insert_favorite`: Insert a record into favorites table.
 //! - `delete_favorite`: Removes a record from favorites table.
+//! - `edit_run_name`: Edits the name of a specific run.
 
 pub mod fetch_run_data;
 pub use fetch_run_data::fetch_run_from_db;
@@ -39,3 +40,4 @@ pub mod insert_run;
 pub mod latest_run;
 pub mod insert_favorite;
 pub mod delete_favorite;
+pub mod edit_run_name;
