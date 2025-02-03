@@ -201,6 +201,10 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  void forceUIRefresh() {
+    notifyListeners();
+  }
+
   /// Start periodic updates
   void startPeriodicUpdate({Duration interval = const Duration(seconds: 1)}) {
     _updateTimer?.cancel(); // Cancel any existing timer

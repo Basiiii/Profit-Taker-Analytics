@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, latest_run::is_latest_run, run_exists::run_exists
+    delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 
@@ -396,6 +396,24 @@ pub fn mark_run_as_favorite(run_id: i32) -> bool {
 pub fn remove_run_from_favorites(run_id: i32) -> bool {
     match unmark_as_favorite(run_id) {
         Ok(_) => true,
+        Err(_) => false, // On error, default to `false`
+    }
+}
+
+/// Checks if a `Run` is marked as a favorite and exposes it to Flutter via flutter_rust_bridge.
+/// 
+/// This function wraps the `is_run_favorite` function to make it accessible to Flutter.
+/// 
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+/// 
+/// # Returns
+/// - `true` if the run is marked as a favorite.
+/// - `false` if an error occurs during the check.
+#[flutter_rust_bridge::frb(sync)]
+pub fn check_run_favorite(run_id: i32) -> bool {
+    match is_run_favorite(run_id) {
+        Ok(is_favorite) => is_favorite,
         Err(_) => false, // On error, default to `false`
     }
 }

@@ -167,6 +167,19 @@ bool markRunAsFavorite({required int runId}) =>
 bool removeRunFromFavorites({required int runId}) =>
     RustLib.instance.api.crateApiRemoveRunFromFavorites(runId: runId);
 
+/// Checks if a `Run` is marked as a favorite and exposes it to Flutter via flutter_rust_bridge.
+///
+/// This function wraps the `is_run_favorite` function to make it accessible to Flutter.
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is marked as a favorite.
+/// - `false` if an error occurs during the check.
+bool checkRunFavorite({required int runId}) =>
+    RustLib.instance.api.crateApiCheckRunFavorite(runId: runId);
+
 /// Updates the name of the given run in the database.
 ///
 /// This function wraps the `edit_run_name` function to make it accessible to Flutter.
