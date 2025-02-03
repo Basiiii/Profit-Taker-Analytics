@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rust_core/rust_core.dart';
 
@@ -6,73 +7,78 @@ Future<void> main() async {
 
   try {
     initializeDb(path: 'C:/test.db');
-    print("Database initialized successfully!");
+    if (kDebugMode) {
+      print("Database initialized successfully!");
+    }
   } catch (e) {
-    print("Failed to initialize database: $e");
+    if (kDebugMode) {
+      print("Failed to initialize database: $e");
+    }
   }
 
   RunModel run = getRunFromDb(runId: 1);
+  print(getPrettyPrintedRun(runModel: run));
 
-  try {
-    final runId = getLatestRunId();
-    if (runId != null) {
-      print("Latest run ID: $runId");
-    } else {
-      print("No runs found");
-    }
-  } catch (e) {
-    print("Failed to fetch latest run ID: $e");
-  }
+  // try {
+  //   final runId = getLatestRunId();
+  //   if (runId != null) {
+  //     print("Latest run ID: $runId");
+  //   } else {
+  //     print("No runs found");
+  //   }
+  // } catch (e) {
+  //   print("Failed to fetch latest run ID: $e");
+  // }
 
-  try {
-    final runId = getEarliestRunId();
-    if (runId != null) {
-      print("Earliest run ID: $runId");
-    } else {
-      print("No runs found");
-    }
-  } catch (e) {
-    print("Failed to fetch latest run ID: $e");
-  }
+  // try {
+  //   final runId = getEarliestRunId();
+  //   if (runId != null) {
+  //     print("Earliest run ID: $runId");
+  //   } else {
+  //     print("No runs found");
+  //   }
+  // } catch (e) {
+  //   print("Failed to fetch latest run ID: $e");
+  // }
 
-  try {
-    final runId = getPreviousRunId(currentRunId: 2);
-    if (runId != null) {
-      print("Next run ID: $runId");
-    } else {
-      print("No next run found");
-    }
-  } catch (e) {
-    print("Failed to fetch next run ID: $e");
-  }
+  // try {
+  //   final runId = getPreviousRunId(currentRunId: 2);
+  //   if (runId != null) {
+  //     print("Next run ID: $runId");
+  //   } else {
+  //     print("No next run found");
+  //   }
+  // } catch (e) {
+  //   print("Failed to fetch next run ID: $e");
+  // }
 
-  try {
-    final runId = getNextRunId(currentRunId: 2);
-    if (runId != null) {
-      print("Next run ID: $runId");
-    } else {
-      print("No next run found");
-    }
-  } catch (e) {
-    print("Failed to fetch next run ID: $e");
-  }
+  // try {
+  //   final runId = getNextRunId(currentRunId: 2);
+  //   if (runId != null) {
+  //     print("Next run ID: $runId");
+  //   } else {
+  //     print("No next run found");
+  //   }
+  // } catch (e) {
+  //   print("Failed to fetch next run ID: $e");
+  // }
 
-  print(checkRunExists(runId: 1));
-  print(checkRunExists(runId: 50));
+  // print(checkRunExists(runId: 1));
+  // print(checkRunExists(runId: 50));
 
-  var result = deleteRunFromDb(runId: 3);
-  if (result.success) {
-    print("Run deleted successfully");
-  } else {
-    print("Error: ${result.error ?? "Unknown error"}");
-  }
+  // var result = deleteRunFromDb(runId: 3);
+  // if (result.success) {
+  //   print("Run deleted successfully");
+  // } else {
+  //   print("Error: ${result.error ?? "Unknown error"}");
+  // }
 
-  var test = deleteRunFromDb(runId: 50);
-  if (test.success) {
-    print("Run deleted successfully");
-  } else {
-    print("Error: ${result.error ?? "Unknown error"}");
-  }
+  // var test = deleteRunFromDb(runId: 50);
+  // if (test.success) {
+  //   print("Run deleted successfully");
+  // } else {
+  //   print("Error: ${result.error ?? "Unknown error"}");
+  // }
 
   runApp(const MyApp());
 }

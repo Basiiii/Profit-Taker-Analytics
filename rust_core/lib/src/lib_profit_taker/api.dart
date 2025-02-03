@@ -192,6 +192,19 @@ bool updateRunName({required int runId, required String newName}) =>
 InitializeParserOutcome initializeParserWrapper() =>
     RustLib.instance.api.crateApiInitializeParserWrapper();
 
+/// Retrieves and pretty-prints the details of a Profit-Taker run.
+///
+/// This function wraps the `pretty_print_run` function to make it accessible to Flutter.
+/// It converts a `RunModel` instance into a `Run` and returns a formatted string.
+///
+/// # Arguments
+/// - `run_model`: The `RunModel` instance to convert and format.
+///
+/// # Returns
+/// - A `String` containing the formatted Profit-Taker run details.
+String getPrettyPrintedRun({required RunModel runModel}) =>
+    RustLib.instance.api.crateApiGetPrettyPrintedRun(runModel: runModel);
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;

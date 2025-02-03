@@ -28,6 +28,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_box_autoadd_i_32(dynamic raw);
 
   @protected
+  RunModel dco_decode_box_autoadd_run_model(dynamic raw);
+
+  @protected
   DeleteRunResult dco_decode_delete_run_result(dynamic raw);
 
   @protected
@@ -101,6 +104,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
+  RunModel sse_decode_box_autoadd_run_model(SseDeserializer deserializer);
 
   @protected
   DeleteRunResult sse_decode_delete_run_result(SseDeserializer deserializer);
@@ -181,6 +187,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_run_model(
+      RunModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_delete_run_result(

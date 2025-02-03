@@ -1,8 +1,8 @@
-use lib_profit_taker_core::{LegPosition, StatusEffect};
+use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
     delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
-use lib_profit_taker_parser::initialize_parser;
+use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 
 #[flutter_rust_bridge::frb]
 pub struct RunModel {
@@ -420,7 +420,6 @@ pub fn update_run_name(run_id: i32, new_name: String) -> bool {
     }
 }
 
-
 /// Enum representing the possible outcomes of parser initialization.
 /// This enum includes a success case and specific error cases, without error messages.
 #[flutter_rust_bridge::frb]
@@ -476,4 +475,77 @@ pub fn initialize_parser_wrapper() -> InitializeParserOutcome {
             }
         }
     }
+}
+
+/// Retrieves and pretty-prints the details of a Profit-Taker run.
+///
+/// This function wraps the `pretty_print_run` function to make it accessible to Flutter.
+/// It converts a `RunModel` instance into a `Run` and returns a formatted string.
+///
+/// # Arguments
+/// - `run_model`: The `RunModel` instance to convert and format.
+///
+/// # Returns
+/// - A `String` containing the formatted Profit-Taker run details.
+#[flutter_rust_bridge::frb(sync)]
+pub fn get_pretty_printed_run(run_model: RunModel) -> String {
+    let run = Run {
+        run_id: run_model.run_id,
+        time_stamp: run_model.time_stamp,
+        run_name: run_model.run_name,
+        player_name: run_model.player_name,
+        is_bugged_run: run_model.is_bugged_run,
+        is_aborted_run: run_model.is_aborted_run,
+        is_solo_run: run_model.is_solo_run,
+        total_times: TotalTimes {
+            total_time: run_model.total_times.total_duration,
+            total_flight_time: run_model.total_times.total_flight_time,
+            total_shield_time: run_model.total_times.total_shield_time,
+            total_leg_time: run_model.total_times.total_leg_time,
+            total_body_time: run_model.total_times.total_body_time,
+            total_pylon_time: run_model.total_times.total_pylon_time,
+        },
+        phases: run_model.phases.into_iter().map(|phase| Phase {
+            phase_number: phase.phase_number,
+            total_time: phase.total_time,
+            total_shield_time: phase.total_shield_time,
+            total_leg_time: phase.total_leg_time,
+            total_body_kill_time: phase.total_body_kill_time,
+            total_pylon_time: phase.total_pylon_time,
+            shield_changes: phase.shield_changes.into_iter().map(|shield| ShieldChange {
+                shield_time: shield.shield_time,
+                status_effect: match shield.status_effect {
+                    StatusEffectEnum::Impact => StatusEffect::Impact,
+                    StatusEffectEnum::Puncture => StatusEffect::Puncture,
+                    StatusEffectEnum::Slash => StatusEffect::Slash,
+                    StatusEffectEnum::Heat => StatusEffect::Heat,
+                    StatusEffectEnum::Cold => StatusEffect::Cold,
+                    StatusEffectEnum::Electric => StatusEffect::Electric,
+                    StatusEffectEnum::Toxin => StatusEffect::Toxin,
+                    StatusEffectEnum::Blast => StatusEffect::Blast,
+                    StatusEffectEnum::Radiation => StatusEffect::Radiation,
+                    StatusEffectEnum::Gas => StatusEffect::Gas,
+                    StatusEffectEnum::Magnetic => StatusEffect::Magnetic,
+                    StatusEffectEnum::Viral => StatusEffect::Viral,
+                    StatusEffectEnum::Corrosive => StatusEffect::Corrosive,
+                    StatusEffectEnum::NoShield => StatusEffect::NoShield,
+                },
+            }).collect(),
+            leg_breaks: phase.leg_breaks.into_iter().map(|leg| LegBreak {
+                leg_break_time: leg.leg_break_time,
+                leg_position: match leg.leg_position {
+                    LegPositionEnum::FrontLeft => LegPosition::FrontLeft,
+                    LegPositionEnum::FrontRight => LegPosition::FrontRight,
+                    LegPositionEnum::BackLeft => LegPosition::BackLeft,
+                    LegPositionEnum::BackRight => LegPosition::BackRight,
+                },
+                leg_order: leg.leg_order,
+            }).collect(),
+        }).collect(),
+        squad_members: run_model.squad_members.into_iter().map(|member| SquadMember {
+            member_name: member.member_name,
+        }).collect(),
+    };
+    
+    pretty_print_run(&run)
 }
