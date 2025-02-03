@@ -4,7 +4,7 @@
 //! associated with the run.
 
 use crate::models::{SquadMember, Phase, TotalTimes};
-use chrono::Utc;
+use chrono::Local;
 
 /// Represents a single run in the application.
 ///
@@ -58,10 +58,10 @@ impl Run {
     ///
     /// A new `Run` instance with default values for `is_bugged_run`, `is_aborted_run`, `is_solo_run`,
     /// `total_times`, `phases`, and `squad_members`.
-    #[must_use] pub fn new(run_id: i32) -> Self {
+    #[must_use] pub fn new() -> Self {
         Self {
-            run_id,
-            time_stamp: Utc::now().timestamp(),
+            run_id: 0,
+            time_stamp: Local::now().timestamp(),
             run_name: String::new(),
             player_name: String::new(),
             is_bugged_run: false,

@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.7.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1683283784;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -196383932;
 
 // Section: executor
 
@@ -347,6 +347,35 @@ fn wire__crate__api__initialize_db_impl(
         },
     )
 }
+fn wire__crate__api__initialize_parser_wrapper_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "initialize_parser_wrapper",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::initialize_parser_wrapper())?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__mark_run_as_favorite_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -488,6 +517,22 @@ impl SseDecode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_i64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::InitializeParserOutcome {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::InitializeParserOutcome::Success,
+            1 => crate::api::InitializeParserOutcome::EnvironmentVariableError,
+            2 => crate::api::InitializeParserOutcome::FileOpenError,
+            3 => crate::api::InitializeParserOutcome::FileSeekError,
+            4 => crate::api::InitializeParserOutcome::ThreadSpawnError,
+            5 => crate::api::InitializeParserOutcome::UnknownError,
+            _ => unreachable!("Invalid variant for InitializeParserOutcome: {}", inner),
+        };
     }
 }
 
@@ -762,9 +807,10 @@ fn pde_ffi_dispatcher_sync_impl(
         7 => wire__crate__api__get_previous_run_id_impl(ptr, rust_vec_len, data_len),
         8 => wire__crate__api__get_run_from_db_impl(ptr, rust_vec_len, data_len),
         10 => wire__crate__api__initialize_db_impl(ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__initialize_parser_wrapper_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -786,6 +832,31 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::DeleteRunResult>
     for crate::api::DeleteRunResult
 {
     fn into_into_dart(self) -> crate::api::DeleteRunResult {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::InitializeParserOutcome {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Success => 0.into_dart(),
+            Self::EnvironmentVariableError => 1.into_dart(),
+            Self::FileOpenError => 2.into_dart(),
+            Self::FileSeekError => 3.into_dart(),
+            Self::ThreadSpawnError => 4.into_dart(),
+            Self::UnknownError => 5.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::InitializeParserOutcome
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::InitializeParserOutcome>
+    for crate::api::InitializeParserOutcome
+{
+    fn into_into_dart(self) -> crate::api::InitializeParserOutcome {
         self
     }
 }
@@ -997,6 +1068,26 @@ impl SseEncode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_i64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::InitializeParserOutcome {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::InitializeParserOutcome::Success => 0,
+                crate::api::InitializeParserOutcome::EnvironmentVariableError => 1,
+                crate::api::InitializeParserOutcome::FileOpenError => 2,
+                crate::api::InitializeParserOutcome::FileSeekError => 3,
+                crate::api::InitializeParserOutcome::ThreadSpawnError => 4,
+                crate::api::InitializeParserOutcome::UnknownError => 5,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 

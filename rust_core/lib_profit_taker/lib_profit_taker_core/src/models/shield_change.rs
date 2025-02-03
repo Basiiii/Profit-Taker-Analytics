@@ -5,8 +5,8 @@ use crate::models::StatusEffect;
 
 /// Represents a change in shield status during a phase.
 ///
-/// A `ShieldChange` contains information about the time at which the shield change occurred and the
-/// associated status effect that caused or resulted from the change.
+/// A `ShieldChange` contains information about the time it took for the shield change to occur 
+/// and the associated status effect that caused the change.
 #[derive(Debug, Clone)]
 pub struct ShieldChange {
     /// The time at which the shield change occurred.

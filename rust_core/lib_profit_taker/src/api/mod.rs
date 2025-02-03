@@ -2,6 +2,7 @@ use lib_profit_taker_core::{LegPosition, StatusEffect};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
     delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
+use lib_profit_taker_parser::initialize_parser;
 
 #[flutter_rust_bridge::frb]
 pub struct RunModel {
@@ -416,5 +417,63 @@ pub fn update_run_name(run_id: i32, new_name: String) -> bool {
     match edit_run_name(run_id, &new_name) {
         Ok(_) => true,
         Err(_) => false, // On error, default to `false`
+    }
+}
+
+
+/// Enum representing the possible outcomes of parser initialization.
+/// This enum includes a success case and specific error cases, without error messages.
+#[flutter_rust_bridge::frb]
+pub enum InitializeParserOutcome {
+    /// Success variant, indicating successful parser initialization.
+    Success,
+    
+    /// Error variant for issues with the environment variable.
+    EnvironmentVariableError,
+    
+    /// Error variant for issues with opening the log file.
+    FileOpenError,
+    
+    /// Error variant for issues with seeking the file.
+    FileSeekError,
+    
+    /// Error variant for issues with spawning the thread.
+    ThreadSpawnError,
+    
+    /// Generic error variant for unknown issues.
+    UnknownError,
+}
+
+/// Wrapper function for calling `initialize_parser` and returning a result to Dart.
+/// This function handles errors from `initialize_parser` and maps them to a specific error type.
+/// It returns `InitializeParserOutcome`, which includes both success and error outcomes.
+///
+/// # Returns:
+/// - `Success`: Indicates that the parser was initialized successfully.
+/// - `Error`: Represents different types of errors during initialization, without error messages.
+#[flutter_rust_bridge::frb(sync)]
+pub fn initialize_parser_wrapper() -> InitializeParserOutcome {
+    match initialize_parser() {
+        // If the parser is initialized successfully, return the success variant.
+        Ok(_) => InitializeParserOutcome::Success,
+        
+        // If there is an error, map it to a specific error variant.
+        Err(e) => {
+            let error_message = e.to_string();
+
+            // Check the error message and map to the appropriate error variant.
+            if error_message.contains("can't find path to log") {
+                InitializeParserOutcome::EnvironmentVariableError
+            } else if error_message.contains("No such file or directory") {
+                InitializeParserOutcome::FileOpenError
+            } else if error_message.contains("Error seeking to start of file") {
+                InitializeParserOutcome::FileSeekError
+            } else if error_message.contains("Error running the parser") {
+                InitializeParserOutcome::ThreadSpawnError
+            } else {
+                // For any unexpected error, return the generic unknown error.
+                InitializeParserOutcome::UnknownError
+            }
+        }
     }
 }

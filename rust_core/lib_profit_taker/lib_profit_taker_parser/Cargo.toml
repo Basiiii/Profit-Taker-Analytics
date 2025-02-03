@@ -10,9 +10,7 @@ edition.workspace = true
 
 [dependencies]
 chrono = "0.4.39"
-diesel = "2.2.6"
-flutter_rust_bridge = "2.7.1"
-notify = "8.0.0"
 regex = "1.11.1"
 lib_profit_taker_core = { path = "../lib_profit_taker_core" }
+lib_profit_taker_database = { path = "../lib_profit_taker_database" }
 
