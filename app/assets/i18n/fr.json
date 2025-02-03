@@ -143,5 +143,9 @@
             "directoryDoesNotExist": "Le répertoire temporaire n'existe pas",
             "screenshotFailure": "Échec de la capture d'écran"
         }
+    },
+    "copy_run_text": {
+        "success": "Texte copié dans le presse-papiers avec succès",
+        "error": "Échec de la copie du texte dans le presse-papiers"
     }
 }

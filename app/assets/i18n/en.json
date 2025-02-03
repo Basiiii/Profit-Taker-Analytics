@@ -143,5 +143,9 @@
             "directoryDoesNotExist": "Temporary directory does not exist",
             "screenshotFailure": "Failed to capture screenshot"
         }
+    },
+    "copy_run_text": {
+        "success": "Text copied to clipboard successfully",
+        "error": "Failed to copy text to clipboard"
     }
 }
