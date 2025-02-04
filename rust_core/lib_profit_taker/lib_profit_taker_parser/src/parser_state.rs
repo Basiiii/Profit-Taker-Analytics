@@ -73,4 +73,10 @@ impl ParserState {
             log_start_time: 0,
         }
     }
+    pub(crate) fn with_log_start_time(log_start_time: i64) -> Self {
+        Self {
+            log_start_time,
+            ..Self::new()
+        }
+    }
 }

@@ -98,9 +98,11 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
                 continue;
             }
 
-            // Set the log start time to have consistent timestamps for runs
+            // Set the log start time to have consistent timestamps for runs,
+            // should only happen once per log file
             if line.contains(LOG_START_TIME) {
                 parser_state.log_start_time = get_log_time(&line);
+                //println!("Log start time set to: {}", parser_state.log_start_time);
             }
 
             // Check if a new run has started, initialize a new run if so
@@ -128,7 +130,7 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
                     current_run = None;
 
                     // Reset temporary run variables for the next run
-                    parser_state = ParserState::new();
+                    parser_state = ParserState::with_log_start_time(parser_state.log_start_time);
                     //println!("Done analysing run");
                 }
             }
