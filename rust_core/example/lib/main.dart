@@ -6,7 +6,9 @@ Future<void> main() async {
   await RustLib.init();
 
   try {
-    initializeDb(path: 'C:/test.db');
+    initializeDb(
+        path:
+            'C:/Users/basi/Documents/GitHub/Profit-Taker-Analytics/app/build/windows/x64/runner/Debug/database/pta_database.db');
     if (kDebugMode) {
       print("Database initialized successfully!");
     }
@@ -16,8 +18,11 @@ Future<void> main() async {
     }
   }
 
-  RunModel run = getRunFromDb(runId: 1);
+  RunModel run = await getRunFromDb(runId: 1);
   print(getPrettyPrintedRun(runModel: run));
+
+  RunModel run2 = await getRunFromDb(runId: 9);
+  print(getPrettyPrintedRun(runModel: run2));
 
   // try {
   //   final runId = getLatestRunId();

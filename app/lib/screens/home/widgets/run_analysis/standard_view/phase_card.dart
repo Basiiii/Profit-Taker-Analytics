@@ -24,10 +24,10 @@ Widget buildPhaseCard(
   ];
 
   List<String> overviewList = [
-    phase.totalShieldTime.toString(),
-    phase.totalLegTime.toString(),
-    phase.totalBodyKillTime.toString(),
-    phase.totalPylonTime.toString(),
+    phase.totalShieldTime.toStringAsFixed(3),
+    phase.totalLegTime.toStringAsFixed(3),
+    phase.totalBodyKillTime.toStringAsFixed(3),
+    phase.totalPylonTime.toStringAsFixed(3),
   ];
 
   List<Widget> rows =

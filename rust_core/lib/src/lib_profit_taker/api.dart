@@ -6,6 +6,8 @@
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`, `fmt`, `hash`
+
 /// Initializes the database by checking if the database file exists.
 /// If it exists, just sets the database path; if not, creates a new database.
 ///
@@ -34,7 +36,7 @@ void initializeDb({required String path}) =>
 /// # Returns
 /// - `Ok(RunModel)` if the run was successfully retrieved and converted into a structured model.
 /// - `Err(error_message)` if there was an error fetching or converting the run, with an error message describing the issue.
-RunModel getRunFromDb({required int runId}) =>
+Future<RunModel> getRunFromDb({required int runId}) =>
     RustLib.instance.api.crateApiGetRunFromDb(runId: runId);
 
 /// Fetches the latest run ID.
@@ -202,8 +204,8 @@ bool updateRunName({required int runId, required String newName}) =>
 /// # Returns:
 /// - `Success`: Indicates that the parser was initialized successfully.
 /// - `Error`: Represents different types of errors during initialization, without error messages.
-InitializeParserOutcome initializeParserWrapper() =>
-    RustLib.instance.api.crateApiInitializeParserWrapper();
+InitializeParserOutcome initializeProfitTakerParser() =>
+    RustLib.instance.api.crateApiInitializeProfitTakerParser();
 
 /// Retrieves and pretty-prints the details of a Profit-Taker run.
 ///
