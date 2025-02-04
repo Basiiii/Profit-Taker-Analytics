@@ -38,6 +38,7 @@ class HomeContent extends StatelessWidget {
             RunTitle(
               run: runData,
               mostRecentRun: checkIfLatestRun(runId: runData.runId),
+              showBestRunText: true,
             ),
             const SizedBox(height: 15),
             _buildAnalysisSection(context),

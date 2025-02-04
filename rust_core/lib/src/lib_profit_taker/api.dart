@@ -24,18 +24,47 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 void initializeDb({required String path}) =>
     RustLib.instance.api.crateApiInitializeDb(path: path);
 
-/// Fetches a run from the database based on the provided `run_id`.
+/// Fetches a run from the database based on the provided `run_id` and ensures it adheres to the expected structure.
 ///
-/// This function wraps the `fetch_run_from_db` function and converts the data into a structured model
-/// that can be returned to Flutter. The conversion process includes transforming nested structures such as
-/// `TotalTimes`, `Phases`, `ShieldChanges`, `LegBreaks`, and `SquadMembers` into their corresponding models.
+/// This function retrieves a run from the database and converts it into a structured `RunModel`. It ensures that:
+/// - There are always exactly 4 phases, filling in missing phases with default values if necessary.
+/// - Each phase contains the required fields based on its position:
+///   - **Phase 1**: Shields, legs, body, and pylon times.
+///   - **Phase 2**: Legs and body times only.
+///   - **Phase 3**: Shields, legs, body, and pylon times.
+///   - **Phase 4**: Shields, legs, and body times.
+/// - Missing shield changes are filled with a default shield (0.0s time, `NoShield` status).
+/// - Missing leg positions are filled with all four positions (FrontLeft, FrontRight, BackLeft, BackRight) with 0.0s time.
 ///
 /// # Arguments
 /// - `run_id`: The ID of the run to fetch from the database.
 ///
 /// # Returns
 /// - `Ok(RunModel)` if the run was successfully retrieved and converted into a structured model.
-/// - `Err(error_message)` if there was an error fetching or converting the run, with an error message describing the issue.
+/// - `Err(String)` if there was an error fetching or converting the run, with an error message describing the issue.
+///
+/// # Example
+/// ```
+/// let run = get_run_from_db(123);
+/// match run {
+///     Ok(run_model) => println!("Run fetched successfully: {:?}", run_model),
+///     Err(e) => println!("Error fetching run: {}", e),
+/// }
+/// ```
+///
+/// # Data Structure
+/// The returned `RunModel` contains:
+/// - General run information (ID, timestamp, name, etc.).
+/// - Total times for the run (duration, flight time, shield time, etc.).
+/// - A vector of exactly 4 `PhaseModel` instances, each containing:
+///   - Phase-specific times (total time, shield time, leg time, etc.).
+///   - Shield changes (if applicable for the phase).
+///   - Leg breaks (all four positions, even if missing in the database).
+/// - A list of squad members.
+///
+/// # Error Handling
+/// - If the database fetch fails, an error message is returned.
+/// - If the run exists but has invalid data (e.g., phases outside the 1-4 range), those phases are ignored and replaced with defaults.
 Future<RunModel> getRunFromDb({required int runId}) =>
     RustLib.instance.api.crateApiGetRunFromDb(runId: runId);
 
