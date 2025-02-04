@@ -14,6 +14,9 @@ pub struct ShieldChange {
 
     /// The status effect associated with the shield change.
     pub status_effect: StatusEffect,
+    
+    // The order in which the shield was changed (e.g., 1 for the first shield change, 2 for the second, etc.).
+    //pub shield_order: i32,
 }
 
 impl ShieldChange {
@@ -31,6 +34,7 @@ impl ShieldChange {
         Self {
             shield_time,
             status_effect,
+            //shield_order: 0,
         }
     }
 }
