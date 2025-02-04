@@ -91,7 +91,7 @@ pub(crate) fn handle_names(line: &str, run: &mut Run) {
             .next()
             .expect("No player name found.")
             .to_string();
-        println!("Run host: {:?}", run.player_name);
+        //println!("Run host: {:?}", run.player_name);
     } else if line.contains(SQUAD_MEMBER) {
         let parts: Vec<&str> = line.split_whitespace().collect();
         if let Some(name_part) = parts.get(3) {
@@ -106,7 +106,7 @@ pub(crate) fn handle_names(line: &str, run: &mut Run) {
                 run.is_solo_run = false;
             }
         }
-        println!("Squad members: {:?}", run.squad_members);
+        //println!("Squad members: {:?}", run.squad_members);
     }
 }
 

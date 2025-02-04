@@ -182,7 +182,6 @@ fn reset_phase_variables(line: &str, parser_state: &mut ParserState) {
 /// - `run`: A mutable reference to the [`Run`] object that stores information about the current run.
 /// - `parser_state`: A mutable reference to the [`ParserState`] which tracks the state of the parser.
 pub fn run_ended(run: &mut Run, parser_state: &mut ParserState) {
-    run.time_stamp = chrono::Utc::now().timestamp(); // TODO: implement relative timestamp from the log
     post_process(run);
     //println!("{run:#?}");
     parser_state.run_ended = true;
