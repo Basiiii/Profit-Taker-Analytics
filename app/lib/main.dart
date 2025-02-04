@@ -6,6 +6,7 @@ import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/utils/initialize_parser.dart';
 import 'package:profit_taker_analyzer/utils/initialize_window_manager.dart';
 import 'package:profit_taker_analyzer/utils/language.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,9 @@ void main() async {
   // Initialize the database
   final databaseService = DatabaseService();
   await databaseService.initialize();
+
+  // Initialize parser
+  initializeParser();
 
   // Run the app with ThemeProvider and LocaleModel
   runApp(

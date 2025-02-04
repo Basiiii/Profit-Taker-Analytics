@@ -72,6 +72,7 @@ pub struct LegBreakModel {
 }
 
 #[flutter_rust_bridge::frb(name = "LegPosition")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum LegPositionEnum {
     FrontLeft,
     FrontRight,
@@ -111,19 +112,47 @@ pub fn initialize_db(path: String) -> Result<(), String> {
     initialize_database(db_path).map_err(|e| format!("Error initializing database: {}", e))
 }
 
-/// Fetches a run from the database based on the provided `run_id`.
+/// Fetches a run from the database based on the provided `run_id` and ensures it adheres to the expected structure.
 ///
-/// This function wraps the `fetch_run_from_db` function and converts the data into a structured model
-/// that can be returned to Flutter. The conversion process includes transforming nested structures such as
-/// `TotalTimes`, `Phases`, `ShieldChanges`, `LegBreaks`, and `SquadMembers` into their corresponding models.
+/// This function retrieves a run from the database and converts it into a structured `RunModel`. It ensures that:
+/// - There are always exactly 4 phases, filling in missing phases with default values if necessary.
+/// - Each phase contains the required fields based on its position:
+///   - **Phase 1**: Shields, legs, body, and pylon times.
+///   - **Phase 2**: Legs and body times only.
+///   - **Phase 3**: Shields, legs, body, and pylon times.
+///   - **Phase 4**: Shields, legs, and body times.
+/// - Missing shield changes are filled with a default shield (0.0s time, `NoShield` status).
+/// - Missing leg positions are filled with all four positions (FrontLeft, FrontRight, BackLeft, BackRight) with 0.0s time.
 ///
 /// # Arguments
 /// - `run_id`: The ID of the run to fetch from the database.
 ///
 /// # Returns
 /// - `Ok(RunModel)` if the run was successfully retrieved and converted into a structured model.
-/// - `Err(error_message)` if there was an error fetching or converting the run, with an error message describing the issue.
-#[flutter_rust_bridge::frb(sync)]
+/// - `Err(String)` if there was an error fetching or converting the run, with an error message describing the issue.
+///
+/// # Example
+/// ```
+/// let run = get_run_from_db(123);
+/// match run {
+///     Ok(run_model) => println!("Run fetched successfully: {:?}", run_model),
+///     Err(e) => println!("Error fetching run: {}", e),
+/// }
+/// ```
+///
+/// # Data Structure
+/// The returned `RunModel` contains:
+/// - General run information (ID, timestamp, name, etc.).
+/// - Total times for the run (duration, flight time, shield time, etc.).
+/// - A vector of exactly 4 `PhaseModel` instances, each containing:
+///   - Phase-specific times (total time, shield time, leg time, etc.).
+///   - Shield changes (if applicable for the phase).
+///   - Leg breaks (all four positions, even if missing in the database).
+/// - A list of squad members.
+///
+/// # Error Handling
+/// - If the database fetch fails, an error message is returned.
+/// - If the run exists but has invalid data (e.g., phases outside the 1-4 range), those phases are ignored and replaced with defaults.
 pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
     match fetch_run_from_db(run_id) {
         Ok(run) => {
@@ -137,59 +166,136 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                 total_pylon_time: run.total_times.total_pylon_time,
             };
 
-            // Convert Phases
-            let phases = run.phases.into_iter().map(|p| {
-                // Convert ShieldChanges for each phase
-                let shield_changes = p.shield_changes.into_iter().map(|sc| {
-                    let status_effect = match sc.status_effect {
-                        StatusEffect::Impact      => StatusEffectEnum::Impact,
-                        StatusEffect::Puncture    => StatusEffectEnum::Puncture,
-                        StatusEffect::Slash       => StatusEffectEnum::Slash,
-                        StatusEffect::Heat        => StatusEffectEnum::Heat,
-                        StatusEffect::Cold        => StatusEffectEnum::Cold,
-                        StatusEffect::Electric    => StatusEffectEnum::Electric,
-                        StatusEffect::Toxin       => StatusEffectEnum::Toxin,
-                        StatusEffect::Blast       => StatusEffectEnum::Blast,
-                        StatusEffect::Radiation   => StatusEffectEnum::Radiation,
-                        StatusEffect::Gas         => StatusEffectEnum::Gas,
-                        StatusEffect::Magnetic    => StatusEffectEnum::Magnetic,
-                        StatusEffect::Viral       => StatusEffectEnum::Viral,
-                        StatusEffect::Corrosive   => StatusEffectEnum::Corrosive,
-                        StatusEffect::NoShield    => StatusEffectEnum::NoShield,
+            // Process phases to ensure exactly 4 with required fields
+            let existing_phases: std::collections::HashMap<_, _> = run.phases
+                .into_iter()
+                .filter(|p| (1..=4).contains(&p.phase_number))
+                .map(|p| (p.phase_number, p))
+                .collect();
+
+            let phases = (1..=4).map(|phase_number| {
+                let mut phase = if let Some(db_phase) = existing_phases.get(&phase_number) {
+                    // Convert shield changes
+                    let shield_changes = db_phase.shield_changes.iter().map(|sc| {
+                        let status_effect = match sc.status_effect {
+                            StatusEffect::Impact => StatusEffectEnum::Impact,
+                            StatusEffect::Puncture => StatusEffectEnum::Puncture,
+                            StatusEffect::Slash => StatusEffectEnum::Slash,
+                            StatusEffect::Heat => StatusEffectEnum::Heat,
+                            StatusEffect::Cold => StatusEffectEnum::Cold,
+                            StatusEffect::Electric => StatusEffectEnum::Electric,
+                            StatusEffect::Toxin => StatusEffectEnum::Toxin,
+                            StatusEffect::Blast => StatusEffectEnum::Blast,
+                            StatusEffect::Radiation => StatusEffectEnum::Radiation,
+                            StatusEffect::Gas => StatusEffectEnum::Gas,
+                            StatusEffect::Magnetic => StatusEffectEnum::Magnetic,
+                            StatusEffect::Viral => StatusEffectEnum::Viral,
+                            StatusEffect::Corrosive => StatusEffectEnum::Corrosive,
+                            StatusEffect::NoShield => StatusEffectEnum::NoShield,
+                        };
+                        ShieldChangeModel {
+                            shield_time: sc.shield_time,
+                            status_effect,
+                        }
+                    }).collect::<Vec<_>>();
+
+                    // Convert leg breaks
+                    let leg_breaks = db_phase.leg_breaks.iter().map(|lb| {
+                        let leg_position = match lb.leg_position {
+                            LegPosition::FrontLeft => LegPositionEnum::FrontLeft,
+                            LegPosition::FrontRight => LegPositionEnum::FrontRight,
+                            LegPosition::BackLeft => LegPositionEnum::BackLeft,
+                            LegPosition::BackRight => LegPositionEnum::BackRight,
+                        };
+                        LegBreakModel {
+                            leg_break_time: lb.leg_break_time,
+                            leg_position,
+                            leg_order: lb.leg_order,
+                        }
+                    }).collect::<Vec<_>>();
+
+                    PhaseModel {
+                        phase_number: db_phase.phase_number,
+                        total_time: db_phase.total_time,
+                        total_shield_time: db_phase.total_shield_time,
+                        total_leg_time: db_phase.total_leg_time,
+                        total_body_kill_time: db_phase.total_body_kill_time,
+                        total_pylon_time: db_phase.total_pylon_time,
+                        shield_changes,
+                        leg_breaks,
+                    }
+                } else {
+                    // Create default phase based on phase number
+                    let (has_shields, has_pylon) = match phase_number {
+                        1 => (true, true),
+                        2 => (false, false),
+                        3 => (true, true),
+                        4 => (true, false),
+                        _ => unreachable!(),
                     };
 
-                    ShieldChangeModel {
-                        shield_time: sc.shield_time,
-                        status_effect,
-                    }
-                }).collect();
-
-                // Convert LegBreaks for each phase
-                let leg_breaks = p.leg_breaks.into_iter().map(|lb| {
-                    let leg_position = match lb.leg_position {
-                        LegPosition::FrontLeft  => LegPositionEnum::FrontLeft,
-                        LegPosition::FrontRight => LegPositionEnum::FrontRight,
-                        LegPosition::BackLeft   => LegPositionEnum::BackLeft,
-                        LegPosition::BackRight  => LegPositionEnum::BackRight,
+                    let shield_changes = if has_shields {
+                        vec![ShieldChangeModel {
+                            shield_time: 0.0,
+                            status_effect: StatusEffectEnum::NoShield,
+                        }]
+                    } else {
+                        Vec::new()
                     };
 
-                    LegBreakModel {
-                        leg_break_time: lb.leg_break_time,
-                        leg_position,
-                        leg_order: lb.leg_order,
-                    }
-                }).collect();
+                    let leg_breaks = vec![
+                        LegPositionEnum::FrontLeft,
+                        LegPositionEnum::FrontRight,
+                        LegPositionEnum::BackLeft,
+                        LegPositionEnum::BackRight,
+                    ].iter().map(|&leg_pos| LegBreakModel {
+                        leg_break_time: 0.0,
+                        leg_position: leg_pos,
+                        leg_order: 0,
+                    }).collect();
 
-                PhaseModel {
-                    phase_number: p.phase_number,
-                    total_time: p.total_time,
-                    total_shield_time: p.total_shield_time,
-                    total_leg_time: p.total_leg_time,
-                    total_body_kill_time: p.total_body_kill_time,
-                    total_pylon_time: p.total_pylon_time,
-                    shield_changes,
-                    leg_breaks,
+                    PhaseModel {
+                        phase_number,
+                        total_time: 0.0,
+                        total_shield_time: 0.0,
+                        total_leg_time: 0.0,
+                        total_body_kill_time: 0.0,
+                        total_pylon_time: 0.0,
+                        shield_changes,
+                        leg_breaks,
+                    }
+                };
+
+                // Ensure required shield changes for phases 1, 3, 4
+                if [1, 3, 4].contains(&phase_number) && phase.shield_changes.is_empty() {
+                    phase.shield_changes.push(ShieldChangeModel {
+                        shield_time: 0.0,
+                        status_effect: StatusEffectEnum::NoShield,
+                    });
                 }
+
+                // Ensure all leg positions are present
+                let existing_positions: std::collections::HashSet<_> = phase.leg_breaks
+                    .iter()
+                    .map(|lb| lb.leg_position)
+                    .collect();
+
+                for &required_pos in &[
+                    LegPositionEnum::FrontLeft,
+                    LegPositionEnum::FrontRight,
+                    LegPositionEnum::BackLeft,
+                    LegPositionEnum::BackRight,
+                ] {
+                    if !existing_positions.contains(&required_pos) {
+                        phase.leg_breaks.push(LegBreakModel {
+                            leg_break_time: 0.0,
+                            leg_position: required_pos,
+                            leg_order: 0,
+                        });
+                    }
+                }
+
+                phase
             }).collect();
 
             // Convert SquadMembers
@@ -469,7 +575,7 @@ pub enum InitializeParserOutcome {
 /// - `Success`: Indicates that the parser was initialized successfully.
 /// - `Error`: Represents different types of errors during initialization, without error messages.
 #[flutter_rust_bridge::frb(sync)]
-pub fn initialize_parser_wrapper() -> InitializeParserOutcome {
+pub fn initialize_profit_taker_parser() -> InitializeParserOutcome {
     match initialize_parser() {
         // If the parser is initialized successfully, return the success variant.
         Ok(_) => InitializeParserOutcome::Success,

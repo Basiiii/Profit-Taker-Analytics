@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => 220798464;
+  int get rustContentHash => 831801823;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -97,13 +97,13 @@ abstract class RustLibApi extends BaseApi {
 
   int? crateApiGetPreviousRunId({required int currentRunId});
 
-  RunModel crateApiGetRunFromDb({required int runId});
+  Future<RunModel> crateApiGetRunFromDb({required int runId});
 
   Future<void> crateApiInitApp();
 
   void crateApiInitializeDb({required String path});
 
-  InitializeParserOutcome crateApiInitializeParserWrapper();
+  InitializeParserOutcome crateApiInitializeProfitTakerParser();
 
   bool crateApiMarkRunAsFavorite({required int runId});
 
@@ -327,12 +327,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  RunModel crateApiGetRunFromDb({required int runId}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
+  Future<RunModel> crateApiGetRunFromDb({required int runId}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_run_model,
@@ -396,7 +397,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  InitializeParserOutcome crateApiInitializeParserWrapper() {
+  InitializeParserOutcome crateApiInitializeProfitTakerParser() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -406,15 +407,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeSuccessData: sse_decode_initialize_parser_outcome,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiInitializeParserWrapperConstMeta,
+      constMeta: kCrateApiInitializeProfitTakerParserConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiInitializeParserWrapperConstMeta =>
+  TaskConstMeta get kCrateApiInitializeProfitTakerParserConstMeta =>
       const TaskConstMeta(
-        debugName: "initialize_parser_wrapper",
+        debugName: "initialize_profit_taker_parser",
         argNames: [],
       );
 
