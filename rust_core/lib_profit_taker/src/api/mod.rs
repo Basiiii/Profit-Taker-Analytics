@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
+    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 
@@ -672,4 +672,70 @@ pub fn get_pretty_printed_run(run_model: RunModel) -> String {
     };
     
     pretty_print_run(&run)
+}
+
+/// Checks whether a run is the Personal Best (PB).
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the PB.
+/// - `false` if the run is not the PB or if an error occurs.
+#[flutter_rust_bridge::frb(sync)]
+pub fn is_run_pb(run_id: i32) -> bool {
+    match is_pb(run_id) {
+        Ok(is_pb) => is_pb,
+        Err(_) => false, // Default to `false` on error
+    }
+}
+/// Represents the times of a run for FFI compatibility.
+#[flutter_rust_bridge::frb]
+pub struct RunTimesResponse {
+    pub total_time: f64,
+    pub total_flight_time: f64,
+    pub total_shield_time: f64,
+    pub total_leg_time: f64,
+    pub total_body_time: f64,
+    pub total_pylon_time: f64,
+}
+
+/// Fetches the times of the PB run.
+///
+/// # Returns
+/// - `Some(RunTimesResponse)` if the PB run exists.
+/// - `None` if no PB run is found.
+#[flutter_rust_bridge::frb]
+pub fn get_pb_times() -> Option<RunTimesResponse> {
+    match fetch_pb_times() {
+        Ok(Some(pb_times)) => Some(RunTimesResponse {
+            total_time: pb_times.total_time,
+            total_flight_time: pb_times.total_flight_time,
+            total_shield_time: pb_times.total_shield_time,
+            total_leg_time: pb_times.total_leg_time,
+            total_body_time: pb_times.total_body_time,
+            total_pylon_time: pb_times.total_pylon_time,
+        }),
+        _ => None, // Return `None` on error or if no PB run exists
+    }
+}
+
+/// Fetches the times of the second-best run.
+///
+/// # Returns
+/// - `Some(RunTimesResponse)` if the second-best run exists.
+/// - `None` if no second-best run is found.
+#[flutter_rust_bridge::frb]
+pub fn get_second_best_times() -> Option<RunTimesResponse> {
+    match fetch_second_best_times() {
+        Ok(Some(second_best_times)) => Some(RunTimesResponse {
+            total_time: second_best_times.total_time,
+            total_flight_time: second_best_times.total_flight_time,
+            total_shield_time: second_best_times.total_shield_time,
+            total_leg_time: second_best_times.total_leg_time,
+            total_body_time: second_best_times.total_body_time,
+            total_pylon_time: second_best_times.total_pylon_time,
+        }),
+        _ => None, // Return `None` on error or if no second-best run exists
+    }
 }
