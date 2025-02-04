@@ -99,11 +99,11 @@ class RunTitle extends StatelessWidget {
         // "Best run yet!" text aligned to the right
         if (showBestRunText) ...[
           const SizedBox(width: 16),
-          Text(
-            "Best run yet!",
+          const Text(
+            "Best run yet!", // hardcoded because it's famous within PT community
             style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: Colors.purple),
           ),
           const SizedBox(width: 62),

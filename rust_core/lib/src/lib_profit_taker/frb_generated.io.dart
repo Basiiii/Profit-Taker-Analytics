@@ -31,6 +31,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RunModel dco_decode_box_autoadd_run_model(dynamic raw);
 
   @protected
+  RunTimesResponse dco_decode_box_autoadd_run_times_response(dynamic raw);
+
+  @protected
   DeleteRunResult dco_decode_delete_run_result(dynamic raw);
 
   @protected
@@ -73,10 +76,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
 
   @protected
+  RunTimesResponse? dco_decode_opt_box_autoadd_run_times_response(dynamic raw);
+
+  @protected
   PhaseModel dco_decode_phase_model(dynamic raw);
 
   @protected
   RunModel dco_decode_run_model(dynamic raw);
+
+  @protected
+  RunTimesResponse dco_decode_run_times_response(dynamic raw);
 
   @protected
   ShieldChangeModel dco_decode_shield_change_model(dynamic raw);
@@ -107,6 +116,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RunModel sse_decode_box_autoadd_run_model(SseDeserializer deserializer);
+
+  @protected
+  RunTimesResponse sse_decode_box_autoadd_run_times_response(
+      SseDeserializer deserializer);
 
   @protected
   DeleteRunResult sse_decode_delete_run_result(SseDeserializer deserializer);
@@ -155,10 +168,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
 
   @protected
+  RunTimesResponse? sse_decode_opt_box_autoadd_run_times_response(
+      SseDeserializer deserializer);
+
+  @protected
   PhaseModel sse_decode_phase_model(SseDeserializer deserializer);
 
   @protected
   RunModel sse_decode_run_model(SseDeserializer deserializer);
+
+  @protected
+  RunTimesResponse sse_decode_run_times_response(SseDeserializer deserializer);
 
   @protected
   ShieldChangeModel sse_decode_shield_change_model(
@@ -191,6 +211,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_run_model(
       RunModel self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_run_times_response(
+      RunTimesResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_delete_run_result(
@@ -243,10 +267,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_run_times_response(
+      RunTimesResponse? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_phase_model(PhaseModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_run_model(RunModel self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_run_times_response(
+      RunTimesResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_shield_change_model(

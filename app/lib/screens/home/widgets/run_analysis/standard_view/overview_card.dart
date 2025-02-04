@@ -5,15 +5,15 @@ import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:rust_core/rust_core.dart';
 
 Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
-    TotalTimesModel totalTimes, List<double> bestValues) {
+    TotalTimesModel totalTimes, List<double> bestValues, bool isComparingToPB) {
   double responsiveCardWidth = screenWidth / 6 - 8;
 
   // Fetch card details dynamically
   final cardDetails = getCardDetails(index, totalTimes, context);
 
   // Calculate time differences
-  final timeDifferenceData =
-      calculateTimeDifference(cardDetails.timeValue, bestValues[index]);
+  final timeDifferenceData = calculateTimeDifference(
+      cardDetails.timeValue, bestValues[index], isComparingToPB);
 
   return Container(
     width: screenWidth < LayoutConstants.minimumResponsiveWidth
@@ -102,7 +102,7 @@ Widget buildContent(
                 ),
               ),
               Text(
-                timeData['isPB'] ? "PB " : "BEST ",
+                timeData['isPB'] ? "PB " : "${timeData['label']} ",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -158,7 +158,7 @@ CardDetails getCardDetails(
 
 /// Calculate time difference, PB status, and text.
 Map<String, dynamic> calculateTimeDifference(
-    double timeValue, double bestTime) {
+    double timeValue, double bestTime, bool isComparingToPB) {
   double timeDifference = timeValue - bestTime;
   bool isPB = timeDifference == 0.0;
 
@@ -169,6 +169,7 @@ Map<String, dynamic> calculateTimeDifference(
     'isNegative': timeDifference.isNegative,
     'isPB': isPB,
     'bestTime': bestTime,
+    'label': isComparingToPB ? "PB" : "SB",
   };
 }
 

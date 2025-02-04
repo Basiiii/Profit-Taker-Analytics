@@ -249,6 +249,33 @@ InitializeParserOutcome initializeProfitTakerParser() =>
 String getPrettyPrintedRun({required RunModel runModel}) =>
     RustLib.instance.api.crateApiGetPrettyPrintedRun(runModel: runModel);
 
+/// Checks whether a run is the Personal Best (PB).
+///
+/// # Arguments
+/// - `run_id`: The ID of the run to check.
+///
+/// # Returns
+/// - `true` if the run is the PB.
+/// - `false` if the run is not the PB or if an error occurs.
+bool isRunPb({required int runId}) =>
+    RustLib.instance.api.crateApiIsRunPb(runId: runId);
+
+/// Fetches the times of the PB run.
+///
+/// # Returns
+/// - `Some(RunTimesResponse)` if the PB run exists.
+/// - `None` if no PB run is found.
+Future<RunTimesResponse?> getPbTimes() =>
+    RustLib.instance.api.crateApiGetPbTimes();
+
+/// Fetches the times of the second-best run.
+///
+/// # Returns
+/// - `Some(RunTimesResponse)` if the second-best run exists.
+/// - `None` if no second-best run is found.
+Future<RunTimesResponse?> getSecondBestTimes() =>
+    RustLib.instance.api.crateApiGetSecondBestTimes();
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;
@@ -427,6 +454,46 @@ class RunModel {
           totalTimes == other.totalTimes &&
           phases == other.phases &&
           squadMembers == other.squadMembers;
+}
+
+/// Represents the times of a run for FFI compatibility.
+class RunTimesResponse {
+  final double totalTime;
+  final double totalFlightTime;
+  final double totalShieldTime;
+  final double totalLegTime;
+  final double totalBodyTime;
+  final double totalPylonTime;
+
+  const RunTimesResponse({
+    required this.totalTime,
+    required this.totalFlightTime,
+    required this.totalShieldTime,
+    required this.totalLegTime,
+    required this.totalBodyTime,
+    required this.totalPylonTime,
+  });
+
+  @override
+  int get hashCode =>
+      totalTime.hashCode ^
+      totalFlightTime.hashCode ^
+      totalShieldTime.hashCode ^
+      totalLegTime.hashCode ^
+      totalBodyTime.hashCode ^
+      totalPylonTime.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RunTimesResponse &&
+          runtimeType == other.runtimeType &&
+          totalTime == other.totalTime &&
+          totalFlightTime == other.totalFlightTime &&
+          totalShieldTime == other.totalShieldTime &&
+          totalLegTime == other.totalLegTime &&
+          totalBodyTime == other.totalBodyTime &&
+          totalPylonTime == other.totalPylonTime;
 }
 
 class ShieldChangeModel {

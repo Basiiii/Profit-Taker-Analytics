@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => 831801823;
+  int get rustContentHash => -1378368092;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -93,17 +93,23 @@ abstract class RustLibApi extends BaseApi {
 
   int? crateApiGetNextRunId({required int currentRunId});
 
+  Future<RunTimesResponse?> crateApiGetPbTimes();
+
   String crateApiGetPrettyPrintedRun({required RunModel runModel});
 
   int? crateApiGetPreviousRunId({required int currentRunId});
 
   Future<RunModel> crateApiGetRunFromDb({required int runId});
 
+  Future<RunTimesResponse?> crateApiGetSecondBestTimes();
+
   Future<void> crateApiInitApp();
 
   void crateApiInitializeDb({required String path});
 
   InitializeParserOutcome crateApiInitializeProfitTakerParser();
+
+  bool crateApiIsRunPb({required int runId});
 
   bool crateApiMarkRunAsFavorite({required int runId});
 
@@ -280,12 +286,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<RunTimesResponse?> crateApiGetPbTimes() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 8, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetPbTimesConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetPbTimesConstMeta => const TaskConstMeta(
+        debugName: "get_pb_times",
+        argNames: [],
+      );
+
+  @override
   String crateApiGetPrettyPrintedRun({required RunModel runModel}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_run_model(runModel, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -309,7 +338,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(currentRunId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -333,7 +362,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 10, port: port_);
+            funcId: 11, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_run_model,
@@ -351,12 +380,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<RunTimesResponse?> crateApiGetSecondBestTimes() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 12, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetSecondBestTimesConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetSecondBestTimesConstMeta => const TaskConstMeta(
+        debugName: "get_second_best_times",
+        argNames: [],
+      );
+
+  @override
   Future<void> crateApiInitApp() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 11, port: port_);
+            funcId: 13, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -379,7 +431,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(path, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -401,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_initialize_parser_outcome,
@@ -420,12 +472,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  bool crateApiIsRunPb({required int runId}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(runId, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiIsRunPbConstMeta,
+      argValues: [runId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiIsRunPbConstMeta => const TaskConstMeta(
+        debugName: "is_run_pb",
+        argNames: ["runId"],
+      );
+
+  @override
   bool crateApiMarkRunAsFavorite({required int runId}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -448,7 +523,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -473,7 +548,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
         sse_encode_String(newName, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -512,6 +587,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RunModel dco_decode_box_autoadd_run_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_run_model(raw);
+  }
+
+  @protected
+  RunTimesResponse dco_decode_box_autoadd_run_times_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_run_times_response(raw);
   }
 
   @protected
@@ -612,6 +693,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RunTimesResponse? dco_decode_opt_box_autoadd_run_times_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_run_times_response(raw);
+  }
+
+  @protected
   PhaseModel dco_decode_phase_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -646,6 +733,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       totalTimes: dco_decode_total_times_model(arr[7]),
       phases: dco_decode_list_phase_model(arr[8]),
       squadMembers: dco_decode_list_squad_member_model(arr[9]),
+    );
+  }
+
+  @protected
+  RunTimesResponse dco_decode_run_times_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return RunTimesResponse(
+      totalTime: dco_decode_f_64(arr[0]),
+      totalFlightTime: dco_decode_f_64(arr[1]),
+      totalShieldTime: dco_decode_f_64(arr[2]),
+      totalLegTime: dco_decode_f_64(arr[3]),
+      totalBodyTime: dco_decode_f_64(arr[4]),
+      totalPylonTime: dco_decode_f_64(arr[5]),
     );
   }
 
@@ -729,6 +832,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RunModel sse_decode_box_autoadd_run_model(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_run_model(deserializer));
+  }
+
+  @protected
+  RunTimesResponse sse_decode_box_autoadd_run_times_response(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_run_times_response(deserializer));
   }
 
   @protected
@@ -865,6 +975,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RunTimesResponse? sse_decode_opt_box_autoadd_run_times_response(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_run_times_response(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   PhaseModel sse_decode_phase_model(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_phaseNumber = sse_decode_i_32(deserializer);
@@ -910,6 +1032,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         totalTimes: var_totalTimes,
         phases: var_phases,
         squadMembers: var_squadMembers);
+  }
+
+  @protected
+  RunTimesResponse sse_decode_run_times_response(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_totalTime = sse_decode_f_64(deserializer);
+    var var_totalFlightTime = sse_decode_f_64(deserializer);
+    var var_totalShieldTime = sse_decode_f_64(deserializer);
+    var var_totalLegTime = sse_decode_f_64(deserializer);
+    var var_totalBodyTime = sse_decode_f_64(deserializer);
+    var var_totalPylonTime = sse_decode_f_64(deserializer);
+    return RunTimesResponse(
+        totalTime: var_totalTime,
+        totalFlightTime: var_totalFlightTime,
+        totalShieldTime: var_totalShieldTime,
+        totalLegTime: var_totalLegTime,
+        totalBodyTime: var_totalBodyTime,
+        totalPylonTime: var_totalPylonTime);
   }
 
   @protected
@@ -988,6 +1128,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       RunModel self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_run_model(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_run_times_response(
+      RunTimesResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_run_times_response(self, serializer);
   }
 
   @protected
@@ -1108,6 +1255,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_run_times_response(
+      RunTimesResponse? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_run_times_response(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_phase_model(PhaseModel self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.phaseNumber, serializer);
@@ -1133,6 +1291,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_total_times_model(self.totalTimes, serializer);
     sse_encode_list_phase_model(self.phases, serializer);
     sse_encode_list_squad_member_model(self.squadMembers, serializer);
+  }
+
+  @protected
+  void sse_encode_run_times_response(
+      RunTimesResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_f_64(self.totalTime, serializer);
+    sse_encode_f_64(self.totalFlightTime, serializer);
+    sse_encode_f_64(self.totalShieldTime, serializer);
+    sse_encode_f_64(self.totalLegTime, serializer);
+    sse_encode_f_64(self.totalBodyTime, serializer);
+    sse_encode_f_64(self.totalPylonTime, serializer);
   }
 
   @protected
