@@ -7,6 +7,12 @@ use crate::models::LegPosition;
 ///
 /// A `LegBreak` contains information about the position of the leg that was broken and the order
 /// in which it was broken relative to other leg breaks in the same phase.
+/// 
+/// # Fields
+/// 
+/// * `leg_break_time` - The time it took to break the leg.
+/// * `leg_position` - The position of the leg that was broken.
+/// * `leg_order` - The order in which the leg was broken (e.g., 1 for the first leg, 2 for the second, etc.).
 #[derive(Debug, Clone)]
 pub struct LegBreak {
     /// The time it took to break the leg

@@ -13,3 +13,4 @@
 pub mod api;
 #[allow(clippy::nursery, clippy::pedantic, reason = "generated code")]
 mod frb_generated;
+mod utils;
