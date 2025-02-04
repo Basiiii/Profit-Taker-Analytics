@@ -73,7 +73,7 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
                     children: <Widget>[
                       generateRichText(context, [
                         generateTextSpan(
-                            cardDetails.timeValue.toStringAsFixed(2),
+                            cardDetails.timeValue.toStringAsFixed(3),
                             32,
                             FontWeight.w600,
                             color: color),

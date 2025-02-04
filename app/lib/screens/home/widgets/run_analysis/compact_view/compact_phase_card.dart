@@ -24,10 +24,10 @@ Widget buildCompactPhaseCard(
   ];
 
   List<String> overviewList = [
-    phase.totalShieldTime.toString(),
-    phase.totalLegTime.toString(),
-    phase.totalBodyKillTime.toString(),
-    phase.totalPylonTime.toString(),
+    phase.totalShieldTime.toStringAsFixed(3),
+    phase.totalLegTime.toStringAsFixed(3),
+    phase.totalBodyKillTime.toStringAsFixed(3),
+    phase.totalPylonTime.toStringAsFixed(3),
   ];
 
   List<Widget> rows =
@@ -37,9 +37,11 @@ Widget buildCompactPhaseCard(
     width: screenWidth < LayoutConstants.minimumResponsiveWidth
         ? LayoutConstants.phaseCardWidth
         : responsiveCardWidth,
-    height: index == 1 && screenWidth < LayoutConstants.minimumResponsiveWidth
-        ? 110
-        : 160,
+    height: (index == 1 && screenWidth < LayoutConstants.minimumResponsiveWidth)
+        ? 110 // Height for 2nd phase
+        : (index == 3 && screenWidth < LayoutConstants.minimumResponsiveWidth)
+            ? 140 // Height for 4th phase
+            : 160, // Default height for all other cases
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surfaceBright,
       borderRadius: BorderRadius.circular(10),
@@ -88,6 +90,14 @@ List<Widget> generatePhaseRows(
 // Helper: Build Compact Card Header
 Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
     List<PhaseModel> phases) {
+  // Calculate total time up until this phase
+  double totalTimeUpUntilNow = 0;
+
+  // Loop through all previous phases and add their times
+  for (int i = 0; i <= index; i++) {
+    totalTimeUpUntilNow += phases[i].totalTime;
+  }
+
   return Padding(
     padding: const EdgeInsets.only(top: 10, left: 20, right: 10),
     child: Row(
@@ -110,23 +120,30 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
               children: <Widget>[
                 generateRichText(
                   context,
+                  // "TIME FOR PHASE"
                   [
-                    generateTextSpan(
-                      (index == 0
-                              ? phase.totalTime
-                              : (phase.totalTime - phases[index - 1].totalTime))
-                          .toStringAsFixed(3),
-                      16,
-                      FontWeight.w400,
-                      color:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                    ),
-                    generateTextSpan('s / ', 16, FontWeight.w400,
+                    if (index != 0) // only for phase 2, 3 and 4
+                      generateTextSpan(
+                        (phase.totalTime - phases[index - 1].totalTime)
+                            .toStringAsFixed(3),
+                        16,
+                        FontWeight.w400,
                         color: Theme.of(context)
                             .colorScheme
-                            .surfaceContainerHighest),
-                    generateTextSpan(
-                        phase.totalTime.toString(), 20, FontWeight.w600,
+                            .surfaceContainerHighest,
+                      ),
+                    if (index != 0) // only for phase 2, 3 and 4
+                      generateTextSpan(
+                        's / ',
+                        16,
+                        FontWeight.w400,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                      ),
+                    // "TOTAL TIME"
+                    generateTextSpan(totalTimeUpUntilNow.toStringAsFixed(3), 20,
+                        FontWeight.w600,
                         color: Theme.of(context).colorScheme.onSurface),
                     generateTextSpan('s ', 20, FontWeight.w400,
                         color: Theme.of(context).colorScheme.onSurface),

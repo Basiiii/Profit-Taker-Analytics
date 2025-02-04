@@ -17,7 +17,7 @@ Future<void> editRunNameDialog(
         title: Text(changeRunNameText),
         content: TextField(
           controller: controller,
-          maxLength: 14,
+          maxLength: 20,
           maxLengthEnforcement:
               MaxLengthEnforcement.truncateAfterCompositionEnds,
           decoration: InputDecoration(hintText: hintText),

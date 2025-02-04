@@ -14,11 +14,13 @@ import 'package:rust_core/rust_core.dart';
 class RunTitle extends StatelessWidget {
   final RunModel run;
   final bool mostRecentRun;
+  final bool showBestRunText;
 
   const RunTitle({
     super.key,
     required this.run,
     required this.mostRecentRun,
+    required this.showBestRunText,
   });
 
   @override
@@ -30,51 +32,82 @@ class RunTitle extends StatelessWidget {
     final isFavorited = checkRunFavorite(runId: run.runId);
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Flexible(
-          child: titleText(
-            getRunTitle(
-                context,
-                mostRecentRun,
-                run.isSoloRun,
-                run.squadMembers.map((member) => member.memberName).toList(),
-                locale),
-            20,
-            FontWeight.w500,
-            overflow: TextOverflow.ellipsis,
+        // Main text and icons wrapped together
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: constraints.maxWidth),
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    // Text parts
+                    titleText(
+                      getRunTitle(
+                          context,
+                          mostRecentRun,
+                          run.isSoloRun,
+                          run.squadMembers
+                              .map((member) => member.memberName)
+                              .toList(),
+                          locale),
+                      20,
+                      FontWeight.w500,
+                    ),
+                    if (locale.languageCode != 'tr')
+                      titleText(
+                        " ${FlutterI18n.translate(context, "home.named")} ",
+                        20,
+                        FontWeight.w500,
+                      ),
+                    titleText("\"$runName\"", 20, FontWeight.w500),
+
+                    // Icons placed right after the text within the Wrap
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 22),
+                      onPressed: () => _handleEditName(context),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.copy, size: 22),
+                      onPressed: () =>
+                          _handleScreenshotCopy(context, screenshotService),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.description_outlined, size: 24),
+                      onPressed: () => _handleCopyRunAsText(context),
+                    ),
+                    IconButton(
+                      icon: isFavorited
+                          ? const Icon(Icons.star_rounded, size: 26)
+                          : const Icon(Icons.star_outline_rounded, size: 26),
+                      onPressed: () => _handleToggleFavorite(
+                          context, isFavorited, run.runId),
+                    ),
+                    if (runService.currentRun?.isBuggedRun ?? false)
+                      _buildWarningIcon(context, true),
+                    if (runService.currentRun?.isAbortedRun ?? false)
+                      _buildWarningIcon(context, false),
+                  ],
+                ),
+              );
+            },
           ),
         ),
-        if (locale.languageCode != 'tr')
-          titleText(
-            " ${FlutterI18n.translate(context, "home.named")} ",
-            20,
-            FontWeight.w500,
+        // "Best run yet!" text aligned to the right
+        if (showBestRunText) ...[
+          const SizedBox(width: 16),
+          Text(
+            "Best run yet!",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
           ),
-        titleText("\"$runName\"", 20, FontWeight.w500),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const Icon(Icons.edit, size: 22),
-          onPressed: () => _handleEditName(context),
-        ),
-        IconButton(
-          icon: const Icon(Icons.copy, size: 22),
-          onPressed: () => _handleScreenshotCopy(context, screenshotService),
-        ),
-        IconButton(
-          icon: const Icon(Icons.description_outlined, size: 24),
-          onPressed: () => _handleCopyRunAsText(context),
-        ),
-        IconButton(
-          icon: isFavorited
-              ? const Icon(Icons.star_rounded, size: 26)
-              : const Icon(Icons.star_outline_rounded, size: 26),
-          onPressed: () =>
-              _handleToggleFavorite(context, isFavorited, run.runId),
-        ),
-        if (runService.currentRun?.isBuggedRun ?? false)
-          _buildWarningIcon(context, true),
-        if (runService.currentRun?.isAbortedRun ?? false)
-          _buildWarningIcon(context, false),
+          const SizedBox(width: 62),
+        ],
       ],
     );
   }
