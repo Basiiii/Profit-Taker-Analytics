@@ -80,7 +80,8 @@
         "date": "Date",
         "edit": "Edit",
         "delete": "Delete",
-        "actions": "Actions"
+        "actions": "Actions",
+        "favorite": "Favorite"
     },
     "analytics" : {
         "title": "Your analytics"

@@ -68,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.7.1';
 
   @override
-  int get rustContentHash => -1378368092;
+  int get rustContentHash => 1668958778;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -92,6 +92,12 @@ abstract class RustLibApi extends BaseApi {
   int? crateApiGetLatestRunId();
 
   int? crateApiGetNextRunId({required int currentRunId});
+
+  Future<PaginatedRunsResponse> crateApiGetPaginatedRuns(
+      {required int page,
+      required int pageSize,
+      required String sortColumn,
+      required bool sortAscending});
 
   Future<RunTimesResponse?> crateApiGetPbTimes();
 
@@ -286,12 +292,43 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<PaginatedRunsResponse> crateApiGetPaginatedRuns(
+      {required int page,
+      required int pageSize,
+      required String sortColumn,
+      required bool sortAscending}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(page, serializer);
+        sse_encode_i_32(pageSize, serializer);
+        sse_encode_String(sortColumn, serializer);
+        sse_encode_bool(sortAscending, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 8, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_paginated_runs_response,
+        decodeErrorData: sse_decode_String,
+      ),
+      constMeta: kCrateApiGetPaginatedRunsConstMeta,
+      argValues: [page, pageSize, sortColumn, sortAscending],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetPaginatedRunsConstMeta => const TaskConstMeta(
+        debugName: "get_paginated_runs",
+        argNames: ["page", "pageSize", "sortColumn", "sortAscending"],
+      );
+
+  @override
   Future<RunTimesResponse?> crateApiGetPbTimes() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
+            funcId: 9, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
@@ -314,7 +351,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_run_model(runModel, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -338,7 +375,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(currentRunId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -362,7 +399,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 11, port: port_);
+            funcId: 12, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_run_model,
@@ -385,7 +422,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 12, port: port_);
+            funcId: 13, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
@@ -408,7 +445,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 13, port: port_);
+            funcId: 14, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -431,7 +468,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(path, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -453,7 +490,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_initialize_parser_outcome,
@@ -477,7 +514,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -500,7 +537,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -523,7 +560,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -548,7 +585,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
         sse_encode_String(newName, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -669,6 +706,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<RunListItemModel> dco_decode_list_run_list_item_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_run_list_item_model).toList();
+  }
+
+  @protected
   List<ShieldChangeModel> dco_decode_list_shield_change_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_shield_change_model).toList();
@@ -699,6 +742,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  PaginatedRunsResponse dco_decode_paginated_runs_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return PaginatedRunsResponse(
+      runs: dco_decode_list_run_list_item_model(arr[0]),
+      totalCount: dco_decode_i_32(arr[1]),
+    );
+  }
+
+  @protected
   PhaseModel dco_decode_phase_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -713,6 +768,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       totalPylonTime: dco_decode_f_64(arr[5]),
       shieldChanges: dco_decode_list_shield_change_model(arr[6]),
       legBreaks: dco_decode_list_leg_break_model(arr[7]),
+    );
+  }
+
+  @protected
+  RunListItemModel dco_decode_run_list_item_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return RunListItemModel(
+      id: dco_decode_i_32(arr[0]),
+      name: dco_decode_String(arr[1]),
+      date: dco_decode_i_64(arr[2]),
+      duration: dco_decode_f_64(arr[3]),
+      isBugged: dco_decode_bool(arr[4]),
+      isAborted: dco_decode_bool(arr[5]),
+      isFavorite: dco_decode_bool(arr[6]),
     );
   }
 
@@ -927,6 +999,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<RunListItemModel> sse_decode_list_run_list_item_model(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RunListItemModel>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_run_list_item_model(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<ShieldChangeModel> sse_decode_list_shield_change_model(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -987,6 +1072,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  PaginatedRunsResponse sse_decode_paginated_runs_response(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_runs = sse_decode_list_run_list_item_model(deserializer);
+    var var_totalCount = sse_decode_i_32(deserializer);
+    return PaginatedRunsResponse(runs: var_runs, totalCount: var_totalCount);
+  }
+
+  @protected
   PhaseModel sse_decode_phase_model(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_phaseNumber = sse_decode_i_32(deserializer);
@@ -1006,6 +1100,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         totalPylonTime: var_totalPylonTime,
         shieldChanges: var_shieldChanges,
         legBreaks: var_legBreaks);
+  }
+
+  @protected
+  RunListItemModel sse_decode_run_list_item_model(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_i_32(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_date = sse_decode_i_64(deserializer);
+    var var_duration = sse_decode_f_64(deserializer);
+    var var_isBugged = sse_decode_bool(deserializer);
+    var var_isAborted = sse_decode_bool(deserializer);
+    var var_isFavorite = sse_decode_bool(deserializer);
+    return RunListItemModel(
+        id: var_id,
+        name: var_name,
+        date: var_date,
+        duration: var_duration,
+        isBugged: var_isBugged,
+        isAborted: var_isAborted,
+        isFavorite: var_isFavorite);
   }
 
   @protected
@@ -1215,6 +1330,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_run_list_item_model(
+      List<RunListItemModel> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_run_list_item_model(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_shield_change_model(
       List<ShieldChangeModel> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1266,6 +1391,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_paginated_runs_response(
+      PaginatedRunsResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_run_list_item_model(self.runs, serializer);
+    sse_encode_i_32(self.totalCount, serializer);
+  }
+
+  @protected
   void sse_encode_phase_model(PhaseModel self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.phaseNumber, serializer);
@@ -1276,6 +1409,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_f_64(self.totalPylonTime, serializer);
     sse_encode_list_shield_change_model(self.shieldChanges, serializer);
     sse_encode_list_leg_break_model(self.legBreaks, serializer);
+  }
+
+  @protected
+  void sse_encode_run_list_item_model(
+      RunListItemModel self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.id, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_i_64(self.date, serializer);
+    sse_encode_f_64(self.duration, serializer);
+    sse_encode_bool(self.isBugged, serializer);
+    sse_encode_bool(self.isAborted, serializer);
+    sse_encode_bool(self.isFavorite, serializer);
   }
 
   @protected

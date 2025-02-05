@@ -80,7 +80,8 @@
         "date": "Tarih",
         "edit": "Düzenle",
         "delete": "Sil",
-        "actions": "Eylemler"
+        "actions": "Eylemler",
+        "favorite": "Favori"
     },
     "analytics" : {
         "title": "Analitiklerin"

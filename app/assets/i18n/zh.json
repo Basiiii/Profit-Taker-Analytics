@@ -80,7 +80,8 @@
         "date": "日期",
         "edit": "编辑",
         "delete": "删除",
-        "actions": "行动"
+        "actions": "行动",
+        "favorite": "最爱"
     },
     "analytics" : {
         "title": "Your analytics"

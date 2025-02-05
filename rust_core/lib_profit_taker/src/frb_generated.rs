@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.7.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1378368092;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1668958778;
 
 // Section: executor
 
@@ -250,6 +250,47 @@ fn wire__crate__api__get_next_run_id_impl(
                 let output_ok = crate::api::get_next_run_id(api_current_run_id)?;
                 Ok(output_ok)
             })())
+        },
+    )
+}
+fn wire__crate__api__get_paginated_runs_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_paginated_runs",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_page = <i32>::sse_decode(&mut deserializer);
+            let api_page_size = <i32>::sse_decode(&mut deserializer);
+            let api_sort_column = <String>::sse_decode(&mut deserializer);
+            let api_sort_ascending = <bool>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::get_paginated_runs(
+                        api_page,
+                        api_page_size,
+                        api_sort_column,
+                        api_sort_ascending,
+                    )?;
+                    Ok(output_ok)
+                })())
+            }
         },
     )
 }
@@ -758,6 +799,18 @@ impl SseDecode for Vec<u8> {
     }
 }
 
+impl SseDecode for Vec<crate::api::RunListItemModel> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::RunListItemModel>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::ShieldChangeModel> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -815,6 +868,18 @@ impl SseDecode for Option<crate::api::RunTimesResponse> {
     }
 }
 
+impl SseDecode for crate::api::PaginatedRunsResponse {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_runs = <Vec<crate::api::RunListItemModel>>::sse_decode(deserializer);
+        let mut var_totalCount = <i32>::sse_decode(deserializer);
+        return crate::api::PaginatedRunsResponse {
+            runs: var_runs,
+            total_count: var_totalCount,
+        };
+    }
+}
+
 impl SseDecode for crate::api::PhaseModel {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -835,6 +900,28 @@ impl SseDecode for crate::api::PhaseModel {
             total_pylon_time: var_totalPylonTime,
             shield_changes: var_shieldChanges,
             leg_breaks: var_legBreaks,
+        };
+    }
+}
+
+impl SseDecode for crate::api::RunListItemModel {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <i32>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_date = <i64>::sse_decode(deserializer);
+        let mut var_duration = <f64>::sse_decode(deserializer);
+        let mut var_isBugged = <bool>::sse_decode(deserializer);
+        let mut var_isAborted = <bool>::sse_decode(deserializer);
+        let mut var_isFavorite = <bool>::sse_decode(deserializer);
+        return crate::api::RunListItemModel {
+            id: var_id,
+            name: var_name,
+            date: var_date,
+            duration: var_duration,
+            is_bugged: var_isBugged,
+            is_aborted: var_isAborted,
+            is_favorite: var_isFavorite,
         };
     }
 }
@@ -974,10 +1061,11 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        8 => wire__crate__api__get_pb_times_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__get_run_from_db_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__get_second_best_times_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__init_app_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__get_paginated_runs_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__get_pb_times_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__get_run_from_db_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__get_second_best_times_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__init_app_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -997,14 +1085,14 @@ fn pde_ffi_dispatcher_sync_impl(
         5 => wire__crate__api__get_earliest_run_id_impl(ptr, rust_vec_len, data_len),
         6 => wire__crate__api__get_latest_run_id_impl(ptr, rust_vec_len, data_len),
         7 => wire__crate__api__get_next_run_id_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__get_pretty_printed_run_impl(ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__get_previous_run_id_impl(ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__initialize_db_impl(ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__initialize_profit_taker_parser_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__is_run_pb_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__get_pretty_printed_run_impl(ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__get_previous_run_id_impl(ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__initialize_db_impl(ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__initialize_profit_taker_parser_impl(ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__is_run_pb_impl(ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1092,6 +1180,27 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::LegPositionEnum>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::PaginatedRunsResponse {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.runs.into_into_dart().into_dart(),
+            self.total_count.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::PaginatedRunsResponse
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::PaginatedRunsResponse>
+    for crate::api::PaginatedRunsResponse
+{
+    fn into_into_dart(self) -> crate::api::PaginatedRunsResponse {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::PhaseModel {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1110,6 +1219,29 @@ impl flutter_rust_bridge::IntoDart for crate::api::PhaseModel {
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::PhaseModel {}
 impl flutter_rust_bridge::IntoIntoDart<crate::api::PhaseModel> for crate::api::PhaseModel {
     fn into_into_dart(self) -> crate::api::PhaseModel {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::RunListItemModel {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.date.into_into_dart().into_dart(),
+            self.duration.into_into_dart().into_dart(),
+            self.is_bugged.into_into_dart().into_dart(),
+            self.is_aborted.into_into_dart().into_dart(),
+            self.is_favorite.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::RunListItemModel {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::RunListItemModel>
+    for crate::api::RunListItemModel
+{
+    fn into_into_dart(self) -> crate::api::RunListItemModel {
         self
     }
 }
@@ -1364,6 +1496,16 @@ impl SseEncode for Vec<u8> {
     }
 }
 
+impl SseEncode for Vec<crate::api::RunListItemModel> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::RunListItemModel>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::ShieldChangeModel> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1414,6 +1556,14 @@ impl SseEncode for Option<crate::api::RunTimesResponse> {
     }
 }
 
+impl SseEncode for crate::api::PaginatedRunsResponse {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::RunListItemModel>>::sse_encode(self.runs, serializer);
+        <i32>::sse_encode(self.total_count, serializer);
+    }
+}
+
 impl SseEncode for crate::api::PhaseModel {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1425,6 +1575,19 @@ impl SseEncode for crate::api::PhaseModel {
         <f64>::sse_encode(self.total_pylon_time, serializer);
         <Vec<crate::api::ShieldChangeModel>>::sse_encode(self.shield_changes, serializer);
         <Vec<crate::api::LegBreakModel>>::sse_encode(self.leg_breaks, serializer);
+    }
+}
+
+impl SseEncode for crate::api::RunListItemModel {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <i64>::sse_encode(self.date, serializer);
+        <f64>::sse_encode(self.duration, serializer);
+        <bool>::sse_encode(self.is_bugged, serializer);
+        <bool>::sse_encode(self.is_aborted, serializer);
+        <bool>::sse_encode(self.is_favorite, serializer);
     }
 }
 

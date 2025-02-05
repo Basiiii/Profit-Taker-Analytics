@@ -80,7 +80,8 @@
         "date": "Data",
         "edit": "Editar",
         "delete": "Apagar",
-        "actions": "Ações"
+        "actions": "Ações",
+        "favorite": "Favorito"
     },
     "analytics" : {
         "title": "Dados das tuas missões"

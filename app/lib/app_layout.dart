@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_screen.dart';
 import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 import 'package:profit_taker_analyzer/screens/settings/settings_screen.dart';
+import 'package:profit_taker_analyzer/screens/storage/storage_screen.dart';
 import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
     as custom_nav;
 
@@ -51,6 +52,8 @@ class AppLayoutState extends State<AppLayout> {
     switch (index) {
       case 0:
         return const HomeScreen();
+      case 1:
+        return const StorageScreen();
       case 3:
         return const AnalyticsScreen();
       case 4:
