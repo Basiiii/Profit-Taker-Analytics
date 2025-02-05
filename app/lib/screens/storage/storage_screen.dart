@@ -2,11 +2,14 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
+import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
+import 'package:profit_taker_analyzer/widgets/edit_run_name.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
 import 'package:rust_core/rust_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageScreen extends StatefulWidget {
   const StorageScreen({super.key});
@@ -115,21 +118,139 @@ class _StorageScreenState extends State<StorageScreen> {
 
   Future<void> _toggleFavorite(RunListItemCustom run) async {
     final previousState = run.isFavorite;
-    final updatedRun = run.copyWith(isFavorite: !previousState);
 
+    // Update UI optimistically
+    final updatedRun = run.copyWith(isFavorite: !previousState);
     setState(() {
       _runItems[_runItems.indexOf(run)] = updatedRun; // Update the list
     });
 
-    try {
-      markRunAsFavorite(runId: run.id);
-    } catch (e) {
+    // Call the API to mark or unmark as favorite
+    final isSuccess = updatedRun.isFavorite
+        ? markRunAsFavorite(runId: run.id)
+        : removeRunFromFavorites(runId: run.id);
+
+    if (isSuccess) {
+      // If the operation succeeded, show success message
+      _showSuccessMessage(run.isFavorite);
+    } else {
+      // If the operation failed, revert the UI state and show an error
       setState(() {
-        // Revert to the previous state in case of error
-        _runItems[_runItems.indexOf(updatedRun)] = run;
+        _runItems[_runItems.indexOf(updatedRun)] = run; // Revert the state
       });
-      _showError('Failed to update favorite: ${e.toString()}');
+      _showError('Failed to update favorite');
     }
+  }
+
+  void _editRunName(BuildContext context, RunListItemCustom run) {
+    TextEditingController controller = TextEditingController(text: run.name);
+
+    editRunNameDialog(
+      context,
+      controller,
+      FlutterI18n.translate(context, "alerts.name_title"),
+      FlutterI18n.translate(context, "alerts.name_title"),
+      FlutterI18n.translate(context, "buttons.cancel"),
+      FlutterI18n.translate(context, "buttons.ok"),
+      (newName) {
+        if (newName.isNotEmpty && newName != run.name) {
+          // Update the run name in the database
+          updateRunName(runId: run.id, newName: newName);
+
+          // Update the UI to reflect the change
+          setState(() {
+            _runItems[_runItems.indexOf(run)] = run.copyWith(name: newName);
+          });
+        }
+      },
+    );
+  }
+
+  void _deleteRun(BuildContext context, RunListItemCustom run) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    // Show a confirmation dialog before deleting
+    final bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(FlutterI18n.translate(context, "alerts.delete_title")),
+          content:
+              Text(FlutterI18n.translate(context, "alerts.delete_message")),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(FlutterI18n.translate(context, "buttons.cancel")),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(FlutterI18n.translate(context, "buttons.delete")),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      // Call the Rust function to delete the run
+      final DeleteRunResult result = deleteRunFromDb(runId: run.id);
+
+      if (result.success) {
+        // Remove the run from the UI
+        setState(() {
+          _runItems.remove(run);
+        });
+
+        // Show success message
+        if (context.mounted) {
+          scaffoldMessenger.showSnackBar(
+            SnackBar(
+              content:
+                  Text(FlutterI18n.translate(context, "delete_run.success")),
+            ),
+          );
+        }
+      } else {
+        // Show error message
+        if (context.mounted) {
+          scaffoldMessenger.showSnackBar(
+            SnackBar(
+              content: Text(result.error ??
+                  FlutterI18n.translate(context, "delete_run.error")),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  void _viewRunDetails(BuildContext context, RunListItemCustom run) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Save the selected run ID to SharedPreferences
+    await prefs.setInt('currentRunId', run.id);
+
+    // Navigate to HomeScreen
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }
+  }
+
+  void _showSuccessMessage(bool isFavorite) {
+    final messageKey =
+        isFavorite ? "mark_favorite.success" : "remove_favorite.success";
+    final message = FlutterI18n.translate(context, messageKey);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _scrollListener() {
@@ -137,11 +258,6 @@ class _StorageScreenState extends State<StorageScreen> {
         _scrollController.position.maxScrollExtent) {
       _loadMoreData();
     }
-  }
-
-  void _showError(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -192,11 +308,14 @@ class _StorageScreenState extends State<StorageScreen> {
       horizontalMargin: 12,
       minWidth: 800,
       columns: [
-        _buildSortableColumn(context, 'storage.run_name', 'name', ColumnSize.L),
-        _buildSortableColumn(context, 'storage.run_time', 'time', ColumnSize.M),
-        _buildSortableColumn(context, 'storage.date', 'date', ColumnSize.M),
         _buildSortableColumn(
-            context, 'storage.favorite', 'favorite', ColumnSize.M),
+            context, 'storage.run_name', 'run_name', ColumnSize.L),
+        _buildSortableColumn(
+            context, 'storage.run_time', 'total_time', ColumnSize.M),
+        _buildSortableColumn(
+            context, 'storage.date', 'time_stamp', ColumnSize.M),
+        _buildSortableColumn(
+            context, 'storage.favorite', 'is_favorite', ColumnSize.M),
         DataColumn2(
           label: Text(
             FlutterI18n.translate(context, "storage.actions"),
@@ -254,7 +373,7 @@ class _StorageScreenState extends State<StorageScreen> {
         ),
         DataCell(Text('${run.duration.toStringAsFixed(3)}s')),
         DataCell(Text(DateFormat('kk:mm:ss - yyyy-MM-dd')
-            .format(DateTime.fromMillisecondsSinceEpoch(run.date)))),
+            .format(DateTime.fromMillisecondsSinceEpoch(run.date * 1000)))),
         DataCell(Text(run.isFavorite
             ? FlutterI18n.translate(context, "buttons.yes")
             : FlutterI18n.translate(context, "buttons.no"))),
@@ -263,13 +382,14 @@ class _StorageScreenState extends State<StorageScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit, size: 18),
-                onPressed: () async {},
+                onPressed: () => _editRunName(context, run),
               ),
               IconButton(
-                  icon: const Icon(Icons.delete), onPressed: () async {}),
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _deleteRun(context, run)),
               IconButton(
                 icon: const Icon(Icons.remove_red_eye, size: 18),
-                onPressed: () {},
+                onPressed: () => _viewRunDetails(context, run),
               ),
               IconButton(
                 icon: Icon(

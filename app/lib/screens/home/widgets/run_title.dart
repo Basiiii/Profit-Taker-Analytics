@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/translations.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/edit_run_name.dart';
+import 'package:profit_taker_analyzer/widgets/edit_run_name.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';

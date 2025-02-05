@@ -14,10 +14,12 @@ pub fn fetch_paginated_runs_query(
 
   // Build the SQL query with pagination and sorting
   let query = format!(
-      "SELECT id, run_name, time_stamp, total_time, bugged_run, aborted_run, player_name
-       FROM runs
-       ORDER BY {} {} LIMIT {} OFFSET {}",
-      sort_column, sort_order, page_size, offset
+      "SELECT runs.id, run_name, time_stamp, total_time, bugged_run, aborted_run, player_name,
+              CASE WHEN favorites.run_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+      FROM runs
+      LEFT JOIN favorites ON runs.id = favorites.run_id
+      ORDER BY {} {}, is_favorite {} LIMIT {} OFFSET {}",
+      sort_column, sort_order, sort_order, page_size, offset
   );
 
   // Open the connection to the database
@@ -35,7 +37,14 @@ pub fn fetch_paginated_runs_query(
           is_bugged_run: row.get(4)?,
           is_aborted_run: row.get(5)?,
           is_solo_run: false,
-          total_times: TotalTimes::default(),
+          total_times: TotalTimes {
+            total_time: row.get(3)?,
+            total_flight_time: 0.0,
+            total_shield_time: 0.0,
+            total_leg_time: 0.0,
+            total_body_time: 0.0,
+            total_pylon_time: 0.0,
+          },
           phases: Vec::new(),
           squad_members: Vec::new(),
       })

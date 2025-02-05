@@ -107,7 +107,7 @@
     "alerts": {
         "name_title": "Changer le nom de la mission",
         "delete_title": "Confirmer la suppresion",
-        "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce run(s)?"
+        "delete_message": "Êtes-vous sûr de vouloir supprimer cette mission ?"
     },
     "donate": {
         "button": "Faire un don",

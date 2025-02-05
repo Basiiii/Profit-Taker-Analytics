@@ -18,10 +18,10 @@ class RunListItemCustom {
   });
 
   // Method to create a copy with a new favorite status
-  RunListItemCustom copyWith({bool? isFavorite}) {
+  RunListItemCustom copyWith({bool? isFavorite, String? name}) {
     return RunListItemCustom(
       id: id,
-      name: name,
+      name: name ?? this.name,
       date: date,
       duration: duration,
       isBugged: isBugged,
