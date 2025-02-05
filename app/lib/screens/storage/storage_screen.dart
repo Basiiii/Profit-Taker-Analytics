@@ -2,15 +2,15 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
-import 'package:profit_taker_analyzer/app_layout.dart';
-import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
+import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
+import 'package:profit_taker_analyzer/screens/storage/utils/favorite_run.dart';
+import 'package:profit_taker_analyzer/screens/storage/utils/view_run.dart';
 import 'package:profit_taker_analyzer/widgets/edit_run_name.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
 import 'package:rust_core/rust_core.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageScreen extends StatefulWidget {
   const StorageScreen({super.key});
@@ -28,8 +28,7 @@ class _StorageScreenState extends State<StorageScreen> {
   final int _pageSize = 50;
 
   // Sorting state
-  String _sortColumn =
-      'time_stamp'; // TODO: make sure these reflect the things in DB
+  String _sortColumn = 'time_stamp'; // Default sort
   bool _sortAscending = false;
 
   @override
@@ -117,32 +116,6 @@ class _StorageScreenState extends State<StorageScreen> {
     _loadInitialData();
   }
 
-  Future<void> _toggleFavorite(RunListItemCustom run) async {
-    final previousState = run.isFavorite;
-
-    // Update UI optimistically
-    final updatedRun = run.copyWith(isFavorite: !previousState);
-    setState(() {
-      _runItems[_runItems.indexOf(run)] = updatedRun; // Update the list
-    });
-
-    // Call the API to mark or unmark as favorite
-    final isSuccess = updatedRun.isFavorite
-        ? markRunAsFavorite(runId: run.id)
-        : removeRunFromFavorites(runId: run.id);
-
-    if (isSuccess) {
-      // If the operation succeeded, show success message
-      _showSuccessMessage(run.isFavorite);
-    } else {
-      // If the operation failed, revert the UI state and show an error
-      setState(() {
-        _runItems[_runItems.indexOf(updatedRun)] = run; // Revert the state
-      });
-      _showError('Failed to update favorite');
-    }
-  }
-
   void _editRunName(BuildContext context, RunListItemCustom run) {
     TextEditingController controller = TextEditingController(text: run.name);
 
@@ -165,84 +138,6 @@ class _StorageScreenState extends State<StorageScreen> {
         }
       },
     );
-  }
-
-  void _deleteRun(BuildContext context, RunListItemCustom run) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-    // Show a confirmation dialog before deleting
-    final bool? confirmDelete = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(FlutterI18n.translate(context, "alerts.delete_title")),
-          content:
-              Text(FlutterI18n.translate(context, "alerts.delete_message")),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(FlutterI18n.translate(context, "buttons.cancel")),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(FlutterI18n.translate(context, "buttons.delete")),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmDelete == true) {
-      // Call the Rust function to delete the run
-      final DeleteRunResult result = deleteRunFromDb(runId: run.id);
-
-      if (result.success) {
-        // Remove the run from the UI
-        setState(() {
-          _runItems.remove(run);
-        });
-
-        // Show success message
-        if (context.mounted) {
-          scaffoldMessenger.showSnackBar(
-            SnackBar(
-              content:
-                  Text(FlutterI18n.translate(context, "delete_run.success")),
-            ),
-          );
-        }
-      } else {
-        // Show error message
-        if (context.mounted) {
-          scaffoldMessenger.showSnackBar(
-            SnackBar(
-              content: Text(result.error ??
-                  FlutterI18n.translate(context, "delete_run.error")),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    }
-  }
-
-  void _viewRunDetails(BuildContext context, RunListItemCustom run) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('currentRunId', run.id);
-
-    print("Trying to switch to Home tab...");
-    print("AppLayout state: ${AppLayout.globalKey.currentState}");
-
-    // Attempt to switch tabs
-    AppLayout.globalKey.currentState?.selectTab(0);
-  }
-
-  void _showSuccessMessage(bool isFavorite) {
-    final messageKey =
-        isFavorite ? "mark_favorite.success" : "remove_favorite.success";
-    final message = FlutterI18n.translate(context, messageKey);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showError(String message) {
@@ -383,17 +278,32 @@ class _StorageScreenState extends State<StorageScreen> {
               ),
               IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteRun(context, run)),
+                  onPressed: () async {
+                    final success = await deleteRun(context, run);
+
+                    if (success) {
+                      setState(() {
+                        // After successful deletion, update the UI
+                        _runItems.remove(run);
+                      });
+                    }
+                  }),
               IconButton(
                 icon: const Icon(Icons.remove_red_eye, size: 18),
-                onPressed: () => _viewRunDetails(context, run),
+                onPressed: () => viewRun(context, run),
               ),
               IconButton(
                 icon: Icon(
                   run.isFavorite ? Icons.star : Icons.star_border,
                   color: run.isFavorite ? Colors.amber : null,
                 ),
-                onPressed: () => _toggleFavorite(run),
+                onPressed: () async {
+                  final success = await toggleFavorite(context, _runItems, run);
+
+                  if (success) {
+                    setState(() {});
+                  }
+                },
               ),
             ],
           ),
