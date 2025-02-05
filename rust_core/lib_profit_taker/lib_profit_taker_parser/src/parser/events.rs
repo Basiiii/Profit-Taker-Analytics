@@ -398,4 +398,5 @@ fn handle_phase_changes(line: &str, run: &mut Run, parser_state: &mut ParserStat
         _ => {}
     }
     parser_state.leg_order = 0;
+    parser_state.shield_order = 0;
 }

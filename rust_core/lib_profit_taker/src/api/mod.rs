@@ -44,6 +44,7 @@ pub struct PhaseModel {
 pub struct ShieldChangeModel {
     pub shield_time: f64,
     pub status_effect: StatusEffectEnum,
+    pub shield_order: i32,
 }
 
 #[flutter_rust_bridge::frb]
@@ -196,6 +197,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                         ShieldChangeModel {
                             shield_time: sc.shield_time,
                             status_effect,
+                            shield_order: sc.shield_order,
                         }
                     }).collect::<Vec<_>>();
 
@@ -238,6 +240,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                         vec![ShieldChangeModel {
                             shield_time: 0.0,
                             status_effect: StatusEffectEnum::NoShield,
+                            shield_order: 0,
                         }]
                     } else {
                         Vec::new()
@@ -271,6 +274,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                     phase.shield_changes.push(ShieldChangeModel {
                         shield_time: 0.0,
                         status_effect: StatusEffectEnum::NoShield,
+                        shield_order: 0,
                     });
                 }
 
@@ -654,6 +658,7 @@ pub fn get_pretty_printed_run(run_model: RunModel) -> String {
                     StatusEffectEnum::Corrosive => StatusEffect::Corrosive,
                     StatusEffectEnum::NoShield => StatusEffect::NoShield,
                 },
+                shield_order: shield.shield_order, 
             }).collect(),
             leg_breaks: phase.leg_breaks.into_iter().map(|leg| LegBreak {
                 leg_break_time: leg.leg_break_time,

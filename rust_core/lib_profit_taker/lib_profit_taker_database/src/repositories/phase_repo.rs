@@ -11,8 +11,9 @@
 //!
 //! ## Example Usage  
 //! ```rust
-//! use crate::repositories::{PhaseRepository, ShieldChangeRepository, LegBreakRepository};
+//! use lib_profit_taker_database::repositories::{PhaseRepository, ShieldChangeRepository, LegBreakRepository};
 //! use rusqlite::Connection;
+//! use lib_profit_taker_core::{Phase};
 //!
 //! let conn = Connection::open("path_to_db").unwrap();
 //! let phase_repo = PhaseRepository::new(&conn);

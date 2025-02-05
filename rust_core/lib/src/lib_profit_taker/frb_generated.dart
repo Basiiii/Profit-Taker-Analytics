@@ -756,11 +756,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ShieldChangeModel dco_decode_shield_change_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return ShieldChangeModel(
       shieldTime: dco_decode_f_64(arr[0]),
       statusEffect: dco_decode_status_effect_enum(arr[1]),
+      shieldOrder: dco_decode_i_32(arr[2]),
     );
   }
 
@@ -1058,8 +1059,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_shieldTime = sse_decode_f_64(deserializer);
     var var_statusEffect = sse_decode_status_effect_enum(deserializer);
+    var var_shieldOrder = sse_decode_i_32(deserializer);
     return ShieldChangeModel(
-        shieldTime: var_shieldTime, statusEffect: var_statusEffect);
+        shieldTime: var_shieldTime,
+        statusEffect: var_statusEffect,
+        shieldOrder: var_shieldOrder);
   }
 
   @protected
@@ -1311,6 +1315,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_f_64(self.shieldTime, serializer);
     sse_encode_status_effect_enum(self.statusEffect, serializer);
+    sse_encode_i_32(self.shieldOrder, serializer);
   }
 
   @protected
