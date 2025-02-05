@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
+import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
 import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
@@ -96,15 +97,19 @@ class _StorageScreenState extends State<StorageScreen> {
 
   void _handleSort(String column) {
     setState(() {
-      if (_sortColumn == column) {
+      final dbColumn = columnMapping[column] ?? column; // Get mapped name
+
+      if (_sortColumn == dbColumn) {
         _sortAscending = !_sortAscending;
       } else {
-        _sortColumn = column;
+        _sortColumn = dbColumn;
         _sortAscending = true;
       }
+
       _currentPage = 1;
       _runItems.clear();
     });
+
     _loadInitialData();
   }
 
