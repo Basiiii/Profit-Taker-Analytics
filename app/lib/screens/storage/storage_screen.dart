@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
+import 'package:profit_taker_analyzer/app_layout.dart';
 import 'package:profit_taker_analyzer/screens/home/home_screen.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
@@ -227,17 +228,13 @@ class _StorageScreenState extends State<StorageScreen> {
 
   void _viewRunDetails(BuildContext context, RunListItemCustom run) async {
     final prefs = await SharedPreferences.getInstance();
-
-    // Save the selected run ID to SharedPreferences
     await prefs.setInt('currentRunId', run.id);
 
-    // Navigate to HomeScreen
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-    }
+    print("Trying to switch to Home tab...");
+    print("AppLayout state: ${AppLayout.globalKey.currentState}");
+
+    // Attempt to switch tabs
+    AppLayout.globalKey.currentState?.selectTab(0);
   }
 
   void _showSuccessMessage(bool isFavorite) {

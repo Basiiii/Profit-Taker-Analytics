@@ -15,6 +15,9 @@ import 'package:profit_taker_analyzer/widgets/navigation_bar.dart'
 /// The layout uses a `Row` to place the `NavigationBar` and the active screen side by side.
 /// The active screen changes when a tab is selected from the navigation bar.
 class AppLayout extends StatefulWidget {
+  static final GlobalKey<AppLayoutState> globalKey =
+      GlobalKey<AppLayoutState>();
+
   const AppLayout({super.key});
 
   @override
@@ -36,7 +39,7 @@ class AppLayoutState extends State<AppLayout> {
   /// The [navIndex] corresponds to the index of the selected tab. This method updates
   /// the `_currentIndex` and sets the `_activeScreen` to the screen corresponding to the
   /// selected tab.
-  void _selectTab(int navIndex) {
+  void selectTab(int navIndex) {
     setState(() {
       _currentIndex = navIndex;
       _activeScreen = _getScreenByIndex(navIndex);
@@ -72,7 +75,7 @@ class AppLayoutState extends State<AppLayout> {
         children: <Widget>[
           custom_nav.NavigationBar(
             currentIndex: _currentIndex,
-            onTabSelected: _selectTab,
+            onTabSelected: selectTab,
           ),
           Expanded(child: _activeScreen!),
         ],
