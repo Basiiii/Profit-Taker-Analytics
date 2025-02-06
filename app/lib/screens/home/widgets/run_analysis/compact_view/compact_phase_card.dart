@@ -135,8 +135,7 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                       ),
                     if (index != 0) // only for phase 2, 3 and 4
                       generateTextSpan(
-                        (phase.totalTime - phases[index - 1].totalTime)
-                            .toStringAsFixed(3),
+                        phase.totalTime.toStringAsFixed(3),
                         16,
                         FontWeight.w400,
                         color: Theme.of(context)
