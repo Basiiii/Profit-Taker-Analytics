@@ -68,7 +68,7 @@ List<Widget> generatePhaseRows(
 
   if (index == 1) {
     rows = labels.sublist(1, 3).asMap().entries.map((entry) {
-      return buildRow(context, entry.value, overviewList[entry.key], false);
+      return buildRow(context, entry.value, overviewList[entry.key + 1], false);
     }).toList();
   } else if (index == 2) {
     rows = labels.asMap().entries.map((entry) {
