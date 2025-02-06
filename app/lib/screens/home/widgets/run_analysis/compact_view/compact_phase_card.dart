@@ -123,6 +123,16 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                   context,
                   // "TIME FOR PHASE"
                   [
+                    if (index == 0)
+                      generateTextSpan(
+                        (phase.totalTime)
+                            .toStringAsFixed(3),
+                        16,
+                        FontWeight.w400,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                      ),
                     if (index != 0) // only for phase 2, 3 and 4
                       generateTextSpan(
                         (phase.totalTime - phases[index - 1].totalTime)
@@ -133,15 +143,14 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                             .colorScheme
                             .surfaceContainerHighest,
                       ),
-                    if (index != 0) // only for phase 2, 3 and 4
-                      generateTextSpan(
-                        's / ',
-                        16,
-                        FontWeight.w400,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest,
-                      ),
+                    generateTextSpan(
+                      's / ',
+                      16,
+                      FontWeight.w400,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                    ),
                     // "TOTAL TIME"
                     generateTextSpan(totalTimeUpUntilNow.toStringAsFixed(3), 20,
                         FontWeight.w600,
