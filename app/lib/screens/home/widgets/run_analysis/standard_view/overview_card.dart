@@ -36,7 +36,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
         color = const Color(0xFFef9b20);
       }
     }
-  } else if ((index == 2 || index == 4 || index == 5) && isBuggedRun)  {
+  } else if ((index == 2 || index == 5) && isBuggedRun)  {
     color = Theme.of(context).colorScheme.error;
   }
 
@@ -98,7 +98,7 @@ Widget buildHeader(
 /// A helper function to build the content with time value and differences.
 Widget buildContent(
     BuildContext context, double timeValue, Map<String, dynamic> timeData, Color color) {
-  final themeColor = Theme.of(context).colorScheme.onSurface;
+  //final themeColor = Theme.of(context).colorScheme.onSurface;
 
   return Padding(
     padding: const EdgeInsets.only(top: 12, left: 25),

@@ -37,7 +37,7 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
       }
     }
 
-  } else if ((index == 2 || index == 4 || index == 5) && isBuggedRun)  {
+  } else if ((index == 2 || index == 5) && isBuggedRun)  {
     color = Theme.of(context).colorScheme.error;
   }
 

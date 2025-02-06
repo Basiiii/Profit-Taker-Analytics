@@ -73,7 +73,7 @@ List<Widget> generatePhaseRows(
   } else if (index == 3) {
     rows = labels.sublist(0, 3).asMap().entries.map((entry) {
       return buildRow(context, entry.value, overviewList[entry.key],
-          entry.key == 0 && isBuggedRun || entry.key == 2 && isBuggedRun);
+          entry.key == 0 && isBuggedRun);
     }).toList();
   } else {
     rows = labels.asMap().entries.map((entry) {
