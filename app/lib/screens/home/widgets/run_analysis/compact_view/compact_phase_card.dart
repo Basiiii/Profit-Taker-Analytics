@@ -12,6 +12,7 @@ Widget buildCompactPhaseCard(
   double screenWidth,
   List<PhaseModel> phases,
   bool isBuggedRun,
+  double flightTime,
 ) {
   final PhaseModel phase = phases[index];
   final double responsiveCardWidth = screenWidth / 2;
@@ -48,7 +49,7 @@ Widget buildCompactPhaseCard(
     ),
     child: Column(
       children: <Widget>[
-        buildCompactCardHeader(phase, context, index, phases),
+        buildCompactCardHeader(phase, context, index, phases, flightTime),
         buildCompactCardBody(rows, phase, index, context, isBuggedRun),
       ],
     ),
@@ -89,9 +90,9 @@ List<Widget> generatePhaseRows(
 
 // Helper: Build Compact Card Header
 Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
-    List<PhaseModel> phases) {
+    List<PhaseModel> phases, double flightTime) {
   // Calculate total time up until this phase
-  double totalTimeUpUntilNow = 0;
+  double totalTimeUpUntilNow = flightTime;
 
   // Loop through all previous phases and add their times
   for (int i = 0; i <= index; i++) {

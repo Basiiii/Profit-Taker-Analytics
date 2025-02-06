@@ -76,7 +76,8 @@ class StandardRunAnalysis extends StatelessWidget {
                       context,
                       screenWidth,
                       runData.phases,
-                      runData.isBuggedRun
+                      runData.isBuggedRun,
+                      runData.totalTimes.totalFlightTime
                     )),
           ],
         );
