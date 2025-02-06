@@ -46,7 +46,7 @@ use crate::parser::r#loop::log_reading;
 pub fn initialize_parser() -> Result<JoinHandle<()>, Box<dyn std::error::Error>> {
     // Build the path to the log file from environment variable and constant.
     let env_path = env::var(ENV_PATH)?;
-    let path = format!("{}{}", env_path, LOG_PATH);
+    let path = format!("{env_path}{LOG_PATH}");
 
     // Open the log file.
     let file = File::open(&path)?;

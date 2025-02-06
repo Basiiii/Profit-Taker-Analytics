@@ -979,9 +979,11 @@ impl SseDecode for crate::api::ShieldChangeModel {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_shieldTime = <f64>::sse_decode(deserializer);
         let mut var_statusEffect = <crate::api::StatusEffectEnum>::sse_decode(deserializer);
+        let mut var_shieldOrder = <i32>::sse_decode(deserializer);
         return crate::api::ShieldChangeModel {
             shield_time: var_shieldTime,
             status_effect: var_statusEffect,
+            shield_order: var_shieldOrder,
         };
     }
 }
@@ -1297,6 +1299,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::ShieldChangeModel {
         [
             self.shield_time.into_into_dart().into_dart(),
             self.status_effect.into_into_dart().into_dart(),
+            self.shield_order.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1624,6 +1627,7 @@ impl SseEncode for crate::api::ShieldChangeModel {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <f64>::sse_encode(self.shield_time, serializer);
         <crate::api::StatusEffectEnum>::sse_encode(self.status_effect, serializer);
+        <i32>::sse_encode(self.shield_order, serializer);
     }
 }
 

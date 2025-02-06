@@ -66,6 +66,8 @@ class StandardRunAnalysis extends StatelessWidget {
                       runData.totalTimes,
                       bestValues,
                       isComparingToPB,
+                      runData.isBuggedRun,
+                      runData.isAbortedRun
                     )),
             ...List.generate(
                 4,
@@ -75,6 +77,7 @@ class StandardRunAnalysis extends StatelessWidget {
                       screenWidth,
                       runData.phases,
                       runData.isBuggedRun,
+                      runData.totalTimes.totalFlightTime
                     )),
           ],
         );

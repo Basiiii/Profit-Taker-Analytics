@@ -12,6 +12,7 @@ Widget buildCompactPhaseCard(
   double screenWidth,
   List<PhaseModel> phases,
   bool isBuggedRun,
+  double flightTime,
 ) {
   final PhaseModel phase = phases[index];
   final double responsiveCardWidth = screenWidth / 2;
@@ -48,7 +49,7 @@ Widget buildCompactPhaseCard(
     ),
     child: Column(
       children: <Widget>[
-        buildCompactCardHeader(phase, context, index, phases),
+        buildCompactCardHeader(phase, context, index, phases, flightTime),
         buildCompactCardBody(rows, phase, index, context, isBuggedRun),
       ],
     ),
@@ -67,7 +68,7 @@ List<Widget> generatePhaseRows(
 
   if (index == 1) {
     rows = labels.sublist(1, 3).asMap().entries.map((entry) {
-      return buildRow(context, entry.value, overviewList[entry.key], false);
+      return buildRow(context, entry.value, overviewList[entry.key + 1], false);
     }).toList();
   } else if (index == 2) {
     rows = labels.asMap().entries.map((entry) {
@@ -77,7 +78,7 @@ List<Widget> generatePhaseRows(
   } else if (index == 3) {
     rows = labels.sublist(0, 3).asMap().entries.map((entry) {
       return buildRow(context, entry.value, overviewList[entry.key],
-          entry.key == 0 && isBuggedRun || entry.key == 2 && isBuggedRun);
+          entry.key == 0 && isBuggedRun);
     }).toList();
   } else {
     rows = labels.asMap().entries.map((entry) {
@@ -89,9 +90,9 @@ List<Widget> generatePhaseRows(
 
 // Helper: Build Compact Card Header
 Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
-    List<PhaseModel> phases) {
+    List<PhaseModel> phases, double flightTime) {
   // Calculate total time up until this phase
-  double totalTimeUpUntilNow = 0;
+  double totalTimeUpUntilNow = flightTime;
 
   // Loop through all previous phases and add their times
   for (int i = 0; i <= index; i++) {
@@ -122,9 +123,9 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                   context,
                   // "TIME FOR PHASE"
                   [
-                    if (index != 0) // only for phase 2, 3 and 4
+                    if (index == 0)
                       generateTextSpan(
-                        (phase.totalTime - phases[index - 1].totalTime)
+                        (phase.totalTime)
                             .toStringAsFixed(3),
                         16,
                         FontWeight.w400,
@@ -134,13 +135,21 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                       ),
                     if (index != 0) // only for phase 2, 3 and 4
                       generateTextSpan(
-                        's / ',
+                        phase.totalTime.toStringAsFixed(3),
                         16,
                         FontWeight.w400,
                         color: Theme.of(context)
                             .colorScheme
                             .surfaceContainerHighest,
                       ),
+                    generateTextSpan(
+                      's / ',
+                      16,
+                      FontWeight.w400,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                    ),
                     // "TOTAL TIME"
                     generateTextSpan(totalTimeUpUntilNow.toStringAsFixed(3), 20,
                         FontWeight.w600,

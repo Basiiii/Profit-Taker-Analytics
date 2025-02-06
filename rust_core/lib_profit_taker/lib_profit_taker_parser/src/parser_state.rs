@@ -13,6 +13,9 @@ pub(crate) struct ParserState {
     /// The order of the legs, incremented by 1 for each leg, reset on phase end
     pub(crate) leg_order: i32,
     
+    /// The order of the shields, incremented by 1 for each shield, reset on phase end
+    pub(crate) shield_order: i32,
+    
     /// The current phase, edited while parsing, added to the run data when the phase ends and reset
     pub(crate) current_phase: Phase,
     
@@ -58,6 +61,7 @@ impl ParserState {
         Self {
             start_time: 0.0,
             leg_order: 0,
+            shield_order: 0,
             current_phase: Phase::new(0),
             body_vuln_time: 0.0,
             pylon_launch_time: 0.0,
