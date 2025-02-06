@@ -22,17 +22,21 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
     double timeValue = cardDetails.timeValue;
 
     if (isAbortedRun == false) {
-      if (timeValue < 50.000) {
-        color = const Color(0xFFFB1D7A);
+      if (timeValue < 49.000) {
+        color = const Color(0xFFFD2881);
+      } else if (timeValue < 50.000) {
+        color = const Color(0xFFC144D5);
       } else if (timeValue < 52.000) {
-        color = const Color(0xFFb33dc6);
+        color = const Color(0xFF9D5DF5);
       } else if (timeValue < 60.000) {
         color = const Color(0xFF27aeef);
       } else if (timeValue < 80.000) {
-        color = const Color(0xFFbdcf32);
-      } else if (timeValue < 120.000) {
         color = const Color(0xFF35967D);
-      } else if (timeValue > 120.000) {
+      } else if (timeValue < 120.000) {
+        color = const Color(0xFF6fc144);
+      } else if (timeValue < 180.000) {
+        color = const Color(0xFFbdcf32);
+      } else if (timeValue > 180.000) {
         color = const Color(0xFFef9b20);
       }
     }
