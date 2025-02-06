@@ -80,7 +80,8 @@
         "date": "Data",
         "edit": "Editar",
         "delete": "Apagar",
-        "actions": "Ações"
+        "actions": "Ações",
+        "favorite": "Favorito"
     },
     "analytics" : {
         "title": "Dados das tuas missões"
@@ -106,7 +107,7 @@
     "alerts": {
         "name_title": "Alterar o nome da missão",
         "delete_title": "Confirmar Apagar",
-        "confirm_delete": "Tem a certeza que deseja apagar a(s) missão(ões) escolhida(s)?"
+        "delete_message": "Tens a certeza de que queres apagar esta missão?"
     },
     "donate": {
         "button": "Doar",

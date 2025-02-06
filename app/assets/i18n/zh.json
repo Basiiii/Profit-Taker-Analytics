@@ -80,7 +80,8 @@
         "date": "日期",
         "edit": "编辑",
         "delete": "删除",
-        "actions": "行动"
+        "actions": "行动",
+        "favorite": "最爱"
     },
     "analytics" : {
         "title": "Your analytics"
@@ -106,7 +107,7 @@
     "alerts": {
         "name_title": "更改任务名称",
         "delete_title": "确认删除",
-        "confirm_delete": "您确定要删除所选运行吗？"
+        "delete_message": "你确定要删除这个任务吗？"
     },
     "donate": {
         "button": "捐赠",

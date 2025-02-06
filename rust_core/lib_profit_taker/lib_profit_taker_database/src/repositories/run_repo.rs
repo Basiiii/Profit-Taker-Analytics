@@ -48,6 +48,61 @@ impl<'a> RunRepository<'a> {
         Self { conn }
     }
 
+    /// Retrieves the basic data for a specific run.
+    ///
+    /// This method fetches only the core data for the `Run` (e.g., name, timestamp, duration, bugged, and aborted status)
+    /// without any associated entities like phases or squad members.
+    ///
+    /// # Arguments
+    /// - `run_id`: The ID of the run to retrieve.
+    ///
+    /// # Returns
+    /// - `Ok(Run)`: The `Run` object containing the core data for the run.
+    /// - `Err`: If there was an error fetching the data (e.g., if the run is not found).
+    pub fn get_basic_run_data(&self, run_id: i32) -> Result<Run> {
+        let mut stmt = self.conn.prepare(
+            r"SELECT 
+                id,
+                time_stamp,
+                run_name,
+                player_name,
+                bugged_run,
+                aborted_run,
+                solo_run,
+                total_time,
+                total_flight_time,
+                total_shield_time,
+                total_leg_time,
+                total_body_time,
+                total_pylon_time
+            FROM runs 
+            WHERE id = ?",
+        )?;
+
+        let mut rows = stmt.query([run_id])?;
+        let row = rows.next()?.ok_or(DataError::NotFound)?;
+
+        Ok(Run {
+            run_id: row.get(0)?,
+            time_stamp: row.get(1)?,
+            run_name: row.get(2)?,
+            player_name: row.get(3)?,
+            is_bugged_run: row.get::<_, i64>(4)? != 0,
+            is_aborted_run: row.get::<_, i64>(5)? != 0,
+            is_solo_run: row.get::<_, i64>(6)? != 0,
+            total_times: TotalTimes {
+                total_time: row.get(7)?,
+                total_flight_time: row.get(8)?,
+                total_shield_time: row.get(9)?,
+                total_leg_time: row.get(10)?,
+                total_body_time: row.get(11)?,
+                total_pylon_time: row.get(12)?,
+            },
+            phases: Vec::new(),
+            squad_members: Vec::new(),
+        })
+    }
+
     /// Retrieves the data for a specific run, including related data like phases and squad members.
     ///
     /// This method fetches the `Run` data based on the provided `run_id`, then uses additional repositories

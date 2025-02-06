@@ -21,7 +21,6 @@
 use rusqlite::{Connection, Result};
 use crate::connection::get_db_path;
 
-
 /// Checks if the given run ID is the Personal Best (PB).
 ///
 /// A run is considered the PB if it has the lowest `total_time` in the database,

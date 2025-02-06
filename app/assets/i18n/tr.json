@@ -80,7 +80,8 @@
         "date": "Tarih",
         "edit": "Düzenle",
         "delete": "Sil",
-        "actions": "Eylemler"
+        "actions": "Eylemler",
+        "favorite": "Favori"
     },
     "analytics" : {
         "title": "Analitiklerin"
@@ -106,7 +107,7 @@
     "alerts": {
         "name_title": "Görevin adını değiştir",
         "delete_title": "Silmeyi Onayla",
-        "confirm_delete": "Seçilen denemeleri silmek istediğinizden eminmisiniz?"
+        "delete_message": "Bu görevi silmek istediğinizden emin misiniz?"
     },
     "donate": {
         "button": "Bağış Yap",
