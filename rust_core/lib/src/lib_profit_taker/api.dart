@@ -499,14 +499,17 @@ class RunTimesResponse {
 class ShieldChangeModel {
   final double shieldTime;
   final StatusEffectEnum statusEffect;
+  final int shieldOrder;
 
   const ShieldChangeModel({
     required this.shieldTime,
     required this.statusEffect,
+    required this.shieldOrder,
   });
 
   @override
-  int get hashCode => shieldTime.hashCode ^ statusEffect.hashCode;
+  int get hashCode =>
+      shieldTime.hashCode ^ statusEffect.hashCode ^ shieldOrder.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -514,7 +517,8 @@ class ShieldChangeModel {
       other is ShieldChangeModel &&
           runtimeType == other.runtimeType &&
           shieldTime == other.shieldTime &&
-          statusEffect == other.statusEffect;
+          statusEffect == other.statusEffect &&
+          shieldOrder == other.shieldOrder;
 }
 
 class SquadMemberModel {

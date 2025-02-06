@@ -103,11 +103,11 @@ INSERT INTO status_effects (id, name) VALUES
 
 -- Create shield_changes table
 CREATE TABLE shield_changes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    shield_time INTEGER NOT NULL,
-    status_effect_id INTEGER NOT NULL,
     run_id INTEGER NOT NULL,
     phase_number INTEGER NOT NULL,
+    shield_time INTEGER NOT NULL,
+    shield_order INTEGER NOT NULL,
+    status_effect_id INTEGER NOT NULL,
     FOREIGN KEY (status_effect_id) REFERENCES status_effects (id) ON DELETE CASCADE,
     FOREIGN KEY (run_id, phase_number) REFERENCES phases (run_id, phase_number) ON DELETE CASCADE
 );

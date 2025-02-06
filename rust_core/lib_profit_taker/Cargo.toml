@@ -30,3 +30,5 @@ flutter_rust_bridge = "=2.7.1"
 lib_profit_taker_database.workspace = true
 lib_profit_taker_parser.workspace = true
 lib_profit_taker_core.workspace = true
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"

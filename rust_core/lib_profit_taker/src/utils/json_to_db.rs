@@ -73,7 +73,7 @@ fn sort_run_data(run: &mut Run, run_json: &RunData) {
         }
     }
 
-    if run.squad_members.len() > 0 {
+    if !run.squad_members.is_empty() {
         run.is_solo_run = false;
     }
 
@@ -141,11 +141,11 @@ fn sort_shields(current_phase: &mut lib_profit_taker_core::Phase, json_phase: Ph
     let shield_change_times = json_phase.shield_change_times.unwrap_or_default();
     let shield_change_types = json_phase.shield_change_types.unwrap_or_default();
     let shield_change_length = shield_change_times.len();
-    //TODO: add shield order
     for entry in 0..shield_change_length {
         current_phase.shield_changes.push(ShieldChange::new(
             shield_change_times[entry],
             status_from_json(&shield_change_types[entry]),
+            entry as i32 + 1,
         ));
     }
 }

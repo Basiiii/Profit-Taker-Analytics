@@ -12,8 +12,9 @@
 //!
 //! ## Example Usage  
 //! ```rust
-//! use crate::repositories::ShieldChangeRepository;
+//! use lib_profit_taker_database::repositories::ShieldChangeRepository;
 //! use rusqlite::Connection;
+//! use lib_profit_taker_core::{ShieldChange, StatusEffect};
 //!
 //! let conn = Connection::open("path_to_db").unwrap();
 //! let shield_change_repo = ShieldChangeRepository::new(&conn);
@@ -22,7 +23,7 @@
 //! let shield_changes = shield_change_repo.get_for_phase(1, 2).unwrap();
 //!
 //! // Insert a new shield change into the database
-//! let shield_change = ShieldChange { shield_time: 30.0, status_effect: StatusEffect::Impact };
+//! let shield_change = ShieldChange { shield_time: 30.0, status_effect: StatusEffect::Impact , shield_order: 1 };
 //! shield_change_repo.insert_for_phase(1, 2, &shield_change).unwrap();
 //! ```  
 
@@ -64,10 +65,11 @@ impl<'a> ShieldChangeRepository<'a> {
         let mut stmt = self.conn.prepare(
             r"SELECT 
                 shield_time,
-                status_effect_id
+                status_effect_id,
+                shield_order
             FROM shield_changes
             WHERE run_id = ? AND phase_number = ?
-            ORDER BY shield_time",
+            ORDER BY shield_order",
         )?;
 
         let changes = stmt.query_map([run_id, phase_number], |row| {
@@ -94,10 +96,12 @@ impl<'a> ShieldChangeRepository<'a> {
                     ))),
                 )),
             };
+            
 
             Ok(ShieldChange {
                 shield_time: row.get(0)?,
                 status_effect,
+                shield_order: row.get(2)?,
             })
         })?;
 
@@ -123,8 +127,8 @@ impl<'a> ShieldChangeRepository<'a> {
     pub fn insert_for_phase(&self, run_id: i64, phase_number: i32, shield_change: &ShieldChange) -> Result<()> {
         // Insert shield change into the shield_changes table
         self.conn.execute(
-            r"INSERT INTO shield_changes (run_id, phase_number, shield_time, status_effect_id)
-            VALUES (?1, ?2, ?3, ?4)",
+            r"INSERT INTO shield_changes (run_id, phase_number, shield_time, status_effect_id, shield_order)
+            VALUES (?1, ?2, ?3, ?4, ?5)",
             params![
                 run_id,
                 phase_number,
@@ -144,7 +148,8 @@ impl<'a> ShieldChangeRepository<'a> {
                     StatusEffect::Viral => 12,
                     StatusEffect::Corrosive => 13,
                     StatusEffect::NoShield => 14,
-                }
+                },
+                shield_change.shield_order
             ]
         )?;
 
