@@ -21,7 +21,8 @@ void showLanguageDialog(
   showDialog(
     context: context,
     builder: (context) => SimpleDialog(
-      title: Text(FlutterI18n.translate(context, "settings.change_language")),
+      title: Text(
+          FlutterI18n.translate(context, "settings.general.change_language")),
       children: SettingsService.supportedLanguages.map((locale) {
         return SimpleDialogOption(
           onPressed: () => _changeLanguage(context, locale, onLanguageChanged),

@@ -1,7 +1,7 @@
 /// A class to hold constant values for the app, including asset paths for icons.
 class AppConstants {
   // Main app constants
-  static const String version = '0.9.8';
+  static const String version = '1.0.0-alpha.1';
   static const String appName = "Profit Taker Analytics";
   static const String assets = 'assets/icons';
   static const String databaseName = 'pta_database.db';
@@ -12,9 +12,6 @@ class AppConstants {
 
   static const String storageGreyIcon = '$assets/STORAGE_GREY.svg';
   static const String storageSelectedIcon = '$assets/STORAGE_SELECTED.svg';
-
-  static const String favoritesGreyIcon = '$assets/FAVORITES_GREY.svg';
-  static const String favoritesSelectedIcon = '$assets/FAVORITES_SELECTED.svg';
 
   static const String analyticsGreyIcon = '$assets/ANALYTICS_GREY.svg';
   static const String analyticsSelectedIcon = '$assets/ANALYTICS_SELECTED.svg';

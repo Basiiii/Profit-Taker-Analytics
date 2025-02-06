@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:profit_taker_analyzer/constants/app_constants.dart';
-import 'package:profit_taker_analyzer/widgets/dialogs.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/about_app_dialog.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/contacts_dialog.dart';
 
 /// Builds the "About" section of the settings page in the app.
 ///
@@ -17,30 +18,30 @@ import 'package:profit_taker_analyzer/widgets/dialogs.dart';
 /// and app version.
 SettingsSection buildAboutSection(BuildContext context) {
   return SettingsSection(
-    title: Text(FlutterI18n.translate(context, "settings.about")),
+    title: Text(FlutterI18n.translate(context, "settings.about.title")),
     tiles: [
       SettingsTile(
-        title: Text(FlutterI18n.translate(context, "settings.contact_basi")),
+        title: Text(FlutterI18n.translate(context, "settings.contact.title")),
         leading: const Icon(Icons.contact_page),
-        onPressed: (_) => showContactsAppDialog(
-          context,
-          FlutterI18n.translate(context, "settings.contact_basi"),
-          FlutterI18n.translate(context, "settings.basi_contacts_description"),
-        ),
+        onPressed: (_) => showContactsDialog(
+            context,
+            FlutterI18n.translate(context, "settings.contact.title"),
+            FlutterI18n.translate(
+                context, "settings.contact.basi_contacts_description"),
+            FlutterI18n.translate(context, "common.ok")),
       ),
       SettingsTile(
-        title: Text(FlutterI18n.translate(context, "settings.about_app")),
+        title: Text(FlutterI18n.translate(context, "settings.about.about_app")),
         leading: const Icon(Icons.info),
         onPressed: (_) => showAboutAppDialog(
-          context,
-          FlutterI18n.translate(context, "settings.about_app"),
-          FlutterI18n.translate(context, "settings.about_app_description"),
-        ),
+            context,
+            FlutterI18n.translate(context, "settings.about.about_app"),
+            FlutterI18n.translate(context, "settings.about.description"),
+            FlutterI18n.translate(context, "common.ok")),
       ),
       SettingsTile(
-        title: Text(FlutterI18n.translate(context, "settings.version")),
-        trailing: const Text(AppConstants.version),
-      ),
+          title: Text(FlutterI18n.translate(context, "settings.about.version")),
+          trailing: const Text(AppConstants.version)),
     ],
   );
 }

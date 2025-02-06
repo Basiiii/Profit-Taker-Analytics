@@ -30,6 +30,7 @@ class AppRoot extends StatelessWidget {
           darkTheme: darkTheme,
           themeMode: themeProvider.themeMode, // Use ThemeProvider's themeMode
           debugShowCheckedModeBanner: false,
+          // TODO: move locales into another file (because also used in settings_service.dart)
           supportedLocales: const [
             Locale('en', 'US'), // English
             Locale('pt', 'PT'), // Portuguese
@@ -45,6 +46,7 @@ class AppRoot extends StatelessWidget {
             FlutterI18nDelegate(
               translationLoader: FileTranslationLoader(
                 useCountryCode: false,
+                // TODO: consider moving these into constants? instead of magic strings
                 fallbackFile: 'en', // Fallback language if not available
                 basePath: 'assets/i18n', // Path to the i18n files
               ),

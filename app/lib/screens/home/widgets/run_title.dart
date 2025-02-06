@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/translations.dart';
-import 'package:profit_taker_analyzer/widgets/edit_run_name.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/bugged_run_dialog.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';
-import 'package:profit_taker_analyzer/widgets/dialogs.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:profit_taker_analyzer/utils/text_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:rust_core/rust_core.dart';
 
@@ -45,25 +45,18 @@ class RunTitle extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     // Text parts
-                    titleText(
-                      getRunTitle(
-                          context,
-                          mostRecentRun,
-                          run.isSoloRun,
-                          run.squadMembers
-                              .map((member) => member.memberName)
-                              .toList(),
-                          locale),
-                      20,
-                      FontWeight.w500,
-                    ),
+                    buildSmallTitle(getRunTitle(
+                        context,
+                        mostRecentRun,
+                        run.isSoloRun,
+                        run.squadMembers
+                            .map((member) => member.memberName)
+                            .toList(),
+                        locale)),
                     if (locale.languageCode != 'tr')
-                      titleText(
-                        " ${FlutterI18n.translate(context, "home.named")} ",
-                        20,
-                        FontWeight.w500,
-                      ),
-                    titleText("\"$runName\"", 20, FontWeight.w500),
+                      buildSmallTitle(
+                          " ${FlutterI18n.translate(context, "home.named")} "),
+                    buildSmallTitle("\"$runName\""),
 
                     // Icons placed right after the text within the Wrap
                     IconButton(
@@ -120,8 +113,8 @@ class RunTitle extends StatelessWidget {
       controller,
       FlutterI18n.translate(context, "alerts.name_title"),
       FlutterI18n.translate(context, "alerts.name_title"),
-      FlutterI18n.translate(context, "buttons.cancel"),
-      FlutterI18n.translate(context, "buttons.ok"),
+      FlutterI18n.translate(context, "common.cancel"),
+      FlutterI18n.translate(context, "common.ok"),
       (newName) {
         // Update the run name in DB
         updateRunName(runId: run.runId, newName: newName);
@@ -206,6 +199,7 @@ class RunTitle extends StatelessWidget {
           context,
           isBugged ? "errors.bugged_run_warning" : "errors.aborted_run_warning",
         ),
+        FlutterI18n.translate(context, "common.ok"),
       ),
     );
   }

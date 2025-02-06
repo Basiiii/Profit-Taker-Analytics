@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:profit_taker_analyzer/utils/text_utils.dart';
 import 'package:rust_core/rust_core.dart';
 
-Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
-    TotalTimesModel totalTimes, List<double> bestValues, bool isComparingToPB, bool isBuggedRun, bool isAbortedRun) {
+Widget buildOverviewCard(
+    int index,
+    BuildContext context,
+    double screenWidth,
+    TotalTimesModel totalTimes,
+    List<double> bestValues,
+    bool isComparingToPB,
+    bool isBuggedRun,
+    bool isAbortedRun) {
   double responsiveCardWidth = screenWidth / 6 - 8;
 
   // Fetch card details dynamically
@@ -40,7 +47,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
         color = const Color(0xFFef9b20);
       }
     }
-  } else if ((index == 2 || index == 5) && isBuggedRun)  {
+  } else if ((index == 2 || index == 5) && isBuggedRun) {
     color = Theme.of(context).colorScheme.error;
   }
 
@@ -100,8 +107,8 @@ Widget buildHeader(
 }
 
 /// A helper function to build the content with time value and differences.
-Widget buildContent(
-    BuildContext context, double timeValue, Map<String, dynamic> timeData, Color color) {
+Widget buildContent(BuildContext context, double timeValue,
+    Map<String, dynamic> timeData, Color color) {
   //final themeColor = Theme.of(context).colorScheme.onSurface;
 
   return Padding(

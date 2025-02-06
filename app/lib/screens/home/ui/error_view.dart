@@ -38,8 +38,7 @@ class ErrorView extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () =>
                         context.read<RunNavigationService>().initialize(),
-                    child:
-                        Text(FlutterI18n.translate(context, "buttons.retry")),
+                    child: Text(FlutterI18n.translate(context, "common.retry")),
                   ),
                 ],
               ),

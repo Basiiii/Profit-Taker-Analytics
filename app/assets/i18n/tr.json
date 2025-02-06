@@ -53,35 +53,40 @@
         "start_new_run": "Lütfen başlamak için yeni bir görev başlatın!"
     },
     "settings": {
-        "general": "Genel",
-        "links": "Linkler",
-        "report_bugs": "Hata Raporu",
-        "about": "Hakkında",
-        "theme": "Tema",
-        "language": "Dil",
-        "change_language": "Dili değiştir",
-        "pt_discord": "Profit Taker Discord'u",
-        "github_repo": "Github Deposu",
-        "pt_guide": "Profit Taker Rehberi",
-        "report_bug": "Github'da bir hata rapor et",
-        "contact_basi": "Basi ile iletişime geç",
-        "about_app": "Uygulama Hakkında",
-        "version": "Versiyon",
-        "about_app_description": "Basi tarafından sevgi ile yapıldı.\nEğer bunu okuyorsan, bana Discord'dan bir mango fotoğrafı at.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
-        "key_config": "Kısayol ayarları",
-        "config_up_key": "İleri tuşu",
-        "config_down_key": "Geri tuşu" 
+        "general": {
+            "title": "Genel",
+            "theme": "Tema",
+            "change_language": "Dili değiştir"
+        },
+        "links": {
+            "title": "Bağlantılar",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "GitHub Deposu",
+            "pt_guide": "Profit Taker Kılavuzu",
+            "report_bug": "GitHub'da hata bildir"
+        },
+        "shortcut_config": {
+            "title": "Kısayol Yapılandırması",
+            "config_up_key": "Sonraki Tuşu Ayarla",
+            "config_down_key": "Önceki Tuşu Ayarla"
+        },
+        "contact": {
+            "title": "Basi ile iletişime geç",
+            "basi_contacts_description": "E-posta: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
+        },
+        "about": {
+            "title": "Hakkında",
+            "about_app": "Uygulama hakkında",
+            "version": "Sürüm",
+            "description": "Basi tarafından sevgiyle yapıldı.\nEğer bunu bulduysan, Discord'dan bana bir mango DM at."
+        }
     },
     "storage" : {
         "title": "Depolama alanın",
         "run_name": "Deneme İsmi",
         "run_time": "Deneme Zamanı",
         "date": "Tarih",
-        "edit": "Düzenle",
-        "delete": "Sil",
-        "actions": "Eylemler",
-        "favorite": "Favori"
+        "actions": "Eylemler"
     },
     "analytics" : {
         "title": "Analitiklerin"
@@ -94,15 +99,17 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "Evet",
+        "no": "Hayır",
         "ok": "Tamam",
         "cancel": "İptal",
         "delete": "Sil",
         "download": "İndir",
-        "dont_show_again": "Bir daha gösterme",
-        "yes": "Evet",
-        "no": "Hayır",
-        "retry": "Tekrar deneyin"
+        "retry": "Tekrar deneyin",
+        "edit": "Düzenle",
+        "favorite": "Favori",
+        "dont_show_again": "Bir daha gösterme"
     },
     "alerts": {
         "name_title": "Görevin adını değiştir",

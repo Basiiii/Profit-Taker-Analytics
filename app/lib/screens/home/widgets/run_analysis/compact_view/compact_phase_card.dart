@@ -3,7 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/build_row.dart';
 import 'package:profit_taker_analyzer/services/database/database_maps.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:profit_taker_analyzer/utils/text_utils.dart';
 import 'package:rust_core/rust_core.dart';
 
 Widget buildCompactPhaseCard(
@@ -125,8 +125,7 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                   [
                     if (index == 0)
                       generateTextSpan(
-                        (phase.totalTime)
-                            .toStringAsFixed(3),
+                        (phase.totalTime).toStringAsFixed(3),
                         16,
                         FontWeight.w400,
                         color: Theme.of(context)
@@ -146,9 +145,8 @@ Widget buildCompactCardHeader(PhaseModel phase, BuildContext context, int index,
                       's / ',
                       16,
                       FontWeight.w400,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceContainerHighest,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     // "TOTAL TIME"
                     generateTextSpan(totalTimeUpUntilNow.toStringAsFixed(3), 20,

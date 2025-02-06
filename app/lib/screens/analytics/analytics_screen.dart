@@ -5,16 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:profit_taker_analyzer/constants/app_constants.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
-import 'package:profit_taker_analyzer/main.dart';
+// import 'package:profit_taker_analyzer/main.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_data.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_widgets.dart';
 // import 'package:profit_taker_analyzer/services/last_runs.dart';
-import 'package:profit_taker_analyzer/theme/theme_provider.dart';
+// import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:profit_taker_analyzer/utils/screenshot.dart';
-import 'package:profit_taker_analyzer/utils/utils.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
-import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
+// import 'package:profit_taker_analyzer/utils/utils.dart';
+import 'package:profit_taker_analyzer/utils/text_utils.dart';
+import 'package:profit_taker_analyzer/widgets/ui/theme_switcher.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -182,7 +183,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     if (details.pointIndex != null) {
       final int tappedPointIndex = details.pointIndex!;
       final RunData tappedRunData = data[tappedPointIndex];
-      final String tappedFileName = tappedRunData.fileName;
+      // final String tappedFileName = tappedRunData.fileName;
       final String tappedRunName = tappedRunData.runName;
 
       showDialog(
@@ -195,7 +196,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                child: Text(FlutterI18n.translate(context, "buttons.yes")),
+                child: Text(FlutterI18n.translate(context, "common.yes")),
                 onPressed: () {
                   Navigator.of(context).pop();
                   // TODO: this was removed, check it
@@ -207,7 +208,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 },
               ),
               TextButton(
-                child: Text(FlutterI18n.translate(context, "buttons.no")),
+                child: Text(FlutterI18n.translate(context, "common.no")),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -225,7 +226,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             content: Text(FlutterI18n.translate(context, "errors.unexpected")),
             actions: <Widget>[
               TextButton(
-                child: Text(FlutterI18n.translate(context, "buttons.ok")),
+                child: Text(FlutterI18n.translate(context, "common.ok")),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -369,7 +370,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    titleText('Profit Taker Analytics', 32, FontWeight.bold),
+                    buildTitle(AppConstants.appName),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -401,8 +402,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     ),
                   ],
                 ),
-                titleText(FlutterI18n.translate(context, "analytics.title"), 24,
-                    FontWeight.normal),
+                buildSubtitle(
+                    FlutterI18n.translate(context, "analytics.title")),
                 const SizedBox(height: 15),
                 Screenshot(
                   controller: screenshotController,

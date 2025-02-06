@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
+import 'package:profit_taker_analyzer/utils/text_utils.dart';
 import 'package:rust_core/rust_core.dart';
 
 /// Builds and returns a compact card widget for displaying overview information.
-Widget buildCompactOverviewCard(int index, BuildContext context,
-    double screenWidth, TotalTimesModel totalTimes, bool isBuggedRun, bool isAbortedRun) {
+Widget buildCompactOverviewCard(
+    int index,
+    BuildContext context,
+    double screenWidth,
+    TotalTimesModel totalTimes,
+    bool isBuggedRun,
+    bool isAbortedRun) {
   // Keep width calculation consistent
   double responsiveCardWidth =
       screenWidth / 6 - 8; // This remains the same as the old code
@@ -40,8 +45,7 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
         color = const Color(0xFFef9b20);
       }
     }
-
-  } else if ((index == 2 || index == 5) && isBuggedRun)  {
+  } else if ((index == 2 || index == 5) && isBuggedRun) {
     color = Theme.of(context).colorScheme.error;
   }
 

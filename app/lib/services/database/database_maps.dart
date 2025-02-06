@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/models/leg_break.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 import 'package:rust_core/rust_core.dart';
 
@@ -91,4 +90,12 @@ IconData getLegPositionIcon(LegPositionEnum legPosition) {
   };
 
   return legPositionIcons[legPosition] ?? Icons.help_outline;
+}
+
+// TODO: document
+enum LegPosition {
+  frontLeft,
+  frontRight,
+  backRight,
+  backLeft,
 }
