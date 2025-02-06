@@ -19,7 +19,7 @@ class CompactRunAnalysis extends StatelessWidget {
       ...List.generate(
           6,
           (index) => buildCompactOverviewCard(
-              index, context, screenWidth, runData.totalTimes)),
+              index, context, screenWidth, runData.totalTimes, runData.isBuggedRun, runData.isAbortedRun)),
       ...List.generate(
           4,
           (index) => buildCompactPhaseCard(index, context, screenWidth,

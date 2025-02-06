@@ -5,7 +5,7 @@ import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
 import 'package:rust_core/rust_core.dart';
 
 Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
-    TotalTimesModel totalTimes, List<double> bestValues, bool isComparingToPB) {
+    TotalTimesModel totalTimes, List<double> bestValues, bool isComparingToPB, bool isBuggedRun, bool isAbortedRun) {
   double responsiveCardWidth = screenWidth / 6 - 8;
 
   // Fetch card details dynamically
@@ -14,6 +14,31 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
   // Calculate time differences
   final timeDifferenceData = calculateTimeDifference(
       cardDetails.timeValue, bestValues[index], isComparingToPB);
+
+  // Determine the color for the time value based on thresholds
+  Color color = Theme.of(context).colorScheme.onSurface;
+
+  if (index == 0) {
+    double timeValue = cardDetails.timeValue;
+
+    if (isAbortedRun == false) {
+      if (timeValue < 50.000) {
+        color = const Color(0xFFFB1D7A);
+      } else if (timeValue < 52.000) {
+        color = const Color(0xFFb33dc6);
+      } else if (timeValue < 60.000) {
+        color = const Color(0xFF27aeef);
+      } else if (timeValue < 80.000) {
+        color = const Color(0xFFbdcf32);
+      } else if (timeValue < 120.000) {
+        color = const Color(0xFF35967D);
+      } else if (timeValue > 120.000) {
+        color = const Color(0xFFef9b20);
+      }
+    }
+  } else if ((index == 2 || index == 4 || index == 5) && isBuggedRun)  {
+    color = Theme.of(context).colorScheme.error;
+  }
 
   return Container(
     width: screenWidth < LayoutConstants.minimumResponsiveWidth
@@ -29,7 +54,7 @@ Widget buildOverviewCard(int index, BuildContext context, double screenWidth,
       children: <Widget>[
         buildHeader(
             context, cardDetails.color, cardDetails.icon, cardDetails.titleKey),
-        buildContent(context, cardDetails.timeValue, timeDifferenceData),
+        buildContent(context, cardDetails.timeValue, timeDifferenceData, color),
       ],
     ),
   );
@@ -72,7 +97,7 @@ Widget buildHeader(
 
 /// A helper function to build the content with time value and differences.
 Widget buildContent(
-    BuildContext context, double timeValue, Map<String, dynamic> timeData) {
+    BuildContext context, double timeValue, Map<String, dynamic> timeData, Color color) {
   final themeColor = Theme.of(context).colorScheme.onSurface;
 
   return Padding(
@@ -85,8 +110,8 @@ Widget buildContent(
         children: <Widget>[
           generateRichText(context, [
             generateTextSpan(timeValue.toStringAsFixed(3), 32, FontWeight.w600,
-                color: themeColor),
-            generateTextSpan('s ', 20, FontWeight.w400, color: themeColor),
+                color: color),
+            generateTextSpan('s ', 20, FontWeight.w400, color: color),
           ]),
           Row(
             children: [
