@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:profit_taker_analyzer/constants/app_constants.dart';
+import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 
 /// Checks if app is the latest version.
 ///

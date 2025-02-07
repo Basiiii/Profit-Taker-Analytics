@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:profit_taker_analyzer/constants/screenshot_constants.dart';
+import 'package:profit_taker_analyzer/constants/features/screenshot_constants.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 

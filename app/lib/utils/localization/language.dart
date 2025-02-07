@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/constants/localization_constants.dart';
-import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
+import 'package:profit_taker_analyzer/constants/localization/localization_constants.dart';
+import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A model class for managing the application's locale.

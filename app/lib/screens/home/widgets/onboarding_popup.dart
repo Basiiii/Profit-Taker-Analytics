@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
+import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPopup extends StatefulWidget {

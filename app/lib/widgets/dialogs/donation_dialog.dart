@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/constants/app_links.dart';
+import 'package:profit_taker_analyzer/constants/app/app_links.dart';
 import 'package:profit_taker_analyzer/utils/network/url_utils.dart';
 
 /// Displays a dialog with information about donating to Basi.

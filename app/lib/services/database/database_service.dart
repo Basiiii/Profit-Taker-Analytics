@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:profit_taker_analyzer/constants/app_constants.dart';
+import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:path/path.dart' as p;
 

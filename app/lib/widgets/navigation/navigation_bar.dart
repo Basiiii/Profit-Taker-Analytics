@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:profit_taker_analyzer/constants/app_constants.dart';
+import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 
 /// A custom navigation bar widget used on the left side of the application.
 ///

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
+import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';

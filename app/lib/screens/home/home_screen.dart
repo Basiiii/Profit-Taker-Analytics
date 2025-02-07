@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
+import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/no_runs_available.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/error_view.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/home_content.dart';

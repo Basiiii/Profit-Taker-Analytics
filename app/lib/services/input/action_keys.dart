@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:profit_taker_analyzer/constants/action_key_constants.dart';
+import 'package:profit_taker_analyzer/constants/actions/action_key_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A class to manage action keys for navigation.

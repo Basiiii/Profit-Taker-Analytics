@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
-import 'package:profit_taker_analyzer/constants/app_links.dart';
+import 'package:profit_taker_analyzer/constants/app/app_links.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 import 'package:profit_taker_analyzer/utils/network/url_utils.dart';
 
