@@ -1,10 +1,12 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
 //use lib_profit_taker_database::queries::insert_run::insert_run;
+use chrono::DateTime;
+use lib_profit_taker_database::queries::insert_run::insert_run;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::fs::File;
-use lib_profit_taker_database::queries::insert_run::insert_run;
 
+/// Phase struct to hold the data from the json file, in the same format as the json file
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Phase {
     phase_time: f64,
@@ -18,6 +20,7 @@ struct Phase {
     pylon_time: Option<f64>,
 }
 
+/// RunData struct to hold the data from the json file, in the same format as the json file
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct RunData {
     total_duration: f64,
@@ -41,7 +44,22 @@ struct RunData {
     phase_4: Phase,
 }
 
+/// Function to initialize the converter, which reads all files in the storage folder and converts them to the database
+///
+/// # Example
+///
+/// ```
+/// use lib_profit_taker_core::utils::json_to_db::initialize_converter;
+/// initialize_converter();
+/// ```
+///
+/// This will read all files in the storage folder and convert them to the database
+///
+/// # Panics
+///
+/// This function will panic if it can't read the storage folder
 pub fn initialize_converter() {
+    //TODO: pass path as argument
     let path = String::from("./src/storage");
     let entries = fs::read_dir(&path).expect("read_dir call failed");
     for entry in entries {
@@ -49,6 +67,27 @@ pub fn initialize_converter() {
     }
 }
 
+/// Function to deserialize the json file and insert it into the database
+///
+/// # Arguments
+///
+/// * `entry` - A Result of a DirEntry, which is the file to be deserialized
+///
+/// # Panics
+///
+/// This function will panic if it
+/// * can't find the path
+/// * can't open the file
+/// * can't parse the json
+///
+/// # Example
+///
+/// ```
+/// use std::fs;
+/// use lib_profit_taker_core::utils::json_to_db::deserialize_json;
+/// let path = fs::read_dir("./src/storage").expect("read_dir call failed").next().unwrap();
+/// deserialize_json(path);
+/// ```
 fn deserialize_json(entry: Result<fs::DirEntry, std::io::Error>) {
     let mut run = Run::new();
     let path = entry.expect("couldnt find path").path();
@@ -61,13 +100,33 @@ fn deserialize_json(entry: Result<fs::DirEntry, std::io::Error>) {
     }
 }
 
+/// Function to sort the run data from the json file into the Run struct
+///
+/// # Arguments
+///
+/// * `run` - A mutable reference to the Run struct to be filled
+/// * `run_json` - A reference to the RunData struct to be used to fill the Run struct
+///
+/// # Example
+///
+/// ```
+/// use lib_profit_taker_core::{Run, SquadMember};
+/// use lib_profit_taker_core::utils::json_to_db::sort_run_data;
+/// use lib_profit_taker_core::utils::json_to_db::RunData;
+/// let mut run = Run::new();
+/// let run_json = RunData::new(); // deserialize into this, RunData doesn't actually have a `new` function for obvious reasons
+/// sort_run_data(&mut run, &run_json);
+/// ```
+///
+/// This will fill the Run struct with the data from the RunData struct
 fn sort_run_data(run: &mut Run, run_json: &RunData) {
     // insert basic run metadata
-    //TODO run.time_stamp = run_json.time_stamp;
+    run.time_stamp = get_run_timestamp(run_json);
     run.is_bugged_run = run_json.bugged_run;
     run.is_aborted_run = run_json.aborted_run;
     run.player_name = run_json.nickname.clone();
     for member in run_json.squad_members.clone() {
+        // old parser added the player name to the squad members
         if member != run.player_name {
             run.squad_members.push(SquadMember::new(member));
         }
@@ -92,6 +151,32 @@ fn sort_run_data(run: &mut Run, run_json: &RunData) {
     }
 }
 
+/// Function to get the run's UNIX timestamp from the json file
+///
+/// # Arguments
+///
+/// * `run_json` - A reference to the RunData struct deserialized from the json file to be used to get the timestamp
+///
+/// # Returns
+///
+/// * `i64` - The timestamp of the run in UNIX format
+fn get_run_timestamp(run_json: &RunData) -> i64 {
+    // parse rf3339 timestamp to DateTime object
+    let chrono_timestamp =
+        DateTime::parse_from_rfc3339(&run_json.time_stamp)
+            .expect("Failed to parse timestamp");
+
+    // return timestamp as UNIX timestamp
+    chrono_timestamp.timestamp()
+}
+
+
+/// Function to sort the total times from the json file into the Run struct
+/// 
+/// # Arguments
+/// 
+/// * `run` - A mutable reference to the Run struct to be filled
+/// * `run_json` - A reference to the RunData struct to be used to fill the Run struct
 fn sort_total_times(run: &mut Run, run_json: &RunData) {
     run.total_times.total_flight_time = run_json.flight_duration;
     run.total_times.total_time = run_json.total_duration;
@@ -101,6 +186,13 @@ fn sort_total_times(run: &mut Run, run_json: &RunData) {
     run.total_times.total_pylon_time = run_json.total_pylon;
 }
 
+/// Function to sort the phase data from the json file into the Run struct
+/// 
+/// # Arguments
+/// 
+/// * `run` - A mutable reference to the Run struct to be filled
+/// * `phase` - A reference to the Phase struct to be used to fill the Run struct
+/// * `phase_nr` - An i32 representing the phase number
 fn sort_phase(run: &mut Run, phase: Phase, phase_nr: i32) {
     let mut current_phase = lib_profit_taker_core::Phase::new(phase_nr);
     current_phase.total_shield_time = phase.total_shield.unwrap_or_default();
@@ -137,6 +229,12 @@ fn sort_phase(run: &mut Run, phase: Phase, phase_nr: i32) {
     run.phases.push(current_phase);
 }
 
+/// Function to sort the shield changes from the json file into the Phase struct
+/// 
+/// # Arguments
+/// 
+/// * `current_phase` - A mutable reference to the Phase struct to be filled
+/// * `json_phase` - A reference to the Phase struct to be used to fill the Phase struct
 fn sort_shields(current_phase: &mut lib_profit_taker_core::Phase, json_phase: Phase) {
     let shield_change_times = json_phase.shield_change_times.unwrap_or_default();
     let shield_change_types = json_phase.shield_change_types.unwrap_or_default();
@@ -149,6 +247,25 @@ fn sort_shields(current_phase: &mut lib_profit_taker_core::Phase, json_phase: Ph
         ));
     }
 }
+
+/// Function to convert the status effect from the json file to the StatusEffect enum
+/// 
+/// # Arguments
+/// 
+/// * `name` - A string representing the status effect to be converted
+/// 
+/// # Returns
+/// 
+/// * `StatusEffect` - The converted status effect
+/// 
+/// # Example
+/// 
+/// ```
+/// use lib_profit_taker_core::utils::json_to_db::status_from_json;
+/// let status = status_from_json("Impact");
+/// 
+/// assert_eq!(status, lib_profit_taker_core::StatusEffect::Impact);
+/// ```
 fn status_from_json(name: &str) -> StatusEffect {
     match name {
         "Impact" => StatusEffect::Impact,
@@ -167,6 +284,13 @@ fn status_from_json(name: &str) -> StatusEffect {
         _ => panic!("Unknown status effect: {}", name),
     }
 }
+
+/// Function to sort the leg breaks from the json file into the Phase struct
+/// 
+/// # Arguments
+/// 
+/// * `current_phase` - A mutable reference to the Phase struct to be filled
+/// * `json_phase` - A reference to the Phase struct to be used to fill the Phase struct
 fn sort_legs(current_phase: &mut lib_profit_taker_core::Phase, json_phase: Phase) {
     let leg_break_times = json_phase.leg_break_times;
     let leg_break_order = json_phase.leg_break_order;
@@ -181,6 +305,25 @@ fn sort_legs(current_phase: &mut lib_profit_taker_core::Phase, json_phase: Phase
     }
 }
 
+/// Function to convert the leg position from the json file to the LegPosition enum.
+/// Flips the leg position to reflect the correct position from the player's perspective
+/// 
+/// # Arguments
+/// 
+/// * `name` - A string representing the leg position to be converted
+/// 
+/// # Returns
+/// 
+/// * `LegPosition` - The converted leg position to the LegPosition enum
+/// 
+/// # Example
+/// 
+/// ```
+/// use lib_profit_taker_core::utils::json_to_db::leg_position_from_json;
+/// let leg_position = leg_position_from_json("FR");
+/// 
+/// assert_eq!(leg_position, lib_profit_taker_core::LegPosition::FrontLeft);
+/// ```
 fn leg_position_from_json(name: &str) -> LegPosition {
     match name {
         "FR" => LegPosition::FrontLeft,
