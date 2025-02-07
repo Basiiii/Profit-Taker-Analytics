@@ -155,5 +155,17 @@
     "copy_run_text": {
         "success": "Metin panoya başarıyla kopyalandı",
         "error": "Metin panoya kopyalanırken hata oluştu"
+    },
+    "mark_favorite": {
+        "success": "Görev başarıyla favorilere eklendi.",
+        "error": "Görev favorilere eklenirken hata oluştu."
+    },
+    "remove_favorite": {
+        "success": "Görev favorilerden başarıyla kaldırıldı.",
+        "error": "Görev favorilerden kaldırılırken hata oluştu."
+    },
+    "delete_run": {
+        "success": "Görev başarıyla silindi.",
+        "error": "Görev silinirken hata oluştu."
     }
 }

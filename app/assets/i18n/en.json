@@ -155,5 +155,17 @@
     "copy_run_text": {
         "success": "Text copied to clipboard successfully",
         "error": "Failed to copy text to clipboard"
+    },
+    "mark_favorite": {
+        "success": "Successfully marked run as favorite.",
+        "error": "Error marking run as favorite."
+    },
+    "remove_favorite": {
+        "success": "Successfully removed run from favorites.",
+        "error": "Error removing run from favorites."
+    },
+    "delete_run": {
+        "success": "Successfully deleted run.",
+        "error": "Error deleting run."
     }
 }

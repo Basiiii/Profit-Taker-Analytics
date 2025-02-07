@@ -155,5 +155,17 @@
     "copy_run_text": {
         "success": "文本已成功复制到剪贴板",
         "error": "无法将文本复制到剪贴板"
+    },
+    "mark_favorite": {
+        "success": "成功将任务标记为收藏。",
+        "error": "标记任务为收藏时出错。"
+    },
+    "remove_favorite": {
+        "success": "成功将任务从收藏中移除。",
+        "error": "从收藏中移除任务时出错。"
+    },
+    "delete_run": {
+        "success": "成功删除任务。",
+        "error": "删除任务时出错。"
     }
 }

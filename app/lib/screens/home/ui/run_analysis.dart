@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/phase_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/build_overview_card.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/build_phase_card.dart';
 import 'package:rust_core/rust_core.dart';
 
-class StandardRunAnalysis extends StatelessWidget {
+class RunAnalysis extends StatelessWidget {
   final RunModel runData;
+  final bool isCompact;
 
-  const StandardRunAnalysis({super.key, required this.runData});
+  const RunAnalysis(
+      {super.key, required this.runData, required this.isCompact});
 
   Future<Map<String, dynamic>> fetchComparisonTimes() async {
     bool isPb = isRunPb(runId: runData.runId);
@@ -60,14 +62,12 @@ class StandardRunAnalysis extends StatelessWidget {
             ...List.generate(
                 6,
                 (index) => buildOverviewCard(
-                    index,
-                    context,
-                    screenWidth,
-                    runData.totalTimes,
-                    bestValues,
-                    isComparingToPB,
-                    runData.isBuggedRun,
-                    runData.isAbortedRun)),
+                    index, context, screenWidth, runData.totalTimes,
+                    isCompact: isCompact,
+                    bestValues: bestValues,
+                    isComparingToPB: isComparingToPB,
+                    isBuggedRun: runData.isBuggedRun,
+                    isAbortedRun: runData.isAbortedRun)),
             ...List.generate(
                 4,
                 (index) => buildPhaseCard(
@@ -76,7 +76,8 @@ class StandardRunAnalysis extends StatelessWidget {
                     screenWidth,
                     runData.phases,
                     runData.isBuggedRun,
-                    runData.totalTimes.totalFlightTime)),
+                    runData.totalTimes.totalFlightTime,
+                    isCompact)),
           ],
         );
       },

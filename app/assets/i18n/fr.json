@@ -155,5 +155,17 @@
     "copy_run_text": {
         "success": "Texte copié dans le presse-papiers avec succès",
         "error": "Échec de la copie du texte dans le presse-papiers"
+    },
+    "mark_favorite": {
+        "success": "Mission marquée comme favorite avec succès.",
+        "error": "Erreur lors de la mise en favori de la mission."
+    },
+    "remove_favorite": {
+        "success": "Mission retirée des favoris avec succès.",
+        "error": "Erreur lors de la suppression de la mission des favoris."
+    },
+    "delete_run": {
+        "success": "Mission supprimée avec succès.",
+        "error": "Erreur lors de la suppression de la mission."
     }
 }
