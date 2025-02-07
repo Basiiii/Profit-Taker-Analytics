@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
+    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 
@@ -44,6 +44,7 @@ pub struct PhaseModel {
 pub struct ShieldChangeModel {
     pub shield_time: f64,
     pub status_effect: StatusEffectEnum,
+    pub shield_order: i32,
 }
 
 #[flutter_rust_bridge::frb]
@@ -196,6 +197,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                         ShieldChangeModel {
                             shield_time: sc.shield_time,
                             status_effect,
+                            shield_order: sc.shield_order,
                         }
                     }).collect::<Vec<_>>();
 
@@ -238,6 +240,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                         vec![ShieldChangeModel {
                             shield_time: 0.0,
                             status_effect: StatusEffectEnum::NoShield,
+                            shield_order: 0,
                         }]
                     } else {
                         Vec::new()
@@ -271,6 +274,7 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
                     phase.shield_changes.push(ShieldChangeModel {
                         shield_time: 0.0,
                         status_effect: StatusEffectEnum::NoShield,
+                        shield_order: 0,
                     });
                 }
 
@@ -654,6 +658,7 @@ pub fn get_pretty_printed_run(run_model: RunModel) -> String {
                     StatusEffectEnum::Corrosive => StatusEffect::Corrosive,
                     StatusEffectEnum::NoShield => StatusEffect::NoShield,
                 },
+                shield_order: shield.shield_order, 
             }).collect(),
             leg_breaks: phase.leg_breaks.into_iter().map(|leg| LegBreak {
                 leg_break_time: leg.leg_break_time,
@@ -738,4 +743,62 @@ pub fn get_second_best_times() -> Option<RunTimesResponse> {
         }),
         _ => None, // Return `None` on error or if no second-best run exists
     }
+}
+
+#[flutter_rust_bridge::frb]
+pub struct RunListItemModel {
+    pub id: i32,
+    pub name: String,
+    pub date: i64,
+    pub duration: f64,
+    pub is_bugged: bool,
+    pub is_aborted: bool,
+    pub is_favorite: bool,
+}
+
+#[flutter_rust_bridge::frb]
+pub struct PaginationRequest {
+    pub page: i32,
+    pub page_size: i32,
+    pub sort_column: String,
+    pub sort_ascending: bool,
+}
+
+#[flutter_rust_bridge::frb]
+pub struct PaginatedRunsResponse {
+    pub runs: Vec<RunListItemModel>,
+    pub total_count: i32,
+}
+
+#[flutter_rust_bridge::frb]
+pub fn get_paginated_runs(
+    page: i32,
+    page_size: i32,
+    sort_column: String,
+    sort_ascending: bool,
+) -> Result<PaginatedRunsResponse, String> {
+    // Call the query function to get paginated runs, handling errors and converting them to String
+    let (runs, total_count) = fetch_paginated_runs_query(page, page_size, &sort_column, sort_ascending)
+        .map_err(|e| e.to_string())?;  // Convert the rusqlite error to String
+
+    // Convert each `Run` to `RunListItemModel`
+    let runs_model: Vec<RunListItemModel> = runs.into_iter().map(|run| {
+        RunListItemModel {
+            id: run.run_id,
+            name: run.run_name,
+            date: run.time_stamp,
+            duration: run.total_times.total_time,
+            is_bugged: run.is_bugged_run,
+            is_aborted: run.is_aborted_run,
+            is_favorite: false,
+        }
+    }).collect();
+
+    // Construct the response with the fetched runs and total count
+    let response = PaginatedRunsResponse {
+        runs: runs_model,
+        total_count,
+    };
+
+    Ok(response)
 }

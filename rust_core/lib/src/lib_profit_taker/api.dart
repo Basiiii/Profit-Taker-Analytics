@@ -6,6 +6,7 @@
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These types are ignored because they are not used by any `pub` functions: `PaginationRequest`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`, `fmt`, `hash`
 
 /// Initializes the database by checking if the database file exists.
@@ -276,6 +277,17 @@ Future<RunTimesResponse?> getPbTimes() =>
 Future<RunTimesResponse?> getSecondBestTimes() =>
     RustLib.instance.api.crateApiGetSecondBestTimes();
 
+Future<PaginatedRunsResponse> getPaginatedRuns(
+        {required int page,
+        required int pageSize,
+        required String sortColumn,
+        required bool sortAscending}) =>
+    RustLib.instance.api.crateApiGetPaginatedRuns(
+        page: page,
+        pageSize: pageSize,
+        sortColumn: sortColumn,
+        sortAscending: sortAscending);
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;
@@ -354,6 +366,27 @@ enum LegPositionEnum {
   ;
 }
 
+class PaginatedRunsResponse {
+  final List<RunListItemModel> runs;
+  final int totalCount;
+
+  const PaginatedRunsResponse({
+    required this.runs,
+    required this.totalCount,
+  });
+
+  @override
+  int get hashCode => runs.hashCode ^ totalCount.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaginatedRunsResponse &&
+          runtimeType == other.runtimeType &&
+          runs == other.runs &&
+          totalCount == other.totalCount;
+}
+
 class PhaseModel {
   final int phaseNumber;
   final double totalTime;
@@ -399,6 +432,49 @@ class PhaseModel {
           totalPylonTime == other.totalPylonTime &&
           shieldChanges == other.shieldChanges &&
           legBreaks == other.legBreaks;
+}
+
+class RunListItemModel {
+  final int id;
+  final String name;
+  final PlatformInt64 date;
+  final double duration;
+  final bool isBugged;
+  final bool isAborted;
+  final bool isFavorite;
+
+  const RunListItemModel({
+    required this.id,
+    required this.name,
+    required this.date,
+    required this.duration,
+    required this.isBugged,
+    required this.isAborted,
+    required this.isFavorite,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      date.hashCode ^
+      duration.hashCode ^
+      isBugged.hashCode ^
+      isAborted.hashCode ^
+      isFavorite.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RunListItemModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          date == other.date &&
+          duration == other.duration &&
+          isBugged == other.isBugged &&
+          isAborted == other.isAborted &&
+          isFavorite == other.isFavorite;
 }
 
 class RunModel {
@@ -499,14 +575,17 @@ class RunTimesResponse {
 class ShieldChangeModel {
   final double shieldTime;
   final StatusEffectEnum statusEffect;
+  final int shieldOrder;
 
   const ShieldChangeModel({
     required this.shieldTime,
     required this.statusEffect,
+    required this.shieldOrder,
   });
 
   @override
-  int get hashCode => shieldTime.hashCode ^ statusEffect.hashCode;
+  int get hashCode =>
+      shieldTime.hashCode ^ statusEffect.hashCode ^ shieldOrder.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -514,7 +593,8 @@ class ShieldChangeModel {
       other is ShieldChangeModel &&
           runtimeType == other.runtimeType &&
           shieldTime == other.shieldTime &&
-          statusEffect == other.statusEffect;
+          statusEffect == other.statusEffect &&
+          shieldOrder == other.shieldOrder;
 }
 
 class SquadMemberModel {

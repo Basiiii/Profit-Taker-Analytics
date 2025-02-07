@@ -172,7 +172,8 @@ pub(crate) fn shield_change_from_line(line: &str, parser_state: &mut ParserState
     
     // calculate the time since the last shield change / other event if start of shield phase
     let time = time_from_line(line) - parser_state.previous_time;
-    let shield_change = ShieldChange::new(time, parser_state.previous_shield);
+    parser_state.shield_order += 1;
+    let shield_change = ShieldChange::new(time, parser_state.previous_shield, parser_state.shield_order);
     parser_state.previous_time = time_from_line(line);
     if !line.contains(SHIELD_PHASE_ENDING) {
         parser_state.previous_shield = status_from_line(line);

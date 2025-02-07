@@ -50,7 +50,9 @@ class AppRoot extends StatelessWidget {
               ),
             ),
           ],
-          home: const AppLayout(),
+          home: AppLayout(
+            key: AppLayout.globalKey,
+          ),
         );
       },
     );

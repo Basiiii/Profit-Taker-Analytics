@@ -80,7 +80,8 @@
         "date": "Date",
         "edit": "Edit",
         "delete": "Delete",
-        "actions": "Actions"
+        "actions": "Actions",
+        "favorite": "Favorite"
     },
     "analytics" : {
         "title": "Your analytics"
@@ -106,7 +107,7 @@
     "alerts": {
         "name_title": "Change run name",
         "delete_title": "Confirm Deletion",
-        "confirm_delete": "Are you sure you want to delete the selected run(s)?"
+        "delete_message": "Are you sure you want to delete this run?"
     },
     "donate": {
         "button": "Donate",

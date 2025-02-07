@@ -64,6 +64,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<RunListItemModel> dco_decode_list_run_list_item_model(dynamic raw);
+
+  @protected
   List<ShieldChangeModel> dco_decode_list_shield_change_model(dynamic raw);
 
   @protected
@@ -79,7 +82,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RunTimesResponse? dco_decode_opt_box_autoadd_run_times_response(dynamic raw);
 
   @protected
+  PaginatedRunsResponse dco_decode_paginated_runs_response(dynamic raw);
+
+  @protected
   PhaseModel dco_decode_phase_model(dynamic raw);
+
+  @protected
+  RunListItemModel dco_decode_run_list_item_model(dynamic raw);
 
   @protected
   RunModel dco_decode_run_model(dynamic raw);
@@ -154,6 +163,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<RunListItemModel> sse_decode_list_run_list_item_model(
+      SseDeserializer deserializer);
+
+  @protected
   List<ShieldChangeModel> sse_decode_list_shield_change_model(
       SseDeserializer deserializer);
 
@@ -172,7 +185,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  PaginatedRunsResponse sse_decode_paginated_runs_response(
+      SseDeserializer deserializer);
+
+  @protected
   PhaseModel sse_decode_phase_model(SseDeserializer deserializer);
+
+  @protected
+  RunListItemModel sse_decode_run_list_item_model(SseDeserializer deserializer);
 
   @protected
   RunModel sse_decode_run_model(SseDeserializer deserializer);
@@ -253,6 +273,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_run_list_item_model(
+      List<RunListItemModel> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_shield_change_model(
       List<ShieldChangeModel> self, SseSerializer serializer);
 
@@ -271,7 +295,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       RunTimesResponse? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_paginated_runs_response(
+      PaginatedRunsResponse self, SseSerializer serializer);
+
+  @protected
   void sse_encode_phase_model(PhaseModel self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_run_list_item_model(
+      RunListItemModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_run_model(RunModel self, SseSerializer serializer);

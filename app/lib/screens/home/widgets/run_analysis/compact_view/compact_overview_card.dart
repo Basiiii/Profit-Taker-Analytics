@@ -7,7 +7,7 @@ import 'package:rust_core/rust_core.dart';
 
 /// Builds and returns a compact card widget for displaying overview information.
 Widget buildCompactOverviewCard(int index, BuildContext context,
-    double screenWidth, TotalTimesModel totalTimes) {
+    double screenWidth, TotalTimesModel totalTimes, bool isBuggedRun, bool isAbortedRun) {
   // Keep width calculation consistent
   double responsiveCardWidth =
       screenWidth / 6 - 8; // This remains the same as the old code
@@ -21,18 +21,27 @@ Widget buildCompactOverviewCard(int index, BuildContext context,
   if (index == 0) {
     double timeValue = cardDetails.timeValue;
 
-    if (timeValue < 52.000) {
-      color = const Color(0xFFb33dc6);
-    } else if (timeValue < 60.000) {
-      color = const Color(0xFF27aeef);
-    } else if (timeValue < 80.000) {
-      color = const Color(0xFFbdcf32);
-    } else if (timeValue < 120.000) {
-      color = const Color(0xFF35967D);
-    } else if (timeValue > 120.000) {
-      color = const Color(0xFFef9b20);
+    if (isAbortedRun == false) {
+      if (timeValue < 49.000) {
+        color = const Color(0xFFFD2881);
+      } else if (timeValue < 50.000) {
+        color = const Color(0xFFC144D5);
+      } else if (timeValue < 52.000) {
+        color = const Color(0xFF9D5DF5);
+      } else if (timeValue < 60.000) {
+        color = const Color(0xFF27aeef);
+      } else if (timeValue < 80.000) {
+        color = const Color(0xFF35967D);
+      } else if (timeValue < 120.000) {
+        color = const Color(0xFF6fc144);
+      } else if (timeValue < 180.000) {
+        color = const Color(0xFFbdcf32);
+      } else if (timeValue > 180.000) {
+        color = const Color(0xFFef9b20);
+      }
     }
-  } else if (index == 2 || index == 4 || index == 5) {
+
+  } else if ((index == 2 || index == 5) && isBuggedRun)  {
     color = Theme.of(context).colorScheme.error;
   }
 
