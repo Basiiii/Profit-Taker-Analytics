@@ -4,10 +4,22 @@ import 'package:profit_taker_analyzer/screens/analytics/ui/graph_widget.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:screenshot/screenshot.dart';
 
+/// A widget that represents the main content of the analytics screen.
+///
+/// This widget includes average time cards and a graph to display analytics data.
+/// It uses a [ScreenshotController] to capture screenshots of the content and
+/// passes the relevant data (average times and run times) to the child widgets.
 class AnalyticsMainContent extends StatelessWidget {
+  /// The width of the screen to adjust content layout.
   final double screenWidth;
+
+  /// The controller used for capturing screenshots.
   final ScreenshotController screenshotController;
+
+  /// The average time data for analytics.
   final TimeTypeModel? averageTimes;
+
+  /// The list of run times to display in the graph.
   final List<AnalyticsRunTotalTimesModel> runTimes;
 
   const AnalyticsMainContent({

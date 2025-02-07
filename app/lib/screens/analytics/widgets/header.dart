@@ -5,8 +5,16 @@ import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
 import 'package:screenshot/screenshot.dart';
 
+/// A widget representing the header of the analytics screen.
+///
+/// The header contains the application title and actions like taking a screenshot
+/// and refreshing the average data. The screenshot is captured using the
+/// [ScreenshotController] passed as a parameter.
 class AnalyticsHeader extends StatelessWidget {
+  /// The controller used for capturing screenshots.
   final ScreenshotController screenshotController;
+
+  /// A callback function to fetch the average data when triggered.
   final VoidCallback fetchAverageData;
 
   const AnalyticsHeader({

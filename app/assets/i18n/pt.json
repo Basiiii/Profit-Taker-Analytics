@@ -89,7 +89,9 @@
         "actions": "Ações"
     },
     "analytics" : {
-        "title": "Dados das tuas missões"
+        "title": "Dados das tuas missões",
+        "no_data": "Não existem dados disponíveis",
+        "run_times": "Tempos de missão"
     },
     "languages": {
         "en": "English",

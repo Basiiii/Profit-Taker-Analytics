@@ -177,7 +177,9 @@ class GraphWidget extends StatelessWidget {
                   primaryYAxis: const NumericAxis(
                     labelFormat: '{value}s',
                   ),
-                  title: const ChartTitle(text: 'Run Times'),
+                  title: ChartTitle(
+                      text: FlutterI18n.translate(
+                          context, "analytics.run_times")),
                   legend: const Legend(isVisible: true),
                   zoomPanBehavior: ZoomPanBehavior(
                     enablePinching: true, // Allows pinch zoom
@@ -190,9 +192,9 @@ class GraphWidget extends StatelessWidget {
                 ),
               ),
               if (runInfo.isEmpty)
-                const Center(
+                Center(
                   child: Text(
-                    'No data available',
+                    FlutterI18n.translate(context, "analytics.no_data"),
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

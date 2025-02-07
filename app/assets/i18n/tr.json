@@ -89,7 +89,9 @@
         "actions": "Eylemler"
     },
     "analytics" : {
-        "title": "Analitiklerin"
+        "title": "Analitiklerin",
+        "no_data": "Veri mevcut değil",
+        "run_times": "Görev süreleri"
     },
     "languages": {
         "en": "English",

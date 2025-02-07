@@ -89,7 +89,9 @@
         "actions": "Действия"
     },
     "analytics" : {
-        "title": "Ваша аналитика"
+        "title": "Ваша аналитика",
+        "no_data": "Нет данных",
+        "run_times": "Время выполнения миссии"
     },
     "languages": {
         "en": "English",

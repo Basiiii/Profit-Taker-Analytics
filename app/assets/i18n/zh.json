@@ -89,7 +89,9 @@
         "actions": "行动"
     },
     "analytics" : {
-        "title": "Your analytics"
+        "title": "您的分析",
+        "no_data": "无数据",
+        "run_times": "任务时间"
     },
     "languages": {
         "en": "English",

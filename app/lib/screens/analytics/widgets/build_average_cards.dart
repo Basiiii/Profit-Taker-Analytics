@@ -6,6 +6,12 @@ import 'package:profit_taker_analyzer/screens/analytics/utils/index_to_threshold
 import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 import 'package:rust_core/rust_core.dart';
 
+/// Builds an average time card for a specific time type.
+///
+/// This function generates a card displaying the average time for a given index
+/// (such as total time, flight time, shield time, etc.). It also adjusts the
+/// color of the card based on thresholds and time value, and uses a responsive
+/// width for layout adjustment.
 Widget buildAverageCards(int index, BuildContext context, double screenWidth,
     TimeTypeModel averageTimes) {
   double responsiveCardWidth = screenWidth / 6 - 8;

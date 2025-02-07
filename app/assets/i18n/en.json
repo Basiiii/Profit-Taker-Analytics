@@ -89,7 +89,9 @@
         "actions": "Actions"
     },
     "analytics" : {
-        "title": "Your analytics"
+        "title": "Your analytics",
+        "no_data": "No data available",
+        "run_times": "Run Times"
     },
     "languages": {
         "en": "English",
