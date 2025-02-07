@@ -32,3 +32,4 @@ lib_profit_taker_parser.workspace = true
 lib_profit_taker_core.workspace = true
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
+chrono = "0.4.39"
