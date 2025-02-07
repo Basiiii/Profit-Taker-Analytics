@@ -109,6 +109,8 @@
         "retry": "Réessayer",
         "edit": "Modifier",
         "favorite": "Favori",
+        "close": "Fermer",
+        "view": "Voir",
         "dont_show_again": "Ne plus montrer"
     },
     "alerts": {

@@ -109,6 +109,8 @@
         "retry": "再试一次",
         "edit": "编辑",
         "favorite": "收藏",
+        "close": "关闭",
+        "view": "查看",
         "dont_show_again": "不要再出现"
     },
     "alerts": {

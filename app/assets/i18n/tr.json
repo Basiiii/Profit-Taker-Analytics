@@ -109,6 +109,8 @@
         "retry": "Tekrar deneyin",
         "edit": "Düzenle",
         "favorite": "Favori",
+        "close": "Kapat",
+        "view": "Görünüm",
         "dont_show_again": "Bir daha gösterme"
     },
     "alerts": {

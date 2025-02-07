@@ -32,6 +32,8 @@
 //! - `fetch_pb_times`: Fetches the PB times.
 //! - `fetch_second_best_times`: Fetches the second best run times.
 //! - `fetch_paginated_runs`: Fetches paginated runs.
+//! - `fetch_average_times`: Fetches average total times of valid runs.
+//! - `fetch_analytics_data`: Fetches runs for analytics.
 
 pub mod fetch_run_data;
 pub use fetch_run_data::fetch_run_from_db;
@@ -51,3 +53,5 @@ pub mod check_is_pb;
 pub mod fetch_pb_times;
 pub mod fetch_second_best_times;
 pub mod fetch_paginated_runs;
+pub mod fetch_average_times;
+pub mod fetch_analytics_data;
