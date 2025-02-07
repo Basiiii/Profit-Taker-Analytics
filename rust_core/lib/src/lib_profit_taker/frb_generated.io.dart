@@ -22,6 +22,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
+  AnalyticsRunTotalTimesModel dco_decode_analytics_run_total_times_model(
+      dynamic raw);
+
+  @protected
   bool dco_decode_bool(dynamic raw);
 
   @protected
@@ -32,6 +36,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RunTimesResponse dco_decode_box_autoadd_run_times_response(dynamic raw);
+
+  @protected
+  TimeTypeModel dco_decode_box_autoadd_time_type_model(dynamic raw);
 
   @protected
   DeleteRunResult dco_decode_delete_run_result(dynamic raw);
@@ -53,6 +60,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LegPositionEnum dco_decode_leg_position_enum(dynamic raw);
+
+  @protected
+  List<AnalyticsRunTotalTimesModel>
+      dco_decode_list_analytics_run_total_times_model(dynamic raw);
 
   @protected
   List<LegBreakModel> dco_decode_list_leg_break_model(dynamic raw);
@@ -82,6 +93,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RunTimesResponse? dco_decode_opt_box_autoadd_run_times_response(dynamic raw);
 
   @protected
+  TimeTypeModel? dco_decode_opt_box_autoadd_time_type_model(dynamic raw);
+
+  @protected
   PaginatedRunsResponse dco_decode_paginated_runs_response(dynamic raw);
 
   @protected
@@ -106,6 +120,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   StatusEffectEnum dco_decode_status_effect_enum(dynamic raw);
 
   @protected
+  TimeTypeModel dco_decode_time_type_model(dynamic raw);
+
+  @protected
   TotalTimesModel dco_decode_total_times_model(dynamic raw);
 
   @protected
@@ -118,6 +135,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  AnalyticsRunTotalTimesModel sse_decode_analytics_run_total_times_model(
+      SseDeserializer deserializer);
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
@@ -128,6 +149,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RunTimesResponse sse_decode_box_autoadd_run_times_response(
+      SseDeserializer deserializer);
+
+  @protected
+  TimeTypeModel sse_decode_box_autoadd_time_type_model(
       SseDeserializer deserializer);
 
   @protected
@@ -151,6 +176,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LegPositionEnum sse_decode_leg_position_enum(SseDeserializer deserializer);
+
+  @protected
+  List<AnalyticsRunTotalTimesModel>
+      sse_decode_list_analytics_run_total_times_model(
+          SseDeserializer deserializer);
 
   @protected
   List<LegBreakModel> sse_decode_list_leg_break_model(
@@ -185,6 +215,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  TimeTypeModel? sse_decode_opt_box_autoadd_time_type_model(
+      SseDeserializer deserializer);
+
+  @protected
   PaginatedRunsResponse sse_decode_paginated_runs_response(
       SseDeserializer deserializer);
 
@@ -211,6 +245,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   StatusEffectEnum sse_decode_status_effect_enum(SseDeserializer deserializer);
 
   @protected
+  TimeTypeModel sse_decode_time_type_model(SseDeserializer deserializer);
+
+  @protected
   TotalTimesModel sse_decode_total_times_model(SseDeserializer deserializer);
 
   @protected
@@ -221,6 +258,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_analytics_run_total_times_model(
+      AnalyticsRunTotalTimesModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
@@ -235,6 +276,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_run_times_response(
       RunTimesResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_time_type_model(
+      TimeTypeModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_delete_run_result(
@@ -259,6 +304,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_leg_position_enum(
       LegPositionEnum self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_analytics_run_total_times_model(
+      List<AnalyticsRunTotalTimesModel> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_leg_break_model(
@@ -295,6 +344,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       RunTimesResponse? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_time_type_model(
+      TimeTypeModel? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_paginated_runs_response(
       PaginatedRunsResponse self, SseSerializer serializer);
 
@@ -323,6 +376,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_status_effect_enum(
       StatusEffectEnum self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_time_type_model(TimeTypeModel self, SseSerializer serializer);
 
   @protected
   void sse_encode_total_times_model(

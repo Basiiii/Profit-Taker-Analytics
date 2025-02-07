@@ -89,7 +89,9 @@
         "actions": "Eylemler"
     },
     "analytics" : {
-        "title": "Analitiklerin"
+        "title": "Analitiklerin",
+        "no_data": "Veri mevcut değil",
+        "run_times": "Görev süreleri"
     },
     "languages": {
         "en": "English",
@@ -109,6 +111,8 @@
         "retry": "Tekrar deneyin",
         "edit": "Düzenle",
         "favorite": "Favori",
+        "close": "Kapat",
+        "view": "Görünüm",
         "dont_show_again": "Bir daha gösterme"
     },
     "alerts": {

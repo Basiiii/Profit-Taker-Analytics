@@ -89,7 +89,9 @@
         "actions": "行动"
     },
     "analytics" : {
-        "title": "Your analytics"
+        "title": "您的分析",
+        "no_data": "无数据",
+        "run_times": "任务时间"
     },
     "languages": {
         "en": "English",
@@ -109,6 +111,8 @@
         "retry": "再试一次",
         "edit": "编辑",
         "favorite": "收藏",
+        "close": "关闭",
+        "view": "查看",
         "dont_show_again": "不要再出现"
     },
     "alerts": {

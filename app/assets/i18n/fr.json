@@ -89,7 +89,9 @@
         "actions": "Actions"
     },
     "analytics" : {
-        "title": "Vos Statistiques"
+        "title": "Vos Statistiques",
+        "no_data": "Pas de données disponibles",
+        "run_times": "Temps de mission"
     },
     "languages": {
         "en": "English",
@@ -109,6 +111,8 @@
         "retry": "Réessayer",
         "edit": "Modifier",
         "favorite": "Favori",
+        "close": "Fermer",
+        "view": "Voir",
         "dont_show_again": "Ne plus montrer"
     },
     "alerts": {
