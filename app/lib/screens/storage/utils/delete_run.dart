@@ -16,11 +16,11 @@ Future<bool> deleteRun(BuildContext context, RunListItemCustom run) async {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(FlutterI18n.translate(context, "buttons.cancel")),
+            child: Text(FlutterI18n.translate(context, "common.cancel")),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(FlutterI18n.translate(context, "buttons.delete")),
+            child: Text(FlutterI18n.translate(context, "common.delete")),
           ),
         ],
       );

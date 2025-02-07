@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profit_taker_analyzer/app_layout.dart';
+import 'package:profit_taker_analyzer/constants/app/app_locales.dart';
+import 'package:profit_taker_analyzer/constants/localization/localization_constants.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/app_theme.dart';
-import 'package:profit_taker_analyzer/utils/language.dart';
+import 'package:profit_taker_analyzer/utils/localization/language.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 
 /// The root widget of the application.
@@ -28,16 +30,9 @@ class AppRoot extends StatelessWidget {
           locale: localeModel.locale, // Set locale dynamically
           theme: lightTheme,
           darkTheme: darkTheme,
-          themeMode: themeProvider.themeMode, // Use ThemeProvider's themeMode
+          themeMode: themeProvider.themeMode,
           debugShowCheckedModeBanner: false,
-          supportedLocales: const [
-            Locale('en', 'US'), // English
-            Locale('pt', 'PT'), // Portuguese
-            Locale('zh', 'CN'), // Chinese
-            Locale('ru'), // Russian
-            Locale('fr'), // French
-            Locale('tr'), // Turkish
-          ],
+          supportedLocales: AppLocales.supportedLanguages,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
@@ -45,8 +40,8 @@ class AppRoot extends StatelessWidget {
             FlutterI18nDelegate(
               translationLoader: FileTranslationLoader(
                 useCountryCode: false,
-                fallbackFile: 'en', // Fallback language if not available
-                basePath: 'assets/i18n', // Path to the i18n files
+                fallbackFile: LocalizationConstants.fallbackLanguage,
+                basePath: LocalizationConstants.translationBasePath,
               ),
             ),
           ],

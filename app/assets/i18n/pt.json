@@ -53,35 +53,40 @@
         "start_new_run": "Por favor, inicie uma nova missão para começar!"
     },
     "settings": {
-        "general": "Geral",
-        "links": "Ligações",
-        "report_bugs": "Reportar erros",
-        "about": "Sobre",
-        "theme": "Tema",
-        "language": "Idioma",
-        "change_language": "Alterar idioma",
-        "pt_discord": "Discord Profit Taker",
-        "github_repo": "Repositório Github",
-        "pt_guide": "Guia do Profit Taker",
-        "report_bug": "Reportar um erro no Github",
-        "contact_basi": "Contactar Basi",
-        "about_app": "Sobre a aplicação",
-        "version": "Versão",
-        "about_app_description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM de uma manga no discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
-        "key_config": "Configuração de Atalhos",
-        "config_up_key": "Configurar Tecla de Avanço",
-        "config_down_key": "Configurar Tecla de Retrocesso" 
+        "general": {
+            "title": "Geral",
+            "theme": "Tema",
+            "change_language": "Alterar idioma"
+        },
+        "links": {
+            "title": "Ligações",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "Repositório GitHub",
+            "pt_guide": "Guia do Profit Taker",
+            "report_bug": "Reportar um erro no GitHub"
+        },
+        "shortcut_config": {
+            "title": "Configuração de Atalhos",
+            "config_up_key": "Configurar tecla Seguinte",
+            "config_down_key": "Configurar tecla Anterior"
+        },
+        "contact": {
+            "title": "Contactar Basi",
+            "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
+        },
+        "about": {
+            "title": "Sobre",
+            "about_app": "Sobre a aplicação",
+            "version": "Versão",
+            "description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM com uma manga no Discord."
+        }
     },
     "storage" : {
         "title": "A sua área de armazenamento",
         "run_name": "Nome Missão",
         "run_time": "Tempo Missão",
         "date": "Data",
-        "edit": "Editar",
-        "delete": "Apagar",
-        "actions": "Ações",
-        "favorite": "Favorito"
+        "actions": "Ações"
     },
     "analytics" : {
         "title": "Dados das tuas missões"
@@ -94,15 +99,17 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "Sim",
+        "no": "Não",
         "ok": "Ok",
         "cancel": "Cancelar",
         "delete": "Apagar",
         "download": "Descarregar",
-        "dont_show_again": "Não voltar a mostrar",
-        "yes": "Sim",
-        "no": "Não",
-        "retry": "Tentar novamente"
+        "retry": "Tentar novamente",
+        "edit": "Editar",
+        "favorite": "Favorito",
+        "dont_show_again": "Não voltar a mostrar"
     },
     "alerts": {
         "name_title": "Alterar o nome da missão",
@@ -148,5 +155,17 @@
     "copy_run_text": {
         "success": "Texto copiado para a área de transferência com sucesso",
         "error": "Falha ao copiar o texto para a área de transferência"
+    },
+    "mark_favorite": {
+        "success": "Missão marcada como favorita com sucesso.",
+        "error": "Erro ao marcar a missão como favorita."
+    },
+    "remove_favorite": {
+        "success": "Missão removida dos favoritos com sucesso.",
+        "error": "Erro ao remover a missão dos favoritos."
+    },
+    "delete_run": {
+        "success": "Missão excluída com sucesso.",
+        "error": "Erro ao excluir a missão."
     }
 }

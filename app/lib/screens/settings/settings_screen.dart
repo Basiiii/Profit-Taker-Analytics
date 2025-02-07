@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:profit_taker_analyzer/screens/settings/utils/language_utils.dart';
-import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 
 import 'ui/general_section.dart';
 import 'ui/links_section.dart';

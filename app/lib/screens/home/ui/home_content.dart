@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/compact_run_analysis.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/home_header.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
+import 'package:profit_taker_analyzer/screens/home/ui/run_analysis.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_title.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_run_analysis.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rust_core/rust_core.dart';
@@ -63,9 +62,10 @@ class HomeContent extends StatelessWidget {
       builder: (context, prefs, child) {
         return Screenshot(
           controller: context.read<ScreenshotService>().controller,
-          child: prefs.compactMode
-              ? CompactRunAnalysis(runData: runData)
-              : StandardRunAnalysis(runData: runData),
+          child: RunAnalysis(
+            runData: runData,
+            isCompact: prefs.compactMode,
+          ),
         );
       },
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/models/leg_break.dart';
 import 'package:profit_taker_analyzer/theme/custom_icons.dart';
 import 'package:rust_core/rust_core.dart';
 
@@ -36,6 +35,21 @@ const Map<int, IconData> statusEffectIcons = {
   14: Icons.question_mark,
 };
 
+/// Returns the corresponding icon for a given status effect.
+///
+/// This function maps a [StatusEffectEnum] to its corresponding icon using a predefined map.
+/// If the status effect is not found in the map, a fallback icon (`Icons.help_outline`) is returned.
+///
+/// **Parameters**:
+/// - [statusEffect]: The status effect for which to retrieve the icon.
+///
+/// **Returns**:
+/// - The [IconData] corresponding to the provided status effect, or a fallback icon if not found.
+///
+/// **Example**:
+/// ```dart
+/// Icon(getStatusEffectIcon(StatusEffectEnum.impact));
+/// ```
 IconData getStatusEffectIcon(StatusEffectEnum statusEffect) {
   const Map<StatusEffectEnum, IconData> statusEffectIcons = {
     StatusEffectEnum.impact: CustomIcons.impact,
@@ -82,6 +96,21 @@ const Map<LegPosition, IconData> legPositionIcons = {
   LegPosition.backLeft: CustomIcons.bl,
 };
 
+/// Returns the corresponding icon for a given leg position.
+///
+/// This function maps a [LegPositionEnum] to its corresponding icon using a predefined map.
+/// If the leg position is not found in the map, a fallback icon (`Icons.help_outline`) is returned.
+///
+/// **Parameters**:
+/// - [legPosition]: The leg position for which to retrieve the icon.
+///
+/// **Returns**:
+/// - The [IconData] corresponding to the provided leg position, or a fallback icon if not found.
+///
+/// **Example**:
+/// ```dart
+/// Icon(getLegPositionIcon(LegPositionEnum.frontLeft));
+/// ```
 IconData getLegPositionIcon(LegPositionEnum legPosition) {
   const Map<LegPositionEnum, IconData> legPositionIcons = {
     LegPositionEnum.frontLeft: CustomIcons.fl,
@@ -91,4 +120,27 @@ IconData getLegPositionIcon(LegPositionEnum legPosition) {
   };
 
   return legPositionIcons[legPosition] ?? Icons.help_outline;
+}
+
+/// Represents the possible positions of legs.
+///
+/// This enum is used to define the different positions of legs, such as front left,
+/// front right, back left, and back right. It is primarily used to map leg positions
+/// to their corresponding icons.
+///
+/// **Values**:
+/// - `frontLeft`: Represents the front left leg position.
+/// - `frontRight`: Represents the front right leg position.
+/// - `backRight`: Represents the back right leg position.
+/// - `backLeft`: Represents the back left leg position.
+///
+/// **Usage**:
+/// ```dart
+/// LegPosition position = LegPosition.frontLeft;
+/// ```
+enum LegPosition {
+  frontLeft,
+  frontRight,
+  backRight,
+  backLeft,
 }

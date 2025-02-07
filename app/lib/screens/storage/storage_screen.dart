@@ -2,14 +2,16 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
+import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
 import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
 import 'package:profit_taker_analyzer/screens/storage/utils/favorite_run.dart';
 import 'package:profit_taker_analyzer/screens/storage/utils/view_run.dart';
-import 'package:profit_taker_analyzer/widgets/edit_run_name.dart';
-import 'package:profit_taker_analyzer/widgets/text_widgets.dart';
-import 'package:profit_taker_analyzer/widgets/theme_switcher.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
+import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
+import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
+import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
 import 'package:rust_core/rust_core.dart';
 
 class StorageScreen extends StatefulWidget {
@@ -124,8 +126,8 @@ class _StorageScreenState extends State<StorageScreen> {
       controller,
       FlutterI18n.translate(context, "alerts.name_title"),
       FlutterI18n.translate(context, "alerts.name_title"),
-      FlutterI18n.translate(context, "buttons.cancel"),
-      FlutterI18n.translate(context, "buttons.ok"),
+      FlutterI18n.translate(context, "common.cancel"),
+      FlutterI18n.translate(context, "common.ok"),
       (newName) {
         if (newName.isNotEmpty && newName != run.name) {
           // Update the run name in the database
@@ -162,6 +164,7 @@ class _StorageScreenState extends State<StorageScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
+            _buildSubTitle(context),
             const SizedBox(height: 15),
             Expanded(
               child: _buildDataTable(),
@@ -177,20 +180,22 @@ class _StorageScreenState extends State<StorageScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        titleText('Profit Taker Analytics', 32, FontWeight.bold),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                onPressed: _loadInitialData,
-                icon: const Icon(Icons.refresh),
-              ),
-              const ThemeSwitcher(),
-            ],
-          ),
+        const HeaderTitle(title: AppConstants.appName),
+        HeaderActions(
+          actions: [
+            IconButton(
+              onPressed: _loadInitialData,
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
         ),
       ],
+    );
+  }
+
+  Widget _buildSubTitle(BuildContext context) {
+    return HeaderSubtitle(
+      text: FlutterI18n.translate(context, "storage.title"),
     );
   }
 
@@ -207,7 +212,7 @@ class _StorageScreenState extends State<StorageScreen> {
         _buildSortableColumn(
             context, 'storage.date', 'time_stamp', ColumnSize.M),
         _buildSortableColumn(
-            context, 'storage.favorite', 'is_favorite', ColumnSize.M),
+            context, 'common.favorite', 'is_favorite', ColumnSize.M),
         DataColumn2(
           label: Text(
             FlutterI18n.translate(context, "storage.actions"),
@@ -267,8 +272,8 @@ class _StorageScreenState extends State<StorageScreen> {
         DataCell(Text(DateFormat('kk:mm:ss - yyyy-MM-dd')
             .format(DateTime.fromMillisecondsSinceEpoch(run.date * 1000)))),
         DataCell(Text(run.isFavorite
-            ? FlutterI18n.translate(context, "buttons.yes")
-            : FlutterI18n.translate(context, "buttons.no"))),
+            ? FlutterI18n.translate(context, "common.yes")
+            : FlutterI18n.translate(context, "common.no"))),
         DataCell(
           Row(
             children: [

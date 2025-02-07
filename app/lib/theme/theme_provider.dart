@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/constants/layout/theme_constants.dart';
+import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A provider class for managing the app's theme settings.
@@ -34,8 +36,8 @@ class ThemeProvider with ChangeNotifier {
   /// Returns:
   /// A [Future<void>] that completes when the theme is loaded and listeners are notified.
   Future<void> _loadTheme(SharedPreferences prefs) async {
-    String? savedTheme = prefs.getString('themeMode');
-    if (savedTheme != null && savedTheme == 'light') {
+    String? savedTheme = prefs.getString(SharedPrefsKeys.themeMode);
+    if (savedTheme != null && savedTheme == ThemeConstants.light) {
       _themeMode = ThemeMode.light;
     } else {
       _themeMode = ThemeMode.dark;
@@ -59,6 +61,9 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
 
     prefs.setString(
-        'themeMode', _themeMode == ThemeMode.light ? 'light' : 'dark');
+        SharedPrefsKeys.themeMode,
+        _themeMode == ThemeMode.light
+            ? ThemeConstants.light
+            : ThemeConstants.dark);
   }
 }
