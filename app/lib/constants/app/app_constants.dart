@@ -4,6 +4,7 @@ class AppConstants {
   static const String version = '1.0.0-alpha.1';
   static const String appName = "Profit Taker Analytics";
   static const String assets = 'assets/icons';
+  static const String databaseFolder = 'database';
   static const String databaseName = 'pta_database.db';
   static const String updateServerURL =
       'https://basi.is-a.dev/pta/updates/updates.json';

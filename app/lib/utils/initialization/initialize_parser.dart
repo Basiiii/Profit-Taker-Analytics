@@ -1,6 +1,27 @@
 import 'package:flutter/foundation.dart';
 import 'package:rust_core/rust_core.dart';
 
+/// Initializes the Profit Taker log parser and handles possible outcomes.
+///
+/// This function calls `initializeProfitTakerParser()` to set up the parser.
+/// It then checks the result and logs any errors that may have occurred during initialization.
+///
+/// Possible outcomes:
+/// - `success`: Parser initialized successfully.
+/// - `environmentVariableError`: Issue with an environment variable.
+/// - `fileOpenError`: Failed to open the log file.
+/// - `fileSeekError`: Failed to seek within the log file.
+/// - `threadSpawnError`: Failed to spawn the required thread.
+/// - `unknownError`: An unspecified issue occurred.
+///
+/// If the app is in debug mode (`kDebugMode`), error messages will be printed to the console.
+///
+/// Example usage:
+/// ```dart
+/// initializeParser();
+/// ```
+///
+/// No parameters or return value.
 void initializeParser() {
   // Initialize the parser and store the outcome
   InitializeParserOutcome outcome = initializeProfitTakerParser();

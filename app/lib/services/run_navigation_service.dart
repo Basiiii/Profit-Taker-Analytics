@@ -1,4 +1,3 @@
-// services/run_navigation_service.dart
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +6,10 @@ import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Service responsible for managing run navigation.
+///
+/// This service provides methods to navigate through runs stored in the database,
+/// update the current run, and handle state changes.
 class RunNavigationService extends ChangeNotifier {
   final DatabaseService _databaseService;
   RunModel? _currentRun;
@@ -15,14 +18,25 @@ class RunNavigationService extends ChangeNotifier {
   bool _hasError = false;
   Timer? _updateTimer;
 
+  /// Constructs a [RunNavigationService] with a required [DatabaseService].
   RunNavigationService({required DatabaseService databaseService})
       : _databaseService = databaseService;
 
+  /// Returns the currently loaded run.
   RunModel? get currentRun => _currentRun;
+
+  /// Returns whether the service is in a loading state.
   bool get isLoading => _isLoading;
+
+  /// Returns whether there was an error loading a run.
   bool get hasError => _hasError;
+
+  /// Returns the ID of the currently loaded run.
   int? get currentRunId => _currentRunId;
 
+  /// Initializes the service and loads the initial run if available.
+  ///
+  /// If no initial run ID is provided, attempts to load the last stored run ID.
   Future<void> initialize({int? initialRunId}) async {
     _isLoading = true;
     _hasError = false;
@@ -64,6 +78,7 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  /// Navigates to the next available run.
   Future<void> navigateToNextRun() async {
     if (_currentRunId == null || _isLoading) return;
 
@@ -84,6 +99,7 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  /// Navigates to the previous available run.
   Future<void> navigateToPreviousRun() async {
     if (_currentRunId == null || _isLoading) return;
 
@@ -105,6 +121,7 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  /// Navigates to a specific run if it is not already loaded.
   Future<void> maybeNavigateToRun(int runId) async {
     if (runId == _currentRunId) return;
 
@@ -112,6 +129,7 @@ class RunNavigationService extends ChangeNotifier {
     await _loadRunData(runId);
   }
 
+  /// Loads data for a specific run ID.
   Future<void> _loadRunData(int runId) async {
     _hasError = false;
     notifyListeners();
@@ -128,6 +146,7 @@ class RunNavigationService extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Handles errors that occur during data retrieval.
   Future<void> _handleError(dynamic error) async {
     _hasError = true;
 
@@ -145,19 +164,21 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  /// Returns `true` if the current run is the first in the database.
   Future<bool> isAtStartOfList() async {
     if (_currentRunId == null) return true;
     final firstRunId = await _databaseService.fetchFirstRunId();
     return _currentRunId == firstRunId;
   }
 
+  /// Returns `true` if the current run is the latest in the database.
   Future<bool> isAtEndOfList() async {
     if (_currentRunId == null) return true;
     final latestRunId = await _databaseService.fetchLatestRunId();
     return _currentRunId == latestRunId;
   }
 
-  /// Check and update to the most recent run
+  /// Checks for and updates to the most recent run if necessary.
   Future<void> checkAndUpdateToMostRecentRun() async {
     if (_isLoading) return;
 
@@ -184,7 +205,7 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
-  // Updates the current run name
+  /// Updates the name of the current run and refreshes the UI.
   void updateCurrentRunName(String newName) {
     if (_currentRun != null) {
       // Create a new RunModel instance with the updated runName
@@ -206,11 +227,12 @@ class RunNavigationService extends ChangeNotifier {
     }
   }
 
+  /// Forces the UI to refresh by notifying listeners.
   void forceUIRefresh() {
     notifyListeners();
   }
 
-  /// Start periodic updates
+  /// Starts periodic updates to check for new runs.
   void startPeriodicUpdate({Duration interval = const Duration(seconds: 1)}) {
     _updateTimer?.cancel(); // Cancel any existing timer
     _updateTimer = Timer.periodic(interval, (_) async {
@@ -218,7 +240,7 @@ class RunNavigationService extends ChangeNotifier {
     });
   }
 
-  /// Stop periodic updates
+  /// Stops periodic updates.
   void stopPeriodicUpdate() {
     _updateTimer?.cancel();
     _updateTimer = null;
