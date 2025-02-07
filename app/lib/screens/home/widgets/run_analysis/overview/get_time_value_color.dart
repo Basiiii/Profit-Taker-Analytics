@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+/// Determines the color to be used for displaying a time value based on the index, time value, and run status.
+///
+/// [index] The index used to determine the color scheme for a specific time value.
+/// [timeValue] The time value that needs to be color-coded.
+/// [isAbortedRun] A boolean indicating whether the run was aborted.
+/// [isBuggedRun] A boolean indicating whether the run was bugged.
+/// [context] The build context used for accessing theme and color scheme.
+///
+/// Returns the [Color] that corresponds to the time value based on the conditions:
+/// - For specific index values (like 0), time ranges are assigned different colors.
+/// - For bugged runs (index 2 or 5), an error color is applied.
 Color getTimeValueColor(int index, double timeValue, bool isAbortedRun,
     bool isBuggedRun, BuildContext context) {
   Color color = Theme.of(context).colorScheme.onSurface;

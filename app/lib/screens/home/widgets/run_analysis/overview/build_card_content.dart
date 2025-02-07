@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 
+/// Builds the content for a card widget that displays time-related data.
+///
+/// [context] The build context used for widget rendering.
+/// [timeValue] The time value to be displayed, representing a time measurement.
+/// [timeDifferenceData] A map containing time difference data with keys like
+/// 'label', 'bestTime', 'differenceText', and 'isNegative' to represent
+/// respective time-related information and whether the difference is negative.
+/// [color] The color used for the text of the time value.
 Widget buildCardContent(BuildContext context, double timeValue,
     Map<String, dynamic> timeDifferenceData, Color color) {
   return Padding(

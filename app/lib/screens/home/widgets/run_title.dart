@@ -11,6 +11,21 @@ import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:rust_core/rust_core.dart';
 
+/// A widget that displays the title section for a specific run.
+///
+/// This widget presents information about the run, including its title,
+/// whether it's the most recent run, options to edit the run name,
+/// toggle favorites, copy run data, and handle screenshots.
+/// It also shows warnings if the run is bugged or aborted.
+///
+/// The [RunTitle] widget includes icons for user actions, such as
+/// editing the run name, copying the run as text, marking the run as a favorite,
+/// and capturing a screenshot. It also displays a "Best run yet!" message
+/// when appropriate.
+///
+/// [run] The [RunModel] that contains the information about the specific run.
+/// [mostRecentRun] A boolean that determines if the current run is the most recent.
+/// [showBestRunText] A boolean that controls the display of the "Best run yet!" text.
 class RunTitle extends StatelessWidget {
   final RunModel run;
   final bool mostRecentRun;
@@ -105,6 +120,10 @@ class RunTitle extends StatelessWidget {
     );
   }
 
+  /// Opens a dialog to edit the name of the current run.
+  ///
+  /// The user can provide a new name for the run, and this method updates
+  /// the run name in the database and updates the UI accordingly.
   void _handleEditName(BuildContext context) {
     TextEditingController controller = TextEditingController(text: run.runName);
 
@@ -129,6 +148,11 @@ class RunTitle extends StatelessWidget {
     );
   }
 
+  /// Captures a screenshot of the current screen and provides feedback.
+  ///
+  /// This method interacts with the ScreenshotService to capture a screenshot
+  /// and displays a message using the [ScaffoldMessenger] to notify the user
+  /// whether the screenshot was successfully captured or failed.
   void _handleScreenshotCopy(BuildContext context, ScreenshotService service) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     captureScreenshot(service.controller).then((status) {
@@ -139,6 +163,10 @@ class RunTitle extends StatelessWidget {
     });
   }
 
+  /// Copies the current run's details as a formatted text to the clipboard.
+  ///
+  /// If successful, a success message is displayed using the [ScaffoldMessenger].
+  /// If an error occurs during the copying process, an error message is displayed.
   void _handleCopyRunAsText(BuildContext context) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -162,6 +190,10 @@ class RunTitle extends StatelessWidget {
     }
   }
 
+  /// Toggles the favorite status of the current run.
+  ///
+  /// If the run is not marked as a favorite, it is marked as one; otherwise, it is removed
+  /// from favorites. A snack bar notification is displayed based on the success or failure of the action.
   void _handleToggleFavorite(
       BuildContext context, bool isFavorited, int runId) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -186,6 +218,10 @@ class RunTitle extends StatelessWidget {
     runService.forceUIRefresh();
   }
 
+  /// Builds and shows a warning icon when the run is either bugged or aborted.
+  ///
+  /// The icon color changes based on whether the run is bugged (red) or aborted (yellow).
+  /// A tap on the icon shows a warning dialog for the respective error type.
   Widget _buildWarningIcon(BuildContext context, bool isBugged) {
     return IconButton(
       icon: Icon(

@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// Builds the header for a card widget, displaying an icon and a text.
+///
+/// [context] The build context used for widget rendering.
+/// [color] The background color of the icon container.
+/// [icon] The icon to be displayed in the container.
+/// [text] The text to be displayed next to the icon, either a title or time.
+/// [isCompact] A boolean flag to determine if the layout should be more compact.
+/// [textColor] An optional color for the text, used only when [isCompact] is true.
 Widget buildCardHeader(
     BuildContext context, Color color, IconData icon, String text,
     {bool isCompact = false, Color? textColor}) {

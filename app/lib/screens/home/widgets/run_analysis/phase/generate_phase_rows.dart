@@ -1,7 +1,17 @@
-// Helper: Generate Phase Rows
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/screens/home/utils/build_row.dart';
 
+/// Generates a list of rows based on the provided index, labels, and overview data.
+///
+/// [index] The index used to determine the specific layout or condition of the rows to be generated.
+/// [labels] A list of labels used as titles for each row.
+/// [overviewList] A list containing the overview data corresponding to each label.
+/// [isBuggedRun] A boolean flag indicating if the run was bugged, which affects the styling of certain rows.
+/// [context] The build context used for widget rendering and theme access.
+///
+/// Returns a [List<Widget>] containing the generated rows, each created using the [buildRow] function.
+/// - The rows are customized based on the [index], with specific handling for indices 1, 2, and 3.
+/// - The styling of certain rows may change based on whether the run is bugged (e.g., for index 2 and 3).
 List<Widget> generatePhaseRows(
   int index,
   List<String> labels,

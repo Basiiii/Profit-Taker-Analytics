@@ -3,6 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: Ensure this is up to date once app is ready for v1.0.0
 class OnboardingPopup extends StatefulWidget {
   final VoidCallback onFinish;
 
@@ -14,32 +15,6 @@ class OnboardingPopup extends StatefulWidget {
 
 class OnboardingPopupState extends State<OnboardingPopup> {
   int _currentStep = 0;
-
-  // final List<Map<String, dynamic>> _steps = [
-  //   {
-  //     "image": "assets/images/welcome.png",
-  //     "text": FlutterI18n.translate(context, "onboarding.welcome"),
-  //   },
-  //   {
-  //     "image": "assets/images/navigation.png",
-  //     "text":
-  //         "Use your arrow keys, the buttons on the top right or your mouse scroll wheel to navigate between runs."
-  //   },
-  //   {
-  //     "image": "assets/images/screenshot.png",
-  //     "text":
-  //         "Click the copy button to automatically screenshot your run! No need for manual screenshots."
-  //   },
-  //   {
-  //     "image": "assets/images/main_nav.png",
-  //     "text":
-  //         "Use the navigation bar on the left to explore different sections of the app by clicking on the buttons."
-  //   },
-  //   {
-  //     "image": "assets/images/welcome.png",
-  //     "text": "That's it! I hope you enjoy PTA."
-  //   },
-  // ];
 
   // List of steps without translation
   final List<Map<String, dynamic>> _steps = [
