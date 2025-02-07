@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/utils/text_utils.dart';
+import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 
 class HeaderTitle extends StatelessWidget {
   final String title;

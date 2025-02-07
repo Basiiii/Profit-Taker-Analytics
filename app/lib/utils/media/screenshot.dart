@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:profit_taker_analyzer/constants/screenshot_constants.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 
@@ -58,7 +59,7 @@ Future<ScreenshotStatus> captureScreenshot(
     }
 
     final path = directory.path;
-    final file = File('$path/screenshot.png');
+    final file = File('$path/${ScreenshotConstants.screenshotFileName}');
     await file.writeAsBytes(image);
 
     final clipboard = SystemClipboard.instance;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPopup extends StatefulWidget {
@@ -61,7 +62,7 @@ class OnboardingPopupState extends State<OnboardingPopup> {
     } else {
       // Mark onboarding as completed
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('hasSeenOnboarding', true);
+      await prefs.setBool(SharedPrefsKeys.hasSeenOnBoarding, true);
       widget.onFinish();
     }
   }

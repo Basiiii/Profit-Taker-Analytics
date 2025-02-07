@@ -5,6 +5,8 @@ class AppConstants {
   static const String appName = "Profit Taker Analytics";
   static const String assets = 'assets/icons';
   static const String databaseName = 'pta_database.db';
+  static const String updateServerURL =
+      'https://basi.is-a.dev/pta/updates/updates.json';
 
   // Icon asset paths
   static const String homeGreyIcon = '$assets/HOME_GREY.svg';

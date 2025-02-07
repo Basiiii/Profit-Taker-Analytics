@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:profit_taker_analyzer/constants/app_locales.dart';
 
 /// A service class for managing language settings in the application.
 ///
@@ -12,18 +13,9 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 class SettingsService {
   /// A getter that returns a list of supported locales for the application.
   ///
-  /// This list includes the locales for English, Portuguese, Chinese, Russian, French, and Turkish.
-  ///
   /// Returns:
   /// A [List<Locale>] containing the supported locales for the app.
-  static List<Locale> get supportedLanguages => const [
-        Locale('en', 'US'),
-        Locale('pt', 'PT'),
-        Locale('zh', 'CN'),
-        Locale('ru'),
-        Locale('fr'),
-        Locale('tr'),
-      ];
+  static List<Locale> get supportedLanguages => AppLocales.supportedLanguages;
 
   /// Retrieves the translated name of the current language based on the provided locale.
   ///

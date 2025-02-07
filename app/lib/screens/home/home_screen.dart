@@ -1,10 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/no_runs_available.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/error_view.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/home_content.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/onboarding_popup.dart';
-import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 import 'package:profit_taker_analyzer/widgets/ui/loading/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
@@ -70,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Checks if onboarding has been seen and shows it if necessary.
   Future<void> _checkOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+    final hasSeenOnboarding =
+        prefs.getBool(SharedPrefsKeys.hasSeenOnBoarding) ?? false;
 
     if (!hasSeenOnboarding) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

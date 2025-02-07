@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/services/settings_service.dart';
-import 'package:profit_taker_analyzer/utils/language.dart';
+import 'package:profit_taker_analyzer/utils/localization/language.dart';
 
 /// Displays a dialog allowing the user to select a new language for the application.
 ///

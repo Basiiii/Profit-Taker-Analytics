@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +53,7 @@ class RunNavigator {
       _runData = await _databaseService.fetchRun(runId);
 
       // Save the current runId to shared preferences
-      await prefs.setInt('currentRunId', runId);
+      await prefs.setInt(SharedPrefsKeys.currentRunId, runId);
     } catch (e) {
       // Log the exception
       if (kDebugMode) {
@@ -63,7 +64,7 @@ class RunNavigator {
       _runData = null;
 
       // Reset the currentRunId to 1 if there's an issue
-      await prefs.setInt('currentRunId', 1);
+      await prefs.setInt(SharedPrefsKeys.currentRunId, 1);
     }
   }
 

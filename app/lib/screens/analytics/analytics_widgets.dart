@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:profit_taker_analyzer/constants/layout_constants.dart';
+import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/analytics/analytics_data.dart';
-import 'package:profit_taker_analyzer/utils/text_utils.dart';
+import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 
 Widget buildAverageCards(int index, BuildContext context, double screenWidth,
     List<VoidCallback> onTapCallbacks) {

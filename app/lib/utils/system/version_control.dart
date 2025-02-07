@@ -14,8 +14,7 @@ import 'package:profit_taker_analyzer/constants/app_constants.dart';
 /// if it's the latest version.
 Future<bool> isLatestVersion() async {
   try {
-    final response =
-        await http.get(Uri.parse('https://basi.is-a.dev/secure/verify.json'));
+    final response = await http.get(Uri.parse(AppConstants.updateServerURL));
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);

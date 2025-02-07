@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:profit_taker_analyzer/constants/action_key_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A class to manage action keys for navigation.
@@ -19,9 +20,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - [loadUpActionKey]: A method to load the up action key from [SharedPreferences].
 /// - [loadDownActionKey]: A method to load the down action key from [SharedPreferences].
 class ActionKeyManager {
-  static const String upActionKeyKey = 'upActionKey';
-  static const String downActionKeyKey = 'downActionKey';
-
   /// Key for going forward on Home Page
   static LogicalKeyboardKey upActionKey = LogicalKeyboardKey.arrowUp;
 
@@ -69,7 +67,7 @@ class ActionKeyManager {
   /// Returns:
   /// A [Future<void>] that completes when the key is saved.
   static Future<void> saveUpActionKey() async {
-    await saveKey(upActionKeyKey, upActionKey);
+    await saveKey(ActionKeyConstants.upActionKeyKey, upActionKey);
   }
 
   /// Saves the down action key to [SharedPreferences].
@@ -79,7 +77,7 @@ class ActionKeyManager {
   /// Returns:
   /// A [Future<void>] that completes when the key is saved.
   static Future<void> saveDownActionKey() async {
-    await saveKey(downActionKeyKey, downActionKey);
+    await saveKey(ActionKeyConstants.downActionKeyKey, downActionKey);
   }
 
   /// Loads the up action key from [SharedPreferences].
@@ -89,7 +87,7 @@ class ActionKeyManager {
   /// Returns:
   /// A [Future<LogicalKeyboardKey?>] that completes with the loaded up action key, or null if not found.
   static Future<LogicalKeyboardKey?> loadUpActionKey() async {
-    return await loadKey(upActionKeyKey);
+    return await loadKey(ActionKeyConstants.upActionKeyKey);
   }
 
   /// Loads the down action key from [SharedPreferences].
@@ -99,6 +97,6 @@ class ActionKeyManager {
   /// Returns:
   /// A [Future<LogicalKeyboardKey?>] that completes with the loaded down action key, or null if not found.
   static Future<LogicalKeyboardKey?> loadDownActionKey() async {
-    return await loadKey(downActionKeyKey);
+    return await loadKey(ActionKeyConstants.downActionKeyKey);
   }
 }

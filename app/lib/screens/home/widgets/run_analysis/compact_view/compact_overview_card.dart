@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:profit_taker_analyzer/constants/layout_constants.dart';
+import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
-import 'package:profit_taker_analyzer/utils/text_utils.dart';
+import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 import 'package:rust_core/rust_core.dart';
 
 /// Builds and returns a compact card widget for displaying overview information.

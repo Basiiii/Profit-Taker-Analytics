@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +31,8 @@ class RunNavigationService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       // First, try to get the ID from SharedPreferences
-      _currentRunId = initialRunId ?? prefs.getInt('currentRunId');
+      _currentRunId =
+          initialRunId ?? prefs.getInt(SharedPrefsKeys.currentRunId);
 
       // Check if the run ID exists in the database
       if (_currentRunId != null) {
@@ -118,7 +120,7 @@ class RunNavigationService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
 
       _currentRun = await _databaseService.fetchRun(runId);
-      await prefs.setInt('currentRunId', runId);
+      await prefs.setInt(SharedPrefsKeys.currentRunId, runId);
     } catch (e) {
       _handleError(e);
     }
@@ -132,10 +134,10 @@ class RunNavigationService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     int? latestId = await _databaseService.fetchLatestRunId();
     if (latestId != null) {
-      prefs.setInt('currentRunId', latestId);
+      prefs.setInt(SharedPrefsKeys.currentRunId, latestId);
     } else {
       // No runs exist, clear currentRunId to indicate no valid data
-      prefs.remove('currentRunId');
+      prefs.remove(SharedPrefsKeys.currentRunId);
     }
 
     if (kDebugMode) {
@@ -161,15 +163,15 @@ class RunNavigationService extends ChangeNotifier {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final latestStoredRunId =
-          prefs.getInt('latestRunId'); // Get the stored latest run ID
+      final latestStoredRunId = prefs
+          .getInt(SharedPrefsKeys.latestRunId); // Get the stored latest run ID
       final latestRunId = await _databaseService
           .fetchLatestRunId(); // Get the latest run ID from the database
 
       // If the latest run ID is different from the stored one, update
       if (latestRunId != null && latestRunId != latestStoredRunId) {
         // Update the stored latest run ID
-        await prefs.setInt('latestRunId', latestRunId);
+        await prefs.setInt(SharedPrefsKeys.latestRunId, latestRunId);
 
         // Update local variable to latest run ID
         _currentRunId = latestRunId;

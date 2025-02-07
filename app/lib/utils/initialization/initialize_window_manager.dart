@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:profit_taker_analyzer/constants/layout_constants.dart';
+import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
 import 'package:window_manager/window_manager.dart';
 
 /// Initializes the window manager for the application.

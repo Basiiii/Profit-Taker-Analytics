@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/constants/layout_constants.dart';
+import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/overview_card.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/run_analysis/standard_view/phase_card.dart';
 import 'package:rust_core/rust_core.dart';
@@ -60,25 +60,23 @@ class StandardRunAnalysis extends StatelessWidget {
             ...List.generate(
                 6,
                 (index) => buildOverviewCard(
-                      index,
-                      context,
-                      screenWidth,
-                      runData.totalTimes,
-                      bestValues,
-                      isComparingToPB,
-                      runData.isBuggedRun,
-                      runData.isAbortedRun
-                    )),
+                    index,
+                    context,
+                    screenWidth,
+                    runData.totalTimes,
+                    bestValues,
+                    isComparingToPB,
+                    runData.isBuggedRun,
+                    runData.isAbortedRun)),
             ...List.generate(
                 4,
                 (index) => buildPhaseCard(
-                      index,
-                      context,
-                      screenWidth,
-                      runData.phases,
-                      runData.isBuggedRun,
-                      runData.totalTimes.totalFlightTime
-                    )),
+                    index,
+                    context,
+                    screenWidth,
+                    runData.phases,
+                    runData.isBuggedRun,
+                    runData.totalTimes.totalFlightTime)),
           ],
         );
       },

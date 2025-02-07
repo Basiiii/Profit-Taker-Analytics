@@ -6,8 +6,8 @@ import 'package:profit_taker_analyzer/widgets/dialogs/bugged_run_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
-import 'package:profit_taker_analyzer/utils/screenshot.dart';
-import 'package:profit_taker_analyzer/utils/text_utils.dart';
+import 'package:profit_taker_analyzer/utils/media/screenshot.dart';
+import 'package:profit_taker_analyzer/utils/text/text_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:rust_core/rust_core.dart';
 

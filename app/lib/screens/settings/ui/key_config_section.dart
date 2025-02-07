@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:profit_taker_analyzer/screens/settings/utils/key_handler.dart';
-import 'package:profit_taker_analyzer/utils/action_keys.dart';
+import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 import 'package:profit_taker_analyzer/screens/settings/widgets/key_config_tile.dart';
 
 /// Builds a settings section for configuring navigation keys.

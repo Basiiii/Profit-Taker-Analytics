@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:profit_taker_analyzer/constants/localization_constants.dart';
+import 'package:profit_taker_analyzer/constants/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A model class for managing the application's locale.
@@ -20,7 +22,7 @@ class LocaleModel extends ChangeNotifier {
 
   /// Initializes the locale from SharedPreferences.
   void _initializeLocale() {
-    final selectedLocale = _prefs.getString("selectedLocale");
+    final selectedLocale = _prefs.getString(SharedPrefsKeys.selectedLocale);
     if (selectedLocale != null) {
       final parts = selectedLocale.split('_');
       if (parts.length == 1) {
@@ -32,7 +34,7 @@ class LocaleModel extends ChangeNotifier {
       }
     } else {
       // Default locale (English)
-      _locale = const Locale('en');
+      _locale = const Locale(LocalizationConstants.fallbackLanguage);
     }
   }
 
@@ -45,7 +47,7 @@ class LocaleModel extends ChangeNotifier {
   ///   - `locale`: The locale to be set as the currently selected locale.
   void setLocale(Locale locale) {
     _locale = locale;
-    _prefs.setString('selectedLocale', _locale.toString());
+    _prefs.setString(SharedPrefsKeys.selectedLocale, _locale.toString());
     notifyListeners();
   }
 }
