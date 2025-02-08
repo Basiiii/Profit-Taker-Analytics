@@ -303,6 +303,59 @@ Future<PaginatedRunsResponse> getPaginatedRuns(
         sortColumn: sortColumn,
         sortAscending: sortAscending);
 
+TimeTypeModel? getAverageTimes() =>
+    RustLib.instance.api.crateApiGetAverageTimes();
+
+List<AnalyticsRunTotalTimesModel> getAnalyticsRuns({required int limit}) =>
+    RustLib.instance.api.crateApiGetAnalyticsRuns(limit: limit);
+
+class AnalyticsRunTotalTimesModel {
+  final int id;
+  final String runName;
+  final double totalTime;
+  final double totalFlightTime;
+  final double totalShieldTime;
+  final double totalLegTime;
+  final double totalBodyTime;
+  final double totalPylonTime;
+
+  const AnalyticsRunTotalTimesModel({
+    required this.id,
+    required this.runName,
+    required this.totalTime,
+    required this.totalFlightTime,
+    required this.totalShieldTime,
+    required this.totalLegTime,
+    required this.totalBodyTime,
+    required this.totalPylonTime,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      runName.hashCode ^
+      totalTime.hashCode ^
+      totalFlightTime.hashCode ^
+      totalShieldTime.hashCode ^
+      totalLegTime.hashCode ^
+      totalBodyTime.hashCode ^
+      totalPylonTime.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnalyticsRunTotalTimesModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          runName == other.runName &&
+          totalTime == other.totalTime &&
+          totalFlightTime == other.totalFlightTime &&
+          totalShieldTime == other.totalShieldTime &&
+          totalLegTime == other.totalLegTime &&
+          totalBodyTime == other.totalBodyTime &&
+          totalPylonTime == other.totalPylonTime;
+}
+
 /// Represents the result of a delete operation.
 class DeleteRunResult {
   final bool success;
@@ -646,6 +699,45 @@ enum StatusEffectEnum {
   corrosive,
   noShield,
   ;
+}
+
+class TimeTypeModel {
+  final double totalTime;
+  final double flightTime;
+  final double shieldTime;
+  final double legTime;
+  final double bodyTime;
+  final double pylonTime;
+
+  const TimeTypeModel({
+    required this.totalTime,
+    required this.flightTime,
+    required this.shieldTime,
+    required this.legTime,
+    required this.bodyTime,
+    required this.pylonTime,
+  });
+
+  @override
+  int get hashCode =>
+      totalTime.hashCode ^
+      flightTime.hashCode ^
+      shieldTime.hashCode ^
+      legTime.hashCode ^
+      bodyTime.hashCode ^
+      pylonTime.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TimeTypeModel &&
+          runtimeType == other.runtimeType &&
+          totalTime == other.totalTime &&
+          flightTime == other.flightTime &&
+          shieldTime == other.shieldTime &&
+          legTime == other.legTime &&
+          bodyTime == other.bodyTime &&
+          pylonTime == other.pylonTime;
 }
 
 class TotalTimesModel {

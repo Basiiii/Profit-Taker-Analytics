@@ -53,38 +53,45 @@
         "start_new_run": "请开始一项新任务！"
     },
     "settings": {
-        "general": "通用",
-        "links": "链接",
-        "report_bugs": "反馈BUG",
-        "about": "关于",
-        "theme": "主题",
-        "language": "语言",
-        "change_language": "更改语言",
-        "pt_discord": "利润收割者Discord",
-        "github_repo": "Github仓库",
-        "pt_guide": "利润收割者攻略",
-        "report_bug": "在Github上反馈BUG",
-        "contact_basi": "联系Basi",
-        "about_app": "关于APP",
-        "version": "版本",
-        "about_app_description": "用爱制作，来自Basi。如果你找到了这个，就在Discord上给我发送一条带有芒果的私信。",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
-        "key_config": "快捷键配置",
-        "config_up_key": "前进键",
-        "config_down_key": "后键"
+        "general": {
+            "title": "通用",
+            "theme": "主题",
+            "change_language": "更改语言"
+        },
+        "links": {
+            "title": "链接",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "GitHub 代码库",
+            "pt_guide": "Profit Taker 指南",
+            "report_bug": "在 GitHub 上报告错误"
+        },
+        "shortcut_config": {
+            "title": "快捷键配置",
+            "config_up_key": "配置下一个键",
+            "config_down_key": "配置上一个键"
+        },
+        "contact": {
+            "title": "联系 Basi",
+            "basi_contacts_description": "电子邮件: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
+        },
+        "about": {
+            "title": "关于",
+            "about_app": "关于应用",
+            "version": "版本",
+            "description": "由 Basi 用爱制作。\n如果你发现了这个，请在 Discord 上给我发一条芒果的私信。"
+        }
     },
     "storage" : {
         "title": "您的存储区域",
         "run_name": "任务名称",
         "run_time": "任务时间",
         "date": "日期",
-        "edit": "编辑",
-        "delete": "删除",
-        "actions": "行动",
-        "favorite": "最爱"
+        "actions": "行动"
     },
     "analytics" : {
-        "title": "Your analytics"
+        "title": "您的分析",
+        "no_data": "无数据",
+        "run_times": "任务时间"
     },
     "languages": {
         "en": "English",
@@ -94,15 +101,19 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "是",
+        "no": "否",
         "ok": "OK",
         "cancel": "取消",
         "delete": "删除",
         "download": "下载",
-        "dont_show_again": "不要再出现",
-        "yes": "是",
-        "no": "否",
-        "retry": "再试一次"
+        "retry": "再试一次",
+        "edit": "编辑",
+        "favorite": "收藏",
+        "close": "关闭",
+        "view": "查看",
+        "dont_show_again": "不要再出现"
     },
     "alerts": {
         "name_title": "更改任务名称",
@@ -148,5 +159,17 @@
     "copy_run_text": {
         "success": "文本已成功复制到剪贴板",
         "error": "无法将文本复制到剪贴板"
+    },
+    "mark_favorite": {
+        "success": "成功将任务标记为收藏。",
+        "error": "标记任务为收藏时出错。"
+    },
+    "remove_favorite": {
+        "success": "成功将任务从收藏中移除。",
+        "error": "从收藏中移除任务时出错。"
+    },
+    "delete_run": {
+        "success": "成功删除任务。",
+        "error": "删除任务时出错。"
     }
 }

@@ -5,14 +5,13 @@ import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.da
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
-import 'package:profit_taker_analyzer/utils/action_keys.dart';
-import 'package:profit_taker_analyzer/utils/initialize_parser.dart';
-import 'package:profit_taker_analyzer/utils/initialize_window_manager.dart';
-import 'package:profit_taker_analyzer/utils/language.dart';
+import 'package:profit_taker_analyzer/services/input/action_keys.dart';
+import 'package:profit_taker_analyzer/utils/initialization/initialize_parser.dart';
+import 'package:profit_taker_analyzer/utils/initialization/initialize_window_manager.dart';
+import 'package:profit_taker_analyzer/utils/localization/language.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:rust_core/rust_core.dart';
 
 /// The entry point of the application.
@@ -27,9 +26,6 @@ void main() async {
 
   // Initialize window manager
   initializeWindowManager();
-
-  // Initialize the database factory for ffi
-  databaseFactory = databaseFactoryFfi;
 
   // Load key mappings for Home controls
   ActionKeyManager.upActionKey =

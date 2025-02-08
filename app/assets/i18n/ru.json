@@ -53,38 +53,45 @@
         "start_new_run": "Сделайте заход"
     },
     "settings": {
-        "general": "Общее",
-        "links": "Ссылки",
-        "report_bugs": "Баг-репорт",
-        "about": "О приложении",
-        "theme": "темы",
-        "language": "язык",
-        "change_language": "Изменить язык",
-        "pt_discord": "Английский Сферный Дискорд",
-        "github_repo": "Гитхаб",
-        "pt_guide": "Английский Гайд на Сферу",
-        "report_bug": "Баг-репорт на Гитхабе",
-        "contact_basi": "Контактировать Basi",
-        "about_app": "О приложении",
-        "version": "Версия",
-        "about_app_description": "Сделано с любовью Basi.\nЕсли ты это нащёл, пришли мне манго в лс на дискорде.",
-        "basi_contacts_description": "E-mail: hello.basi@proton.me\nДискорд: basi__\nGithub: Basiiii",
-        "key_config": "Настройка клавиш",
-        "config_up_key": "клавиша перемотки",
-        "config_down_key": "клавиша обратного хода" 
+        "general": {
+            "title": "Общие",
+            "theme": "Тема",
+            "change_language": "Изменить язык"
+        },
+        "links": {
+            "title": "Ссылки",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "Репозиторий GitHub",
+            "pt_guide": "Руководство по Profit Taker",
+            "report_bug": "Сообщить об ошибке на GitHub"
+        },
+        "shortcut_config": {
+            "title": "Настройки сочетаний клавиш",
+            "config_up_key": "Настроить клавишу «Вперёд»",
+            "config_down_key": "Настроить клавишу «Назад»"
+        },
+        "contact": {
+            "title": "Связаться с Basi",
+            "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
+        },
+        "about": {
+            "title": "О приложении",
+            "about_app": "Информация о приложении",
+            "version": "Версия",
+            "description": "Создано с любовью Basi.\nЕсли ты нашёл это, отправь мне в личные сообщения манго в Discord."
+        }
     },
     "storage" : {
         "title": "Ваше место хранения",
         "run_name": "название миссии",
         "run_time": "время миссии",
         "date": "дата",
-        "edit": "редактировать",
-        "delete": "удалить",
-        "actions": "Действия",
-        "favorite": "Любимый"
+        "actions": "Действия"
     },
     "analytics" : {
-        "title": "Ваша аналитика"
+        "title": "Ваша аналитика",
+        "no_data": "Нет данных",
+        "run_times": "Время выполнения миссии"
     },
     "languages": {
         "en": "English",
@@ -94,15 +101,19 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "да",
+        "no": "нет",
         "ok": "Ок",
         "cancel": "отменить",
         "delete": "удалить",
         "download": "скачать",
-        "dont_show_again": "Больше не показывайте",
-        "yes": "да",
-        "no": "нет",
-        "retry": "Попробуйте еще раз"
+        "retry": "Попробуйте еще раз",
+        "edit": "Редактировать",
+        "favorite": "Избранное",
+        "close": "Закрыть",
+        "view": "Посмотреть",
+        "dont_show_again": "Больше не показывайте"
     },
     "alerts": {
         "name_title": "Изменить имя задания",
@@ -148,5 +159,17 @@
     "copy_run_text": {
         "success": "Текст успешно скопирован в буфер обмена",
         "error": "Не удалось скопировать текст в буфер обмена"
+    },
+    "mark_favorite": {
+        "success": "Миссия успешно добавлена в избранное.",
+        "error": "Ошибка при добавлении миссии в избранное."
+    },
+    "remove_favorite": {
+        "success": "Миссия успешно удалена из избранного.",
+        "error": "Ошибка при удалении миссии из избранного."
+    },
+    "delete_run": {
+        "success": "Миссия успешно удалена.",
+        "error": "Ошибка при удалении миссии."
     }
 }

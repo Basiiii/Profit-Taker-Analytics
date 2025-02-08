@@ -53,38 +53,45 @@
         "start_new_run": "Veuillez commencer une nouvelle mission pour débuter!"
     },
     "settings": {
-        "general": "Général",
-        "links": "Liens",
-        "report_bugs": "Signaler un Problème",
-        "about": "À propos",
-        "theme": "Thème",
-        "language": "Language",
-        "change_language": "Changer de Langue",
-        "pt_discord": "Discord pour Preneur de Profit",
-        "github_repo": "Dépôt Github",
-        "pt_guide": "Guide du Preneur de Profit",
-        "report_bug": "Signaler un bug sur Github",
-        "contact_basi": "Contacter Basi",
-        "about_app": "A propos de l'application",
-        "version": "Version",
-        "about_app_description": "Fabriqué avec amour par Basi.\nSi vous avez trouvé ceci, envoyez-moi un DM d'une mangue sur Discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
-        "key_config": "Configuration des touches",
-        "config_up_key": "Configurer la touche suivante",
-        "config_down_key": "Configurer la touche arrière" 
+        "general": {
+            "title": "Général",
+            "theme": "Thème",
+            "change_language": "Changer la langue"
+        },
+        "links": {
+            "title": "Liens",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "Dépôt GitHub",
+            "pt_guide": "Guide Profit Taker",
+            "report_bug": "Signaler un bug sur GitHub"
+        },
+        "shortcut_config": {
+            "title": "Configuration des raccourcis",
+            "config_up_key": "Configurer la touche Suivante",
+            "config_down_key": "Configurer la touche Précédente"
+        },
+        "contact": {
+            "title": "Contacter Basi",
+            "basi_contacts_description": "Email : hello.basi@proton.me\nDiscord : basi__\nGitHub : Basiiii"
+        },
+        "about": {
+            "title": "À propos",
+            "about_app": "À propos de l'application",
+            "version": "Version",
+            "description": "Fait avec amour par Basi.\nSi vous trouvez ceci, envoyez-moi un DM d'une mangue sur Discord."
+        }
     },
     "storage" : {
         "title": "Votre espace de stockage",
         "run_name": "Nom de la Mission",
         "run_time": "Temps de la Mission",
         "date": "Date",
-        "edit": "Modifier",
-        "delete": "Supprimer",
-        "actions": "Actions",
-        "favorite": "Favoris"
+        "actions": "Actions"
     },
     "analytics" : {
-        "title": "Vos Statistiques"
+        "title": "Vos Statistiques",
+        "no_data": "Pas de données disponibles",
+        "run_times": "Temps de mission"
     },
     "languages": {
         "en": "English",
@@ -94,15 +101,19 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "Oui",
+        "no": "Non",
         "ok": "Ok",
         "cancel": "Annuler",
         "delete": "Supprimer",
         "download": "Télécharger",
-        "dont_show_again": "Ne plus montrer",
-        "yes": "Oui",
-        "no": "Non",
-        "retry": "Réessayer"
+        "retry": "Réessayer",
+        "edit": "Modifier",
+        "favorite": "Favori",
+        "close": "Fermer",
+        "view": "Voir",
+        "dont_show_again": "Ne plus montrer"
     },
     "alerts": {
         "name_title": "Changer le nom de la mission",
@@ -148,5 +159,17 @@
     "copy_run_text": {
         "success": "Texte copié dans le presse-papiers avec succès",
         "error": "Échec de la copie du texte dans le presse-papiers"
+    },
+    "mark_favorite": {
+        "success": "Mission marquée comme favorite avec succès.",
+        "error": "Erreur lors de la mise en favori de la mission."
+    },
+    "remove_favorite": {
+        "success": "Mission retirée des favoris avec succès.",
+        "error": "Erreur lors de la suppression de la mission des favoris."
+    },
+    "delete_run": {
+        "success": "Mission supprimée avec succès.",
+        "error": "Erreur lors de la suppression de la mission."
     }
 }

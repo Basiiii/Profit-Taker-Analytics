@@ -87,6 +87,11 @@ abstract class RustLibApi extends BaseApi {
 
   DeleteRunResult crateApiDeleteRunFromDb({required int runId});
 
+  List<AnalyticsRunTotalTimesModel> crateApiGetAnalyticsRuns(
+      {required int limit});
+
+  TimeTypeModel? crateApiGetAverageTimes();
+
   int? crateApiGetEarliestRunId();
 
   int? crateApiGetLatestRunId();
@@ -227,11 +232,57 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  List<AnalyticsRunTotalTimesModel> crateApiGetAnalyticsRuns(
+      {required int limit}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(limit, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_analytics_run_total_times_model,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetAnalyticsRunsConstMeta,
+      argValues: [limit],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetAnalyticsRunsConstMeta => const TaskConstMeta(
+        debugName: "get_analytics_runs",
+        argNames: ["limit"],
+      );
+
+  @override
+  TimeTypeModel? crateApiGetAverageTimes() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_box_autoadd_time_type_model,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiGetAverageTimesConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiGetAverageTimesConstMeta => const TaskConstMeta(
+        debugName: "get_average_times",
+        argNames: [],
+      );
+
+  @override
   int? crateApiGetEarliestRunId() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -253,7 +304,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -276,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(currentRunId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -307,7 +358,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(sortColumn, serializer);
         sse_encode_bool(sortAscending, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_paginated_runs_response,
@@ -330,7 +381,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 9, port: port_);
+            funcId: 11, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
@@ -353,7 +404,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_run_model(runModel, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -377,7 +428,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(currentRunId, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -401,7 +452,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(runId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 12, port: port_);
+            funcId: 14, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_run_model,
@@ -424,7 +475,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 13, port: port_);
+            funcId: 15, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_run_times_response,
@@ -447,7 +498,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 14, port: port_);
+            funcId: 16, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -636,6 +687,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AnalyticsRunTotalTimesModel dco_decode_analytics_run_total_times_model(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return AnalyticsRunTotalTimesModel(
+      id: dco_decode_i_32(arr[0]),
+      runName: dco_decode_String(arr[1]),
+      totalTime: dco_decode_f_64(arr[2]),
+      totalFlightTime: dco_decode_f_64(arr[3]),
+      totalShieldTime: dco_decode_f_64(arr[4]),
+      totalLegTime: dco_decode_f_64(arr[5]),
+      totalBodyTime: dco_decode_f_64(arr[6]),
+      totalPylonTime: dco_decode_f_64(arr[7]),
+    );
+  }
+
+  @protected
   bool dco_decode_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as bool;
@@ -657,6 +727,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RunTimesResponse dco_decode_box_autoadd_run_times_response(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_run_times_response(raw);
+  }
+
+  @protected
+  TimeTypeModel dco_decode_box_autoadd_time_type_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_time_type_model(raw);
   }
 
   @protected
@@ -715,6 +791,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<AnalyticsRunTotalTimesModel>
+      dco_decode_list_analytics_run_total_times_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_analytics_run_total_times_model)
+        .toList();
+  }
+
+  @protected
   List<LegBreakModel> dco_decode_list_leg_break_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_leg_break_model).toList();
@@ -766,6 +851,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RunTimesResponse? dco_decode_opt_box_autoadd_run_times_response(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_run_times_response(raw);
+  }
+
+  @protected
+  TimeTypeModel? dco_decode_opt_box_autoadd_time_type_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_time_type_model(raw);
   }
 
   @protected
@@ -882,6 +973,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TimeTypeModel dco_decode_time_type_model(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return TimeTypeModel(
+      totalTime: dco_decode_f_64(arr[0]),
+      flightTime: dco_decode_f_64(arr[1]),
+      shieldTime: dco_decode_f_64(arr[2]),
+      legTime: dco_decode_f_64(arr[3]),
+      bodyTime: dco_decode_f_64(arr[4]),
+      pylonTime: dco_decode_f_64(arr[5]),
+    );
+  }
+
+  @protected
   TotalTimesModel dco_decode_total_times_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -917,6 +1024,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AnalyticsRunTotalTimesModel sse_decode_analytics_run_total_times_model(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_i_32(deserializer);
+    var var_runName = sse_decode_String(deserializer);
+    var var_totalTime = sse_decode_f_64(deserializer);
+    var var_totalFlightTime = sse_decode_f_64(deserializer);
+    var var_totalShieldTime = sse_decode_f_64(deserializer);
+    var var_totalLegTime = sse_decode_f_64(deserializer);
+    var var_totalBodyTime = sse_decode_f_64(deserializer);
+    var var_totalPylonTime = sse_decode_f_64(deserializer);
+    return AnalyticsRunTotalTimesModel(
+        id: var_id,
+        runName: var_runName,
+        totalTime: var_totalTime,
+        totalFlightTime: var_totalFlightTime,
+        totalShieldTime: var_totalShieldTime,
+        totalLegTime: var_totalLegTime,
+        totalBodyTime: var_totalBodyTime,
+        totalPylonTime: var_totalPylonTime);
+  }
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8() != 0;
@@ -939,6 +1069,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_run_times_response(deserializer));
+  }
+
+  @protected
+  TimeTypeModel sse_decode_box_autoadd_time_type_model(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_time_type_model(deserializer));
   }
 
   @protected
@@ -992,6 +1129,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return LegPositionEnum.values[inner];
+  }
+
+  @protected
+  List<AnalyticsRunTotalTimesModel>
+      sse_decode_list_analytics_run_total_times_model(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <AnalyticsRunTotalTimesModel>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_analytics_run_total_times_model(deserializer));
+    }
+    return ans_;
   }
 
   @protected
@@ -1094,6 +1245,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_run_times_response(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  TimeTypeModel? sse_decode_opt_box_autoadd_time_type_model(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_time_type_model(deserializer));
     } else {
       return null;
     }
@@ -1223,6 +1386,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TimeTypeModel sse_decode_time_type_model(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_totalTime = sse_decode_f_64(deserializer);
+    var var_flightTime = sse_decode_f_64(deserializer);
+    var var_shieldTime = sse_decode_f_64(deserializer);
+    var var_legTime = sse_decode_f_64(deserializer);
+    var var_bodyTime = sse_decode_f_64(deserializer);
+    var var_pylonTime = sse_decode_f_64(deserializer);
+    return TimeTypeModel(
+        totalTime: var_totalTime,
+        flightTime: var_flightTime,
+        shieldTime: var_shieldTime,
+        legTime: var_legTime,
+        bodyTime: var_bodyTime,
+        pylonTime: var_pylonTime);
+  }
+
+  @protected
   TotalTimesModel sse_decode_total_times_model(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_totalDuration = sse_decode_f_64(deserializer);
@@ -1258,6 +1439,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_analytics_run_total_times_model(
+      AnalyticsRunTotalTimesModel self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.id, serializer);
+    sse_encode_String(self.runName, serializer);
+    sse_encode_f_64(self.totalTime, serializer);
+    sse_encode_f_64(self.totalFlightTime, serializer);
+    sse_encode_f_64(self.totalShieldTime, serializer);
+    sse_encode_f_64(self.totalLegTime, serializer);
+    sse_encode_f_64(self.totalBodyTime, serializer);
+    sse_encode_f_64(self.totalPylonTime, serializer);
+  }
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self ? 1 : 0);
@@ -1281,6 +1476,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       RunTimesResponse self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_run_times_response(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_time_type_model(
+      TimeTypeModel self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_time_type_model(self, serializer);
   }
 
   @protected
@@ -1330,6 +1532,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       LegPositionEnum self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_list_analytics_run_total_times_model(
+      List<AnalyticsRunTotalTimesModel> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_analytics_run_total_times_model(item, serializer);
+    }
   }
 
   @protected
@@ -1422,6 +1634,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_time_type_model(
+      TimeTypeModel? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_time_type_model(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_paginated_runs_response(
       PaginatedRunsResponse self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1503,6 +1726,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       StatusEffectEnum self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_time_type_model(
+      TimeTypeModel self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_f_64(self.totalTime, serializer);
+    sse_encode_f_64(self.flightTime, serializer);
+    sse_encode_f_64(self.shieldTime, serializer);
+    sse_encode_f_64(self.legTime, serializer);
+    sse_encode_f_64(self.bodyTime, serializer);
+    sse_encode_f_64(self.pylonTime, serializer);
   }
 
   @protected

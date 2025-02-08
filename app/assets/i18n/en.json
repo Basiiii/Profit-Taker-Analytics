@@ -53,38 +53,45 @@
         "start_new_run": "Please start a new run to begin!"
     },
     "settings": {
-        "general": "General",
-        "links": "Links",
-        "report_bugs": "Report Bugs",
-        "about": "About",
-        "theme": "Theme",
-        "language": "Language",
-        "change_language": "Change language",
-        "pt_discord": "Profit Taker Discord",
-        "github_repo": "Github Repository",
-        "pt_guide": "Profit Taker Guide",
-        "report_bug": "Report a Bug on Github",
-        "contact_basi": "Contact Basi",
-        "about_app": "About App",
-        "version": "Version",
-        "about_app_description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on discord.",
-        "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGithub: Basiiii",
-        "key_config": "Shortcut Configuration",
-        "config_up_key": "Configure Next Key",
-        "config_down_key": "Configure Previous key" 
+        "general": {
+            "title": "General",
+            "theme": "Theme",
+            "change_language": "Change language"
+        },
+        "links": {
+            "title": "Links",
+            "pt_discord": "Profit Taker Discord",
+            "github_repo": "GitHub Repository",
+            "pt_guide": "Profit Taker Guide",
+            "report_bug": "Report a Bug on GitHub"
+        },
+        "shortcut_config": {
+            "title": "Shortcut Configuration",
+            "config_up_key": "Configure Next Key",
+            "config_down_key": "Configure Previous Key"
+        },
+        "contact": {
+            "title": "Contact Basi",
+            "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
+        },
+        "about": {
+            "title": "About",
+            "about_app": "About App",
+            "version": "Version",
+            "description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on Discord."
+        }
     },
     "storage" : {
         "title": "Your storage area",
         "run_name": "Run Name",
         "run_time": "Run Time",
         "date": "Date",
-        "edit": "Edit",
-        "delete": "Delete",
-        "actions": "Actions",
-        "favorite": "Favorite"
+        "actions": "Actions"
     },
     "analytics" : {
-        "title": "Your analytics"
+        "title": "Your analytics",
+        "no_data": "No data available",
+        "run_times": "Run Times"
     },
     "languages": {
         "en": "English",
@@ -94,15 +101,19 @@
         "fr": "Français",
         "tr": "Türkçe"
     },
-    "buttons": {
+    "common": {
+        "yes": "Yes",
+        "no": "No",
         "ok": "Okay",
         "cancel": "Cancel",
         "delete": "Delete",
         "download": "Download",
-        "dont_show_again": "Don't show again",
-        "yes": "Yes",
-        "no": "No",
-        "retry": "Try again"
+        "retry": "Try again",
+        "edit": "Edit",
+        "favorite": "Favorite",
+        "close": "Close",
+        "view": "View",
+        "dont_show_again": "Don't show again"
     },
     "alerts": {
         "name_title": "Change run name",
@@ -148,5 +159,17 @@
     "copy_run_text": {
         "success": "Text copied to clipboard successfully",
         "error": "Failed to copy text to clipboard"
+    },
+    "mark_favorite": {
+        "success": "Successfully marked run as favorite.",
+        "error": "Error marking run as favorite."
+    },
+    "remove_favorite": {
+        "success": "Successfully removed run from favorites.",
+        "error": "Error removing run from favorites."
+    },
+    "delete_run": {
+        "success": "Successfully deleted run.",
+        "error": "Error deleting run."
     }
 }

@@ -1,6 +1,6 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
 use lib_profit_taker_database::{connection::initialize_database, queries::{
-    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
+    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_analytics_data::fetch_analytics_runs, fetch_average_times::fetch_average_times_query, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 use crate::utils::json_to_db::initialize_json_converter;
@@ -820,4 +820,67 @@ pub fn get_paginated_runs(
     };
 
     Ok(response)
+}
+
+// Struct representing the different time types, redefined for Flutter FFI compatibility
+#[flutter_rust_bridge::frb]
+pub struct TimeTypeModel {
+    pub total_time: f64,
+    pub flight_time: f64,
+    pub shield_time: f64,
+    pub leg_time: f64,
+    pub body_time: f64,
+    pub pylon_time: f64,
+}
+
+// This function fetches the average times and returns them as TimeTypeModel
+#[flutter_rust_bridge::frb(sync)]
+pub fn get_average_times() -> Option<TimeTypeModel> {
+    match fetch_average_times_query() {
+        Ok((avg_total_time, avg_flight_time, avg_shield_time, avg_leg_time, avg_body_time, avg_pylon_time)) => {
+            Some(TimeTypeModel {
+                total_time: avg_total_time,
+                flight_time: avg_flight_time,
+                shield_time: avg_shield_time,
+                leg_time: avg_leg_time,
+                body_time: avg_body_time,
+                pylon_time: avg_pylon_time,
+            })
+        },
+        Err(_) => None, // Return None if there's an error fetching the averages
+    }
+}
+
+// Struct representing the different time types, redefined for Flutter FFI compatibility
+#[flutter_rust_bridge::frb]
+pub struct AnalyticsRunTotalTimesModel {
+    pub id: i32,
+    pub run_name: String,
+    pub total_time: f64,
+    pub total_flight_time: f64,
+    pub total_shield_time: f64,
+    pub total_leg_time: f64,
+    pub total_body_time: f64,
+    pub total_pylon_time: f64,
+}
+
+// This function fetches the analytics runs and returns them as a list of AnalyticsRunTotalTimesModel
+#[flutter_rust_bridge::frb(sync)]
+pub fn get_analytics_runs(limit: i32) -> Vec<AnalyticsRunTotalTimesModel> {
+    match fetch_analytics_runs(limit) {
+        Ok(runs) => runs
+            .into_iter()
+            .map(|run| AnalyticsRunTotalTimesModel {
+                id: run.id,
+                run_name: run.run_name,
+                total_time: run.total_time,
+                total_flight_time: run.total_flight_time,
+                total_shield_time: run.total_shield_time,
+                total_leg_time: run.total_leg_time,
+                total_body_time: run.total_body_time,
+                total_pylon_time: run.total_pylon_time,
+            })
+            .collect(),
+        Err(_) => Vec::new(), // Return an empty list if there's an error
+    }
 }
