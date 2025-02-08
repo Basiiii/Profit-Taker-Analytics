@@ -118,4 +118,18 @@ CREATE TABLE favorites (
     favorited_at INTEGER NOT NULL,  -- Store as Unix timestamp
     FOREIGN KEY (run_id) REFERENCES runs (id) ON DELETE CASCADE
 );
+
+-- Index for sorting
+CREATE INDEX idx_runs_name ON runs(run_name);
+CREATE INDEX idx_runs_time ON runs(time_stamp);
+CREATE INDEX idx_runs_total_time ON runs(total_time);
+
+-- Index for joins
+CREATE INDEX idx_favorites_run_id ON favorites(run_id);
+
+-- Composite index for sorting and filtering
+CREATE INDEX idx_runs_sorting ON runs(time_stamp DESC, total_time DESC, run_name);
+
+-- Index to optimize filtering of solo, non-bugged, non-aborted runs
+CREATE INDEX idx_runs_solo_bugged_aborted ON runs (solo_run, bugged_run, aborted_run);
 ";
