@@ -77,7 +77,8 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
         let mut file = File::open(path)?;
         file.seek(SeekFrom::Start(pos))?;
         let mut reader = BufReader::new(file);
-        let mut line = String::new();
+
+        let mut raw_line = Vec::new();
 
         // Check if the file has been reset, set seeking position to start of file if so
         let new_size = fs::metadata(path)?.len();
@@ -90,7 +91,17 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
         }
         known_size = new_size;
 
-        while reader.read_line(&mut line)? > 0 {
+        while reader.read_until(b'\n', &mut raw_line)? > 0 {
+            
+            let line = match String::from_utf8(raw_line.clone()) { 
+                Ok(l) => l,
+                Err(e) => {
+                    eprintln!("UTF-8 encoding error: {e}, waiting and rereading line...");
+                    thread::sleep(Duration::from_millis(10));
+                    continue;
+                }
+            };
+
             // Logger sometimes commits incomplete lines, causing reading errors,
             // so we wait a little and try again if the line is incomplete
             if !line.ends_with('\n') {
@@ -136,7 +147,7 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
             }
 
             pos = reader.seek(SeekFrom::Current(0))?;
-            line.clear();
+            raw_line.clear();
         }
         thread::sleep(Duration::from_millis(100));
     }

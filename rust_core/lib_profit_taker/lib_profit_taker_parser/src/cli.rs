@@ -76,7 +76,7 @@ pub fn pretty_print_run(run: &Run) -> String {
 
     // Header
     output.push('\n');
-    output.push_str("------------------------------------------------------------------------\n\n");
+    output.push_str("------------------------------------------------------------------------\n");
     output.push_str(&format!(
         "Profit-Taker Run #{} by {} cleared in {}\n\n",
         run.run_id, run.player_name, formatted_total
@@ -129,10 +129,12 @@ pub fn pretty_print_run(run: &Run) -> String {
         }
 
         // Pylons
-        output.push_str(&format!(
-            " Pylons:          {:.3}s\n",
-            phase.total_pylon_time
-        ));
+        if phase.total_pylon_time > 0.0 || phase.phase_number == 3 {
+            output.push_str(&format!(
+                " Pylons:          {:.3}s\n",
+                phase.total_pylon_time
+            ));
+        }
 
         output.push('\n');
     }

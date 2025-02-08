@@ -3,6 +3,7 @@ use lib_profit_taker_database::{connection::initialize_database, queries::{
     check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_analytics_data::fetch_analytics_runs, fetch_average_times::fetch_average_times_query, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
 }};
 use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
+use crate::utils::json_to_db::initialize_json_converter;
 
 #[flutter_rust_bridge::frb]
 pub struct RunModel {
@@ -111,6 +112,24 @@ pub fn initialize_db(path: String) -> Result<(), String> {
 
     // Try to initialize the database (either create or set the path)
     initialize_database(db_path).map_err(|e| format!("Error initializing database: {}", e))
+}
+
+/// Initializes the JSON converter by setting the storage folder for JSON files.
+/// This function wraps the `initialize_json_converter` function and handles errors by returning them
+/// in a format suitable for Flutter. The initialization will set the storage folder for JSON files.
+/// 
+/// # Arguments
+/// - `storage_folder`: The path to the folder where JSON files are stored.
+/// 
+/// # Returns
+/// 
+/// - `Ok(())` if the JSON converter was successfully initialized.
+/// - `Err(error_message)` if there was an error initializing the converter, with an error message describing the issue.
+#[flutter_rust_bridge::frb(dart_async)]
+pub fn initialize_converter (storage_folder: String) -> Result<(), String> {
+    let storage_folder = storage_folder.as_str();
+    // Try to initialize the JSON converter
+    initialize_json_converter(storage_folder).map_err(|e| format!("Error initializing converter: {}", e))
 }
 
 /// Fetches a run from the database based on the provided `run_id` and ensures it adheres to the expected structure.
@@ -595,7 +614,7 @@ pub fn initialize_profit_taker_parser() -> InitializeParserOutcome {
                 InitializeParserOutcome::FileOpenError
             } else if error_message.contains("Error seeking to start of file") {
                 InitializeParserOutcome::FileSeekError
-            } else if error_message.contains("Error running the parser") {
+            } else if error_message.contains("Error starting the parser") {
                 InitializeParserOutcome::ThreadSpawnError
             } else {
                 // For any unexpected error, return the generic unknown error.

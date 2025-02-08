@@ -32,7 +32,8 @@ pub const ENV_PATH: &str = "HOME";
 
 /// The OS-dependent path to where the warframe log folder is stored
 #[cfg(target_os = "linux")]
-pub const LOG_PATH: &str = "/.local/share/Warframe/EE.log"; //TODO to be updated with whatever the path is on linux
+pub const LOG_PATH: &str = "/.local/share/Steam/steamapps/compatdata/230410/pfx/drive_c/users/steamuser/AppData/Local/Warframe/EE.log";
+
 /// Line containing information on when the log was generated
 pub const LOG_START_TIME: &str = "Sys [Diag]: Current time:";
 /// Line indicating shield vulnerability was changed
