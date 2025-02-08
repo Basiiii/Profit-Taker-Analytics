@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.7.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1873209481;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2135135648;
 
 // Section: executor
 
@@ -1224,12 +1224,12 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        8 => wire__crate__api__get_paginated_runs_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__get_pb_times_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__get_run_from_db_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__get_second_best_times_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__init_app_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__initialize_converter_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__get_paginated_runs_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__get_pb_times_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__get_run_from_db_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__get_second_best_times_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__init_app_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__initialize_converter_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1246,17 +1246,19 @@ fn pde_ffi_dispatcher_sync_impl(
         2 => wire__crate__api__check_run_exists_impl(ptr, rust_vec_len, data_len),
         3 => wire__crate__api__check_run_favorite_impl(ptr, rust_vec_len, data_len),
         4 => wire__crate__api__delete_run_from_db_impl(ptr, rust_vec_len, data_len),
-        5 => wire__crate__api__get_earliest_run_id_impl(ptr, rust_vec_len, data_len),
-        6 => wire__crate__api__get_latest_run_id_impl(ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__get_next_run_id_impl(ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__get_pretty_printed_run_impl(ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__get_previous_run_id_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__initialize_db_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__initialize_profit_taker_parser_impl(ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__is_run_pb_impl(ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
+        5 => wire__crate__api__get_analytics_runs_impl(ptr, rust_vec_len, data_len),
+        6 => wire__crate__api__get_average_times_impl(ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__get_earliest_run_id_impl(ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__get_latest_run_id_impl(ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__get_next_run_id_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__get_pretty_printed_run_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__get_previous_run_id_impl(ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__initialize_db_impl(ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__initialize_profit_taker_parser_impl(ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__is_run_pb_impl(ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__mark_run_as_favorite_impl(ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__remove_run_from_favorites_impl(ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__update_run_name_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
