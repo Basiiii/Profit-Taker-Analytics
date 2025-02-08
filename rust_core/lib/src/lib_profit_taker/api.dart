@@ -25,6 +25,21 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 void initializeDb({required String path}) =>
     RustLib.instance.api.crateApiInitializeDb(path: path);
 
+/// Initializes the JSON converter by setting the storage folder for JSON files.
+/// This function wraps the `initialize_json_converter` function and handles errors by returning them
+/// in a format suitable for Flutter. The initialization will set the storage folder for JSON files.
+///
+/// # Arguments
+/// - `storage_folder`: The path to the folder where JSON files are stored.
+///
+/// # Returns
+///
+/// - `Ok(())` if the JSON converter was successfully initialized.
+/// - `Err(error_message)` if there was an error initializing the converter, with an error message describing the issue.
+Future<void> initializeConverter({required String storageFolder}) =>
+    RustLib.instance.api
+        .crateApiInitializeConverter(storageFolder: storageFolder);
+
 /// Fetches a run from the database based on the provided `run_id` and ensures it adheres to the expected structure.
 ///
 /// This function retrieves a run from the database and converts it into a structured `RunModel`. It ensures that:

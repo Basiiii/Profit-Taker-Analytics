@@ -125,7 +125,7 @@ pub fn initialize_db(path: String) -> Result<(), String> {
 /// 
 /// - `Ok(())` if the JSON converter was successfully initialized.
 /// - `Err(error_message)` if there was an error initializing the converter, with an error message describing the issue.
-#[flutter_rust_bridge::frb(async)]
+#[flutter_rust_bridge::frb(dart_async)]
 pub fn initialize_converter (storage_folder: String) -> Result<(), String> {
     let storage_folder = storage_folder.as_str();
     // Try to initialize the JSON converter
@@ -614,7 +614,7 @@ pub fn initialize_profit_taker_parser() -> InitializeParserOutcome {
                 InitializeParserOutcome::FileOpenError
             } else if error_message.contains("Error seeking to start of file") {
                 InitializeParserOutcome::FileSeekError
-            } else if error_message.contains("Error running the parser") {
+            } else if error_message.contains("Error starting the parser") {
                 InitializeParserOutcome::ThreadSpawnError
             } else {
                 // For any unexpected error, return the generic unknown error.
