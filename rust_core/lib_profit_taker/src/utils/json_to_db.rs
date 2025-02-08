@@ -1,9 +1,8 @@
 use lib_profit_taker_core::{LegBreak, LegPosition, Run, ShieldChange, SquadMember, StatusEffect};
-//use lib_profit_taker_database::queries::insert_run::insert_run;
 use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
 use lib_profit_taker_database::queries::insert_run::insert_run;
 use serde::{Deserialize, Serialize};
-use std::fs;
+use std::{fs, io};
 use std::fs::File;
 
 /// Phase struct to hold the data from the json file, in the same format as the json file
@@ -58,11 +57,12 @@ struct RunData {
 /// # Panics
 ///
 /// This function will panic if it can't read the storage folder
-pub fn initialize_converter(path: String) {
-    let entries = fs::read_dir(&path).expect("read_dir call failed");
+pub fn initialize_json_converter(path: &str) -> Result<(), io::Error> {
+    let entries = fs::read_dir(&path)?;
     for entry in entries {
-        deserialize_json(entry);
+        deserialize_json(entry)?;
     }
+    Ok(())
 }
 
 /// Function to deserialize the json file and insert it into the database
@@ -86,16 +86,17 @@ pub fn initialize_converter(path: String) {
 /// let path = fs::read_dir("./src/storage").expect("read_dir call failed").next().unwrap();
 /// deserialize_json(path);
 /// ```
-fn deserialize_json(entry: Result<fs::DirEntry, std::io::Error>) {
+fn deserialize_json(entry: Result<fs::DirEntry, io::Error>) -> Result<(), io::Error> {
     let mut run = Run::new();
-    let path = entry.expect("couldnt find path").path();
-    let file = File::open(&path).expect("file open failed");
-    let run_json: RunData = serde_json::from_reader(file).expect("json parse failed");
+    let path = entry?.path();
+    let file = File::open(&path)?;
+    let run_json: RunData = serde_json::from_reader(file)?;
     sort_run_data(&mut run, &run_json);
     //println!("done parsing run: {run:#?}");
-    if let Err(_e) = insert_run(&run) {
-        //eprintln!("Error inserting run: {e}");
+    if let Err(e) = insert_run(&run) {
+        eprintln!("Error inserting run: {e}");
     }
+    Ok(())
 }
 
 /// Function to sort the run data from the json file into the Run struct
