@@ -50,7 +50,7 @@ struct RunData {
 ///
 /// ```
 /// use lib_profit_taker_core::utils::json_to_db::initialize_converter;
-/// initialize_converter();
+/// initialize_converter("./storage/".to_string());
 /// ```
 ///
 /// This will read all files in the storage folder and convert them to the database

@@ -207,8 +207,10 @@ fn post_process(run: &mut Run) {
     run.total_times.total_shield_time = run.phases.iter().map(|x| x.total_shield_time).sum();
     run.total_times.total_leg_time = run.phases.iter().map(|x| x.total_leg_time).sum();
     run.total_times.total_body_time = run.phases.iter().map(|x| x.total_body_kill_time).sum();
+    // we can safely assume that bugged runs will always have an intact first phase
+    // because we can only detect bugged runs way after the first phase has ended
     run.total_times.total_pylon_time = if run.is_bugged_run {
-        0.0
+        run.phases.first().expect("no pylon time found in phase 1").total_pylon_time
     } else {
         run.phases.iter().map(|x| x.total_pylon_time).sum()
     };
