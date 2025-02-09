@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:rust_core/rust_core.dart';
 
-Future<bool> deleteRun(BuildContext context, RunListItemCustom run) async {
+Future<bool> deleteRun(BuildContext context, int runId) async {
   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
   // Show a confirmation dialog before deleting
@@ -29,7 +28,7 @@ Future<bool> deleteRun(BuildContext context, RunListItemCustom run) async {
 
   if (confirmDelete == true) {
     // Call the Rust function to delete the run
-    final DeleteRunResult result = deleteRunFromDb(runId: run.id);
+    final DeleteRunResult result = deleteRunFromDb(runId: runId);
 
     if (result.success) {
       // Show success message
