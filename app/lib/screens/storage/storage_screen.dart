@@ -1,17 +1,16 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:intl/intl.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/favorite_run.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/view_run.dart';
+import 'package:profit_taker_analyzer/screens/storage/run_data_source.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
+import 'package:profit_taker_analyzer/widgets/ui/loading/loading_indicator.dart';
 import 'package:rust_core/rust_core.dart';
 
 class StorageScreen extends StatefulWidget {
@@ -22,12 +21,12 @@ class StorageScreen extends StatefulWidget {
 }
 
 class _StorageScreenState extends State<StorageScreen> {
-  final ScrollController _scrollController = ScrollController();
   final List<RunListItemCustom> _runItems = [];
-  bool _hasMore = true;
   bool _isLoading = false;
-  int _currentPage = 1;
-  final int _pageSize = 50;
+  // TODO: This is very inefficient when you have a lot of runs
+  // this should be updated to paginate results (but this implies a completely
+  // custom page navigation because the data table does not accept a total num of records)
+  final int _pageSize = 50000;
 
   // Sorting state
   String _sortColumn = 'time_stamp'; // Default sort
@@ -36,7 +35,6 @@ class _StorageScreenState extends State<StorageScreen> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
     _loadInitialData();
   }
 
@@ -47,26 +45,6 @@ class _StorageScreenState extends State<StorageScreen> {
       setState(() {
         _runItems.clear();
         _runItems.addAll(newRuns);
-        _hasMore = newRuns.length == _pageSize;
-        _currentPage = 1;
-      });
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _loadMoreData() async {
-    if (!_hasMore || _isLoading) return;
-
-    setState(() => _isLoading = true);
-    try {
-      final newRuns = await _fetchRuns(page: _currentPage + 1);
-      setState(() {
-        _runItems.addAll(newRuns);
-        _hasMore = newRuns.length == _pageSize;
-        _currentPage++;
       });
     } catch (e) {
       _showError(e.toString());
@@ -76,18 +54,31 @@ class _StorageScreenState extends State<StorageScreen> {
   }
 
   Future<List<RunListItemCustom>> _fetchRuns({required int page}) async {
-    // Assume this calls your Rust function with proper pagination and sorting
+    final params = {
+      'page': page,
+      'pageSize': _pageSize,
+      'sortColumn': _sortColumn,
+      'sortAscending': _sortAscending,
+    };
+
+    // Offload everything to the isolate
+    return await compute(_fetchRunsIsolate, params);
+  }
+
+  static Future<List<RunListItemCustom>> _fetchRunsIsolate(
+      Map<String, dynamic> params) async {
+    await RustLib.init();
+
     final results = await getPaginatedRuns(
-      page: page,
-      pageSize: _pageSize,
-      sortColumn: _sortColumn,
-      sortAscending: _sortAscending,
+      page: params['page'] as int,
+      pageSize: params['pageSize'] as int,
+      sortColumn: params['sortColumn'] as String,
+      sortAscending: params['sortAscending'] as bool,
     );
 
+    // Perform the mapping in the isolate
     return results.runs.map((run) {
       final isFavorite = checkRunFavorite(runId: run.id);
-
-      // Map to the custom model with mutable 'isFavorite'
       return RunListItemCustom(
         id: run.id,
         name: run.name,
@@ -111,7 +102,6 @@ class _StorageScreenState extends State<StorageScreen> {
         _sortAscending = true;
       }
 
-      _currentPage = 1;
       _runItems.clear();
     });
 
@@ -147,13 +137,6 @@ class _StorageScreenState extends State<StorageScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreData();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,10 +149,11 @@ class _StorageScreenState extends State<StorageScreen> {
             _buildHeader(),
             _buildSubTitle(context),
             const SizedBox(height: 15),
-            Expanded(
-              child: _buildDataTable(),
-            ),
-            if (_isLoading) _buildLoadingIndicator(),
+            if (!_isLoading)
+              Expanded(
+                child: _buildDataTable(),
+              ),
+            if (_isLoading) LoadingIndicator()
           ],
         ),
       ),
@@ -200,10 +184,12 @@ class _StorageScreenState extends State<StorageScreen> {
   }
 
   Widget _buildDataTable() {
-    return DataTable2(
+    return PaginatedDataTable2(
       columnSpacing: 20,
       horizontalMargin: 12,
       minWidth: 800,
+      showFirstLastButtons: true,
+      autoRowsToHeight: true,
       columns: [
         _buildSortableColumn(
             context, 'storage.run_name', 'run_name', ColumnSize.L),
@@ -214,13 +200,15 @@ class _StorageScreenState extends State<StorageScreen> {
         _buildSortableColumn(
             context, 'common.favorite', 'is_favorite', ColumnSize.M),
         DataColumn2(
-          label: Text(
-            FlutterI18n.translate(context, "storage.actions"),
-          ),
+          label: Text(FlutterI18n.translate(context, "storage.actions")),
           size: ColumnSize.L,
         ),
       ],
-      rows: _runItems.map((run) => _buildDataRow(run)).toList(),
+      source: RunDataSource(
+        runs: _runItems,
+        context: context,
+        onEdit: _editRunName,
+      ),
     );
   }
 
@@ -244,89 +232,5 @@ class _StorageScreenState extends State<StorageScreen> {
       onSort: (_, __) => _handleSort(columnId),
       size: colSize,
     );
-  }
-
-  DataRow _buildDataRow(RunListItemCustom run) {
-    return DataRow(
-      cells: [
-        DataCell(
-          Row(
-            children: [
-              // Wrap the Text widget with Flexible to handle overflow
-              Flexible(
-                child: Text(
-                  run.name,
-                  overflow: TextOverflow.ellipsis, // Truncate with "..."
-                  maxLines: 1, // Ensure only one line is shown
-                ),
-              ),
-              const SizedBox(width: 6), // Space between icon and text
-              if (run.isBugged)
-                const Icon(Icons.warning, color: Colors.red, size: 18),
-              if (run.isAborted)
-                const Icon(Icons.warning, color: Colors.yellow, size: 18),
-            ],
-          ),
-        ),
-        DataCell(Text('${run.duration.toStringAsFixed(3)}s')),
-        DataCell(Text(DateFormat('kk:mm:ss - yyyy-MM-dd')
-            .format(DateTime.fromMillisecondsSinceEpoch(run.date * 1000)))),
-        DataCell(Text(run.isFavorite
-            ? FlutterI18n.translate(context, "common.yes")
-            : FlutterI18n.translate(context, "common.no"))),
-        DataCell(
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit, size: 18),
-                onPressed: () => _editRunName(context, run),
-              ),
-              IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    final success = await deleteRun(context, run);
-
-                    if (success) {
-                      setState(() {
-                        // After successful deletion, update the UI
-                        _runItems.remove(run);
-                      });
-                    }
-                  }),
-              IconButton(
-                icon: const Icon(Icons.remove_red_eye, size: 18),
-                onPressed: () => viewRun(context, run),
-              ),
-              IconButton(
-                icon: Icon(
-                  run.isFavorite ? Icons.star : Icons.star_border,
-                  color: run.isFavorite ? Colors.amber : null,
-                ),
-                onPressed: () async {
-                  final success = await toggleFavorite(context, _runItems, run);
-
-                  if (success) {
-                    setState(() {});
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
