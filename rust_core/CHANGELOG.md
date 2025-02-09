@@ -1,3 +1,3 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* Initial release with all base features, including parsing runs from ``EE.log`` and setting up an SQLite database.
