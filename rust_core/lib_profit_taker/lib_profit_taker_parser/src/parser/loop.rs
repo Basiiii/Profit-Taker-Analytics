@@ -37,6 +37,7 @@ use crate::line_utils::get_log_time;
 use crate::parser::events::parse_run;
 use crate::parser_state::ParserState;
 use lib_profit_taker_core::Run;
+use lib_profit_taker_database::queries::fetch_latest_run::fetch_latest_run_id;
 use lib_profit_taker_database::queries::insert_run::insert_run;
 
 
@@ -131,6 +132,19 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
                 // Check if the run has ended, save the run to the database and reset the current run
                 if parser_state.run_ended {
                     //println!("{}", pretty_print_run(run)); // for debugging purposes
+                    
+                    // Fetch the latest run ID from the database
+                    let latest_run_id = match fetch_latest_run_id() {
+                        Ok(Some(run_id)) => run_id,
+                        Ok(None) => 0,
+                        Err(e) => {
+                            eprintln!("Failed to fetch latest run: {e}");
+                            0
+                        }
+                    };
+                    
+                    // Set the run name based on the latest run ID
+                    run.run_name = format!("Run #{}", latest_run_id + 1);
 
                     // Insert the run into the database
                     if let Err(e) = insert_run(run) {
