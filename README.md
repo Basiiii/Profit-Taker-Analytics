@@ -71,7 +71,7 @@ Please adhere to this project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Special Thanks
 
-We extend our sincere gratitude to the original repository, [revoltage34/ptanalyzer](https://github.com/revoltage34/ptanalyzer), for the groundwork laid by the command line version. We found the original project interesting and saw potential in its concept. **Profit Taker Analytics** is a completely rebuilt solution, with a Rust-based backend parser and a Flutter-powered frontend, offering a fresh and modern approach to analyzing and storing data with a user-friendly Graphical User Interface (GUI).
+We would like to express our gratitude to the creators of [revoltage34/ptanalyzer](https://github.com/revoltage34/ptanalyzer), whose work inspired us. After exploring the original command-line tool, we recognized its potential and decided to create a new solution with a Rust-based backend parser and a Flutter-powered frontend. Profit Taker Analytics is a complete overhaul, offering a modern, user-friendly approach to analyzing and storing data through a sophisticated Graphical User Interface (GUI).
 
 ## Authors & Contributors
 
