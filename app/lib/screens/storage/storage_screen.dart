@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
@@ -9,6 +10,7 @@ import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart'
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
+import 'package:profit_taker_analyzer/widgets/ui/loading/loading_indicator.dart';
 import 'package:rust_core/rust_core.dart';
 
 class StorageScreen extends StatefulWidget {
@@ -21,8 +23,10 @@ class StorageScreen extends StatefulWidget {
 class _StorageScreenState extends State<StorageScreen> {
   final List<RunListItemCustom> _runItems = [];
   bool _isLoading = false;
-  final int _pageSize =
-      50000; // TODO: Potentially make this paginated (requires fully custom pagination buttons)
+  // TODO: This is very inefficient when you have a lot of runs
+  // this should be updated to paginate results (but this implies a completely
+  // custom page navigation because the data table does not accept a total num of records)
+  final int _pageSize = 50000;
 
   // Sorting state
   String _sortColumn = 'time_stamp'; // Default sort
@@ -50,18 +54,31 @@ class _StorageScreenState extends State<StorageScreen> {
   }
 
   Future<List<RunListItemCustom>> _fetchRuns({required int page}) async {
-    // Assume this calls your Rust function with proper pagination and sorting
+    final params = {
+      'page': page,
+      'pageSize': _pageSize,
+      'sortColumn': _sortColumn,
+      'sortAscending': _sortAscending,
+    };
+
+    // Offload everything to the isolate
+    return await compute(_fetchRunsIsolate, params);
+  }
+
+  static Future<List<RunListItemCustom>> _fetchRunsIsolate(
+      Map<String, dynamic> params) async {
+    await RustLib.init();
+
     final results = await getPaginatedRuns(
-      page: page,
-      pageSize: _pageSize,
-      sortColumn: _sortColumn,
-      sortAscending: _sortAscending,
+      page: params['page'] as int,
+      pageSize: params['pageSize'] as int,
+      sortColumn: params['sortColumn'] as String,
+      sortAscending: params['sortAscending'] as bool,
     );
 
+    // Perform the mapping in the isolate
     return results.runs.map((run) {
       final isFavorite = checkRunFavorite(runId: run.id);
-
-      // Map to the custom model with mutable 'isFavorite'
       return RunListItemCustom(
         id: run.id,
         name: run.name,
@@ -136,7 +153,7 @@ class _StorageScreenState extends State<StorageScreen> {
               Expanded(
                 child: _buildDataTable(),
               ),
-            if (_isLoading) _buildLoadingIndicator()
+            if (_isLoading) LoadingIndicator()
           ],
         ),
       ),
@@ -214,12 +231,6 @@ class _StorageScreenState extends State<StorageScreen> {
       ),
       onSort: (_, __) => _handleSort(columnId),
       size: colSize,
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
