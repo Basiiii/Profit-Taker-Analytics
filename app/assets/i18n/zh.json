@@ -56,7 +56,8 @@
         "general": {
             "title": "通用",
             "theme": "主题",
-            "change_language": "更改语言"
+            "change_language": "更改语言",
+            "view_onboarding": "查看入职指导"
         },
         "links": {
             "title": "链接",
