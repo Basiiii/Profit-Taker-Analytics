@@ -1,8 +1,8 @@
 # Contributing to Profit Taker Analytics
 
-Thank you for your interest in contributing to our app! We greatly appreciate your enthusiasm and willingness to help improve our project. However, please note that due to security concerns, certain parts of the codebase are not visible or shareable.
+Thank you for your interest in contributing to **Profit Taker Analytics**! We greatly appreciate your enthusiasm and willingness to help improve our project. However, please note that due to security concerns, certain parts of the codebase (specifically the **Application Component**) are not visible or shareable.
 
-While we understand this limitation may affect the scope of contributions, there are still various ways you can contribute to the project.
+While this limitation may affect the scope of contributions, the **Rust Core Component** is open-source and we encourage contributions to this part of the project.
 
 ## How to Contribute
 
@@ -18,10 +18,10 @@ Have an idea for a new feature or enhancement? Open a GitHub issue to discuss an
 
 ### Code Contributions
 
-As the app's code is only partially visible, most code contributions will be for the python parser.
+As the **Application Component** is proprietary and not open-source, most code contributions will focus on the **Rust Core Component**.
 
 1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
+2. Create a new branch for your feature or bug fix related to the **Rust Core Component**.
 3. Make changes and commit them with clear, concise messages.
 4. Push changes to your fork.
 5. Submit a pull request to the main repository.
@@ -38,7 +38,7 @@ Improvements to documentation are always welcome. If you find typos, unclear wor
 
 ### Translation Contributions
 
-We offer many languages on our app, if you'd like to contribute translations to the app please contact Basi through email `hello.basi@proton.me` or via Discord: `basi__`.
+We offer many languages on our app. If you'd like to contribute translations to the app, please contact Basi through email at `hello.basi@proton.me` or via Discord: `basi__`.
 
 ## Code of Conduct
 
@@ -46,6 +46,6 @@ This project follows a [Code of Conduct](CODE_OF_CONDUCT.md). Please uphold this
 
 ## License
 
-By contributing to Profit Taker Analytics, you acknowledge and agree that your contributions will be subject to the licensing terms specified in the project's license file. It's important to note that the parser and the app components have distinct licenses, each specified within their respective folders. More information is available in the [projects license](LICENSE).
+By contributing to **Profit Taker Analytics**, you acknowledge and agree that your contributions will be subject to the licensing terms specified in the project's license file. It's important to note that the **Rust Core Component** and the **Application Component** have distinct licenses, each specified within their respective folders. More information is available in the [project's license](LICENSE).
 
-Thank you for contributing to Profit Taker Analytics!
+Thank you for contributing to **Profit Taker Analytics**!

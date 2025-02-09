@@ -1,10 +1,10 @@
 ![project header](assets/PT_Analytics.png)
 
-# Profit Taker Analytics app
+# Profit Taker Analytics App
 
-The Profit Taker Analytics project is designed to enhance the experience for Profit Taker speedrunners in Warframe by providing an advanced analyzer with a user-friendly Graphical User Interface (GUI). This project builds upon an existing simple command line application, transforming it into a sophisticated tool that bridges the gap between textual data and intuitive visual representation.
+The Profit Taker Analytics project is designed to enhance the experience for Profit Taker speedrunners in Warframe by providing an advanced analyzer with a user-friendly Graphical User Interface (GUI). This project introduces a powerful new parser powered by a Rust-based backend, seamlessly integrated with a sleek Flutter GUI, offering an intuitive and efficient way to visualize and interact with data.
 
-The original command line application offered essential parsing capabilities, but it was limited to displaying information in a text format. The Profit Taker Analytics project elevates this functionality by introducing a seamlessly integrated GUI, enabling users to interact with the data effortlessly.
+The app provides users with an advanced, interactive tool to parse and analyze data, turning raw information into insightful visualizations that make it easier to track and optimize performance.
 
 Download [here](https://basi.is-a.dev/pta/).
 
@@ -17,17 +17,15 @@ Our project proudly stands as the tool of choice for a majority of the top-tier 
 ![home page](assets/home_screen.png)
 ![storage page](assets/storage_screen.png)
 
-
-
 https://github.com/Basiiii/Profit-Taker-Analytics/assets/90209339/68ba883b-8360-4d5e-a094-2f63d58eaf59
-
 
 ## Features
 
 - **Intuitive GUI Design:** Benefit from an intuitive and user-friendly Graphical User Interface (GUI), transforming raw data into a visually appealing format for easy interpretation.
-- **Compiled Application:** Eliminate the need for Python installation, making it hassle-free to seamlessly integrate the application into your Warframe speedrunning toolkit.
+- **Compiled Application:** No external dependencies are required, ensuring a hassle-free experience and seamless integration into your Warframe speedrunning toolkit.
 - **Designed for Elite Speedrunners:** Embraced by some of the best speedrunners in the Warframe community, the Profit Taker Analytics app is designed to meet the high standards and demands of elite gaming strategies.
-- **Parse bugged runs:** Compared to the old analyzer, this one can parse bugged runs. You'll no longer lose out on valuable runs!
+- **Parse Bugged Runs:** Unlike previous tools, this app can successfully parse bugged runs, ensuring you no longer lose valuable data.
+- **Support for Windows & Linux:** The PTA app is available on both Windows and Linux operating systems, making sure even the Linux users can enjoy it!
 
 ## FAQ
 
@@ -37,11 +35,11 @@ https://github.com/Basiiii/Profit-Taker-Analytics/assets/90209339/68ba883b-8360-
 
 #### Q2: What benefits does the GUI bring to the Profit Taker Analytics app?
 
-**A2:** The GUI transforms the text-based presentation into a visually appealing interface, improving data accessibility and overall user experience. It also allows us to easily expand the app, adding new features.
+**A2:** The GUI transforms data presentation into a visually appealing interface, improving data accessibility and overall user experience. It also allows for easy future expansions and feature additions.
 
-#### Q3: Is Python installation required?
+#### Q3: Is any special installation required?
 
-**A3:** No, the Profit Taker Analytics app is compiled, eliminating the need for Python installation.
+**A3:** No, the Profit Taker Analytics app is a compiled application, ensuring a smooth setup with no need for external dependencies.
 
 #### Q4: Can the app theme be customized?
 
@@ -49,7 +47,7 @@ https://github.com/Basiiii/Profit-Taker-Analytics/assets/90209339/68ba883b-8360-
 
 #### Q5: How can users provide feedback or report issues?
 
-**A5:** Users can contribute feedback or report issues through this official Github repository, by emailing Basi at `hello.basi@proton.me`, or by sending a DM on discord to `basi__`.
+**A5:** Users can contribute feedback or report issues through this official GitHub repository, by emailing Basi at `hello.basi@proton.me`, or by sending a DM on Discord to `basi__`.
 
 ## Performance
 
@@ -73,20 +71,20 @@ Please adhere to this project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Special Thanks
 
-We extend our sincere gratitude to the original repository, [revoltage34/ptanalyzer](https://github.com/revoltage34/ptanalyzer), for laying the foundation of the command line version. Our project builds upon this exceptional work, taking the code to new heights. Through diligent effort, we've expanded, updated, and modified it to function as a background parser, ultimately culminating in the creation of a user-friendly Graphical User Interface (GUI).
+We would like to express our gratitude to the creators of [revoltage34/ptanalyzer](https://github.com/revoltage34/ptanalyzer), whose work inspired us. After exploring the original command-line tool, we recognized its potential and decided to create a new solution with a Rust-based backend parser and a Flutter-powered frontend. Profit Taker Analytics is a complete overhaul, offering a modern, user-friendly approach to analyzing and storing data through a sophisticated Graphical User Interface (GUI).
 
 ## Authors & Contributors
 
-### Project Organizer
+### Project Lead
 
-- [Basi](https://github.com/Basiiii) - UI/UX Designer & Project Organizer
+- [Basi](https://github.com/Basiiii) - UI/UX Designer & Project Lead
 
 ### Developers
 
 - [Basi](https://github.com/Basiiii) - Flutter App Developer
-- [scamcat](https://github.com/ScamCatt) - Python Parser Developer
-- [RemasteredArch](https://remasteredarch.net/) - Rust Core Developer
 - [Kalaay](https://github.com/KalaayPT) - Rust Core Developer
+- [scamcat](https://github.com/ScamCatt) - Rust Core Developer
+- [RemasteredArch](https://remasteredarch.net/) - Rust Core Developer
 
 ### Notable Contributors
 

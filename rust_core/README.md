@@ -1,92 +1,36 @@
-# rust_core
+# Profit Taker Analytics - Rust Core Component
 
-A new Flutter FFI plugin project.
+The **Rust Core Component** is a backend library designed to parse data from Warframe's **EE.log** files and manage SQLite databases. It provides the core functionality required for efficient data processing and storage, with high performance and reliability.
 
-## Getting Started
+## Overview
 
-This project is a starting point for a Flutter
-[FFI plugin](https://flutter.dev/to/ffi-package),
-a specialized package that includes native code directly invoked with Dart FFI.
+This component is written in **Rust** and serves as the foundation for parsing and analyzing data related to the **Profit Taker** in Warframe. It handles the extraction of relevant data from **EE.log** files and manages storage in an SQLite database.
 
-## Project structure
+### Key Features
 
-This template uses the following structure:
+- **EE.log Parsing**: Efficiently parses Warframe's **EE.log** files to extract relevant information for Profit Taker speedruns.
+- **SQLite Database Management**: Manages storage of parsed data in an SQLite database, ensuring fast and reliable access.
+- **High Performance**: Built in **Rust** for maximum performance and efficiency during data processing.
 
-* `src`: Contains the native source code, and a CmakeFile.txt file for building
-  that source code into a dynamic library.
+## License
 
-* `lib`: Contains the Dart code that defines the API of the plugin, and which
-  calls into the native code using `dart:ffi`.
+This project is licensed under the **GNU General Public License v3.0** (GPL-3.0). See the [LICENSE](LICENSE) file for full details.
 
-* platform folders (`android`, `ios`, `windows`, etc.): Contains the build files
-  for building and bundling the native code library with the platform application.
+## Installation
 
-## Building and bundling native code
+To integrate the **Rust Core Component** into your project, include the library as an external dependency. The component is built to be used with FFI (Foreign Function Interface), allowing seamless integration with other applications or projects.
 
-The `pubspec.yaml` specifies FFI plugins as follows:
+## Usage
 
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        ffiPlugin: true
-```
+Once integrated, the library can be used to parse **EE.log** files and manage the storage of parsed data in an SQLite database. The core functionalities of parsing and database management are abstracted for ease of use.
 
-This configuration invokes the native build for the various target platforms
-and bundles the binaries in Flutter applications using these FFI plugins.
+## Contributing
 
-This can be combined with dartPluginClass, such as when FFI is used for the
-implementation of one platform in a federated plugin:
+Contributions to the **Rust Core Component** are welcome. If you'd like to contribute, please fork the repository, create a branch, and submit a pull request.
 
-```yaml
-  plugin:
-    implements: some_other_plugin
-    platforms:
-      some_platform:
-        dartPluginClass: SomeClass
-        ffiPlugin: true
-```
+## Authors
 
-A plugin can have both FFI and method channels:
-
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        pluginClass: SomeName
-        ffiPlugin: true
-```
-
-The native build systems that are invoked by FFI (and method channel) plugins are:
-
-* For Android: Gradle, which invokes the Android NDK for native builds.
-  * See the documentation in android/build.gradle.
-* For iOS and MacOS: Xcode, via CocoaPods.
-  * See the documentation in ios/rust_core.podspec.
-  * See the documentation in macos/rust_core.podspec.
-* For Linux and Windows: CMake.
-  * See the documentation in linux/CMakeLists.txt.
-  * See the documentation in windows/CMakeLists.txt.
-
-## Binding to native code
-
-To use the native code, bindings in Dart are needed.
-To avoid writing these by hand, they are generated from the header file
-(`src/rust_core.h`) by `package:ffigen`.
-Regenerate the bindings by running `dart run ffigen --config ffigen.yaml`.
-
-## Invoking native code
-
-Very short-running native functions can be directly invoked from any isolate.
-For example, see `sum` in `lib/rust_core.dart`.
-
-Longer-running functions should be invoked on a helper isolate to avoid
-dropping frames in Flutter applications.
-For example, see `sumAsync` in `lib/rust_core.dart`.
-
-## Flutter help
-
-For help getting started with Flutter, view our
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+- **[Basi](https://github.com/Basiiii)** - Project Lead
+- **[RemasteredArch](https://remasteredarch.net/)** - Rust Core Developer
+- **[Kalaay](https://github.com/KalaayPT)** - Rust Core Developer
+- **[scamcat](https://github.com/ScamCatt)** - Rust Core Developer

@@ -1,9 +1,13 @@
-Profit Taker Analytics
+**Profit Taker Analytics**
 
-The Profit Taker Analytics project consists of two main components: the application and the parser.
+The **Profit Taker Analytics** project consists of two completely separate components: the **Application Component** and the **Rust Core Component**. Each has distinct licensing terms and purposes.
 
-Application Component: The application portion of this project (located in the 'app' folder) is proprietary, and all rights are reserved. This means that unauthorized use, reproduction, or distribution of this component is strictly prohibited without explicit permission from the project owner (Basi). This decision was made to protect the intellectual property and ensure control over the distribution and usage of the application.
+### Application Component (Proprietary)
+The **Application Component** (located in the `app` folder) is proprietary, and all rights are strictly reserved. Unauthorized use, reproduction, or distribution of this component is expressly prohibited without explicit permission from the project owner **(Enrique Rodrigues (Basi))**. This ensures full control over its distribution and usage, protecting the intellectual property contained within the application.
 
-Parser Component: In contrast, the parser portion of this project (located in the 'parser' folder) is licensed under the GNU General Public License v3.0 (GPL-3.0). This license grants users the freedom to use, modify, and distribute the parser component according to the terms specified in the GPL-3.0 license. This choice reflects our commitment to open-source principles and encourages collaboration and innovation within the developer community.
+### Rust Core Component (Open Source - GPL-3.0)
+The **Rust Core Component** (located in the `rust_core` folder) is licensed under the **GNU General Public License v3.0 (GPL-3.0)**. This portion of the project consists of a Rust-based core that serves as a Flutter Rust FFI library. It enables FFI (Foreign Function Interface) calls from Dart to Rust, primarily for parsing runs and managing data storage in a database. This portion of the project consists of a Rust-based core that serves as a Flutter Rust FFI library. It enables FFI (Foreign Function Interface) calls from Dart to Rust, primarily for parsing runs and managing data storage in a database. The Application Component utilizes this Rust Core library as an external dependency, while remaining entirely separate in terms of licensing and ownership.
 
-Please refer to the respective license files (located in the 'parser' and 'app' folders) for detailed information on the licensing terms and conditions.
+By licensing the **Rust Core Component** under GPL-3.0, we embrace open-source principles, encouraging community collaboration and further development. However, this open-source license applies **only** to the `rust_core` component and does not extend to the proprietary **Application Component**.
+
+For full details regarding the licensing terms and conditions, please refer to the respective `LICENSE` files found in the `app` and `rust_core` folders.
