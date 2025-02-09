@@ -116,6 +116,11 @@
         "view": "Ver",
         "dont_show_again": "Não voltar a mostrar"
     },
+    "record_runs": {
+        "title": "Tempos Recordes",
+        "pb": "Melhor Pessoal",
+        "sb": "Segundo Melhor"
+    },
     "alerts": {
         "name_title": "Alterar o nome da missão",
         "delete_title": "Confirmar Apagar",

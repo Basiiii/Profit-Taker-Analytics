@@ -116,6 +116,11 @@
         "view": "查看",
         "dont_show_again": "不要再出现"
     },
+    "record_runs": {
+        "title": "记录跑步",
+        "pb": "个人最佳",
+        "sb": "第二最佳"
+    },
     "alerts": {
         "name_title": "更改任务名称",
         "delete_title": "确认删除",

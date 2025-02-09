@@ -116,6 +116,11 @@
         "view": "Görünüm",
         "dont_show_again": "Bir daha gösterme"
     },
+    "record_runs": {
+        "title": "Rekor Koşuları",
+        "pb": "Kişisel En İyi",
+        "sb": "İkinci En İyi"
+    },
     "alerts": {
         "name_title": "Görevin adını değiştir",
         "delete_title": "Silmeyi Onayla",

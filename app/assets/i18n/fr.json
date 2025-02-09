@@ -116,6 +116,11 @@
         "view": "Voir",
         "dont_show_again": "Ne plus montrer"
     },
+    "record_runs": {
+        "title": "Tempos Recordes",
+        "pb": "Melhor Pessoal",
+        "sb": "Segundo Melhor"
+    },
     "alerts": {
         "name_title": "Changer le nom de la mission",
         "delete_title": "Confirmer la suppresion",

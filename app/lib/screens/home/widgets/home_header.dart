@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/record_runs_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
@@ -50,6 +52,11 @@ class HomeHeader extends StatelessWidget {
                   onPressed: runService.navigateToPreviousRun,
                   tooltip:
                       FlutterI18n.translate(context, "tooltips.previous_run"),
+                ),
+                IconButton(
+                  icon: Icon(MdiIcons.medal),
+                  onPressed: () => showRecordRunsDialog(context),
+                  tooltip: FlutterI18n.translate(context, "tooltips.view_pb"),
                 ),
                 // Icon button for toggling the compact mode layout
                 IconButton(

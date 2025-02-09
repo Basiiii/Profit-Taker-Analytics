@@ -116,6 +116,11 @@
         "view": "View",
         "dont_show_again": "Don't show again"
     },
+    "record_runs": {
+        "title": "Record Runs",
+        "pb": "Personal Best",
+        "sb": "Second Best"
+    },
     "alerts": {
         "name_title": "Change run name",
         "delete_title": "Confirm Deletion",
