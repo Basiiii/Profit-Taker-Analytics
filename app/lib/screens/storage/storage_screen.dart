@@ -1,13 +1,10 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:intl/intl.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/favorite_run.dart';
-import 'package:profit_taker_analyzer/screens/storage/utils/view_run.dart';
+import 'package:profit_taker_analyzer/screens/storage/run_data_source.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
@@ -22,25 +19,18 @@ class StorageScreen extends StatefulWidget {
 }
 
 class _StorageScreenState extends State<StorageScreen> {
-  final ScrollController _scrollController = ScrollController();
   final List<RunListItemCustom> _runItems = [];
-  bool _hasMore = true;
   bool _isLoading = false;
-  int _currentPage = 1;
-  final int _pageSize = 5000; // TODO: make this dynamic (??)
+  final int _pageSize =
+      50000; // TODO: Potentially make this paginated (requires fully custom pagination buttons)
 
   // Sorting state
   String _sortColumn = 'time_stamp'; // Default sort
   bool _sortAscending = false;
 
-  // Total count and total pages
-  int _totalCount = 0;
-  int _totalPages = 0;
-
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
     _loadInitialData();
   }
 
@@ -51,26 +41,6 @@ class _StorageScreenState extends State<StorageScreen> {
       setState(() {
         _runItems.clear();
         _runItems.addAll(newRuns);
-        _hasMore = newRuns.length == _pageSize;
-        _currentPage = 1;
-      });
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _loadMoreData() async {
-    if (!_hasMore || _isLoading) return;
-
-    setState(() => _isLoading = true);
-    try {
-      final newRuns = await _fetchRuns(page: _currentPage + 1);
-      setState(() {
-        _runItems.addAll(newRuns);
-        _hasMore = newRuns.length == _pageSize;
-        _currentPage++;
       });
     } catch (e) {
       _showError(e.toString());
@@ -87,12 +57,6 @@ class _StorageScreenState extends State<StorageScreen> {
       sortColumn: _sortColumn,
       sortAscending: _sortAscending,
     );
-
-    // Update total count and total pages
-    setState(() {
-      _totalCount = results.totalCount;
-      _totalPages = (_totalCount / _pageSize).ceil();
-    });
 
     return results.runs.map((run) {
       final isFavorite = checkRunFavorite(runId: run.id);
@@ -121,7 +85,6 @@ class _StorageScreenState extends State<StorageScreen> {
         _sortAscending = true;
       }
 
-      _currentPage = 1;
       _runItems.clear();
     });
 
@@ -157,13 +120,6 @@ class _StorageScreenState extends State<StorageScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreData();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,10 +132,11 @@ class _StorageScreenState extends State<StorageScreen> {
             _buildHeader(),
             _buildSubTitle(context),
             const SizedBox(height: 15),
-            Expanded(
-              child: _buildDataTable(),
-            ),
-            if (_isLoading) _buildLoadingIndicator(),
+            if (!_isLoading)
+              Expanded(
+                child: _buildDataTable(),
+              ),
+            if (_isLoading) _buildLoadingIndicator()
           ],
         ),
       ),
@@ -214,13 +171,8 @@ class _StorageScreenState extends State<StorageScreen> {
       columnSpacing: 20,
       horizontalMargin: 12,
       minWidth: 800,
-      showFirstLastButtons: true, // Adds first/last page buttons
-      // rowsPerPage: _pageSize, // Define how many rows per page
+      showFirstLastButtons: true,
       autoRowsToHeight: true,
-      onPageChanged: (pageIndex) {
-        // When page changes, fetch more data
-        _loadPageData(pageIndex);
-      },
       columns: [
         _buildSortableColumn(
             context, 'storage.run_name', 'run_name', ColumnSize.L),
@@ -235,11 +187,10 @@ class _StorageScreenState extends State<StorageScreen> {
           size: ColumnSize.L,
         ),
       ],
-      source: _RunDataSource(
+      source: RunDataSource(
         runs: _runItems,
         context: context,
         onEdit: _editRunName,
-        onFetchMoreData: () => _loadPageData(_currentPage),
       ),
     );
   }
@@ -266,148 +217,9 @@ class _StorageScreenState extends State<StorageScreen> {
     );
   }
 
-  void _loadPageData(int pageIndex) {
-    setState(() {
-      _currentPage =
-          pageIndex + 1; // Ensure we are using the correct 1-based page index
-    });
-
-    // Fetch the data for the requested page
-    Future.delayed(Duration.zero, () async {
-      try {
-        final newRuns = await _fetchRuns(page: _currentPage);
-
-        setState(() {
-          if (pageIndex == 0) {
-            _runItems.clear(); // Clear the list if it's the first page
-          }
-          _runItems.addAll(newRuns);
-        });
-      } catch (e) {
-        _showError(e.toString());
-      }
-    });
-  }
-
-  DataRow _buildDataRow(RunListItemCustom run) {
-    return DataRow(
-      cells: [
-        DataCell(
-          Row(
-            children: [
-              // Wrap the Text widget with Flexible to handle overflow
-              Flexible(
-                child: Text(
-                  run.name,
-                  overflow: TextOverflow.ellipsis, // Truncate with "..."
-                  maxLines: 1, // Ensure only one line is shown
-                ),
-              ),
-            ],
-          ),
-        ),
-        DataCell(Text(run.duration.toString())),
-        DataCell(Text(DateFormat('kk:mm:ss - yyyy-MM-dd')
-            .format(DateTime.fromMillisecondsSinceEpoch(run.date * 1000)))),
-        DataCell(Icon(
-          run.isFavorite ? Icons.favorite : Icons.favorite_border,
-        )),
-        DataCell(
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => _editRunName(context, run),
-                icon: const Icon(Icons.edit),
-              ),
-              IconButton(
-                onPressed: () => deleteRun(context, run.id),
-                icon: const Icon(Icons.delete),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildLoadingIndicator() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
-}
-
-class _RunDataSource extends DataTableSource {
-  final List<RunListItemCustom> runs;
-  final BuildContext context;
-  final Function(BuildContext, RunListItemCustom) onEdit;
-  final Function() onFetchMoreData; // Callback to fetch more data
-
-  _RunDataSource({
-    required this.runs,
-    required this.context,
-    required this.onEdit,
-    required this.onFetchMoreData,
-  });
-
-  @override
-  DataRow getRow(int index) {
-    final run = runs[index];
-
-    return DataRow(
-      cells: [
-        DataCell(Text(run.name)),
-        DataCell(Text('${run.duration.toStringAsFixed(3)}s')),
-        DataCell(Text(DateFormat('kk:mm:ss - yyyy-MM-dd')
-            .format(DateTime.fromMillisecondsSinceEpoch(run.date * 1000)))),
-        DataCell(Text(run.isFavorite
-            ? FlutterI18n.translate(context, "common.yes")
-            : FlutterI18n.translate(context, "common.no"))),
-        DataCell(
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit, size: 18),
-                onPressed: () => onEdit(context, run),
-              ),
-              IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    final success = await deleteRun(context, run.id);
-                    if (success) {
-                      runs.removeAt(index);
-                      notifyListeners(); // Refresh table
-                    }
-                  }),
-              IconButton(
-                icon: const Icon(Icons.remove_red_eye, size: 18),
-                onPressed: () => viewRun(context, run.id),
-              ),
-              IconButton(
-                icon: Icon(
-                  run.isFavorite ? Icons.star : Icons.star_border,
-                  color: run.isFavorite ? Colors.amber : null,
-                ),
-                onPressed: () async {
-                  final success = await toggleFavorite(context, runs, run);
-                  if (success) {
-                    notifyListeners(); // Refresh table
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  int get rowCount => runs.length;
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get selectedRowCount => 0;
 }
