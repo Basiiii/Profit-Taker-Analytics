@@ -52,6 +52,8 @@ dependencies:
     path: ../rust_core
   # Used to fetch most recent app version
   http: ^1.3.0
+  # Used for icons
+  flutter_material_design_icons: ^1.1.7447
 
 dev_dependencies:
   flutter_test:
