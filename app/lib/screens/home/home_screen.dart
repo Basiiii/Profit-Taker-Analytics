@@ -4,8 +4,8 @@ import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.da
 import 'package:profit_taker_analyzer/screens/home/ui/no_runs_available.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/error_view.dart';
 import 'package:profit_taker_analyzer/screens/home/ui/home_content.dart';
-import 'package:profit_taker_analyzer/screens/home/widgets/onboarding_popup.dart';
 import 'package:profit_taker_analyzer/services/input/action_keys.dart';
+import 'package:profit_taker_analyzer/widgets/dialogs/show_onboarding_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/ui/loading/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
@@ -76,21 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (!hasSeenOnboarding) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showOnboarding();
+        showOnboardingDialog(context, false);
       });
     }
-  }
-
-  void _showOnboarding() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // User must complete onboarding
-      builder: (context) => OnboardingPopup(
-        onFinish: () {
-          Navigator.of(context).pop(); // Close overlay when finished
-        },
-      ),
-    );
   }
 
   /// Loads the saved action keys from SharedPreferences and updates the state accordingly.

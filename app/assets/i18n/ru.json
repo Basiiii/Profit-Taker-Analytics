@@ -56,7 +56,8 @@
         "general": {
             "title": "Общие",
             "theme": "Тема",
-            "change_language": "Изменить язык"
+            "change_language": "Изменить язык",
+            "view_onboarding": "Просмотреть вводный курс"
         },
         "links": {
             "title": "Ссылки",

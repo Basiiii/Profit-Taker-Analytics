@@ -56,7 +56,8 @@
         "general": {
             "title": "Genel",
             "theme": "Tema",
-            "change_language": "Dili değiştir"
+            "change_language": "Dili değiştir",
+            "view_onboarding": "Onboarding'i Gör"
         },
         "links": {
             "title": "Bağlantılar",

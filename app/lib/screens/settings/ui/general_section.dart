@@ -20,6 +20,7 @@ SettingsSection buildGeneralSection(
   BuildContext context,
   Locale currentLocale,
   VoidCallback onLanguagePressed,
+  VoidCallback onViewOnboarding,
 ) {
   final settingsService = SettingsService();
 
@@ -38,6 +39,12 @@ SettingsSection buildGeneralSection(
         trailing:
             Text(settingsService.getCurrentLanguage(context, currentLocale)),
         onPressed: (_) => onLanguagePressed(),
+      ),
+      SettingsTile(
+        title: Text(
+            FlutterI18n.translate(context, "settings.general.view_onboarding")),
+        leading: const Icon(Icons.info_outline_rounded),
+        onPressed: (_) => onViewOnboarding(),
       ),
     ],
   );

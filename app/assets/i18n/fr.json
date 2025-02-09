@@ -56,7 +56,8 @@
         "general": {
             "title": "Général",
             "theme": "Thème",
-            "change_language": "Changer la langue"
+            "change_language": "Changer la langue",
+            "view_onboarding": "Voir l'onboarding"
         },
         "links": {
             "title": "Liens",
