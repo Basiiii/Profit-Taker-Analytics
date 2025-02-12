@@ -57,7 +57,8 @@
             "title": "Général",
             "theme": "Thème",
             "change_language": "Changer la langue",
-            "view_onboarding": "Voir l'onboarding"
+            "view_onboarding": "Voir l'onboarding",
+            "import_old_json": "Importer les anciennes missions JSON"
         },
         "links": {
             "title": "Liens",
@@ -177,5 +178,9 @@
     "delete_run": {
         "success": "Mission supprimée avec succès.",
         "error": "Erreur lors de la suppression de la mission."
+    },
+    "import_run": {
+        "success": "Importation réussie de vos anciennes missions JSON.",
+        "error": "Une erreur s'est produite lors de l'importation de vos anciennes missions JSON !"
     }
 }

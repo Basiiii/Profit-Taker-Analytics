@@ -54,6 +54,8 @@ dependencies:
   http: ^1.3.0
   # Used for icons
   flutter_material_design_icons: ^1.1.7447
+  # Used for selecting folder to import old JSON
+  file_selector: ^1.0.1
 
 dev_dependencies:
   flutter_test:

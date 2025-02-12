@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:profit_taker_analyzer/screens/settings/utils/language_utils.dart';
+import 'package:profit_taker_analyzer/screens/settings/utils/select_folder.dart';
 import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/show_onboarding_dialog.dart';
 
@@ -126,6 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _currentLocale,
                 () => _showLanguageDialog(context),
                 () => showOnboardingDialog(context, true),
+                () => selectFolder(context),
               ),
               buildLinksSection(context),
               buildKeyConfigSection(

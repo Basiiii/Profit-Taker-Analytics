@@ -57,7 +57,8 @@
             "title": "Genel",
             "theme": "Tema",
             "change_language": "Dili değiştir",
-            "view_onboarding": "Onboarding'i Gör"
+            "view_onboarding": "Onboarding'i Gör",
+            "import_old_json": "Eski JSON görevlerini içe aktar"
         },
         "links": {
             "title": "Bağlantılar",
@@ -177,5 +178,9 @@
     "delete_run": {
         "success": "Görev başarıyla silindi.",
         "error": "Görev silinirken hata oluştu."
+    },
+    "import_run": {
+        "success": "Eski JSON görevleriniz başarıyla içe aktarıldı.",
+        "error": "Eski JSON görevlerinizi içe aktarırken bir hata oluştu!"
     }
 }

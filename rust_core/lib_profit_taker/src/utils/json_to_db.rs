@@ -4,6 +4,7 @@ use lib_profit_taker_database::queries::insert_run::insert_run;
 use serde::{Deserialize, Serialize};
 use std::{fs, io};
 use std::fs::File;
+use lib_profit_taker_database::queries::fetch_latest_run::fetch_latest_run_id;
 
 /// Phase struct to hold the data from the json file, in the same format as the json file
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -92,6 +93,20 @@ fn deserialize_json(entry: Result<fs::DirEntry, io::Error>) -> Result<(), io::Er
     let file = File::open(&path)?;
     let run_json: RunData = serde_json::from_reader(file)?;
     sort_run_data(&mut run, &run_json);
+
+    // Fetch the latest run ID from the database
+    let latest_run_id = match fetch_latest_run_id() {
+        Ok(Some(run_id)) => run_id,
+        Ok(None) => 0,
+        Err(e) => {
+            eprintln!("Failed to fetch latest run: {e}");
+            0
+        }
+    };
+    
+    // Set the run name based on the latest run ID
+    run.run_name = format!("Run #{}", latest_run_id + 1);
+    
     //println!("done parsing run: {run:#?}");
     if let Err(e) = insert_run(&run) {
         eprintln!("Error inserting run: {e}");
