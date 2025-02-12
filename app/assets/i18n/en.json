@@ -57,7 +57,8 @@
             "title": "General",
             "theme": "Theme",
             "change_language": "Change language",
-            "view_onboarding": "View onboarding"
+            "view_onboarding": "View onboarding",
+            "import_old_json": "Import Old JSON Runs"
         },
         "links": {
             "title": "Links",
@@ -177,5 +178,9 @@
     "delete_run": {
         "success": "Successfully deleted run.",
         "error": "Error deleting run."
+    },
+    "import_run": {
+        "success": "Successfully imported your old JSON runs.",
+        "error": "There was an error importing your old JSON files!"
     }
 }

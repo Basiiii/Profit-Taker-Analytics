@@ -57,7 +57,8 @@
             "title": "通用",
             "theme": "主题",
             "change_language": "更改语言",
-            "view_onboarding": "查看入职指导"
+            "view_onboarding": "查看入职指导",
+            "import_old_json": "导入旧 JSON 任务"
         },
         "links": {
             "title": "链接",
@@ -177,5 +178,9 @@
     "delete_run": {
         "success": "成功删除任务。",
         "error": "删除任务时出错。"
+    },
+    "import_run": {
+        "success": "成功导入您的旧 JSON 任务。",
+        "error": "导入您的旧 JSON 任务时发生错误！"
     }
 }
