@@ -69,7 +69,7 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
     // parser state is used to keep track temporary variables used while parsing a run
     let mut parser_state = ParserState::new();
 
-    // get the size of the log file ot account for log file resets
+    // get the size of the log file to account for log file resets
     let mut known_size = fs::metadata(path)?.len();
 
     // Main loop, reads the log file line by line, and processes the lines
@@ -78,7 +78,6 @@ pub fn log_reading(path: &str, mut pos: u64) -> io::Result<()> {
         let mut file = File::open(path)?;
         file.seek(SeekFrom::Start(pos))?;
         let mut reader = BufReader::new(file);
-
         let mut raw_line = Vec::new();
 
         // Check if the file has been reset, set seeking position to start of file if so
