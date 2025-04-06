@@ -1,11 +1,11 @@
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/column_mapping.dart';
 import 'package:profit_taker_analyzer/screens/storage/model/run_list_model.dart';
 import 'package:profit_taker_analyzer/screens/storage/run_data_source.dart';
+import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/edit_run_name_dialog.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_actions.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
@@ -23,10 +23,11 @@ class StorageScreen extends StatefulWidget {
 class _StorageScreenState extends State<StorageScreen> {
   final List<RunListItemCustom> _runItems = [];
   bool _isLoading = false;
-  // TODO: This is very inefficient when you have a lot of runs
-  // this should be updated to paginate results (but this implies a completely
-  // custom page navigation because the data table does not accept a total num of records)
-  final int _pageSize = 50000;
+
+  // Pagination settings
+  int _currentPage = 1;
+  int _pageSize = 8;
+  int _totalRows = 0;
 
   // Sorting state
   String _sortColumn = 'time_stamp'; // Default sort
@@ -41,11 +42,7 @@ class _StorageScreenState extends State<StorageScreen> {
   Future<void> _loadInitialData() async {
     setState(() => _isLoading = true);
     try {
-      final newRuns = await _fetchRuns(page: 1);
-      setState(() {
-        _runItems.clear();
-        _runItems.addAll(newRuns);
-      });
+      await _loadPage(_currentPage);
     } catch (e) {
       _showError(e.toString());
     } finally {
@@ -53,31 +50,56 @@ class _StorageScreenState extends State<StorageScreen> {
     }
   }
 
-  Future<List<RunListItemCustom>> _fetchRuns({required int page}) async {
-    final params = {
-      'page': page,
-      'pageSize': _pageSize,
-      'sortColumn': _sortColumn,
-      'sortAscending': _sortAscending,
-    };
+  // Add this new state variable
+  bool _isChangingPage = false;
 
-    // Offload everything to the isolate
-    return await compute(_fetchRunsIsolate, params);
+  Future<void> _loadPage(int page) async {
+    final stopwatch = Stopwatch()..start();
+    print('⏱️ Starting page load for page $page');
+
+    // Set page changing indicator to true
+    setState(() {
+      _isChangingPage = true;
+    });
+
+    try {
+      print(
+          '⏱️ Fetching runs - starting at ${stopwatch.elapsedMilliseconds}ms');
+      final result = await _fetchRuns(page: page);
+      print('⏱️ Fetch complete - took ${stopwatch.elapsedMilliseconds}ms');
+
+      print('⏱️ Updating UI - starting at ${stopwatch.elapsedMilliseconds}ms');
+      setState(() {
+        _runItems.clear();
+        _runItems.addAll(result.runs);
+        _totalRows = result.totalCount;
+        _currentPage = page;
+        _isChangingPage = false; // Reset when done
+      });
+      print(
+          '⏱️ UI update complete - total time: ${stopwatch.elapsedMilliseconds}ms');
+    } catch (e) {
+      print('⏱️ Error occurred after ${stopwatch.elapsedMilliseconds}ms: $e');
+      setState(() {
+        _isChangingPage = false; // Reset on error too
+      });
+      _showError(e.toString());
+    }
   }
 
-  static Future<List<RunListItemCustom>> _fetchRunsIsolate(
-      Map<String, dynamic> params) async {
-    await RustLib.init();
-
+  Future<RunPaginationResult> _fetchRuns({required int page}) async {
     final results = await getPaginatedRuns(
-      page: params['page'] as int,
-      pageSize: params['pageSize'] as int,
-      sortColumn: params['sortColumn'] as String,
-      sortAscending: params['sortAscending'] as bool,
+      page: page,
+      pageSize: _pageSize,
+      sortColumn: _sortColumn,
+      sortAscending: _sortAscending,
     );
 
-    // Perform the mapping in the isolate
-    return results.runs.map((run) {
+    // Get total count from results
+    final totalCount = results.totalCount;
+
+    // Map the results
+    final runs = results.runs.map((run) {
       final isFavorite = checkRunFavorite(runId: run.id);
       return RunListItemCustom(
         id: run.id,
@@ -89,6 +111,8 @@ class _StorageScreenState extends State<StorageScreen> {
         isFavorite: isFavorite,
       );
     }).toList();
+
+    return RunPaginationResult(runs: runs, totalCount: totalCount);
   }
 
   void _handleSort(String column) {
@@ -103,9 +127,10 @@ class _StorageScreenState extends State<StorageScreen> {
       }
 
       _runItems.clear();
+      // Don't reset page here, just reload current page with new sort
     });
 
-    _loadInitialData();
+    _loadPage(_currentPage); // Load the current page with new sort
   }
 
   void _editRunName(BuildContext context, RunListItemCustom run) {
@@ -184,32 +209,90 @@ class _StorageScreenState extends State<StorageScreen> {
   }
 
   Widget _buildDataTable() {
-    return PaginatedDataTable2(
-      columnSpacing: 20,
-      horizontalMargin: 12,
-      minWidth: 800,
-      showFirstLastButtons: true,
-      autoRowsToHeight: true,
-      columns: [
-        _buildSortableColumn(
-            context, 'storage.run_name', 'run_name', ColumnSize.L),
-        _buildSortableColumn(
-            context, 'storage.run_time', 'total_time', ColumnSize.M),
-        _buildSortableColumn(
-            context, 'storage.date', 'time_stamp', ColumnSize.M),
-        _buildSortableColumn(
-            context, 'common.favorite', 'is_favorite', ColumnSize.M),
-        DataColumn2(
-          label: Text(FlutterI18n.translate(context, "storage.actions")),
-          size: ColumnSize.L,
+    return Stack(
+      children: [
+        PaginatedDataTable2(
+          columnSpacing: 20,
+          horizontalMargin: 12,
+          minWidth: 800,
+          showFirstLastButtons: true,
+          rowsPerPage: _pageSize,
+          availableRowsPerPage: const [8, 16, 32],
+          onRowsPerPageChanged: (value) {
+            if (value != null && value != _pageSize) {
+              setState(() {
+                _pageSize = value;
+                _currentPage = 1; // Reset to first page when changing page size
+              });
+              _loadPage(_currentPage);
+            }
+          },
+          onPageChanged: (pageIndex) {
+            // Calculate the 1-based page number from the pageIndex
+            final newPage = (pageIndex / _pageSize).floor() + 1;
+
+            if (newPage != _currentPage) {
+              _loadPage(newPage);
+            }
+          },
+          columns: [
+            _buildSortableColumn(
+                context, 'storage.run_name', 'run_name', ColumnSize.L),
+            _buildSortableColumn(
+                context, 'storage.run_time', 'total_time', ColumnSize.M),
+            _buildSortableColumn(
+                context, 'storage.date', 'time_stamp', ColumnSize.M),
+            _buildSortableColumn(
+                context, 'common.favorite', 'is_favorite', ColumnSize.M),
+            DataColumn2(
+              label: Text(FlutterI18n.translate(context, "storage.actions")),
+              size: ColumnSize.L,
+            ),
+          ],
+          source: RunDataSource(
+            runs: _runItems,
+            context: context,
+            onEdit: _editRunName,
+            onDelete: _handleDelete,
+            totalRowCount: _totalRows,
+            pageSize: _pageSize,
+            currentPage: _currentPage,
+          ),
         ),
+
+        // Overlay a loading indicator when changing pages
+        if (_isChangingPage)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.1),
+              child: Center(
+                child: Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
-      source: RunDataSource(
-        runs: _runItems,
-        context: context,
-        onEdit: _editRunName,
-      ),
     );
+  }
+
+  Future<void> _handleDelete(int index) async {
+    // Make sure we're using the correct index from the current page
+    final run = _runItems[index];
+    final success = await deleteRun(context, run.id);
+    if (success) {
+      // Reload the current page to reflect the deletion
+      _loadPage(_currentPage);
+    }
   }
 
   DataColumn2 _buildSortableColumn(
@@ -233,4 +316,12 @@ class _StorageScreenState extends State<StorageScreen> {
       size: colSize,
     );
   }
+}
+
+// Helper class to return both runs and total count
+class RunPaginationResult {
+  final List<RunListItemCustom> runs;
+  final int totalCount;
+
+  RunPaginationResult({required this.runs, required this.totalCount});
 }

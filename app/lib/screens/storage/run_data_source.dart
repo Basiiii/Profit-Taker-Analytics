@@ -10,16 +10,35 @@ class RunDataSource extends DataTableSource {
   final List<RunListItemCustom> runs;
   final BuildContext context;
   final Function(BuildContext, RunListItemCustom) onEdit;
+  final Function(int)? onDelete;
+  final int totalRowCount;
+  final int pageSize;
+  final int currentPage;
 
   RunDataSource({
     required this.runs,
     required this.context,
     required this.onEdit,
+    this.onDelete,
+    required this.totalRowCount,
+    required this.pageSize,
+    required this.currentPage,
   });
 
   @override
   DataRow getRow(int index) {
-    final run = runs[index];
+    // Calculate the actual index in the current page data
+    final localIndex = index % pageSize;
+    
+    // Safety check to prevent index out of bounds errors
+    if (localIndex >= runs.length) {
+      // Return an empty row if the index is out of bounds
+      return DataRow(
+        cells: List.generate(5, (_) => const DataCell(Text(''))),
+      );
+    }
+
+    final run = runs[localIndex];
 
     return DataRow(
       cells: [
@@ -38,14 +57,18 @@ class RunDataSource extends DataTableSource {
                 onPressed: () => onEdit(context, run),
               ),
               IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
+                icon: const Icon(Icons.delete),
+                onPressed: () async {
+                  if (onDelete != null) {
+                    onDelete!(localIndex);
+                  } else {
                     final success = await deleteRun(context, run.id);
                     if (success) {
-                      runs.removeAt(index);
-                      notifyListeners(); // Refresh table
+                      notifyListeners();
                     }
-                  }),
+                  }
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.remove_red_eye, size: 18),
                 onPressed: () => viewRun(context, run.id),
@@ -58,7 +81,7 @@ class RunDataSource extends DataTableSource {
                 onPressed: () async {
                   final success = await toggleFavorite(context, runs, run);
                   if (success) {
-                    notifyListeners(); // Refresh table
+                    notifyListeners();
                   }
                 },
               ),
@@ -70,7 +93,7 @@ class RunDataSource extends DataTableSource {
   }
 
   @override
-  int get rowCount => runs.length;
+  int get rowCount => totalRowCount;
 
   @override
   bool get isRowCountApproximate => false;
