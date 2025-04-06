@@ -1,9 +1,21 @@
-use lib_profit_taker_core::{LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes};
-use lib_profit_taker_database::{connection::initialize_database, queries::{
-    check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run, edit_run_name::edit_run_name, fetch_analytics_data::fetch_analytics_runs, fetch_average_times::fetch_average_times_query, fetch_earliest_run::fetch_earliest_run_id, fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id, fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times, fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db, fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite, is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists
-}};
-use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 use crate::utils::json_to_db::initialize_json_converter;
+use lib_profit_taker_core::{
+    LegBreak, LegPosition, Phase, Run, ShieldChange, SquadMember, StatusEffect, TotalTimes,
+};
+use lib_profit_taker_database::{
+    connection::initialize_database,
+    queries::{
+        check_is_pb::is_pb, delete_favorite::unmark_as_favorite, delete_run::delete_run,
+        edit_run_name::edit_run_name, fetch_analytics_data::fetch_analytics_runs,
+        fetch_average_times::fetch_average_times_query, fetch_earliest_run::fetch_earliest_run_id,
+        fetch_latest_run::fetch_latest_run_id, fetch_next_run::fetch_next_run_id,
+        fetch_paginated_runs::fetch_paginated_runs_query, fetch_pb_times::fetch_pb_times,
+        fetch_previous_run::fetch_previous_run_id, fetch_run_data::fetch_run_from_db,
+        fetch_second_best_times::fetch_second_best_times, insert_favorite::mark_as_favorite,
+        is_favorite::is_run_favorite, latest_run::is_latest_run, run_exists::run_exists,
+    },
+};
+use lib_profit_taker_parser::{cli::pretty_print_run, initialize_parser};
 
 #[flutter_rust_bridge::frb]
 pub struct RunModel {
@@ -117,19 +129,20 @@ pub fn initialize_db(path: String) -> Result<(), String> {
 /// Initializes the JSON converter by setting the storage folder for JSON files.
 /// This function wraps the `initialize_json_converter` function and handles errors by returning them
 /// in a format suitable for Flutter. The initialization will set the storage folder for JSON files.
-/// 
+///
 /// # Arguments
 /// - `storage_folder`: The path to the folder where JSON files are stored.
-/// 
+///
 /// # Returns
-/// 
+///
 /// - `Ok(())` if the JSON converter was successfully initialized.
 /// - `Err(error_message)` if there was an error initializing the converter, with an error message describing the issue.
 #[flutter_rust_bridge::frb(dart_async)]
-pub fn initialize_converter (storage_folder: String) -> Result<(), String> {
+pub fn initialize_converter(storage_folder: String) -> Result<(), String> {
     let storage_folder = storage_folder.as_str();
     // Try to initialize the JSON converter
-    initialize_json_converter(storage_folder).map_err(|e| format!("Error initializing converter: {}", e))
+    initialize_json_converter(storage_folder)
+        .map_err(|e| format!("Error initializing converter: {}", e))
 }
 
 /// Fetches a run from the database based on the provided `run_id` and ensures it adheres to the expected structure.
@@ -187,146 +200,160 @@ pub fn get_run_from_db(run_id: i32) -> Result<RunModel, String> {
             };
 
             // Process phases to ensure exactly 4 with required fields
-            let existing_phases: std::collections::HashMap<_, _> = run.phases
+            let existing_phases: std::collections::HashMap<_, _> = run
+                .phases
                 .into_iter()
                 .filter(|p| (1..=4).contains(&p.phase_number))
                 .map(|p| (p.phase_number, p))
                 .collect();
 
-            let phases = (1..=4).map(|phase_number| {
-                let mut phase = if let Some(db_phase) = existing_phases.get(&phase_number) {
-                    // Convert shield changes
-                    let shield_changes = db_phase.shield_changes.iter().map(|sc| {
-                        let status_effect = match sc.status_effect {
-                            StatusEffect::Impact => StatusEffectEnum::Impact,
-                            StatusEffect::Puncture => StatusEffectEnum::Puncture,
-                            StatusEffect::Slash => StatusEffectEnum::Slash,
-                            StatusEffect::Heat => StatusEffectEnum::Heat,
-                            StatusEffect::Cold => StatusEffectEnum::Cold,
-                            StatusEffect::Electric => StatusEffectEnum::Electric,
-                            StatusEffect::Toxin => StatusEffectEnum::Toxin,
-                            StatusEffect::Blast => StatusEffectEnum::Blast,
-                            StatusEffect::Radiation => StatusEffectEnum::Radiation,
-                            StatusEffect::Gas => StatusEffectEnum::Gas,
-                            StatusEffect::Magnetic => StatusEffectEnum::Magnetic,
-                            StatusEffect::Viral => StatusEffectEnum::Viral,
-                            StatusEffect::Corrosive => StatusEffectEnum::Corrosive,
-                            StatusEffect::NoShield => StatusEffectEnum::NoShield,
-                        };
-                        ShieldChangeModel {
-                            shield_time: sc.shield_time,
-                            status_effect,
-                            shield_order: sc.shield_order,
-                        }
-                    }).collect::<Vec<_>>();
+            let phases = (1..=4)
+                .map(|phase_number| {
+                    let mut phase = if let Some(db_phase) = existing_phases.get(&phase_number) {
+                        // Convert shield changes
+                        let shield_changes = db_phase
+                            .shield_changes
+                            .iter()
+                            .map(|sc| {
+                                let status_effect = match sc.status_effect {
+                                    StatusEffect::Impact => StatusEffectEnum::Impact,
+                                    StatusEffect::Puncture => StatusEffectEnum::Puncture,
+                                    StatusEffect::Slash => StatusEffectEnum::Slash,
+                                    StatusEffect::Heat => StatusEffectEnum::Heat,
+                                    StatusEffect::Cold => StatusEffectEnum::Cold,
+                                    StatusEffect::Electric => StatusEffectEnum::Electric,
+                                    StatusEffect::Toxin => StatusEffectEnum::Toxin,
+                                    StatusEffect::Blast => StatusEffectEnum::Blast,
+                                    StatusEffect::Radiation => StatusEffectEnum::Radiation,
+                                    StatusEffect::Gas => StatusEffectEnum::Gas,
+                                    StatusEffect::Magnetic => StatusEffectEnum::Magnetic,
+                                    StatusEffect::Viral => StatusEffectEnum::Viral,
+                                    StatusEffect::Corrosive => StatusEffectEnum::Corrosive,
+                                    StatusEffect::NoShield => StatusEffectEnum::NoShield,
+                                };
+                                ShieldChangeModel {
+                                    shield_time: sc.shield_time,
+                                    status_effect,
+                                    shield_order: sc.shield_order,
+                                }
+                            })
+                            .collect::<Vec<_>>();
 
-                    // Convert leg breaks
-                    let leg_breaks = db_phase.leg_breaks.iter().map(|lb| {
-                        let leg_position = match lb.leg_position {
-                            LegPosition::FrontLeft => LegPositionEnum::FrontLeft,
-                            LegPosition::FrontRight => LegPositionEnum::FrontRight,
-                            LegPosition::BackLeft => LegPositionEnum::BackLeft,
-                            LegPosition::BackRight => LegPositionEnum::BackRight,
-                        };
-                        LegBreakModel {
-                            leg_break_time: lb.leg_break_time,
-                            leg_position,
-                            leg_order: lb.leg_order,
-                        }
-                    }).collect::<Vec<_>>();
+                        // Convert leg breaks
+                        let leg_breaks = db_phase
+                            .leg_breaks
+                            .iter()
+                            .map(|lb| {
+                                let leg_position = match lb.leg_position {
+                                    LegPosition::FrontLeft => LegPositionEnum::FrontLeft,
+                                    LegPosition::FrontRight => LegPositionEnum::FrontRight,
+                                    LegPosition::BackLeft => LegPositionEnum::BackLeft,
+                                    LegPosition::BackRight => LegPositionEnum::BackRight,
+                                };
+                                LegBreakModel {
+                                    leg_break_time: lb.leg_break_time,
+                                    leg_position,
+                                    leg_order: lb.leg_order,
+                                }
+                            })
+                            .collect::<Vec<_>>();
 
-                    PhaseModel {
-                        phase_number: db_phase.phase_number,
-                        total_time: db_phase.total_time,
-                        total_shield_time: db_phase.total_shield_time,
-                        total_leg_time: db_phase.total_leg_time,
-                        total_body_kill_time: db_phase.total_body_kill_time,
-                        total_pylon_time: db_phase.total_pylon_time,
-                        shield_changes,
-                        leg_breaks,
-                    }
-                } else {
-                    // Create default phase based on phase number
-                    let (has_shields, has_pylon) = match phase_number {
-                        1 => (true, true),
-                        2 => (false, false),
-                        3 => (true, true),
-                        4 => (true, false),
-                        _ => unreachable!(),
+                        PhaseModel {
+                            phase_number: db_phase.phase_number,
+                            total_time: db_phase.total_time,
+                            total_shield_time: db_phase.total_shield_time,
+                            total_leg_time: db_phase.total_leg_time,
+                            total_body_kill_time: db_phase.total_body_kill_time,
+                            total_pylon_time: db_phase.total_pylon_time,
+                            shield_changes,
+                            leg_breaks,
+                        }
+                    } else {
+                        // Create default phase based on phase number
+                        let (has_shields, has_pylon) = match phase_number {
+                            1 => (true, true),
+                            2 => (false, false),
+                            3 => (true, true),
+                            4 => (true, false),
+                            _ => unreachable!(),
+                        };
+
+                        let shield_changes = if has_shields {
+                            vec![ShieldChangeModel {
+                                shield_time: 0.0,
+                                status_effect: StatusEffectEnum::NoShield,
+                                shield_order: 0,
+                            }]
+                        } else {
+                            Vec::new()
+                        };
+
+                        let leg_breaks = vec![
+                            LegPositionEnum::FrontLeft,
+                            LegPositionEnum::FrontRight,
+                            LegPositionEnum::BackLeft,
+                            LegPositionEnum::BackRight,
+                        ]
+                        .iter()
+                        .map(|&leg_pos| LegBreakModel {
+                            leg_break_time: 0.0,
+                            leg_position: leg_pos,
+                            leg_order: 0,
+                        })
+                        .collect();
+
+                        PhaseModel {
+                            phase_number,
+                            total_time: 0.0,
+                            total_shield_time: 0.0,
+                            total_leg_time: 0.0,
+                            total_body_kill_time: 0.0,
+                            total_pylon_time: 0.0,
+                            shield_changes,
+                            leg_breaks,
+                        }
                     };
 
-                    let shield_changes = if has_shields {
-                        vec![ShieldChangeModel {
+                    // Ensure required shield changes for phases 1, 3, 4
+                    if [1, 3, 4].contains(&phase_number) && phase.shield_changes.is_empty() {
+                        phase.shield_changes.push(ShieldChangeModel {
                             shield_time: 0.0,
                             status_effect: StatusEffectEnum::NoShield,
                             shield_order: 0,
-                        }]
-                    } else {
-                        Vec::new()
-                    };
+                        });
+                    }
 
-                    let leg_breaks = vec![
+                    // Ensure all leg positions are present
+                    let existing_positions: std::collections::HashSet<_> =
+                        phase.leg_breaks.iter().map(|lb| lb.leg_position).collect();
+
+                    for &required_pos in &[
                         LegPositionEnum::FrontLeft,
                         LegPositionEnum::FrontRight,
                         LegPositionEnum::BackLeft,
                         LegPositionEnum::BackRight,
-                    ].iter().map(|&leg_pos| LegBreakModel {
-                        leg_break_time: 0.0,
-                        leg_position: leg_pos,
-                        leg_order: 0,
-                    }).collect();
-
-                    PhaseModel {
-                        phase_number,
-                        total_time: 0.0,
-                        total_shield_time: 0.0,
-                        total_leg_time: 0.0,
-                        total_body_kill_time: 0.0,
-                        total_pylon_time: 0.0,
-                        shield_changes,
-                        leg_breaks,
+                    ] {
+                        if !existing_positions.contains(&required_pos) {
+                            phase.leg_breaks.push(LegBreakModel {
+                                leg_break_time: 0.0,
+                                leg_position: required_pos,
+                                leg_order: 0,
+                            });
+                        }
                     }
-                };
 
-                // Ensure required shield changes for phases 1, 3, 4
-                if [1, 3, 4].contains(&phase_number) && phase.shield_changes.is_empty() {
-                    phase.shield_changes.push(ShieldChangeModel {
-                        shield_time: 0.0,
-                        status_effect: StatusEffectEnum::NoShield,
-                        shield_order: 0,
-                    });
-                }
-
-                // Ensure all leg positions are present
-                let existing_positions: std::collections::HashSet<_> = phase.leg_breaks
-                    .iter()
-                    .map(|lb| lb.leg_position)
-                    .collect();
-
-                for &required_pos in &[
-                    LegPositionEnum::FrontLeft,
-                    LegPositionEnum::FrontRight,
-                    LegPositionEnum::BackLeft,
-                    LegPositionEnum::BackRight,
-                ] {
-                    if !existing_positions.contains(&required_pos) {
-                        phase.leg_breaks.push(LegBreakModel {
-                            leg_break_time: 0.0,
-                            leg_position: required_pos,
-                            leg_order: 0,
-                        });
-                    }
-                }
-
-                phase
-            }).collect();
+                    phase
+                })
+                .collect();
 
             // Convert SquadMembers
-            let squad_members = run.squad_members.into_iter().map(|s| {
-                SquadMemberModel {
+            let squad_members = run
+                .squad_members
+                .into_iter()
+                .map(|s| SquadMemberModel {
                     member_name: s.member_name,
-                }
-            }).collect();
+                })
+                .collect();
 
             Ok(RunModel {
                 run_id: run.run_id,
@@ -405,8 +432,7 @@ pub fn get_previous_run_id(current_run_id: i32) -> Result<Option<i32>, String> {
 /// - `Err(error_message)` if there is an error fetching the next run ID, with an error message describing the issue.
 #[flutter_rust_bridge::frb(sync)]
 pub fn get_next_run_id(current_run_id: i32) -> Result<Option<i32>, String> {
-    fetch_next_run_id(current_run_id)
-        .map_err(|e| format!("Error fetching next run ID: {}", e))
+    fetch_next_run_id(current_run_id).map_err(|e| format!("Error fetching next run ID: {}", e))
 }
 
 /// Checks whether a run exists with the given run ID.
@@ -438,7 +464,7 @@ pub struct DeleteRunResult {
 /// Deletes a run by its ID from the database.
 ///
 /// This function attempts to delete a run identified by its `run_id` from the database.
-/// It returns a result that indicates whether the deletion was successful, 
+/// It returns a result that indicates whether the deletion was successful,
 /// and if not, provides a descriptive error message.
 ///
 /// # Arguments
@@ -449,7 +475,7 @@ pub struct DeleteRunResult {
 /// - `DeleteRunResult { success: false, error: Some(error_message) }` if there was an error, including:
 ///     - `Run not found`: if no run with the given `run_id` exists in the database.
 ///     - A detailed error message describing the failure if an exception occurred during the deletion process.
-/// 
+///
 /// # Errors
 /// This function will return `DeleteRunResult` with an error message if:
 /// - The database query fails (e.g., a connection issue).
@@ -494,7 +520,7 @@ pub fn check_if_latest_run(run_id: i32) -> bool {
 /// Marks the given run as a favorite in the database.
 ///
 /// This function wraps the `mark_as_favorite` function to make it accessible to Flutter.
-/// It attempts to mark the run with the given `run_id` as a favorite. 
+/// It attempts to mark the run with the given `run_id` as a favorite.
 ///
 /// # Arguments
 /// - `run_id`: The ID of the run to be marked as favorite.
@@ -530,12 +556,12 @@ pub fn remove_run_from_favorites(run_id: i32) -> bool {
 }
 
 /// Checks if a `Run` is marked as a favorite and exposes it to Flutter via flutter_rust_bridge.
-/// 
+///
 /// This function wraps the `is_run_favorite` function to make it accessible to Flutter.
-/// 
+///
 /// # Arguments
 /// - `run_id`: The ID of the run to check.
-/// 
+///
 /// # Returns
 /// - `true` if the run is marked as a favorite.
 /// - `false` if an error occurs during the check.
@@ -573,19 +599,19 @@ pub fn update_run_name(run_id: i32, new_name: String) -> bool {
 pub enum InitializeParserOutcome {
     /// Success variant, indicating successful parser initialization.
     Success,
-    
+
     /// Error variant for issues with the environment variable.
     EnvironmentVariableError,
-    
+
     /// Error variant for issues with opening the log file.
     FileOpenError,
-    
+
     /// Error variant for issues with seeking the file.
     FileSeekError,
-    
+
     /// Error variant for issues with spawning the thread.
     ThreadSpawnError,
-    
+
     /// Generic error variant for unknown issues.
     UnknownError,
 }
@@ -602,7 +628,7 @@ pub fn initialize_profit_taker_parser() -> InitializeParserOutcome {
     match initialize_parser() {
         // If the parser is initialized successfully, return the success variant.
         Ok(_) => InitializeParserOutcome::Success,
-        
+
         // If there is an error, map it to a specific error variant.
         Err(e) => {
             let error_message = e.to_string();
@@ -652,49 +678,65 @@ pub fn get_pretty_printed_run(run_model: RunModel) -> String {
             total_body_time: run_model.total_times.total_body_time,
             total_pylon_time: run_model.total_times.total_pylon_time,
         },
-        phases: run_model.phases.into_iter().map(|phase| Phase {
-            phase_number: phase.phase_number,
-            total_time: phase.total_time,
-            total_shield_time: phase.total_shield_time,
-            total_leg_time: phase.total_leg_time,
-            total_body_kill_time: phase.total_body_kill_time,
-            total_pylon_time: phase.total_pylon_time,
-            shield_changes: phase.shield_changes.into_iter().map(|shield| ShieldChange {
-                shield_time: shield.shield_time,
-                status_effect: match shield.status_effect {
-                    StatusEffectEnum::Impact => StatusEffect::Impact,
-                    StatusEffectEnum::Puncture => StatusEffect::Puncture,
-                    StatusEffectEnum::Slash => StatusEffect::Slash,
-                    StatusEffectEnum::Heat => StatusEffect::Heat,
-                    StatusEffectEnum::Cold => StatusEffect::Cold,
-                    StatusEffectEnum::Electric => StatusEffect::Electric,
-                    StatusEffectEnum::Toxin => StatusEffect::Toxin,
-                    StatusEffectEnum::Blast => StatusEffect::Blast,
-                    StatusEffectEnum::Radiation => StatusEffect::Radiation,
-                    StatusEffectEnum::Gas => StatusEffect::Gas,
-                    StatusEffectEnum::Magnetic => StatusEffect::Magnetic,
-                    StatusEffectEnum::Viral => StatusEffect::Viral,
-                    StatusEffectEnum::Corrosive => StatusEffect::Corrosive,
-                    StatusEffectEnum::NoShield => StatusEffect::NoShield,
-                },
-                shield_order: shield.shield_order, 
-            }).collect(),
-            leg_breaks: phase.leg_breaks.into_iter().map(|leg| LegBreak {
-                leg_break_time: leg.leg_break_time,
-                leg_position: match leg.leg_position {
-                    LegPositionEnum::FrontLeft => LegPosition::FrontLeft,
-                    LegPositionEnum::FrontRight => LegPosition::FrontRight,
-                    LegPositionEnum::BackLeft => LegPosition::BackLeft,
-                    LegPositionEnum::BackRight => LegPosition::BackRight,
-                },
-                leg_order: leg.leg_order,
-            }).collect(),
-        }).collect(),
-        squad_members: run_model.squad_members.into_iter().map(|member| SquadMember {
-            member_name: member.member_name,
-        }).collect(),
+        phases: run_model
+            .phases
+            .into_iter()
+            .map(|phase| Phase {
+                phase_number: phase.phase_number,
+                total_time: phase.total_time,
+                total_shield_time: phase.total_shield_time,
+                total_leg_time: phase.total_leg_time,
+                total_body_kill_time: phase.total_body_kill_time,
+                total_pylon_time: phase.total_pylon_time,
+                shield_changes: phase
+                    .shield_changes
+                    .into_iter()
+                    .map(|shield| ShieldChange {
+                        shield_time: shield.shield_time,
+                        status_effect: match shield.status_effect {
+                            StatusEffectEnum::Impact => StatusEffect::Impact,
+                            StatusEffectEnum::Puncture => StatusEffect::Puncture,
+                            StatusEffectEnum::Slash => StatusEffect::Slash,
+                            StatusEffectEnum::Heat => StatusEffect::Heat,
+                            StatusEffectEnum::Cold => StatusEffect::Cold,
+                            StatusEffectEnum::Electric => StatusEffect::Electric,
+                            StatusEffectEnum::Toxin => StatusEffect::Toxin,
+                            StatusEffectEnum::Blast => StatusEffect::Blast,
+                            StatusEffectEnum::Radiation => StatusEffect::Radiation,
+                            StatusEffectEnum::Gas => StatusEffect::Gas,
+                            StatusEffectEnum::Magnetic => StatusEffect::Magnetic,
+                            StatusEffectEnum::Viral => StatusEffect::Viral,
+                            StatusEffectEnum::Corrosive => StatusEffect::Corrosive,
+                            StatusEffectEnum::NoShield => StatusEffect::NoShield,
+                        },
+                        shield_order: shield.shield_order,
+                    })
+                    .collect(),
+                leg_breaks: phase
+                    .leg_breaks
+                    .into_iter()
+                    .map(|leg| LegBreak {
+                        leg_break_time: leg.leg_break_time,
+                        leg_position: match leg.leg_position {
+                            LegPositionEnum::FrontLeft => LegPosition::FrontLeft,
+                            LegPositionEnum::FrontRight => LegPosition::FrontRight,
+                            LegPositionEnum::BackLeft => LegPosition::BackLeft,
+                            LegPositionEnum::BackRight => LegPosition::BackRight,
+                        },
+                        leg_order: leg.leg_order,
+                    })
+                    .collect(),
+            })
+            .collect(),
+        squad_members: run_model
+            .squad_members
+            .into_iter()
+            .map(|member| SquadMember {
+                member_name: member.member_name,
+            })
+            .collect(),
     };
-    
+
     pretty_print_run(&run)
 }
 
@@ -716,6 +758,7 @@ pub fn is_run_pb(run_id: i32) -> bool {
 /// Represents the times of a run for FFI compatibility.
 #[flutter_rust_bridge::frb]
 pub struct RunTimesResponse {
+    pub run_id: i32,
     pub total_time: f64,
     pub total_flight_time: f64,
     pub total_shield_time: f64,
@@ -733,6 +776,7 @@ pub struct RunTimesResponse {
 pub fn get_pb_times() -> Option<RunTimesResponse> {
     match fetch_pb_times() {
         Ok(Some(pb_times)) => Some(RunTimesResponse {
+            run_id: pb_times.run_id,
             total_time: pb_times.total_time,
             total_flight_time: pb_times.total_flight_time,
             total_shield_time: pb_times.total_shield_time,
@@ -753,6 +797,7 @@ pub fn get_pb_times() -> Option<RunTimesResponse> {
 pub fn get_second_best_times() -> Option<RunTimesResponse> {
     match fetch_second_best_times() {
         Ok(Some(second_best_times)) => Some(RunTimesResponse {
+            run_id: second_best_times.run_id,
             total_time: second_best_times.total_time,
             total_flight_time: second_best_times.total_flight_time,
             total_shield_time: second_best_times.total_shield_time,
@@ -797,12 +842,14 @@ pub fn get_paginated_runs(
     sort_ascending: bool,
 ) -> Result<PaginatedRunsResponse, String> {
     // Call the query function to get paginated runs, handling errors and converting them to String
-    let (runs, total_count) = fetch_paginated_runs_query(page, page_size, &sort_column, sort_ascending)
-        .map_err(|e| e.to_string())?;  // Convert the rusqlite error to String
+    let (runs, total_count) =
+        fetch_paginated_runs_query(page, page_size, &sort_column, sort_ascending)
+            .map_err(|e| e.to_string())?; // Convert the rusqlite error to String
 
     // Convert each `Run` to `RunListItemModel`
-    let runs_model: Vec<RunListItemModel> = runs.into_iter().map(|run| {
-        RunListItemModel {
+    let runs_model: Vec<RunListItemModel> = runs
+        .into_iter()
+        .map(|run| RunListItemModel {
             id: run.run_id,
             name: run.run_name,
             date: run.time_stamp,
@@ -810,8 +857,8 @@ pub fn get_paginated_runs(
             is_bugged: run.is_bugged_run,
             is_aborted: run.is_aborted_run,
             is_favorite: false,
-        }
-    }).collect();
+        })
+        .collect();
 
     // Construct the response with the fetched runs and total count
     let response = PaginatedRunsResponse {
@@ -837,16 +884,21 @@ pub struct TimeTypeModel {
 #[flutter_rust_bridge::frb(sync)]
 pub fn get_average_times() -> Option<TimeTypeModel> {
     match fetch_average_times_query() {
-        Ok((avg_total_time, avg_flight_time, avg_shield_time, avg_leg_time, avg_body_time, avg_pylon_time)) => {
-            Some(TimeTypeModel {
-                total_time: avg_total_time,
-                flight_time: avg_flight_time,
-                shield_time: avg_shield_time,
-                leg_time: avg_leg_time,
-                body_time: avg_body_time,
-                pylon_time: avg_pylon_time,
-            })
-        },
+        Ok((
+            avg_total_time,
+            avg_flight_time,
+            avg_shield_time,
+            avg_leg_time,
+            avg_body_time,
+            avg_pylon_time,
+        )) => Some(TimeTypeModel {
+            total_time: avg_total_time,
+            flight_time: avg_flight_time,
+            shield_time: avg_shield_time,
+            leg_time: avg_leg_time,
+            body_time: avg_body_time,
+            pylon_time: avg_pylon_time,
+        }),
         Err(_) => None, // Return None if there's an error fetching the averages
     }
 }

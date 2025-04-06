@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "Missão anterior",
         "next_run": "Próxima missão",
-        "toggle_layout": "Alternar layout"
+        "toggle_layout": "Alternar layout",
+        "view_pb": "Ver os teu melhores tempos"
     },
     "screenshot": {
         "ScreenshotStatus": {

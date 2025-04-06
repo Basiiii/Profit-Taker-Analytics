@@ -975,15 +975,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RunTimesResponse dco_decode_run_times_response(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return RunTimesResponse(
-      totalTime: dco_decode_f_64(arr[0]),
-      totalFlightTime: dco_decode_f_64(arr[1]),
-      totalShieldTime: dco_decode_f_64(arr[2]),
-      totalLegTime: dco_decode_f_64(arr[3]),
-      totalBodyTime: dco_decode_f_64(arr[4]),
-      totalPylonTime: dco_decode_f_64(arr[5]),
+      runId: dco_decode_i_32(arr[0]),
+      totalTime: dco_decode_f_64(arr[1]),
+      totalFlightTime: dco_decode_f_64(arr[2]),
+      totalShieldTime: dco_decode_f_64(arr[3]),
+      totalLegTime: dco_decode_f_64(arr[4]),
+      totalBodyTime: dco_decode_f_64(arr[5]),
+      totalPylonTime: dco_decode_f_64(arr[6]),
     );
   }
 
@@ -1404,6 +1405,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   RunTimesResponse sse_decode_run_times_response(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_runId = sse_decode_i_32(deserializer);
     var var_totalTime = sse_decode_f_64(deserializer);
     var var_totalFlightTime = sse_decode_f_64(deserializer);
     var var_totalShieldTime = sse_decode_f_64(deserializer);
@@ -1411,6 +1413,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_totalBodyTime = sse_decode_f_64(deserializer);
     var var_totalPylonTime = sse_decode_f_64(deserializer);
     return RunTimesResponse(
+      runId: var_runId,
       totalTime: var_totalTime,
       totalFlightTime: var_totalFlightTime,
       totalShieldTime: var_totalShieldTime,
@@ -1803,6 +1806,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.runId, serializer);
     sse_encode_f_64(self.totalTime, serializer);
     sse_encode_f_64(self.totalFlightTime, serializer);
     sse_encode_f_64(self.totalShieldTime, serializer);

@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "Предыдущий заход",
         "next_run": "Следующий заход",
-        "toggle_layout": "Переключить формат"
+        "toggle_layout": "Переключить формат",
+        "view_pb": "Показать лучший результат"
     },
     "screenshot": {
         "ScreenshotStatus": {

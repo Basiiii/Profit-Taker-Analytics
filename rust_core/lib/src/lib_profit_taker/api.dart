@@ -591,6 +591,7 @@ class RunModel {
 
 /// Represents the times of a run for FFI compatibility.
 class RunTimesResponse {
+  final int runId;
   final double totalTime;
   final double totalFlightTime;
   final double totalShieldTime;
@@ -599,6 +600,7 @@ class RunTimesResponse {
   final double totalPylonTime;
 
   const RunTimesResponse({
+    required this.runId,
     required this.totalTime,
     required this.totalFlightTime,
     required this.totalShieldTime,
@@ -609,6 +611,7 @@ class RunTimesResponse {
 
   @override
   int get hashCode =>
+      runId.hashCode ^
       totalTime.hashCode ^
       totalFlightTime.hashCode ^
       totalShieldTime.hashCode ^
@@ -621,6 +624,7 @@ class RunTimesResponse {
       identical(this, other) ||
       other is RunTimesResponse &&
           runtimeType == other.runtimeType &&
+          runId == other.runId &&
           totalTime == other.totalTime &&
           totalFlightTime == other.totalFlightTime &&
           totalShieldTime == other.totalShieldTime &&

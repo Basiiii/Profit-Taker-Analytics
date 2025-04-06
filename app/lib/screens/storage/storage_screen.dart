@@ -54,21 +54,14 @@ class _StorageScreenState extends State<StorageScreen> {
   bool _isChangingPage = false;
 
   Future<void> _loadPage(int page) async {
-    final stopwatch = Stopwatch()..start();
-    print('⏱️ Starting page load for page $page');
-
     // Set page changing indicator to true
     setState(() {
       _isChangingPage = true;
     });
 
     try {
-      print(
-          '⏱️ Fetching runs - starting at ${stopwatch.elapsedMilliseconds}ms');
       final result = await _fetchRuns(page: page);
-      print('⏱️ Fetch complete - took ${stopwatch.elapsedMilliseconds}ms');
 
-      print('⏱️ Updating UI - starting at ${stopwatch.elapsedMilliseconds}ms');
       setState(() {
         _runItems.clear();
         _runItems.addAll(result.runs);
@@ -76,10 +69,7 @@ class _StorageScreenState extends State<StorageScreen> {
         _currentPage = page;
         _isChangingPage = false; // Reset when done
       });
-      print(
-          '⏱️ UI update complete - total time: ${stopwatch.elapsedMilliseconds}ms');
     } catch (e) {
-      print('⏱️ Error occurred after ${stopwatch.elapsedMilliseconds}ms: $e');
       setState(() {
         _isChangingPage = false; // Reset on error too
       });
