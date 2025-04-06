@@ -1,5 +1,4 @@
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
@@ -55,13 +54,21 @@ class _StorageScreenState extends State<StorageScreen> {
   bool _isChangingPage = false;
 
   Future<void> _loadPage(int page) async {
+    final stopwatch = Stopwatch()..start();
+    print('⏱️ Starting page load for page $page');
+
     // Set page changing indicator to true
     setState(() {
       _isChangingPage = true;
     });
 
     try {
+      print(
+          '⏱️ Fetching runs - starting at ${stopwatch.elapsedMilliseconds}ms');
       final result = await _fetchRuns(page: page);
+      print('⏱️ Fetch complete - took ${stopwatch.elapsedMilliseconds}ms');
+
+      print('⏱️ Updating UI - starting at ${stopwatch.elapsedMilliseconds}ms');
       setState(() {
         _runItems.clear();
         _runItems.addAll(result.runs);
@@ -69,7 +76,10 @@ class _StorageScreenState extends State<StorageScreen> {
         _currentPage = page;
         _isChangingPage = false; // Reset when done
       });
+      print(
+          '⏱️ UI update complete - total time: ${stopwatch.elapsedMilliseconds}ms');
     } catch (e) {
+      print('⏱️ Error occurred after ${stopwatch.elapsedMilliseconds}ms: $e');
       setState(() {
         _isChangingPage = false; // Reset on error too
       });
@@ -78,32 +88,17 @@ class _StorageScreenState extends State<StorageScreen> {
   }
 
   Future<RunPaginationResult> _fetchRuns({required int page}) async {
-    final params = {
-      'page': page,
-      'pageSize': _pageSize,
-      'sortColumn': _sortColumn,
-      'sortAscending': _sortAscending,
-    };
-
-    // Offload everything to the isolate
-    return await compute(_fetchRunsIsolate, params);
-  }
-
-  static Future<RunPaginationResult> _fetchRunsIsolate(
-      Map<String, dynamic> params) async {
-    await RustLib.init();
-
     final results = await getPaginatedRuns(
-      page: params['page'] as int,
-      pageSize: params['pageSize'] as int,
-      sortColumn: params['sortColumn'] as String,
-      sortAscending: params['sortAscending'] as bool,
+      page: page,
+      pageSize: _pageSize,
+      sortColumn: _sortColumn,
+      sortAscending: _sortAscending,
     );
 
     // Get total count from results
     final totalCount = results.totalCount;
 
-    // Perform the mapping in the isolate
+    // Map the results
     final runs = results.runs.map((run) {
       final isFavorite = checkRunFavorite(runId: run.id);
       return RunListItemCustom(
@@ -269,7 +264,7 @@ class _StorageScreenState extends State<StorageScreen> {
         if (_isChangingPage)
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               child: Center(
                 child: Card(
                   elevation: 4,
