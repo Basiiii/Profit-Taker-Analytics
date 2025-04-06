@@ -1098,6 +1098,7 @@ impl SseDecode for crate::api::RunModel {
 impl SseDecode for crate::api::RunTimesResponse {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_runId = <i32>::sse_decode(deserializer);
         let mut var_totalTime = <f64>::sse_decode(deserializer);
         let mut var_totalFlightTime = <f64>::sse_decode(deserializer);
         let mut var_totalShieldTime = <f64>::sse_decode(deserializer);
@@ -1105,6 +1106,7 @@ impl SseDecode for crate::api::RunTimesResponse {
         let mut var_totalBodyTime = <f64>::sse_decode(deserializer);
         let mut var_totalPylonTime = <f64>::sse_decode(deserializer);
         return crate::api::RunTimesResponse {
+            run_id: var_runId,
             total_time: var_totalTime,
             total_flight_time: var_totalFlightTime,
             total_shield_time: var_totalShieldTime,
@@ -1466,6 +1468,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RunModel> for crate::api::Run
 impl flutter_rust_bridge::IntoDart for crate::api::RunTimesResponse {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.run_id.into_into_dart().into_dart(),
             self.total_time.into_into_dart().into_dart(),
             self.total_flight_time.into_into_dart().into_dart(),
             self.total_shield_time.into_into_dart().into_dart(),
@@ -1858,6 +1861,7 @@ impl SseEncode for crate::api::RunModel {
 impl SseEncode for crate::api::RunTimesResponse {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.run_id, serializer);
         <f64>::sse_encode(self.total_time, serializer);
         <f64>::sse_encode(self.total_flight_time, serializer);
         <f64>::sse_encode(self.total_shield_time, serializer);

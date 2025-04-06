@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "Önceki Görev",
         "next_run": "Sonraki Görev",
-        "toggle_layout": "Düzeni Değiştir"
+        "toggle_layout": "Düzeni Değiştir",
+        "view_pb": "En İyi Görevi Gör"
     },
     "screenshot": {
         "ScreenshotStatus": {

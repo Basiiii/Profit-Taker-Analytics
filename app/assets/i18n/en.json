@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "Previous run",
         "next_run": "Next run",
-        "toggle_layout": "Toggle layout"
+        "toggle_layout": "Toggle layout",
+        "view_pb": "View personal best"
     },
     "screenshot": {
         "ScreenshotStatus": {

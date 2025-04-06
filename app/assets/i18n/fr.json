@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "Mission précédente",
         "next_run": "Mission suivante",
-        "toggle_layout": "Basculer la mise en page"
+        "toggle_layout": "Basculer la mise en page",
+        "view_pb": "Voir votre meilleur temps"
     },
     "screenshot": {
         "ScreenshotStatus": {

@@ -152,7 +152,8 @@
     "tooltips": {
         "previous_run": "上一个使命",
         "next_run": "下一个任务",
-        "toggle_layout": "切换布局"
+        "toggle_layout": "切换布局",
+        "view_pb": "查看个人最佳"
     },
     "screenshot": {
         "ScreenshotStatus": {
