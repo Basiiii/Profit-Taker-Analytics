@@ -163,6 +163,7 @@ fn calculate_total_pylon_time(line: &str, parser_state: &ParserState) -> f64 {
 /// - `parser_state`: A mutable reference to the [`ParserState`] which contains
 ///   information about the parser's state and variables for the current phase.
 fn reset_phase_variables(line: &str, parser_state: &mut ParserState) {
+    parser_state.body_kill_time = 0.0;
     parser_state.body_vuln_time = 0.0;
     parser_state.pylon_launch_time = 0.0;
     parser_state.kill_sequence = 0;
