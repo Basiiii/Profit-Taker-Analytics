@@ -46,6 +46,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   bool isBodyTimeVisible = true;
   bool isPylonTimeVisible = true;
 
+  /// Limit for the number of run times to fetch.
+  int _runLimit = 50;
+
+  /// Flag to indicate if data is currently being loaded.
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -80,15 +86,35 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   /// error in debug mode.
   void fetchRunTimes() async {
     try {
-      final runs = getAnalyticsRuns(limit: 50);
+      setState(() {
+        _isLoading = true; // Add loading state
+      });
+
+      final runs = getAnalyticsRuns(limit: _runLimit);
+
+      // Sort runs by ID in ascending order
+      runs.sort((a, b) => a.id.compareTo(b.id));
+
       setState(() {
         _runTimes = runs;
+        _isLoading = false;
       });
     } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
       if (kDebugMode) {
         print('Error fetching run times: $e');
       }
     }
+  }
+
+  // Add this method to handle limit changes
+  void _updateRunLimit(int newLimit) {
+    setState(() {
+      _runLimit = newLimit;
+    });
+    fetchRunTimes(); // Refresh data with new limit
   }
 
   @override
@@ -100,36 +126,47 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate the screen width considering the padding and margins.
     double screenWidth = MediaQuery.of(context).size.width -
         (LayoutConstants.totalLeftPaddingHome) -
-        13; // 13 pixels to make left side padding the same as the right side
+        13;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 60, top: 30, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header widget for the analytics screen.
-              AnalyticsHeader(
-                screenshotController: screenshotController,
-                fetchAverageData: fetchAverageData,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 60, top: 30, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnalyticsHeader(
+                    screenshotController: screenshotController,
+                    fetchAverageData: fetchAverageData,
+                    currentLimit: _runLimit,
+                    onLimitChanged: _updateRunLimit,
+                  ),
+                  const AnalyticsSubTitle(), // Subtitle of the analytics screen.
+                  // Main content that displays the analytics data.
+                  AnalyticsMainContent(
+                    screenWidth: screenWidth,
+                    screenshotController: screenshotController,
+                    averageTimes: _averageTimes,
+                    runTimes: _runTimes,
+                  ),
+                ],
               ),
-              const AnalyticsSubTitle(), // Subtitle of the analytics screen.
-              // Main content that displays the analytics data.
-              AnalyticsMainContent(
-                screenWidth: screenWidth,
-                screenshotController: screenshotController,
-                averageTimes: _averageTimes,
-                runTimes: _runTimes,
-              ),
-            ],
+            ),
           ),
-        ),
+          if (_isLoading)
+            Container(
+              color: Colors.black.withValues(alpha: 0.3),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
       ),
     );
   }

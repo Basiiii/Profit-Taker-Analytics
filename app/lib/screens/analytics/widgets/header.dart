@@ -17,10 +17,15 @@ class AnalyticsHeader extends StatelessWidget {
   /// A callback function to fetch the average data when triggered.
   final VoidCallback fetchAverageData;
 
+  final int currentLimit;
+  final Function(int) onLimitChanged;
+
   const AnalyticsHeader({
     super.key,
     required this.screenshotController,
     required this.fetchAverageData,
+    required this.currentLimit,
+    required this.onLimitChanged,
   });
 
   @override
@@ -31,6 +36,23 @@ class AnalyticsHeader extends StatelessWidget {
         const HeaderTitle(title: AppConstants.appName),
         HeaderActions(
           actions: [
+            DropdownButton<int>(
+              value: currentLimit,
+              items: [50, 100, 200, 500, 1000].map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('$value runs'),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                if (newValue != null) {
+                  onLimitChanged(newValue);
+                }
+              },
+              underline: Container(),
+              dropdownColor: Theme.of(context).colorScheme.surface,
+            ),
+            const SizedBox(width: 8),
             IconButton(
               icon: const Icon(Icons.copy, size: 18),
               onPressed: () {

@@ -1,5 +1,5 @@
-use rusqlite::{Connection, Result as RusqliteResult};
 use crate::connection::get_db_path;
+use rusqlite::{Connection, Result as RusqliteResult};
 
 #[derive(Debug)]
 pub struct AnalyticsRunTotalTimes {
@@ -24,8 +24,8 @@ pub fn fetch_analytics_runs(limit: i32) -> RusqliteResult<Vec<AnalyticsRunTotalT
          WHERE solo_run = 1 
          AND bugged_run = 0 
          AND aborted_run = 0
-         ORDER BY time_stamp ASC 
-         LIMIT {}", 
+         ORDER BY time_stamp DESC 
+         LIMIT {}",
         limit
     );
 
