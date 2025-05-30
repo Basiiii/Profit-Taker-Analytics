@@ -39,7 +39,9 @@ pub const LOG_START_TIME: &str = "Sys [Diag]: Current time:";
 /// Line indicating shield vulnerability was changed
 pub const SHIELD_SWITCH: &str = "SwitchShieldVulnerability";
 /// Line indicating a shield phase has ended
-pub const SHIELD_PHASE_ENDING: &str = "GiveItem Queuing resource load for Transmission: ";
+pub const SHIELD_PHASE_ENDING: &str = "ResourceLoader";
+// this line no longer exists:
+// pub const SHIELD_PHASE_ENDING: &str = "GiveItem Queuing resource load for Transmission: ";
 /// Line indicating the first shield phase has ended
 pub const SHIELD_PHASE_ENDING_1: &str =
     "Lotus/Sounds/Dialog/FortunaOrbHeist/Business/DBntyFourInterPrTk0920TheBusiness";
