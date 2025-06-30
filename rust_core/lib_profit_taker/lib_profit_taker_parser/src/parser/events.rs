@@ -166,7 +166,7 @@ fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut
         parser_state.shield_phase_ended = false;
         //println!("shield count: {}", parser_state.shield_count);
         //println!("Bugged run detected, phase 4 started");
-        //prepare_and_submit_phase(line, run, parser_state);
+        prepare_and_submit_phase(line, run, parser_state);
     } else {
         parser_state.shield_count += 1;
     }
