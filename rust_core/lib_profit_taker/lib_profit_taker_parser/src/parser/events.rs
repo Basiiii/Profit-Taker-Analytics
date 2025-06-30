@@ -12,7 +12,8 @@
 use crate::constants::{
     ABORT_MISSION, BACK_TO_TOWN, BODY_VULNERABLE, ELEVATOR_EXIT, LEG_KILL, NICKNAME, PHASE_1_START,
     PHASE_ENDS_1, PHASE_ENDS_2, PHASE_ENDS_3, PHASE_START, PYLONS_LAUNCHED, SHIELD_PHASE_ENDING,
-    SHIELD_PHASE_ENDINGS, SHIELD_SWITCH, SQUAD_MEMBER, STATE_CHANGE,
+    SHIELD_PHASE_ENDINGS, SHIELD_PHASE_ENDING_1, SHIELD_PHASE_ENDING_3, SHIELD_PHASE_ENDING_4,
+    SHIELD_SWITCH, SQUAD_MEMBER, STATE_CHANGE,
 };
 use crate::line_utils::{
     handle_names, leg_break_from_line, shield_change_from_line, status_from_line, time_from_line,
@@ -20,7 +21,6 @@ use crate::line_utils::{
 use crate::parser::phase::{prepare_and_submit_phase, run_ended};
 use crate::parser_state::ParserState;
 use lib_profit_taker_core::{Run, StatusEffect};
-
 
 /// Parses a run log line and updates the current run state accordingly.
 ///
@@ -54,11 +54,7 @@ use lib_profit_taker_core::{Run, StatusEffect};
 ///   during a single phase.
 /// - **Handling bugs**: Handles specific cases where logs may be bugged, such as missing events
 ///   or corrupted phases.
-pub(crate) fn parse_run(
-    run: &mut Run,
-    line: &str,
-    parser_state: &mut ParserState,
-) {
+pub(crate) fn parse_run(run: &mut Run, line: &str, parser_state: &mut ParserState) {
     //println!("{}", line); //printing all log lines for debugging
     if line.contains(NICKNAME) || line.contains(SQUAD_MEMBER) {
         handle_names(line, run);
@@ -225,6 +221,10 @@ fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut
     else if line.contains(SHIELD_PHASE_ENDING)
         && !parser_state.current_phase.shield_changes.is_empty()
         && !parser_state.shield_phase_ended
+        && (line.contains(SHIELD_PHASE_ENDING_1)
+            || line.contains(SHIELD_PHASE_ENDING_3)
+            || line.contains(SHIELD_PHASE_ENDING_4)
+        )
     {
         let shield = shield_change_from_line(line, parser_state);
         parser_state.current_phase.shield_changes.push(shield);
@@ -254,7 +254,6 @@ fn register_shield_changes(line: &str, parser_state: &mut ParserState, run: &mut
         //println!();
     }
 }
-
 
 /// Registers leg breaks to the current phase.
 ///
@@ -301,7 +300,7 @@ fn register_leg_breaks(line: &str, parser_state: &mut ParserState, run: &mut Run
 /// Registers the time of the body kill in phases 1-3 by parsing the relevant state change from the log line.
 ///
 /// This function keeps track of specific state changes during the Profit-Taker fight.
-/// 
+///
 /// # Parameters
 ///
 /// - `line`: A string slice representing the current log line being processed.
@@ -326,7 +325,6 @@ fn register_state_change(line: &str, parser_state: &mut ParserState) {
         //println!("Body killed at {}", parser_state.body_kill_time);
     }
 }
-
 
 /// Registers the time of the pylon launch in the Profit-Taker fight and sets the pylon check flag to handle specific scenarios in bugged runs.
 ///
