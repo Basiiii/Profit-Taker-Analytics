@@ -1,187 +1,197 @@
 {
-    "home": {
-        "hello": "Olá!",
-        "hello_name": "Olá {name}!",
-        "last_run": "Última luta",
-        "last_run_with": "Última luta com ",
-        "run": "A tua luta",
-        "run_with": "A tua luta com ",
-        "and": " e ",
-        "named": "chamada"
+  "home": {
+    "hello": "Olá!",
+    "hello_name": "Olá {name}!",
+    "last_run": "Última luta",
+    "last_run_with": "Última luta com ",
+    "run": "A tua luta",
+    "run_with": "A tua luta com ",
+    "and": " e ",
+    "named": "chamada"
+  },
+  "onboarding": {
+    "welcome": "Bem-vindo ao Profit Taker Analytics!\nVamos dar uma olhada em alguns recursos principais.",
+    "navigation": "Use as setas, os botões no canto superior direito ou a roda do mouse para navegar entre as execuções.",
+    "screenshot": "Clique no botão de copiar para capturar automaticamente sua execução! Sem necessidade de capturas de tela manuais.",
+    "main_nav": "Use a barra de navegação à esquerda para explorar diferentes seções do aplicativo clicando nos botões.",
+    "final": "É isso! Espero que aproveite o PTA."
+  },
+  "overview_cards": {
+    "total_duration": "Tempo\nTotal",
+    "flight_time": "Tempo de\nVoo",
+    "shield_break": "Quebra dos\nEscudos",
+    "leg_break": "Quebra das\nPernas",
+    "body_kill": "Morte do\nCorpo",
+    "pylon_destruction": "Destruição dos\nPilares"
+  },
+  "average_cards": {
+    "total_avg": "Média\nDuração Total",
+    "flight_avg": "Média\nTempo Voo",
+    "shield_avg": "Média Quebra\nEscudos",
+    "leg_avg": "Média Quebra\nPerna",
+    "body_avg": "Média Morte\nCorpo",
+    "pylon_avg": "Média Destruição\nPilares"
+  },
+  "phase_cards": {
+    "phase_1": "Primeira Phase",
+    "phase_2": "Segunda Phase",
+    "phase_3": "Terceira Phase",
+    "phase_4": "Quarta Phase",
+    "shields": "Escudos",
+    "legs": "Pernas",
+    "body": "Corpo",
+    "pylons": "Pilares"
+  },
+  "errors": {
+    "error": "Erro!",
+    "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
+    "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos.",
+    "aborted_run_warning": "Esta luta foi interrompida precocemente.",
+    "existing_name": "Este nome já existe. Por favor escolha outro nome.",
+    "load_failed": "O carregamento da tua missão falhou.",
+    "no_runs": "Ainda não há missões disponíveis ou registadas",
+    "start_new_run": "Por favor, inicie uma nova missão para começar!"
+  },
+  "settings": {
+    "general": {
+      "title": "Geral",
+      "theme": "Tema",
+      "change_language": "Alterar idioma",
+      "view_onboarding": "Ver o onboarding",
+      "import_old_json": "Importar antigas missões JSON",
+      "sign_in": "Entrar",
+      "sign_up": "Registrar-se"
     },
-    "onboarding": {
-        "welcome": "Bem-vindo ao Profit Taker Analytics!\nVamos dar uma olhada em alguns recursos principais.",
-        "navigation": "Use as setas, os botões no canto superior direito ou a roda do mouse para navegar entre as execuções.",
-        "screenshot": "Clique no botão de copiar para capturar automaticamente sua execução! Sem necessidade de capturas de tela manuais.",
-        "main_nav": "Use a barra de navegação à esquerda para explorar diferentes seções do aplicativo clicando nos botões.",
-        "final": "É isso! Espero que aproveite o PTA."
+    "links": {
+      "title": "Ligações",
+      "pt_discord": "Profit Taker Discord",
+      "github_repo": "Repositório GitHub",
+      "pt_guide": "Guia do Profit Taker",
+      "report_bug": "Reportar um erro no GitHub"
     },
-    "overview_cards": {
-        "total_duration": "Tempo\nTotal",
-        "flight_time": "Tempo de\nVoo",
-        "shield_break": "Quebra dos\nEscudos",
-        "leg_break": "Quebra das\nPernas",
-        "body_kill": "Morte do\nCorpo",
-        "pylon_destruction": "Destruição dos\nPilares"
+    "shortcut_config": {
+      "title": "Configuração de Atalhos",
+      "config_up_key": "Configurar tecla Seguinte",
+      "config_down_key": "Configurar tecla Anterior"
     },
-    "average_cards": {
-        "total_avg": "Média\nDuração Total",
-        "flight_avg": "Média\nTempo Voo",
-        "shield_avg": "Média Quebra\nEscudos",
-        "leg_avg": "Média Quebra\nPerna",
-        "body_avg": "Média Morte\nCorpo",
-        "pylon_avg": "Média Destruição\nPilares"
+    "contact": {
+      "title": "Contactar Basi",
+      "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
     },
-    "phase_cards": {
-        "phase_1": "Primeira Phase",
-        "phase_2": "Segunda Phase",
-        "phase_3": "Terceira Phase",
-        "phase_4": "Quarta Phase",
-        "shields": "Escudos",
-        "legs": "Pernas",
-        "body": "Corpo",
-        "pylons": "Pilares"
+    "about": {
+      "title": "Sobre",
+      "about_app": "Sobre a aplicação",
+      "version": "Versão",
+      "description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM com uma manga no Discord."
     },
-    "errors": {
-        "error": "Erro!",
-        "parser_connection_error": "A aplicação não consegue estabelecer uma ligação com o analisador.\nPor favor reinicie o programa.\n\nCaso não funcione depois de reiniciar, por favor contacte o Basi.\nContactos disponíveis nas definições da aplicação.",
-        "bugged_run_warning": "Esta missão foi identificada como potencialmente com erros. Algumas missões não são registadas com precisão pelo Warframe,\no que nos impossibilita de recuperar todos os dados.\n\nInfelizmente, este problema está fora do nosso controlo, mas continuaremos a mostrar-te toda a informação que pudermos.",
-        "aborted_run_warning": "Esta luta foi interrompida precocemente.",
-        "existing_name": "Este nome já existe. Por favor escolha outro nome.",
-        "load_failed": "O carregamento da tua missão falhou.",
-        "no_runs": "Ainda não há missões disponíveis ou registadas",
-        "start_new_run": "Por favor, inicie uma nova missão para começar!"
-    },
-    "settings": {
-        "general": {
-            "title": "Geral",
-            "theme": "Tema",
-            "change_language": "Alterar idioma",
-            "view_onboarding": "Ver o onboarding",
-            "import_old_json": "Importar antigas missões JSON"
-        },
-        "links": {
-            "title": "Ligações",
-            "pt_discord": "Profit Taker Discord",
-            "github_repo": "Repositório GitHub",
-            "pt_guide": "Guia do Profit Taker",
-            "report_bug": "Reportar um erro no GitHub"
-        },
-        "shortcut_config": {
-            "title": "Configuração de Atalhos",
-            "config_up_key": "Configurar tecla Seguinte",
-            "config_down_key": "Configurar tecla Anterior"
-        },
-        "contact": {
-            "title": "Contactar Basi",
-            "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
-        },
-        "about": {
-            "title": "Sobre",
-            "about_app": "Sobre a aplicação",
-            "version": "Versão",
-            "description": "Feito com amor por Basi.\nSe encontraste isto, envia-me uma DM com uma manga no Discord."
-        }
-    },
-    "storage" : {
-        "title": "A sua área de armazenamento",
-        "run_name": "Nome Missão",
-        "run_time": "Tempo Missão",
-        "date": "Data",
-        "actions": "Ações"
-    },
-    "analytics" : {
-        "title": "Dados das tuas missões",
-        "no_data": "Não existem dados disponíveis",
-        "run_times": "Tempos de missão"
-    },
-    "languages": {
-        "en": "English",
-        "pt": "Português",
-        "zh": "中文",
-        "ru": "Русский",
-        "fr": "Français",
-        "tr": "Türkçe"
-    },
-    "common": {
-        "yes": "Sim",
-        "no": "Não",
-        "ok": "Ok",
-        "cancel": "Cancelar",
-        "delete": "Apagar",
-        "download": "Descarregar",
-        "retry": "Tentar novamente",
-        "edit": "Editar",
-        "favorite": "Favorito",
-        "close": "Fechar",
-        "view": "Ver",
-        "dont_show_again": "Não voltar a mostrar"
-    },
-    "record_runs": {
-        "title": "Tempos Recordes",
-        "pb": "Melhor Pessoal",
-        "sb": "Segundo Melhor"
-    },
-    "alerts": {
-        "name_title": "Alterar o nome da missão",
-        "delete_title": "Confirmar Apagar",
-        "delete_message": "Tens a certeza de que queres apagar esta missão?"
-    },
-    "donate": {
-        "button": "Doar",
-        "title": "Donativos",
-        "main": "O seu apoio mantém este projeto vivo.\nCentenas de horas e um enorme esforço foram dedicados a esta app.\nOs seus donativos ajudam a cobrir os custos e a motivar o desenvolvimento futuro.\nObrigado! <3"
-    },
-    "update": {
-        "title": "Atualização Disponível",
-        "text": "Existe uma versão mais recente disponível. Deseja descarregar agora?"
-    },
-    "graph": {
-        "total": "Total",
-        "flight": "Voo",
-        "shields": "Escudos",
-        "legs": "Pernas",
-        "body": "Corpo",
-        "pylons": "Pilares",
-        "view_question": "Gostaria de ver a missão chamada \"",
-        "after_question": "\"?"
-    },
-    "favorite": {
-        "title": "As tuas missões favoritas"
-    },
-    "tooltips": {
-        "previous_run": "Missão anterior",
-        "next_run": "Próxima missão",
-        "toggle_layout": "Alternar layout",
-        "view_pb": "Ver os teu melhores tempos"
-    },
-    "screenshot": {
-        "ScreenshotStatus": {
-            "success": "Imagem copiada para a área de transferência",
-            "failure": "Ocorreu um erro desconhecido",
-            "unsupportedPlatform": "A API da área de transferência não é suportada nesta plataforma",
-            "directoryDoesNotExist": "O diretório temporário não existe",
-            "screenshotFailure": "Falha ao capturar a captura de tela"
-        }
-    },
-    "copy_run_text": {
-        "success": "Texto copiado para a área de transferência com sucesso",
-        "error": "Falha ao copiar o texto para a área de transferência"
-    },
-    "mark_favorite": {
-        "success": "Missão marcada como favorita com sucesso.",
-        "error": "Erro ao marcar a missão como favorita."
-    },
-    "remove_favorite": {
-        "success": "Missão removida dos favoritos com sucesso.",
-        "error": "Erro ao remover a missão dos favoritos."
-    },
-    "delete_run": {
-        "success": "Missão excluída com sucesso.",
-        "error": "Erro ao excluir a missão."
-    },
-    "import_run": {
-        "success": "As tuas missões antigas de JSON foram importadas com sucesso.",
-        "error": "Houve um erro ao importar as tuas antigas missões JSON!"
+    "account": {
+      "title": "Conta",
+      "logged_in_as": "Conectado como: {username}",
+      "logout": "Sair"
     }
+  },
+  "storage": {
+    "title": "A sua área de armazenamento",
+    "run_name": "Nome Missão",
+    "run_time": "Tempo Missão",
+    "date": "Data",
+    "actions": "Ações"
+  },
+  "analytics": {
+    "title": "Dados das tuas missões",
+    "no_data": "Não existem dados disponíveis",
+    "run_times": "Tempos de missão"
+  },
+  "languages": {
+    "en": "English",
+    "pt": "Português",
+    "zh": "中文",
+    "ru": "Русский",
+    "fr": "Français",
+    "tr": "Türkçe"
+  },
+  "common": {
+    "yes": "Sim",
+    "no": "Não",
+    "ok": "Ok",
+    "cancel": "Cancelar",
+    "delete": "Apagar",
+    "download": "Descarregar",
+    "retry": "Tentar novamente",
+    "edit": "Editar",
+    "favorite": "Favorito",
+    "close": "Fechar",
+    "view": "Ver",
+    "dont_show_again": "Não voltar a mostrar"
+  },
+  "record_runs": {
+    "title": "Tempos Recordes",
+    "pb": "Melhor Pessoal",
+    "sb": "Segundo Melhor"
+  },
+  "alerts": {
+    "name_title": "Alterar o nome da missão",
+    "delete_title": "Confirmar Apagar",
+    "delete_message": "Tens a certeza de que queres apagar esta missão?"
+  },
+  "account": {
+    "title": "Conta"
+  },
+  "donate": {
+    "button": "Doar",
+    "title": "Doações",
+    "main": "O seu apoio mantém este projeto vivo.\nCentenas de horas e imenso esforço foram dedicados a esta app.\nAs suas doações ajudam a cobrir custos e motivam o desenvolvimento futuro.\n\nObrigado! <3"
+  },
+  "update": {
+    "title": "Atualização Disponível",
+    "text": "Existe uma versão mais recente disponível. Deseja descarregar agora?"
+  },
+  "graph": {
+    "total": "Total",
+    "flight": "Voo",
+    "shields": "Escudos",
+    "legs": "Pernas",
+    "body": "Corpo",
+    "pylons": "Pilares",
+    "view_question": "Gostaria de ver a missão chamada \"",
+    "after_question": "\"?"
+  },
+  "favorite": {
+    "title": "As tuas missões favoritas"
+  },
+  "tooltips": {
+    "previous_run": "Missão anterior",
+    "next_run": "Próxima missão",
+    "toggle_layout": "Alternar layout",
+    "view_pb": "Ver os teu melhores tempos"
+  },
+  "screenshot": {
+    "ScreenshotStatus": {
+      "success": "Imagem copiada para a área de transferência",
+      "failure": "Ocorreu um erro desconhecido",
+      "unsupportedPlatform": "A API da área de transferência não é suportada nesta plataforma",
+      "directoryDoesNotExist": "O diretório temporário não existe",
+      "screenshotFailure": "Falha ao capturar a captura de tela"
+    }
+  },
+  "copy_run_text": {
+    "success": "Texto copiado para a área de transferência com sucesso",
+    "error": "Falha ao copiar o texto para a área de transferência"
+  },
+  "mark_favorite": {
+    "success": "Missão marcada como favorita com sucesso.",
+    "error": "Erro ao marcar a missão como favorita."
+  },
+  "remove_favorite": {
+    "success": "Missão removida dos favoritos com sucesso.",
+    "error": "Erro ao remover a missão dos favoritos."
+  },
+  "delete_run": {
+    "success": "Missão excluída com sucesso.",
+    "error": "Erro ao excluir a missão."
+  },
+  "import_run": {
+    "success": "As tuas missões antigas de JSON foram importadas com sucesso.",
+    "error": "Houve um erro ao importar as tuas antigas missões JSON!"
+  }
 }

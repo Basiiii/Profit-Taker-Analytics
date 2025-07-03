@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rust_core/rust_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// The entry point of the application.
 ///
@@ -20,6 +22,11 @@ import 'package:rust_core/rust_core.dart';
 /// preferences, and window configuration), and then runs the app using `runApp`.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
 
   // Initialize Rust Core library
   await RustLib.init();

@@ -1,187 +1,197 @@
 {
-    "home": {
-        "hello": "Merhaba!",
-        "hello_name": "Merhaba {name}!",
-        "last_run": "Son denemenizin adı ",
-        "last_run_with": "Bu oyuncularla son denemeniz ",
-        "run": "Denemenizin adı ",
-        "run_with": "Bu oyuncularla denemeniz ",
-        "and": " ve ",
-        "named": "called"
+  "home": {
+    "hello": "Merhaba!",
+    "hello_name": "Merhaba {name}!",
+    "last_run": "Son denemenizin adı ",
+    "last_run_with": "Bu oyuncularla son denemeniz ",
+    "run": "Denemenizin adı ",
+    "run_with": "Bu oyuncularla denemeniz ",
+    "and": " ve ",
+    "named": "called"
+  },
+  "onboarding": {
+    "welcome": "Profit Taker Analytics'e hoş geldiniz!\nBazı önemli özelliklere göz atalım.",
+    "navigation": "Ok tuşlarını, sağ üstteki butonları veya fare kaydırma tekerleğini kullanarak koşular arasında gezin.",
+    "screenshot": "Koşunuzu otomatik olarak ekran görüntüsü almak için kopyala butonuna tıklayın! Manuel ekran görüntülerine gerek yok.",
+    "main_nav": "Uygulamanın farklı bölümlerini keşfetmek için soldaki navigasyon çubuğunu kullanarak butonlara tıklayın.",
+    "final": "Hepsi bu kadar! PTA'yı beğenmenizi umarım."
+  },
+  "overview_cards": {
+    "total_duration": "Toplam\nSüre",
+    "flight_time": "Uçuş\nSüresi",
+    "shield_break": "Kalkan Kırma\nSüresi",
+    "leg_break": "Bacak Kırma\nSüresi",
+    "body_kill": "Gövde Kesme\nSüresi",
+    "pylon_destruction": "Sütun\nYıkımı"
+  },
+  "average_cards": {
+    "total_avg": "Toplam Süre\nOrtalaması",
+    "flight_avg": "Uçuş Süresi\nOrtalaması",
+    "shield_avg": "Kalkan Kırma\nOrtalaması",
+    "leg_avg": "Bacak Kırma\nOrtalaması",
+    "body_avg": "Gövde Kesme\nOrtalaması",
+    "pylon_avg": "Sütun\nOrtalaması"
+  },
+  "phase_cards": {
+    "phase_1": "İlk Safha",
+    "phase_2": "İkinci Safha",
+    "phase_3": "Üçüncü Safha",
+    "phase_4": "Dördüncü Safha",
+    "shields": "Kalkan",
+    "legs": "Bacaklar",
+    "body": "Gövde",
+    "pylons": "Sütunlar"
+  },
+  "errors": {
+    "error": "Hata!",
+    "parser_connection_error": "Uygulama ayrıştırıcı ile bağlantı kuramıyor.\nLütfen uygulamayı yeniden başlatın.\n\nSorunlarınız devam ederse lütfen Basi ile iletişime geçin.\nİletişim bilgileri uygulama ayarlarında mevcuttur.",
+    "bugged_run_warning": "Bu denemenin hatalı olabileceği tespit edildi. Bazı denemeler Warframe tarafından düzgünce kaydedilmiyor,\nve bütün bilgileri öğrenmemizi imkansız kılıyor.\n\nMaalesef ki, bu sorun bizim kontrolümüzde değil, yine de gösterebileceğimiz bilgileri göstericeğiz.",
+    "aborted_run_warning": "Bu deneme erkenden iptal edildi.",
+    "existing_name": "Bu isimle bir denemeniz zaten var. Lütfen farklı bir isim seçin.",
+    "load_failed": "Göreviniz yüklenemedi.",
+    "no_runs": "Henüz hiçbir görev mevcut değil veya kaydedilmedi",
+    "start_new_run": "Lütfen başlamak için yeni bir görev başlatın!"
+  },
+  "settings": {
+    "general": {
+      "title": "Genel",
+      "theme": "Tema",
+      "change_language": "Dili değiştir",
+      "view_onboarding": "Onboarding'i Gör",
+      "import_old_json": "Eski JSON görevlerini içe aktar",
+      "sign_in": "Giriş Yap",
+      "sign_up": "Kayıt Ol"
     },
-    "onboarding": {
-        "welcome": "Profit Taker Analytics'e hoş geldiniz!\nBazı önemli özelliklere göz atalım.",
-        "navigation": "Ok tuşlarını, sağ üstteki butonları veya fare kaydırma tekerleğini kullanarak koşular arasında gezin.",
-        "screenshot": "Koşunuzu otomatik olarak ekran görüntüsü almak için kopyala butonuna tıklayın! Manuel ekran görüntülerine gerek yok.",
-        "main_nav": "Uygulamanın farklı bölümlerini keşfetmek için soldaki navigasyon çubuğunu kullanarak butonlara tıklayın.",
-        "final": "Hepsi bu kadar! PTA'yı beğenmenizi umarım."
+    "links": {
+      "title": "Bağlantılar",
+      "pt_discord": "Profit Taker Discord",
+      "github_repo": "GitHub Deposu",
+      "pt_guide": "Profit Taker Kılavuzu",
+      "report_bug": "GitHub'da hata bildir"
     },
-    "overview_cards": {
-        "total_duration": "Toplam\nSüre",
-        "flight_time": "Uçuş\nSüresi",
-        "shield_break": "Kalkan Kırma\nSüresi",
-        "leg_break": "Bacak Kırma\nSüresi",
-        "body_kill": "Gövde Kesme\nSüresi", 
-        "pylon_destruction": "Sütun\nYıkımı"
+    "shortcut_config": {
+      "title": "Kısayol Yapılandırması",
+      "config_up_key": "Sonraki Tuşu Ayarla",
+      "config_down_key": "Önceki Tuşu Ayarla"
     },
-    "average_cards": {
-        "total_avg": "Toplam Süre\nOrtalaması",
-        "flight_avg": "Uçuş Süresi\nOrtalaması",
-        "shield_avg": "Kalkan Kırma\nOrtalaması",
-        "leg_avg": "Bacak Kırma\nOrtalaması",
-        "body_avg": "Gövde Kesme\nOrtalaması",
-        "pylon_avg": "Sütun\nOrtalaması"
+    "contact": {
+      "title": "Basi ile iletişime geç",
+      "basi_contacts_description": "E-posta: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
     },
-    "phase_cards": {
-        "phase_1": "İlk Safha",
-        "phase_2": "İkinci Safha",
-        "phase_3": "Üçüncü Safha",
-        "phase_4": "Dördüncü Safha",
-        "shields": "Kalkan",
-        "legs": "Bacaklar",
-        "body": "Gövde",
-        "pylons": "Sütunlar"
+    "about": {
+      "title": "Hakkında",
+      "about_app": "Uygulama hakkında",
+      "version": "Sürüm",
+      "description": "Basi tarafından sevgiyle yapıldı.\nEğer bunu bulduysan, Discord'dan bana bir mango DM at."
     },
-    "errors": {
-        "error": "Hata!",
-        "parser_connection_error": "Uygulama ayrıştırıcı ile bağlantı kuramıyor.\nLütfen uygulamayı yeniden başlatın.\n\nSorunlarınız devam ederse lütfen Basi ile iletişime geçin.\nİletişim bilgileri uygulama ayarlarında mevcuttur.",
-        "bugged_run_warning": "Bu denemenin hatalı olabileceği tespit edildi. Bazı denemeler Warframe tarafından düzgünce kaydedilmiyor,\nve bütün bilgileri öğrenmemizi imkansız kılıyor.\n\nMaalesef ki, bu sorun bizim kontrolümüzde değil, yine de gösterebileceğimiz bilgileri göstericeğiz.",
-        "aborted_run_warning": "Bu deneme erkenden iptal edildi.",
-        "existing_name": "Bu isimle bir denemeniz zaten var. Lütfen farklı bir isim seçin.",
-        "load_failed": "Göreviniz yüklenemedi.",
-        "no_runs": "Henüz hiçbir görev mevcut değil veya kaydedilmedi",
-        "start_new_run": "Lütfen başlamak için yeni bir görev başlatın!"
-    },
-    "settings": {
-        "general": {
-            "title": "Genel",
-            "theme": "Tema",
-            "change_language": "Dili değiştir",
-            "view_onboarding": "Onboarding'i Gör",
-            "import_old_json": "Eski JSON görevlerini içe aktar"
-        },
-        "links": {
-            "title": "Bağlantılar",
-            "pt_discord": "Profit Taker Discord",
-            "github_repo": "GitHub Deposu",
-            "pt_guide": "Profit Taker Kılavuzu",
-            "report_bug": "GitHub'da hata bildir"
-        },
-        "shortcut_config": {
-            "title": "Kısayol Yapılandırması",
-            "config_up_key": "Sonraki Tuşu Ayarla",
-            "config_down_key": "Önceki Tuşu Ayarla"
-        },
-        "contact": {
-            "title": "Basi ile iletişime geç",
-            "basi_contacts_description": "E-posta: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
-        },
-        "about": {
-            "title": "Hakkında",
-            "about_app": "Uygulama hakkında",
-            "version": "Sürüm",
-            "description": "Basi tarafından sevgiyle yapıldı.\nEğer bunu bulduysan, Discord'dan bana bir mango DM at."
-        }
-    },
-    "storage" : {
-        "title": "Depolama alanın",
-        "run_name": "Deneme İsmi",
-        "run_time": "Deneme Zamanı",
-        "date": "Tarih",
-        "actions": "Eylemler"
-    },
-    "analytics" : {
-        "title": "Analitiklerin",
-        "no_data": "Veri mevcut değil",
-        "run_times": "Görev süreleri"
-    },
-    "languages": {
-        "en": "English",
-        "pt": "Português",
-        "zh": "中文",
-        "ru": "Русский",
-        "fr": "Français",
-        "tr": "Türkçe"
-    },
-    "common": {
-        "yes": "Evet",
-        "no": "Hayır",
-        "ok": "Tamam",
-        "cancel": "İptal",
-        "delete": "Sil",
-        "download": "İndir",
-        "retry": "Tekrar deneyin",
-        "edit": "Düzenle",
-        "favorite": "Favori",
-        "close": "Kapat",
-        "view": "Görünüm",
-        "dont_show_again": "Bir daha gösterme"
-    },
-    "record_runs": {
-        "title": "Rekor Koşuları",
-        "pb": "Kişisel En İyi",
-        "sb": "İkinci En İyi"
-    },
-    "alerts": {
-        "name_title": "Görevin adını değiştir",
-        "delete_title": "Silmeyi Onayla",
-        "delete_message": "Bu görevi silmek istediğinizden emin misiniz?"
-    },
-    "donate": {
-        "button": "Bağış Yap",
-        "title": "Bağışlar",
-        "main": "Desteğiniz bu projeyi ayakta tutuyor.\nBu uygulama için yüzlerce saat ve büyük emek harcandı.\nBağışlarınız masrafların karşılanmasına yardımcı olur ve daha fazla gelişmeyi motive eder.\n\nTeşekkürler! <3"
-    },
-    "update": {
-        "title": "Güncelleme Mevcut",
-        "text": "Uygulamanın daha yeni bir sürümü mevcuttur. Şimdi indirmek ister misiniz?"
-    },
-    "graph": {
-        "total": "Toplam",
-        "flight": "Uçuş",
-        "shields": "Kalkan",
-        "legs": "Bacaklar",
-        "body": "Gövde",
-        "pylons": "Sütunlar",
-        "view_question": "",
-        "after_question": "adlı görevi görüntülemek ister misiniz?"
-    },
-    "favorite": {
-        "title": "En sevdiğiniz görevler"
-    },
-    "tooltips": {
-        "previous_run": "Önceki Görev",
-        "next_run": "Sonraki Görev",
-        "toggle_layout": "Düzeni Değiştir",
-        "view_pb": "En İyi Görevi Gör"
-    },
-    "screenshot": {
-        "ScreenshotStatus": {
-            "success": "Görüntü panoya kopyalandı",
-            "failure": "Bilinmeyen bir hata oluştu",
-            "unsupportedPlatform": "Pano API'si bu platformda desteklenmiyor",
-            "directoryDoesNotExist": "Geçici dizin mevcut değil",
-            "screenshotFailure": "Ekran görüntüsü alınamadı"
-        }
-    },
-    "copy_run_text": {
-        "success": "Metin panoya başarıyla kopyalandı",
-        "error": "Metin panoya kopyalanırken hata oluştu"
-    },
-    "mark_favorite": {
-        "success": "Görev başarıyla favorilere eklendi.",
-        "error": "Görev favorilere eklenirken hata oluştu."
-    },
-    "remove_favorite": {
-        "success": "Görev favorilerden başarıyla kaldırıldı.",
-        "error": "Görev favorilerden kaldırılırken hata oluştu."
-    },
-    "delete_run": {
-        "success": "Görev başarıyla silindi.",
-        "error": "Görev silinirken hata oluştu."
-    },
-    "import_run": {
-        "success": "Eski JSON görevleriniz başarıyla içe aktarıldı.",
-        "error": "Eski JSON görevlerinizi içe aktarırken bir hata oluştu!"
+    "account": {
+      "title": "Hesap",
+      "logged_in_as": "Giriş yapan: {username}",
+      "logout": "Çıkış Yap"
     }
+  },
+  "storage": {
+    "title": "Depolama alanın",
+    "run_name": "Deneme İsmi",
+    "run_time": "Deneme Zamanı",
+    "date": "Tarih",
+    "actions": "Eylemler"
+  },
+  "analytics": {
+    "title": "Analitiklerin",
+    "no_data": "Veri mevcut değil",
+    "run_times": "Görev süreleri"
+  },
+  "languages": {
+    "en": "English",
+    "pt": "Português",
+    "zh": "中文",
+    "ru": "Русский",
+    "fr": "Français",
+    "tr": "Türkçe"
+  },
+  "common": {
+    "yes": "Evet",
+    "no": "Hayır",
+    "ok": "Tamam",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "download": "İndir",
+    "retry": "Tekrar deneyin",
+    "edit": "Düzenle",
+    "favorite": "Favori",
+    "close": "Kapat",
+    "view": "Görünüm",
+    "dont_show_again": "Bir daha gösterme"
+  },
+  "record_runs": {
+    "title": "Rekor Koşuları",
+    "pb": "Kişisel En İyi",
+    "sb": "İkinci En İyi"
+  },
+  "alerts": {
+    "name_title": "Görevin adını değiştir",
+    "delete_title": "Silmeyi Onayla",
+    "delete_message": "Bu görevi silmek istediğinizden emin misiniz?"
+  },
+  "donate": {
+    "button": "Bağış Yap",
+    "title": "Bağışlar",
+    "main": "Desteğiniz bu projeyi hayatta tutuyor.\nBu uygulamaya yüzlerce saat ve büyük çaba harcandı.\nBağışlarınız maliyetleri karşılamaya ve daha fazla geliştirme için motive etmeye yardımcı oluyor.\n\nTeşekkürler! <3"
+  },
+  "update": {
+    "title": "Güncelleme Mevcut",
+    "text": "Uygulamanın daha yeni bir sürümü mevcuttur. Şimdi indirmek ister misiniz?"
+  },
+  "graph": {
+    "total": "Toplam",
+    "flight": "Uçuş",
+    "shields": "Kalkan",
+    "legs": "Bacaklar",
+    "body": "Gövde",
+    "pylons": "Sütunlar",
+    "view_question": "",
+    "after_question": "adlı görevi görüntülemek ister misiniz?"
+  },
+  "favorite": {
+    "title": "En sevdiğiniz görevler"
+  },
+  "tooltips": {
+    "previous_run": "Önceki Görev",
+    "next_run": "Sonraki Görev",
+    "toggle_layout": "Düzeni Değiştir",
+    "view_pb": "En İyi Görevi Gör"
+  },
+  "screenshot": {
+    "ScreenshotStatus": {
+      "success": "Görüntü panoya kopyalandı",
+      "failure": "Bilinmeyen bir hata oluştu",
+      "unsupportedPlatform": "Pano API'si bu platformda desteklenmiyor",
+      "directoryDoesNotExist": "Geçici dizin mevcut değil",
+      "screenshotFailure": "Ekran görüntüsü alınamadı"
+    }
+  },
+  "copy_run_text": {
+    "success": "Metin panoya başarıyla kopyalandı",
+    "error": "Metin panoya kopyalanırken hata oluştu"
+  },
+  "mark_favorite": {
+    "success": "Görev başarıyla favorilere eklendi.",
+    "error": "Görev favorilere eklenirken hata oluştu."
+  },
+  "remove_favorite": {
+    "success": "Görev favorilerden başarıyla kaldırıldı.",
+    "error": "Görev favorilerden kaldırılırken hata oluştu."
+  },
+  "delete_run": {
+    "success": "Görev başarıyla silindi.",
+    "error": "Görev silinirken hata oluştu."
+  },
+  "import_run": {
+    "success": "Eski JSON görevleriniz başarıyla içe aktarıldı.",
+    "error": "Eski JSON görevlerinizi içe aktarırken bir hata oluştu!"
+  },
+  "account": {
+    "title": "Hesap"
+  }
 }
