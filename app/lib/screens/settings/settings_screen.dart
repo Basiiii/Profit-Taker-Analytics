@@ -249,7 +249,7 @@ class _SignInDialogState extends State<_SignInDialog> {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.discord,
-        // Optionally set a redirect URL
+        redirectTo: 'pta://auth-callback',
       );
       if (!mounted) return;
       Navigator.of(context).pop();
