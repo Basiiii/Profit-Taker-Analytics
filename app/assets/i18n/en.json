@@ -1,187 +1,198 @@
 {
-    "home": {
-        "hello": "Hello!",
-        "hello_name": "Hello {name}!",
-        "last_run": "Your last run",
-        "last_run_with": "Your last run with ",
-        "run": "Your run",
-        "run_with": "Your run with ",
-        "and": " and ",
-        "named": "called"
+  "home": {
+    "hello": "Hello!",
+    "hello_name": "Hello {name}!",
+    "last_run": "Your last run",
+    "last_run_with": "Your last run with ",
+    "run": "Your run",
+    "run_with": "Your run with ",
+    "and": " and ",
+    "named": "called"
+  },
+  "onboarding": {
+    "welcome": "Welcome to Profit Taker Analytics!\nLet's go over some key features.",
+    "navigation": "Use your arrow keys, the buttons on the top right or your mouse scroll wheel to navigate between runs.",
+    "screenshot": "Click the copy button to automatically screenshot your run! No need for manual screenshots.",
+    "main_nav": "Use the navigation bar on the left to explore different sections of the app by clicking on the buttons.",
+    "final": "Those are the basics! I hope you enjoy PTA."
+  },
+  "overview_cards": {
+    "total_duration": "Total\nDuration",
+    "flight_time": "Flight\nTime",
+    "shield_break": "Shield\nBreak",
+    "leg_break": "Leg\nBreak",
+    "body_kill": "Body\nKill",
+    "pylon_destruction": "Pylon\nDestruction"
+  },
+  "average_cards": {
+    "total_avg": "Total Duration\nAverage",
+    "flight_avg": "Flight Time\nAverage",
+    "shield_avg": "Shield Break\nAverage",
+    "leg_avg": "Leg Break\nAverage",
+    "body_avg": "Body Kill\nAverage",
+    "pylon_avg": "Pylons \nAverage"
+  },
+  "phase_cards": {
+    "phase_1": "First Phase",
+    "phase_2": "Second Phase",
+    "phase_3": "Third Phase",
+    "phase_4": "Fourth Phase",
+    "shields": "Shields",
+    "legs": "Legs",
+    "body": "Body",
+    "pylons": "Pylons"
+  },
+  "errors": {
+    "error": "Error!",
+    "parser_connection_error": "The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.\nContacts are available in the app settings.",
+    "bugged_run_warning": "This run has been identified as potentially bugged. Some runs are not accurately recorded by Warframe,\nmaking it impossible for us to retrieve all the data.\n\nUnfortunately, this issue is beyond our control, but we will still show you all the information we can.",
+    "aborted_run_warning": "This run was aborted early.",
+    "existing_name": "The name already exists. Please choose a different name.",
+    "load_failed": "Loading your run failed.",
+    "no_runs": "No runs are available or recorded yet",
+    "start_new_run": "Please start a new run to begin!"
+  },
+  "settings": {
+    "general": {
+      "title": "General",
+      "theme": "Theme",
+      "change_language": "Change language",
+      "view_onboarding": "View onboarding",
+      "import_old_json": "Import Old JSON Runs",
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up"
     },
-    "onboarding": {
-        "welcome": "Welcome to Profit Taker Analytics!\nLet's go over some key features.",
-        "navigation": "Use your arrow keys, the buttons on the top right or your mouse scroll wheel to navigate between runs.",
-        "screenshot": "Click the copy button to automatically screenshot your run! No need for manual screenshots.",
-        "main_nav": "Use the navigation bar on the left to explore different sections of the app by clicking on the buttons.",
-        "final": "Those are the basics! I hope you enjoy PTA."
+    "links": {
+      "title": "Links",
+      "pt_discord": "Profit Taker Discord",
+      "github_repo": "GitHub Repository",
+      "pt_guide": "Profit Taker Guide",
+      "report_bug": "Report a Bug on GitHub",
+      "leaderboard": "Leaderboard"
     },
-    "overview_cards": {
-        "total_duration": "Total\nDuration",
-        "flight_time": "Flight\nTime",
-        "shield_break": "Shield\nBreak",
-        "leg_break": "Leg\nBreak",
-        "body_kill": "Body\nKill",
-        "pylon_destruction": "Pylon\nDestruction"
+    "shortcut_config": {
+      "title": "Shortcut Configuration",
+      "config_up_key": "Configure Next Key",
+      "config_down_key": "Configure Previous Key"
     },
-    "average_cards": {
-        "total_avg": "Total Duration\nAverage",
-        "flight_avg": "Flight Time\nAverage",
-        "shield_avg": "Shield Break\nAverage",
-        "leg_avg": "Leg Break\nAverage",
-        "body_avg": "Body Kill\nAverage",
-        "pylon_avg": "Pylons \nAverage"
+    "contact": {
+      "title": "Contact Basi",
+      "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
     },
-    "phase_cards": {
-        "phase_1": "First Phase",
-        "phase_2": "Second Phase",
-        "phase_3": "Third Phase",
-        "phase_4": "Fourth Phase",
-        "shields": "Shields",
-        "legs": "Legs",
-        "body": "Body",
-        "pylons": "Pylons"
+    "about": {
+      "title": "About",
+      "about_app": "About App",
+      "version": "Version",
+      "description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on Discord."
     },
-    "errors": {
-        "error": "Error!",
-        "parser_connection_error": "The app cannot establish a connection to the parser.\nPlease restart the program.\n\nIf you continue with issues please contact Basi.\nContacts are available in the app settings.",
-        "bugged_run_warning": "This run has been identified as potentially bugged. Some runs are not accurately recorded by Warframe,\nmaking it impossible for us to retrieve all the data.\n\nUnfortunately, this issue is beyond our control, but we will still show you all the information we can.",
-        "aborted_run_warning": "This run was aborted early.",
-        "existing_name": "The name already exists. Please choose a different name.",
-        "load_failed": "Loading your run failed.",
-        "no_runs": "No runs are available or recorded yet",
-        "start_new_run": "Please start a new run to begin!"
-    },
-    "settings": {
-        "general": {
-            "title": "General",
-            "theme": "Theme",
-            "change_language": "Change language",
-            "view_onboarding": "View onboarding",
-            "import_old_json": "Import Old JSON Runs"
-        },
-        "links": {
-            "title": "Links",
-            "pt_discord": "Profit Taker Discord",
-            "github_repo": "GitHub Repository",
-            "pt_guide": "Profit Taker Guide",
-            "report_bug": "Report a Bug on GitHub"
-        },
-        "shortcut_config": {
-            "title": "Shortcut Configuration",
-            "config_up_key": "Configure Next Key",
-            "config_down_key": "Configure Previous Key"
-        },
-        "contact": {
-            "title": "Contact Basi",
-            "basi_contacts_description": "Email: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
-        },
-        "about": {
-            "title": "About",
-            "about_app": "About App",
-            "version": "Version",
-            "description": "Made with love by Basi.\nIf you found this, send me a DM of a mango on Discord."
-        }
-    },
-    "storage" : {
-        "title": "Your storage area",
-        "run_name": "Run Name",
-        "run_time": "Run Time",
-        "date": "Date",
-        "actions": "Actions"
-    },
-    "analytics" : {
-        "title": "Your analytics",
-        "no_data": "No data available",
-        "run_times": "Run Times"
-    },
-    "languages": {
-        "en": "English",
-        "pt": "Português",
-        "zh": "中文",
-        "ru": "Русский",
-        "fr": "Français",
-        "tr": "Türkçe"
-    },
-    "common": {
-        "yes": "Yes",
-        "no": "No",
-        "ok": "Okay",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "download": "Download",
-        "retry": "Try again",
-        "edit": "Edit",
-        "favorite": "Favorite",
-        "close": "Close",
-        "view": "View",
-        "dont_show_again": "Don't show again"
-    },
-    "record_runs": {
-        "title": "Record Runs",
-        "pb": "Personal Best",
-        "sb": "Second Best"
-    },
-    "alerts": {
-        "name_title": "Change run name",
-        "delete_title": "Confirm Deletion",
-        "delete_message": "Are you sure you want to delete this run?"
-    },
-    "donate": {
-        "button": "Donate",
-        "title": "Donations",
-        "main": "Your support keeps this project alive.\nHundreds of hours and immense effort have gone into this app.\nYour donations help cover costs and motivate further development.\n\nThank you! <3"
-    },
-    "update": {
-        "title": "Update Available",
-        "text": "There is a more recent version of the app available. Would you like to download it now?"
-    },
-    "graph": {
-        "total": "Total",
-        "flight": "Flight",
-        "shields": "Shields",
-        "legs": "Legs",
-        "body": "Body",
-        "pylons": "Pylons",
-        "view_question": "Would you like to view the run called \"",
-        "after_question": "\"?"
-    },
-    "favorite": {
-        "title": "Your favorite runs"
-    },
-    "tooltips": {
-        "previous_run": "Previous run",
-        "next_run": "Next run",
-        "toggle_layout": "Toggle layout",
-        "view_pb": "View personal best"
-    },
-    "screenshot": {
-        "ScreenshotStatus": {
-            "success": "Image copied to clipboard",
-            "failure": "An unknown error occurred",
-            "unsupportedPlatform": "Clipboard API is not supported on this platform",
-            "directoryDoesNotExist": "Temporary directory does not exist",
-            "screenshotFailure": "Failed to capture screenshot"
-        }
-    },
-    "copy_run_text": {
-        "success": "Text copied to clipboard successfully",
-        "error": "Failed to copy text to clipboard"
-    },
-    "mark_favorite": {
-        "success": "Successfully marked run as favorite.",
-        "error": "Error marking run as favorite."
-    },
-    "remove_favorite": {
-        "success": "Successfully removed run from favorites.",
-        "error": "Error removing run from favorites."
-    },
-    "delete_run": {
-        "success": "Successfully deleted run.",
-        "error": "Error deleting run."
-    },
-    "import_run": {
-        "success": "Successfully imported your old JSON runs.",
-        "error": "There was an error importing your old JSON files!"
+    "account": {
+      "title": "Account",
+      "logged_in_as": "Logged in as: {username}",
+      "logout": "Logout"
     }
+  },
+  "storage": {
+    "title": "Your storage area",
+    "run_name": "Run Name",
+    "run_time": "Run Time",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "analytics": {
+    "title": "Your analytics",
+    "no_data": "No data available",
+    "run_times": "Run Times"
+  },
+  "languages": {
+    "en": "English",
+    "pt": "Português",
+    "zh": "中文",
+    "ru": "Русский",
+    "fr": "Français",
+    "tr": "Türkçe"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "ok": "Okay",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "download": "Download",
+    "retry": "Try again",
+    "edit": "Edit",
+    "favorite": "Favorite",
+    "close": "Close",
+    "view": "View",
+    "dont_show_again": "Don't show again"
+  },
+  "record_runs": {
+    "title": "Record Runs",
+    "pb": "Personal Best",
+    "sb": "Second Best"
+  },
+  "alerts": {
+    "name_title": "Change run name",
+    "delete_title": "Confirm Deletion",
+    "delete_message": "Are you sure you want to delete this run?"
+  },
+  "donate": {
+    "button": "Donate",
+    "title": "Donations",
+    "main": "Your support keeps this project alive.\nHundreds of hours and immense effort have gone into this app.\nYour donations help cover costs and motivate further development.\n\nThank you! <3"
+  },
+  "update": {
+    "title": "Update Available",
+    "text": "There is a more recent version of the app available. Would you like to download it now?"
+  },
+  "graph": {
+    "total": "Total",
+    "flight": "Flight",
+    "shields": "Shields",
+    "legs": "Legs",
+    "body": "Body",
+    "pylons": "Pylons",
+    "view_question": "Would you like to view the run called \"",
+    "after_question": "\"?"
+  },
+  "favorite": {
+    "title": "Your favorite runs"
+  },
+  "tooltips": {
+    "previous_run": "Previous run",
+    "next_run": "Next run",
+    "toggle_layout": "Toggle layout",
+    "view_pb": "View personal best"
+  },
+  "screenshot": {
+    "ScreenshotStatus": {
+      "success": "Image copied to clipboard",
+      "failure": "An unknown error occurred",
+      "unsupportedPlatform": "Clipboard API is not supported on this platform",
+      "directoryDoesNotExist": "Temporary directory does not exist",
+      "screenshotFailure": "Failed to capture screenshot"
+    }
+  },
+  "copy_run_text": {
+    "success": "Text copied to clipboard successfully",
+    "error": "Failed to copy text to clipboard"
+  },
+  "mark_favorite": {
+    "success": "Successfully marked run as favorite.",
+    "error": "Error marking run as favorite."
+  },
+  "remove_favorite": {
+    "success": "Successfully removed run from favorites.",
+    "error": "Error removing run from favorites."
+  },
+  "delete_run": {
+    "success": "Successfully deleted run.",
+    "error": "Error deleting run."
+  },
+  "import_run": {
+    "success": "Successfully imported your old JSON runs.",
+    "error": "There was an error importing your old JSON files!"
+  },
+  "account": {
+    "title": "Account"
+  }
 }

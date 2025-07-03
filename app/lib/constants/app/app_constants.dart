@@ -1,7 +1,7 @@
 /// A class to hold constant values for the app, including asset paths for icons.
 class AppConstants {
   // Main app constants
-  static const String version = '1.0.0-beta.4';
+  static const String version = '1.0.0-beta.5';
   static const String appName = "Profit Taker Analytics";
   static const String assets = 'assets/icons';
   static const String databaseFolder = 'database';

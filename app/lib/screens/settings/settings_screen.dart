@@ -5,11 +5,15 @@ import 'package:profit_taker_analyzer/screens/settings/utils/language_utils.dart
 import 'package:profit_taker_analyzer/screens/settings/utils/select_folder.dart';
 import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 import 'package:profit_taker_analyzer/widgets/dialogs/show_onboarding_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'ui/general_section.dart';
 import 'ui/links_section.dart';
 import 'ui/about_section.dart';
 import 'ui/key_config_section.dart';
+import 'ui/account_section.dart';
+import 'ui/donate_section.dart';
 
 /// A StatefulWidget that displays the settings screen of the application.
 ///
@@ -35,18 +39,43 @@ class SettingsScreen extends StatefulWidget {
 /// - [_currentLocale]: The current locale of the app, used for localization.
 /// - [_upWaitingForKeyPress]: A flag indicating whether the app is waiting for a key press for the "up" action key.
 /// - [_downWaitingForKeyPress]: A flag indicating whether the app is waiting for a key press for the "down" action key.
+/// - [_user]: The current user object.
+/// - [_username]: The username of the current user.
 ///
 /// Methods:
 /// - [didChangeDependencies]: A lifecycle method that updates the current locale when dependencies change.
+/// - [refreshUser]: A method to refresh the user information.
+/// - [onLogout]: A method to handle user logout.
 class _SettingsScreenState extends State<SettingsScreen> {
   late Locale _currentLocale;
   bool _upWaitingForKeyPress = false;
   bool _downWaitingForKeyPress = false;
+  User? _user;
+  String? _username;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _currentLocale = Localizations.localeOf(context);
+    _refreshUser();
+  }
+
+  void _refreshUser() {
+    final user = Supabase.instance.client.auth.currentUser;
+    setState(() {
+      _user = user;
+      _username = user?.userMetadata?['username'] ??
+          user?.userMetadata?['full_name'] ??
+          user?.email;
+    });
+  }
+
+  void _onLogout() async {
+    await Supabase.instance.client.auth.signOut();
+    setState(() {
+      _user = null;
+      _username = null;
+    });
   }
 
   /// Handles the key press events for configuring action keys.
@@ -111,6 +140,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  void _onSignUp(BuildContext context) async {
+    final url = Uri.parse('https://stats.profit-taker.com/auth/sign-up');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void _onSignIn(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => SignInDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FocusTraversalGroup(
@@ -129,6 +172,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 () => showOnboardingDialog(context, true),
                 () => selectFolder(context),
               ),
+              buildAccountSection(
+                context,
+                _user,
+                _username,
+                () => _onSignIn(context),
+                () => _onSignUp(context),
+                () => _onLogout(),
+              ),
+              buildDonateSection(context),
               buildLinksSection(context),
               buildKeyConfigSection(
                 context,

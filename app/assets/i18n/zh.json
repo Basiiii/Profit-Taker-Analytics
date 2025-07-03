@@ -1,187 +1,195 @@
 {
-    "home": {
-        "hello": "你好!",
-        "hello_name": "你好， {name}!",
-        "last_run": "上一次记录",
-        "last_run_with": "你的上一把记录，与 ",
-        "run": "你的记录",
-        "run_with": "你的记录，与 ",
-        "and": " 和 ",
-        "named": ""
+  "home": {
+    "hello": "你好!",
+    "hello_name": "你好， {name}!",
+    "last_run": "上一次记录",
+    "last_run_with": "你的上一把记录，与 ",
+    "run": "你的记录",
+    "run_with": "你的记录，与 ",
+    "and": " 和 ",
+    "named": ""
+  },
+  "onboarding": {
+    "welcome": "欢迎使用 Profit Taker Analytics！\n让我们了解一些关键功能。",
+    "navigation": "使用箭头键、右上角的按钮或鼠标滚轮在各个运行间进行导航。",
+    "screenshot": "点击复制按钮自动截图您的运行！不再需要手动截图。",
+    "main_nav": "使用左侧的导航栏点击按钮探索应用程序的不同部分。",
+    "final": "就这些！希望你喜欢 PTA。"
+  },
+  "overview_cards": {
+    "total_duration": "总时长",
+    "flight_time": "飞行耗时",
+    "shield_break": "破盾耗时",
+    "leg_break": "破腿耗时",
+    "body_kill": "本体耗时",
+    "pylon_destruction": "信标耗时"
+  },
+  "average_cards": {
+    "total_avg": "平均总时长",
+    "flight_avg": "平均飞行耗时",
+    "shield_avg": "平均破盾耗时",
+    "leg_avg": "平均破腿耗时",
+    "body_avg": "平均本体耗时",
+    "pylon_avg": "平均信标耗时"
+  },
+  "phase_cards": {
+    "phase_1": "第一阶段",
+    "phase_2": "第二阶段",
+    "phase_3": "第三阶段",
+    "phase_4": "第四阶段",
+    "shields": "护盾",
+    "legs": "破腿",
+    "body": "本体",
+    "pylons": "信标"
+  },
+  "errors": {
+    "error": "错误！",
+    "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
+    "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。",
+    "aborted_run_warning": "比赛提前结束。",
+    "existing_name": "该名称已存在。请选择其他名称。",
+    "load_failed": "加载任务失败。",
+    "no_runs": "尚无任务可用或已记录",
+    "start_new_run": "请开始一项新任务！"
+  },
+  "settings": {
+    "general": {
+      "title": "通用",
+      "theme": "主题",
+      "change_language": "更改语言",
+      "view_onboarding": "查看入职指导",
+      "import_old_json": "导入旧 JSON 任务",
+      "sign_in": "登录",
+      "sign_up": "注册"
     },
-    "onboarding": {
-        "welcome": "欢迎使用 Profit Taker Analytics！\n让我们了解一些关键功能。",
-        "navigation": "使用箭头键、右上角的按钮或鼠标滚轮在各个运行间进行导航。",
-        "screenshot": "点击复制按钮自动截图您的运行！不再需要手动截图。",
-        "main_nav": "使用左侧的导航栏点击按钮探索应用程序的不同部分。",
-        "final": "就这些！希望你喜欢 PTA。"
+    "links": {
+      "title": "链接",
+      "pt_discord": "Profit Taker Discord",
+      "github_repo": "GitHub 代码库",
+      "pt_guide": "Profit Taker 指南",
+      "report_bug": "在 GitHub 上报告错误",
+      "leaderboard": "排行榜"
     },
-    "overview_cards": {
-        "total_duration": "总时长",
-        "flight_time": "飞行耗时",
-        "shield_break": "破盾耗时",
-        "leg_break": "破腿耗时",
-        "body_kill": "本体耗时",
-        "pylon_destruction": "信标耗时"
+    "shortcut_config": {
+      "title": "快捷键配置",
+      "config_up_key": "配置下一个键",
+      "config_down_key": "配置上一个键"
     },
-    "average_cards": {
-        "total_avg": "平均总时长",
-        "flight_avg": "平均飞行耗时",
-        "shield_avg": "平均破盾耗时",
-        "leg_avg": "平均破腿耗时",
-        "body_avg": "平均本体耗时",
-        "pylon_avg": "平均信标耗时"
+    "contact": {
+      "title": "联系 Basi",
+      "basi_contacts_description": "电子邮件: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
     },
-    "phase_cards": {
-        "phase_1": "第一阶段",
-        "phase_2": "第二阶段",
-        "phase_3": "第三阶段",
-        "phase_4": "第四阶段",
-        "shields": "护盾",
-        "legs": "破腿",
-        "body": "本体",
-        "pylons": "信标"
-    },
-    "errors": {
-        "error": "错误！",
-        "parser_connection_error": "APP无法连接到服务器\n请重启APP\n\n如果你继续遇到问题，请前往B站私信Nezarec\n记得描述问题与提供截图",
-        "bugged_run_warning": "本次运行已被确认为可能存在错误。不幸的是，这个问题超出了我们的控制范围，但我们仍会向您展示我们所能提供的所有信息。",
-        "aborted_run_warning": "比赛提前结束。",
-        "existing_name": "该名称已存在。请选择其他名称。",
-        "load_failed": "加载任务失败。",
-        "no_runs": "尚无任务可用或已记录",
-        "start_new_run": "请开始一项新任务！"
-    },
-    "settings": {
-        "general": {
-            "title": "通用",
-            "theme": "主题",
-            "change_language": "更改语言",
-            "view_onboarding": "查看入职指导",
-            "import_old_json": "导入旧 JSON 任务"
-        },
-        "links": {
-            "title": "链接",
-            "pt_discord": "Profit Taker Discord",
-            "github_repo": "GitHub 代码库",
-            "pt_guide": "Profit Taker 指南",
-            "report_bug": "在 GitHub 上报告错误"
-        },
-        "shortcut_config": {
-            "title": "快捷键配置",
-            "config_up_key": "配置下一个键",
-            "config_down_key": "配置上一个键"
-        },
-        "contact": {
-            "title": "联系 Basi",
-            "basi_contacts_description": "电子邮件: hello.basi@proton.me\nDiscord: basi__\nGitHub: Basiiii"
-        },
-        "about": {
-            "title": "关于",
-            "about_app": "关于应用",
-            "version": "版本",
-            "description": "由 Basi 用爱制作。\n如果你发现了这个，请在 Discord 上给我发一条芒果的私信。"
-        }
-    },
-    "storage" : {
-        "title": "您的存储区域",
-        "run_name": "任务名称",
-        "run_time": "任务时间",
-        "date": "日期",
-        "actions": "行动"
-    },
-    "analytics" : {
-        "title": "您的分析",
-        "no_data": "无数据",
-        "run_times": "任务时间"
-    },
-    "languages": {
-        "en": "English",
-        "pt": "Português",
-        "zh": "中文",
-        "ru": "Русский",
-        "fr": "Français",
-        "tr": "Türkçe"
-    },
-    "common": {
-        "yes": "是",
-        "no": "否",
-        "ok": "OK",
-        "cancel": "取消",
-        "delete": "删除",
-        "download": "下载",
-        "retry": "再试一次",
-        "edit": "编辑",
-        "favorite": "收藏",
-        "close": "关闭",
-        "view": "查看",
-        "dont_show_again": "不要再出现"
-    },
-    "record_runs": {
-        "title": "记录跑步",
-        "pb": "个人最佳",
-        "sb": "第二最佳"
-    },
-    "alerts": {
-        "name_title": "更改任务名称",
-        "delete_title": "确认删除",
-        "delete_message": "你确定要删除这个任务吗？"
-    },
-    "donate": {
-        "button": "捐赠",
-        "title": "捐赠",
-        "main": "您的支持让这个项目得以继续。这个应用程序耗费了数百个小时和巨大的精力。\n您的捐赠有助于支付成本和推动进一步开发。谢谢您的支持！<3"
-    },
-    "update": {
-        "title": "可提供的更新",
-        "text": "该应用程序有一个更新的版本。您想现在下载吗？"
-    },
-    "graph": {
-        "total": "总计",
-        "flight": "飞行",
-        "shields": "盾牌",
-        "legs": "腿部",
-        "body": "身体",
-        "pylons": "铁塔",
-        "view_question": "您想查看名为 \"",
-        "after_question": "\" 的任务吗？"
-    },
-    "favorite": {
-        "title": "您最喜爱的任务"
-    },
-    "tooltips": {
-        "previous_run": "上一个使命",
-        "next_run": "下一个任务",
-        "toggle_layout": "切换布局",
-        "view_pb": "查看个人最佳"
-    },
-    "screenshot": {
-        "ScreenshotStatus": {
-            "success": "图片已复制到剪贴板",
-            "failure": "发生未知错误",
-            "unsupportedPlatform": "剪贴板 API 不支持此平台",
-            "directoryDoesNotExist": "临时目录不存在",
-            "screenshotFailure": "无法捕获截图"
-        }
-    },
-    "copy_run_text": {
-        "success": "文本已成功复制到剪贴板",
-        "error": "无法将文本复制到剪贴板"
-    },
-    "mark_favorite": {
-        "success": "成功将任务标记为收藏。",
-        "error": "标记任务为收藏时出错。"
-    },
-    "remove_favorite": {
-        "success": "成功将任务从收藏中移除。",
-        "error": "从收藏中移除任务时出错。"
-    },
-    "delete_run": {
-        "success": "成功删除任务。",
-        "error": "删除任务时出错。"
-    },
-    "import_run": {
-        "success": "成功导入您的旧 JSON 任务。",
-        "error": "导入您的旧 JSON 任务时发生错误！"
+    "about": {
+      "title": "关于",
+      "about_app": "关于应用",
+      "version": "版本",
+      "description": "由 Basi 用爱制作。\n如果你发现了这个，请在 Discord 上给我发一条芒果的私信。"
     }
+  },
+  "storage": {
+    "title": "您的存储区域",
+    "run_name": "任务名称",
+    "run_time": "任务时间",
+    "date": "日期",
+    "actions": "行动"
+  },
+  "analytics": {
+    "title": "您的分析",
+    "no_data": "无数据",
+    "run_times": "任务时间"
+  },
+  "languages": {
+    "en": "English",
+    "pt": "Português",
+    "zh": "中文",
+    "ru": "Русский",
+    "fr": "Français",
+    "tr": "Türkçe"
+  },
+  "common": {
+    "yes": "是",
+    "no": "否",
+    "ok": "OK",
+    "cancel": "取消",
+    "delete": "删除",
+    "download": "下载",
+    "retry": "再试一次",
+    "edit": "编辑",
+    "favorite": "收藏",
+    "close": "关闭",
+    "view": "查看",
+    "dont_show_again": "不要再出现"
+  },
+  "record_runs": {
+    "title": "记录跑步",
+    "pb": "个人最佳",
+    "sb": "第二最佳"
+  },
+  "alerts": {
+    "name_title": "更改任务名称",
+    "delete_title": "确认删除",
+    "delete_message": "你确定要删除这个任务吗？"
+  },
+  "account": {
+    "title": "账户",
+    "logged_in_as": "已登录为：{username}",
+    "logout": "退出登录"
+  },
+  "donate": {
+    "button": "捐赠",
+    "title": "捐赠",
+    "main": "您的支持让这个项目得以延续。\n数百小时和巨大的努力投入到了这个应用中。\n您的捐赠有助于支付费用并激励进一步开发。\n\n谢谢！<3"
+  },
+  "update": {
+    "title": "可提供的更新",
+    "text": "该应用程序有一个更新的版本。您想现在下载吗？"
+  },
+  "graph": {
+    "total": "总计",
+    "flight": "飞行",
+    "shields": "盾牌",
+    "legs": "腿部",
+    "body": "身体",
+    "pylons": "铁塔",
+    "view_question": "您想查看名为 \"",
+    "after_question": "\" 的任务吗？"
+  },
+  "favorite": {
+    "title": "您最喜爱的任务"
+  },
+  "tooltips": {
+    "previous_run": "上一个使命",
+    "next_run": "下一个任务",
+    "toggle_layout": "切换布局",
+    "view_pb": "查看个人最佳"
+  },
+  "screenshot": {
+    "ScreenshotStatus": {
+      "success": "图片已复制到剪贴板",
+      "failure": "发生未知错误",
+      "unsupportedPlatform": "剪贴板 API 不支持此平台",
+      "directoryDoesNotExist": "临时目录不存在",
+      "screenshotFailure": "无法捕获截图"
+    }
+  },
+  "copy_run_text": {
+    "success": "文本已成功复制到剪贴板",
+    "error": "无法将文本复制到剪贴板"
+  },
+  "mark_favorite": {
+    "success": "成功将任务标记为收藏。",
+    "error": "标记任务为收藏时出错。"
+  },
+  "remove_favorite": {
+    "success": "成功将任务从收藏中移除。",
+    "error": "从收藏中移除任务时出错。"
+  },
+  "delete_run": {
+    "success": "成功删除任务。",
+    "error": "删除任务时出错。"
+  },
+  "import_run": {
+    "success": "成功导入您的旧 JSON 任务。",
+    "error": "导入您的旧 JSON 任务时发生错误！"
+  }
 }

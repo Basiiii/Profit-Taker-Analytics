@@ -1,7 +1,7 @@
 name: profit_taker_analyzer
 description: "Warframe Profit Taker analysis app."
 publish_to: "none"
-version: 1.0.0-beta.4
+version: 1.0.0-beta.5
 
 environment:
   sdk: ">=3.2.0-199.0.dev <4.0.0"
@@ -14,7 +14,7 @@ topics:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # Splash screen
   another_flutter_splash_screen: ^1.2.1
   # Windows window control
@@ -56,6 +56,10 @@ dependencies:
   flutter_material_design_icons: ^1.1.7447
   # Used for selecting folder to import old JSON
   file_selector: ^1.0.1
+  # Supabase
+  supabase_flutter: ^2.9.1
+  # Environment variables
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +83,8 @@ flutter:
     - assets/i18n/tr.json
     # Images
     - assets/images/
+    # Dot Env
+    - .env
   fonts:
     - family: Poppins
       fonts:
