@@ -42,6 +42,12 @@ SettingsSection buildLinksSection(BuildContext context) {
         leading: const Icon(Icons.bug_report),
         onPressed: (_) => launchURL(AppLinks.reportBug),
       ),
+      SettingsTile(
+        title:
+            Text(FlutterI18n.translate(context, "settings.links.leaderboard")),
+        leading: const Icon(Icons.leaderboard),
+        onPressed: (_) => launchURL(AppLinks.leaderboard),
+      ),
     ],
   );
 }

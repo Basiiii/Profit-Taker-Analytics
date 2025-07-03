@@ -67,7 +67,8 @@
       "pt_discord": "Profit Taker Discord",
       "github_repo": "Repositório GitHub",
       "pt_guide": "Guia do Profit Taker",
-      "report_bug": "Reportar um erro no GitHub"
+      "report_bug": "Reportar um erro no GitHub",
+      "leaderboard": "Classificação"
     },
     "shortcut_config": {
       "title": "Configuração de Atalhos",

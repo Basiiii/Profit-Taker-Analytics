@@ -67,7 +67,8 @@
       "pt_discord": "Profit Taker Discord",
       "github_repo": "GitHub 代码库",
       "pt_guide": "Profit Taker 指南",
-      "report_bug": "在 GitHub 上报告错误"
+      "report_bug": "在 GitHub 上报告错误",
+      "leaderboard": "排行榜"
     },
     "shortcut_config": {
       "title": "快捷键配置",

@@ -67,7 +67,8 @@
       "pt_discord": "Profit Taker Discord",
       "github_repo": "Репозиторий GitHub",
       "pt_guide": "Руководство по Profit Taker",
-      "report_bug": "Сообщить об ошибке на GitHub"
+      "report_bug": "Сообщить об ошибке на GitHub",
+      "leaderboard": "Таблица лидеров"
     },
     "shortcut_config": {
       "title": "Настройки сочетаний клавиш",

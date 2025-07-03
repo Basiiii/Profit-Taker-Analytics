@@ -67,7 +67,8 @@
       "pt_discord": "Profit Taker Discord",
       "github_repo": "GitHub Deposu",
       "pt_guide": "Profit Taker Kılavuzu",
-      "report_bug": "GitHub'da hata bildir"
+      "report_bug": "GitHub'da hata bildir",
+      "leaderboard": "Lider Tablosu"
     },
     "shortcut_config": {
       "title": "Kısayol Yapılandırması",

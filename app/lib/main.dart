@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:profit_taker_analyzer/app.dart';
@@ -52,12 +53,18 @@ void main(List<String> args) async {
         final refreshToken = json['refresh_token'];
         if (accessToken != null && refreshToken != null) {
           await Supabase.instance.client.auth.setSession(refreshToken);
-          print('Login successful!');
+          if (kDebugMode) {
+            print('Login successful!');
+          }
         } else {
-          print('Login failed: Invalid session.');
+          if (kDebugMode) {
+            print('Login failed: Invalid session.');
+          }
         }
       } catch (e) {
-        print('Login failed: ${e.toString()}');
+        if (kDebugMode) {
+          print('Login failed: ${e.toString()}');
+        }
       }
     }
   }

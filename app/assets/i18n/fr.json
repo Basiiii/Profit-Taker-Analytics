@@ -67,7 +67,8 @@
       "pt_discord": "Profit Taker Discord",
       "github_repo": "Dépôt GitHub",
       "pt_guide": "Guide Profit Taker",
-      "report_bug": "Signaler un bug sur GitHub"
+      "report_bug": "Signaler un bug sur GitHub",
+      "leaderboard": "Classement"
     },
     "shortcut_config": {
       "title": "Configuration des raccourcis",
