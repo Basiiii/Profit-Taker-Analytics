@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:profit_taker_analyzer/screens/home/widgets/submit_run_dialog.dart';
+import 'package:profit_taker_analyzer/screens/storage/utils/delete_run.dart';
 
 /// A widget that represents the header section of the home screen.
 ///
@@ -55,6 +56,25 @@ class HomeHeader extends StatelessWidget {
                     icon: const Icon(Icons.cloud_upload),
                     onPressed: () => _showSubmitRunDialog(context),
                     tooltip: FlutterI18n.translate(context, "home.submit_run"),
+                  ),
+                // Delete run button
+                if (runService.currentRun != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      final runId = runService.currentRun!.runId;
+                      final deleted = await deleteRun(context, runId);
+                      if (deleted) {
+                        // Try to navigate to the next run, or previous if at end
+                        await runService.navigateToNextRun();
+                        // If still on the same run (no next), try previous
+                        if (runService.currentRun?.runId == runId) {
+                          await runService.navigateToPreviousRun();
+                        }
+                      }
+                    },
+                    tooltip:
+                        FlutterI18n.translate(context, "tooltips.delete_run"),
                   ),
                 // Icon button for navigating to the next run
                 IconButton(

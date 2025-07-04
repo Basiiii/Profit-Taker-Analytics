@@ -133,7 +133,8 @@
     "favorite": "Favorito",
     "close": "Fechar",
     "view": "Ver",
-    "dont_show_again": "Não voltar a mostrar"
+    "dont_show_again": "Não voltar a mostrar",
+    "cancel": "Cancelar"
   },
   "record_runs": {
     "title": "Tempos Recordes",
@@ -174,7 +175,8 @@
     "previous_run": "Missão anterior",
     "next_run": "Próxima missão",
     "toggle_layout": "Alternar layout",
-    "view_pb": "Ver os teu melhores tempos"
+    "view_pb": "Ver os teu melhores tempos",
+    "delete_run": "Apagar esta missão"
   },
   "screenshot": {
     "ScreenshotStatus": {

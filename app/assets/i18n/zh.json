@@ -127,7 +127,8 @@
     "favorite": "收藏",
     "close": "关闭",
     "view": "查看",
-    "dont_show_again": "不要再出现"
+    "dont_show_again": "不要再出现",
+    "cancel": "取消"
   },
   "record_runs": {
     "title": "记录跑步",
@@ -171,7 +172,8 @@
     "previous_run": "上一个使命",
     "next_run": "下一个任务",
     "toggle_layout": "切换布局",
-    "view_pb": "查看个人最佳"
+    "view_pb": "查看个人最佳",
+    "delete_run": "删除此任务"
   },
   "screenshot": {
     "ScreenshotStatus": {
