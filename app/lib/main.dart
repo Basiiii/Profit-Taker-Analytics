@@ -6,6 +6,7 @@ import 'package:profit_taker_analyzer/screens/home/widgets/layout_preferences.da
 import 'package:profit_taker_analyzer/services/database/database_service.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
 import 'package:profit_taker_analyzer/services/screenshot_service.dart';
+import 'package:profit_taker_analyzer/services/deep_link_service.dart';
 import 'package:profit_taker_analyzer/services/input/action_keys.dart';
 import 'package:profit_taker_analyzer/utils/initialization/initialize_parser.dart';
 import 'package:profit_taker_analyzer/utils/initialization/initialize_window_manager.dart';
@@ -31,43 +32,8 @@ void main(List<String> args) async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  String? deepLinkCode;
-  if (args.isNotEmpty && args[0].startsWith('pta://')) {
-    final uri = Uri.parse(args[0]);
-    deepLinkCode = uri.queryParameters['code'];
-    if (deepLinkCode != null) {
-      // Exchange code for session
-      final supabaseUrl = dotenv.env['SUPABASE_URL']!;
-      final authUrl = '$supabaseUrl/auth/v1/token?grant_type=pkce';
-      final client = HttpClient();
-      final request = await client.postUrl(Uri.parse(authUrl));
-      request.headers.contentType = ContentType('application', 'json');
-      request.write(
-          '{"code": "$deepLinkCode", "redirect_uri": "pta://auth-callback", "grant_type": "pkce"}');
-      final httpResponse = await request.close();
-      final responseBody =
-          await httpResponse.transform(SystemEncoding().decoder).join();
-      try {
-        final Map<String, dynamic> json = jsonDecode(responseBody);
-        final accessToken = json['access_token'];
-        final refreshToken = json['refresh_token'];
-        if (accessToken != null && refreshToken != null) {
-          await Supabase.instance.client.auth.setSession(refreshToken);
-          if (kDebugMode) {
-            print('Login successful!');
-          }
-        } else {
-          if (kDebugMode) {
-            print('Login failed: Invalid session.');
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Login failed: ${e.toString()}');
-        }
-      }
-    }
-  }
+  // Handle command line arguments (Windows and Linux)
+  await DeepLinkService.handleCommandLineArgs(args);
 
   // Initialize Rust Core library
   await RustLib.init();
