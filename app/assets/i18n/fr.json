@@ -88,6 +88,7 @@
     "account": {
       "title": "Compte",
       "logged_in_as": "Connecté en tant que : {username}",
+      "my_runs": "Mes runs",
       "logout": "Se déconnecter"
     }
   },

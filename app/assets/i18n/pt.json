@@ -88,6 +88,7 @@
     "account": {
       "title": "Conta",
       "logged_in_as": "Conectado como: {username}",
+      "my_runs": "Minhas missões",
       "logout": "Sair"
     }
   },

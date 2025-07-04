@@ -88,6 +88,7 @@
     "account": {
       "title": "Аккаунт",
       "logged_in_as": "Вошли как: {username}",
+      "my_runs": "Мои забеги",
       "logout": "Выйти"
     }
   },

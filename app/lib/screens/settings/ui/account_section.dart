@@ -37,6 +37,24 @@ SettingsSection buildAccountSection(
               context, "settings.account.logged_in_as",
               translationParams: {"username": username})),
           leading: const Icon(Icons.account_circle),
+          onPressed: (_) async {
+            final url =
+                Uri.parse('https://stats.profit-taker.com/profile/$username');
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url, mode: LaunchMode.externalApplication);
+            }
+          },
+        ),
+        SettingsTile(
+          title:
+              Text(FlutterI18n.translate(context, "settings.account.my_runs")),
+          leading: const Icon(Icons.list_alt),
+          onPressed: (_) async {
+            final url = Uri.parse('https://stats.profit-taker.com/my-runs');
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url, mode: LaunchMode.externalApplication);
+            }
+          },
         ),
         SettingsTile(
           title:

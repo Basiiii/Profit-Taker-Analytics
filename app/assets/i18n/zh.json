@@ -133,6 +133,7 @@
   "account": {
     "title": "账户",
     "logged_in_as": "已登录为：{username}",
+    "my_runs": "我的记录",
     "logout": "退出登录"
   },
   "donate": {
