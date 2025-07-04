@@ -7,7 +7,16 @@
     "run": "A tua luta",
     "run_with": "A tua luta com ",
     "and": " e ",
-    "named": "chamada"
+    "named": "chamada",
+    "submit_run": "Enviar corrida",
+    "submit_run_title": "Enviar uma corrida",
+    "video_proof_label": "Link do vídeo de prova",
+    "video_required": "O link do vídeo é obrigatório.",
+    "submit": "Enviar",
+    "category_label": "Categoria",
+    "submission_success": "Missão enviada com sucesso!",
+    "category_none": "Nenhuma",
+    "duplicate_run_error": "Não é possível enviar corridas duplicadas (mesmo usuário e horário)"
   },
   "onboarding": {
     "welcome": "Bem-vindo ao Profit Taker Analytics!\nVamos dar uma olhada em alguns recursos principais.",
@@ -60,7 +69,8 @@
       "view_onboarding": "Ver o onboarding",
       "import_old_json": "Importar antigas missões JSON",
       "sign_in": "Entrar",
-      "sign_up": "Registrar-se"
+      "sign_up": "Registrar-se",
+      "cancel": "Cancelar"
     },
     "links": {
       "title": "Ligações",
@@ -116,7 +126,6 @@
     "yes": "Sim",
     "no": "Não",
     "ok": "Ok",
-    "cancel": "Cancelar",
     "delete": "Apagar",
     "download": "Descarregar",
     "retry": "Tentar novamente",

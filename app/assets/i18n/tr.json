@@ -7,7 +7,16 @@
     "run": "Denemenizin adı ",
     "run_with": "Bu oyuncularla denemeniz ",
     "and": " ve ",
-    "named": "called"
+    "named": "called",
+    "submit_run": "Koşu Gönder",
+    "submit_run_title": "Bir Koşu Gönder",
+    "video_proof_label": "Video Kanıtı Bağlantısı",
+    "video_required": "Video kanıtı bağlantısı gereklidir.",
+    "submit": "Gönder",
+    "category_label": "Kategori",
+    "submission_success": "Koşu başarıyla gönderildi!",
+    "category_none": "Yok",
+    "duplicate_run_error": "Aynı kullanıcı ve zaman damgası ile yinelenen koşular gönderilemez"
   },
   "onboarding": {
     "welcome": "Profit Taker Analytics'e hoş geldiniz!\nBazı önemli özelliklere göz atalım.",
@@ -60,7 +69,8 @@
       "view_onboarding": "Onboarding'i Gör",
       "import_old_json": "Eski JSON görevlerini içe aktar",
       "sign_in": "Giriş Yap",
-      "sign_up": "Kayıt Ol"
+      "sign_up": "Kayıt Ol",
+      "cancel": "İptal"
     },
     "links": {
       "title": "Bağlantılar",
@@ -116,7 +126,6 @@
     "yes": "Evet",
     "no": "Hayır",
     "ok": "Tamam",
-    "cancel": "İptal",
     "delete": "Sil",
     "download": "İndir",
     "retry": "Tekrar deneyin",
