@@ -4,7 +4,6 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
-import 'dart:io';
 
 /// Builds the "Account" settings section in the app.
 ///
@@ -144,23 +143,16 @@ class _SignInDialogState extends State<SignInDialog> {
       _error = null;
     });
     
-    // Log the OAuth attempt
-    _logToFile('OAuth: Starting Discord OAuth flow');
-    
     try {
       final success = await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.discord,
         redirectTo: 'pta://auth-callback',
       );
-      await windowManager.close();
-      
-      _logToFile('OAuth: Supabase OAuth success: $success');
       
       // await windowManager.close();
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (e) {
-      _logToFile('OAuth: Error during Discord OAuth: ${e.toString()}');
       if (!mounted) return;
       setState(() {
         _error = e.toString();
@@ -171,16 +163,6 @@ class _SignInDialogState extends State<SignInDialog> {
           _isLoading = false;
         });
       }
-    }
-  }
-
-  void _logToFile(String message) {
-    try {
-      final logFile = File('/tmp/pta_oauth.log');
-      final timestamp = DateTime.now().toIso8601String();
-      logFile.writeAsStringSync('[$timestamp] $message\n', mode: FileMode.append);
-    } catch (e) {
-      // Ignore logging errors
     }
   }
 
