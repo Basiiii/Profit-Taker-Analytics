@@ -7,7 +7,16 @@
     "run": "Votre mission",
     "run_with": "Votre mission avec ",
     "and": " et ",
-    "named": "appelée"
+    "named": "appelée",
+    "submit_run": "Soumettre un run",
+    "submit_run_title": "Soumettre un run",
+    "video_proof_label": "Lien de la vidéo de preuve",
+    "video_required": "Le lien de la vidéo est requis.",
+    "submit": "Soumettre",
+    "category_label": "Catégorie",
+    "submission_success": "Run soumis avec succès !",
+    "category_none": "Aucune",
+    "duplicate_run_error": "Impossible de soumettre des runs en double (même utilisateur et horodatage)"
   },
   "onboarding": {
     "welcome": "Bienvenue sur Profit Taker Analytics !\nPassons en revue quelques fonctionnalités clés.",
@@ -60,7 +69,8 @@
       "view_onboarding": "Voir l'onboarding",
       "import_old_json": "Importer les anciennes missions JSON",
       "sign_in": "Se connecter",
-      "sign_up": "S'inscrire"
+      "sign_up": "S'inscrire",
+      "cancel": "Annuler"
     },
     "links": {
       "title": "Liens",
@@ -88,6 +98,7 @@
     "account": {
       "title": "Compte",
       "logged_in_as": "Connecté en tant que : {username}",
+      "my_runs": "Mes runs",
       "logout": "Se déconnecter"
     }
   },
@@ -115,7 +126,6 @@
     "yes": "Oui",
     "no": "Non",
     "ok": "Ok",
-    "cancel": "Annuler",
     "delete": "Supprimer",
     "download": "Télécharger",
     "retry": "Réessayer",

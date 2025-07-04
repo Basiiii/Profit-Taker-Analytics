@@ -7,7 +7,16 @@
     "run": "你的记录",
     "run_with": "你的记录，与 ",
     "and": " 和 ",
-    "named": ""
+    "named": "",
+    "submit_run": "提交记录",
+    "submit_run_title": "提交一条记录",
+    "video_proof_label": "视频证明链接",
+    "video_required": "需要提供视频证明链接。",
+    "submit": "提交",
+    "category_label": "类别",
+    "submission_success": "提交成功！",
+    "category_none": "无",
+    "duplicate_run_error": "无法提交重复的记录（同一用户和时间戳）"
   },
   "onboarding": {
     "welcome": "欢迎使用 Profit Taker Analytics！\n让我们了解一些关键功能。",
@@ -60,7 +69,8 @@
       "view_onboarding": "查看入职指导",
       "import_old_json": "导入旧 JSON 任务",
       "sign_in": "登录",
-      "sign_up": "注册"
+      "sign_up": "注册",
+      "cancel": "取消"
     },
     "links": {
       "title": "链接",
@@ -110,7 +120,6 @@
     "yes": "是",
     "no": "否",
     "ok": "OK",
-    "cancel": "取消",
     "delete": "删除",
     "download": "下载",
     "retry": "再试一次",
@@ -133,6 +142,7 @@
   "account": {
     "title": "账户",
     "logged_in_as": "已登录为：{username}",
+    "my_runs": "我的记录",
     "logout": "退出登录"
   },
   "donate": {

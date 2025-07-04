@@ -7,7 +7,16 @@
     "run": "Your run",
     "run_with": "Your run with ",
     "and": " and ",
-    "named": "called"
+    "named": "called",
+    "submit_run": "Submit Run",
+    "submit_run_title": "Submit a Run",
+    "video_proof_label": "Video Proof Link",
+    "video_required": "Video proof link is required.",
+    "submit": "Submit",
+    "category_label": "Category",
+    "submission_success": "Run submitted successfully!",
+    "category_none": "None",
+    "duplicate_run_error": "Cannot submit duplicate runs (same user and timestamp)"
   },
   "onboarding": {
     "welcome": "Welcome to Profit Taker Analytics!\nLet's go over some key features.",
@@ -60,7 +69,8 @@
       "view_onboarding": "View onboarding",
       "import_old_json": "Import Old JSON Runs",
       "sign_in": "Sign In",
-      "sign_up": "Sign Up"
+      "sign_up": "Sign Up",
+      "cancel": "Cancel"
     },
     "links": {
       "title": "Links",
@@ -88,6 +98,7 @@
     "account": {
       "title": "Account",
       "logged_in_as": "Logged in as: {username}",
+      "my_runs": "My Runs",
       "logout": "Logout"
     }
   },
@@ -115,7 +126,6 @@
     "yes": "Yes",
     "no": "No",
     "ok": "Okay",
-    "cancel": "Cancel",
     "delete": "Delete",
     "download": "Download",
     "retry": "Try again",

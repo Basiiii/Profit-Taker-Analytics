@@ -9,6 +9,8 @@ import 'package:profit_taker_analyzer/widgets/ui/headers/header_subtitle.dart';
 import 'package:profit_taker_analyzer/widgets/ui/headers/header_title.dart';
 import 'package:provider/provider.dart';
 import 'package:profit_taker_analyzer/services/run_navigation_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:profit_taker_analyzer/screens/home/widgets/submit_run_dialog.dart';
 
 /// A widget that represents the header section of the home screen.
 ///
@@ -27,10 +29,18 @@ class HomeHeader extends StatelessWidget {
     required this.scaffoldKey,
   });
 
+  void _showSubmitRunDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const SubmitRunDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final runService = context.watch<RunNavigationService>();
     final layoutPrefs = context.watch<LayoutPreferences>();
+    final user = Supabase.instance.client.auth.currentUser;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,6 +50,12 @@ class HomeHeader extends StatelessWidget {
             const HeaderTitle(title: AppConstants.appName),
             HeaderActions(
               actions: [
+                if (user != null)
+                  IconButton(
+                    icon: const Icon(Icons.cloud_upload),
+                    onPressed: () => _showSubmitRunDialog(context),
+                    tooltip: FlutterI18n.translate(context, "home.submit_run"),
+                  ),
                 // Icon button for navigating to the next run
                 IconButton(
                   icon: const Icon(Icons.arrow_upward),
