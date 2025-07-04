@@ -147,11 +147,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  void _onSignIn(BuildContext context) {
-    showDialog(
+  void _onSignIn(BuildContext context) async {
+    final result = await showDialog(
       context: context,
       builder: (context) => SignInDialog(),
     );
+    if (result == true) {
+      _refreshUser();
+    }
   }
 
   @override

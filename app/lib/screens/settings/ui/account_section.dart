@@ -120,7 +120,7 @@ class _SignInDialogState extends State<SignInDialog> {
           _error = 'Invalid credentials';
         });
       } else {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (!mounted) return;
@@ -149,7 +149,7 @@ class _SignInDialogState extends State<SignInDialog> {
       );
       await windowManager.close();
       if (!mounted) return;
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
       setState(() {
