@@ -133,7 +133,8 @@
     "favorite": "Favori",
     "close": "Kapat",
     "view": "Görünüm",
-    "dont_show_again": "Bir daha gösterme"
+    "dont_show_again": "Bir daha gösterme",
+    "cancel": "İptal"
   },
   "record_runs": {
     "title": "Rekor Koşuları",
@@ -171,7 +172,8 @@
     "previous_run": "Önceki Görev",
     "next_run": "Sonraki Görev",
     "toggle_layout": "Düzeni Değiştir",
-    "view_pb": "En İyi Görevi Gör"
+    "view_pb": "En İyi Görevi Gör",
+    "delete_run": "Bu görevi sil"
   },
   "screenshot": {
     "ScreenshotStatus": {
