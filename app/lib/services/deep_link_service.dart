@@ -1,8 +1,7 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DeepLinkService {
   static Future<void> handleCommandLineArgs(List<String> args) async {
@@ -12,7 +11,7 @@ class DeepLinkService {
         print('DeepLinkService: arg[$i] = "${args[i]}"');
       }
     }
-    
+
     if (args.isNotEmpty && args[0].startsWith('pta://')) {
       if (kDebugMode) {
         print('DeepLinkService: Found pta:// URL in arguments');
@@ -32,12 +31,12 @@ class DeepLinkService {
 
     final uri = Uri.parse(url);
     final deepLinkCode = uri.queryParameters['code'];
-    
+
     if (kDebugMode) {
       print('DeepLinkService: Parsed URI: $uri');
       print('DeepLinkService: Code parameter: $deepLinkCode');
     }
-    
+
     if (deepLinkCode != null) {
       await _handleOAuthCallback(uri);
     } else {
@@ -51,7 +50,7 @@ class DeepLinkService {
     if (kDebugMode) {
       print('DeepLinkService: Handling OAuth callback with Supabase');
     }
-    
+
     try {
       // Extract the code from the URI
       final code = uri.queryParameters['code'];
@@ -63,12 +62,14 @@ class DeepLinkService {
       }
 
       // Use the exchangeCodeForSession method which handles PKCE properly
-      final response = await Supabase.instance.client.auth.exchangeCodeForSession(code);
-      
+      final response =
+          await Supabase.instance.client.auth.exchangeCodeForSession(code);
+
       if (kDebugMode) {
-        print('DeepLinkService: Exchange code result: ${response.session != null ? 'Session created' : 'No session created'}');
+        print(
+            'DeepLinkService: Exchange code result: ${response.session != null ? 'Session created' : 'No session created'}');
       }
-      
+
       if (response.session != null) {
         if (kDebugMode) {
           print('DeepLinkService: Login successful!');
@@ -80,8 +81,9 @@ class DeepLinkService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('DeepLinkService: Error handling OAuth callback: ${e.toString()}');
+        print(
+            'DeepLinkService: Error handling OAuth callback: ${e.toString()}');
       }
     }
   }
-} 
+}

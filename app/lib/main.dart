@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:profit_taker_analyzer/app.dart';
@@ -17,8 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rust_core/rust_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:io';
-import 'dart:convert';
 
 /// The entry point of the application.
 ///

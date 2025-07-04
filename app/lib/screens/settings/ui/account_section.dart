@@ -142,14 +142,14 @@ class _SignInDialogState extends State<SignInDialog> {
       _isLoading = true;
       _error = null;
     });
-    
+
     try {
-      final success = await Supabase.instance.client.auth.signInWithOAuth(
+      await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.discord,
         redirectTo: 'pta://auth-callback',
       );
-      
-      // await windowManager.close();
+
+      await windowManager.close();
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (e) {
