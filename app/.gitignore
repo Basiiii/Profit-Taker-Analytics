@@ -6,6 +6,8 @@ installers/*.exe
 *.log
 *.pyc
 *.swp
+.env
+.env.*
 .DS_Store
 .atom/
 .buildlog/
