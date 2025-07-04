@@ -1,7 +1,7 @@
 name: profit_taker_analyzer
 description: "Warframe Profit Taker analysis app."
 publish_to: "none"
-version: 1.0.0-beta.5
+version: 1.0.0-beta.5+linuxfix
 
 environment:
   sdk: ">=3.2.0-199.0.dev <4.0.0"
