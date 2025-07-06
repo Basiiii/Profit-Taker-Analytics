@@ -16,7 +16,8 @@
     "category_label": "Category",
     "submission_success": "Run submitted successfully!",
     "category_none": "None",
-    "duplicate_run_error": "Cannot submit duplicate runs (same user and timestamp)"
+    "duplicate_run_error": "Cannot submit duplicate runs (same user and timestamp)",
+    "verified_run_label": "Verified run"
   },
   "onboarding": {
     "welcome": "Welcome to Profit Taker Analytics!\nLet's go over some key features.",

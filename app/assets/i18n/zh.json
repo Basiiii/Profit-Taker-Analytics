@@ -16,7 +16,8 @@
     "category_label": "类别",
     "submission_success": "提交成功！",
     "category_none": "无",
-    "duplicate_run_error": "无法提交重复的记录（同一用户和时间戳）"
+    "duplicate_run_error": "无法提交重复的记录（同一用户和时间戳）",
+    "verified_run_label": "已验证的记录"
   },
   "onboarding": {
     "welcome": "欢迎使用 Profit Taker Analytics！\n让我们了解一些关键功能。",

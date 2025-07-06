@@ -16,7 +16,8 @@
     "category_label": "Категория",
     "submission_success": "Забег успешно отправлен!",
     "category_none": "Нет",
-    "duplicate_run_error": "Нельзя отправить дублирующиеся забеги (тот же пользователь и время)"
+    "duplicate_run_error": "Нельзя отправить дублирующиеся забеги (тот же пользователь и время)",
+    "verified_run_label": "Проверенный забег"
   },
   "onboarding": {
     "welcome": "Добро пожаловать в Profit Taker Analytics!\nДавайте рассмотрим несколько ключевых функций.",

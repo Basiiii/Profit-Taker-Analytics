@@ -16,7 +16,8 @@
     "category_label": "Categoria",
     "submission_success": "Missão enviada com sucesso!",
     "category_none": "Nenhuma",
-    "duplicate_run_error": "Não é possível enviar corridas duplicadas (mesmo usuário e horário)"
+    "duplicate_run_error": "Não é possível enviar corridas duplicadas (mesmo usuário e horário)",
+    "verified_run_label": "Execução verificada"
   },
   "onboarding": {
     "welcome": "Bem-vindo ao Profit Taker Analytics!\nVamos dar uma olhada em alguns recursos principais.",
