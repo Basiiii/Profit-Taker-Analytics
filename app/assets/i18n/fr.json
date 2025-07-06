@@ -16,7 +16,8 @@
     "category_label": "Catégorie",
     "submission_success": "Run soumis avec succès !",
     "category_none": "Aucune",
-    "duplicate_run_error": "Impossible de soumettre des runs en double (même utilisateur et horodatage)"
+    "duplicate_run_error": "Impossible de soumettre des runs en double (même utilisateur et horodatage)",
+    "verified_run_label": "Run vérifié"
   },
   "onboarding": {
     "welcome": "Bienvenue sur Profit Taker Analytics !\nPassons en revue quelques fonctionnalités clés.",

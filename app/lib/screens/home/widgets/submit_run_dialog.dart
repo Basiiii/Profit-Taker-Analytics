@@ -70,11 +70,13 @@ class _SubmitRunDialogState extends State<SubmitRunDialog> {
   bool _isSubmitting = false;
   String? _error;
   int? _selectedCategory; // 1 = Volt, 2 = Chroma, null = None
+  bool _isVerifiedRun = false;
 
   @override
   void initState() {
     super.initState();
     _selectedCategory = null; // Default to None
+    _isVerifiedRun = false; // Always non-verified for now
   }
 
   Future<void> _submitRun() async {
@@ -83,7 +85,8 @@ class _SubmitRunDialogState extends State<SubmitRunDialog> {
       _error = null;
     });
     final videoUrl = _videoController.text.trim();
-    if (videoUrl.isEmpty) {
+    // Only require video for verified runs
+    if (_isVerifiedRun && videoUrl.isEmpty) {
       setState(() {
         _error = FlutterI18n.translate(context, "home.video_required");
         _isSubmitting = false;
@@ -102,8 +105,12 @@ class _SubmitRunDialogState extends State<SubmitRunDialog> {
       return;
     }
 
-    final runJson =
-        run.toSubmissionJson(videoUrl: videoUrl, category: _selectedCategory);
+    final runJson = run.toSubmissionJson(
+      videoUrl: videoUrl,
+      category: _selectedCategory,
+    );
+    // Add needs_verification to the JSON
+    runJson['needs_verification'] = _isVerifiedRun;
 
     try {
       final response = await Supabase.instance.client
@@ -169,6 +176,14 @@ class _SubmitRunDialogState extends State<SubmitRunDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // TODO: Verified run toggle temporarily disabled. Always non-verified until video proof is re-enabled.
+          // SwitchListTile(
+          //   title: Text(FlutterI18n.translate(context, "home.verified_run_label")),
+          //   value: _isVerifiedRun,
+          //   onChanged: _isSubmitting
+          //       ? null
+          //       : (val) => setState(() => _isVerifiedRun = val),
+          // ),
           DropdownButtonFormField<int?>(
             value: _selectedCategory,
             decoration: InputDecoration(
@@ -186,15 +201,17 @@ class _SubmitRunDialogState extends State<SubmitRunDialog> {
                 ? null
                 : (val) => setState(() => _selectedCategory = val),
           ),
-          TextField(
-            controller: _videoController,
-            decoration: InputDecoration(
-              labelText:
-                  FlutterI18n.translate(context, "home.video_proof_label"),
-            ),
-            keyboardType: TextInputType.url,
-            enabled: !_isSubmitting,
-          ),
+          // Temporarily hide video link field
+          // if (_isVerifiedRun)
+          //   TextField(
+          //     controller: _videoController,
+          //     decoration: InputDecoration(
+          //       labelText:
+          //           FlutterI18n.translate(context, "home.video_proof_label"),
+          //     ),
+          //     keyboardType: TextInputType.url,
+          //     enabled: !_isSubmitting,
+          //   ),
           if (_error != null) ...[
             SizedBox(height: 8),
             Text(_error!, style: TextStyle(color: Colors.red)),

@@ -16,7 +16,8 @@
     "category_label": "Kategori",
     "submission_success": "Koşu başarıyla gönderildi!",
     "category_none": "Yok",
-    "duplicate_run_error": "Aynı kullanıcı ve zaman damgası ile yinelenen koşular gönderilemez"
+    "duplicate_run_error": "Aynı kullanıcı ve zaman damgası ile yinelenen koşular gönderilemez",
+    "verified_run_label": "Doğrulanmış koşu"
   },
   "onboarding": {
     "welcome": "Profit Taker Analytics'e hoş geldiniz!\nBazı önemli özelliklere göz atalım.",
