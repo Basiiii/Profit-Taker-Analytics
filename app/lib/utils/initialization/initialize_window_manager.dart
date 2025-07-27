@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:profit_taker_analyzer/constants/app/app_constants.dart';
 import 'package:profit_taker_analyzer/constants/layout/layout_constants.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -13,6 +14,7 @@ import 'package:window_manager/window_manager.dart';
 /// A [Future<void>] that completes once the window manager is initialized and the window is shown and focused.
 Future<void> initializeWindowManager() async {
   await windowManager.ensureInitialized();
+  await windowManager.setTitle(AppConstants.appName);
   WindowOptions windowOptions = const WindowOptions(
     size: Size(LayoutConstants.startingWidth, LayoutConstants.startingHeight),
     minimumSize:

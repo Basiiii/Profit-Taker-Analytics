@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Profit Taker Analytics"
-#define MyAppVersion "0.9.7"
-#define MyAppPublisher "Basi"
+#define MyAppVersion "1.0.0"
+#define MyAppPublisher "Enrique Rodrigues (Basi)"
 #define MyAppURL "https://basi.is-a.dev/pta"
 #define MyAppExeName "profit_taker_analyzer.exe"
 
@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 LicenseFile=C:\Users\basi\Documents\GitHub\portfolio\ptdocssource\docs\docs\eula.md
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=pta_0.9.7
+OutputBaseFilename=pta_1.0.0
 Compression=lzma2/max
 WizardStyle=modern
 
@@ -37,18 +37,7 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
-; Source: "C:\Github\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\update\*"; DestDir: "{app}\update"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\irondash_engine_context_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\screen_retriever_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\super_native_extensions_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\url_launcher_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "C:\Users\basi\Documents\GitHub\Profit-Taker-Analytics\app\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Dirs]
 Name: {app}\storage
@@ -60,3 +49,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Registry]
+Root: HKCR; Subkey: "pta"; ValueType: string; ValueName: ""; ValueData: "URL:PTA Protocol"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "pta"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "pta\\shell\\open\\command"; ValueType: string; ValueName: ""; ValueData: """{app}\\{#MyAppExeName}"" ""%1"""; Flags: uninsdeletekey

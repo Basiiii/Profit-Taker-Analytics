@@ -3,7 +3,6 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:profit_taker_analyzer/constants/preferences/shared_prefs_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: Ensure this is up to date once app is ready for v1.0.0
 class OnboardingPopup extends StatefulWidget {
   final VoidCallback onFinish;
 
