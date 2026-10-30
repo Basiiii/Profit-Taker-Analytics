@@ -146,6 +146,7 @@ pub(crate) fn time_from_line(line: &str) -> f64 {
     line.split_whitespace()
         .next()
         .unwrap_or_default()
+        .trim_start_matches('!')
         .parse::<f64>()
         .expect("Time couldn't be extracted from line")
 }
