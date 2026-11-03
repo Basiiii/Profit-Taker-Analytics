@@ -128,7 +128,9 @@ pub(crate) fn parse_run(run: &mut Run, line: &str, parser_state: &mut ParserStat
 /// - Computes the run's `time_stamp` by adding the parsed log start time to the timestamp.
 fn register_start_time(line: &str, parser_state: &mut ParserState, run: &mut Run) {
     let line_time = time_from_line(line);
-    parser_state.start_time = line_time;
+    if parser_state.start_time == 0.0 || line_time < parser_state.start_time {
+        parser_state.start_time = line_time;  // Keep the earliest time
+    }
     //println!("Run started at {}", parser_state.start_time);
 
     // Set timestamp for when run was started
