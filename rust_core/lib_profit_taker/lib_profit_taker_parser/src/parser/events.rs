@@ -129,7 +129,7 @@ pub(crate) fn parse_run(run: &mut Run, line: &str, parser_state: &mut ParserStat
 fn register_start_time(line: &str, parser_state: &mut ParserState, run: &mut Run) {
     let line_time = time_from_line(line);
     if parser_state.start_time == 0.0 || line_time < parser_state.start_time {
-        parser_state.start_time = line_time;  // Keep the earliest time
+        parser_state.start_time = line_time;  // Use first player that leaves the elevator for timing
     }
     //println!("Run started at {}", parser_state.start_time);
 
